@@ -25,6 +25,7 @@ import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 
 import grondag.frex.api.material.RenderMaterial;
 
+@SuppressWarnings("deprecation")
 public class FabricMaterialFinder implements grondag.frex.api.material.MaterialFinder {
 	public static FabricMaterialFinder of(MaterialFinder wrapped) {
 		return new FabricMaterialFinder(wrapped);

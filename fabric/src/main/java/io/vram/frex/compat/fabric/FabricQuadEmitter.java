@@ -23,6 +23,7 @@ import net.minecraft.util.math.Direction;
 
 import grondag.frex.api.mesh.QuadEmitter;
 
+@SuppressWarnings("deprecation")
 public class FabricQuadEmitter extends FabricQuadView<QuadEditor> implements grondag.frex.api.mesh.MutableQuadView, grondag.frex.api.mesh.QuadEmitter {
 	public static FabricQuadEmitter of(QuadEditor wrapped) {
 		return new FabricQuadEmitter(wrapped);

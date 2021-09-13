@@ -27,6 +27,7 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import grondag.frex.api.material.MaterialFinder;
 import grondag.frex.api.material.RenderMaterial;
 
+@SuppressWarnings("deprecation")
 public class FabricRenderer implements grondag.frex.api.Renderer {
 	public static FabricRenderer of(Renderer wrapped) {
 		return new FabricRenderer(wrapped);

@@ -23,6 +23,7 @@ import net.minecraft.util.Identifier;
 
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 
+@SuppressWarnings("deprecation")
 public class FabricMaterial implements grondag.frex.api.material.RenderMaterial {
 	public static FabricMaterial of(RenderMaterial wrapped) {
 		return new FabricMaterial(wrapped);

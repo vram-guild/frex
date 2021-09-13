@@ -23,6 +23,7 @@ import net.minecraft.util.math.Vec3f;
 
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 
+@SuppressWarnings("deprecation")
 public class FabricQuadView<T extends QuadView> implements grondag.frex.api.mesh.QuadView {
 	public static FabricQuadView<QuadView> of(QuadView wrapped) {
 		return new FabricQuadView<>(wrapped);

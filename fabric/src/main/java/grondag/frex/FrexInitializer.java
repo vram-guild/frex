@@ -35,6 +35,7 @@ package grondag.frex;
  * "frex" end point for mods that nest the FREX library or have a hard dependency on FREX.
  * Such mods can safely handle FREX registration in their client initialize instance.
  */
+@Deprecated
 public interface FrexInitializer {
 	/**
 	 * Signals mods that maintain an optional dependency on FREX that FREX is

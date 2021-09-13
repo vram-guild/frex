@@ -17,23 +17,16 @@ package grondag.frex.api.event;
 import java.util.List;
 import java.util.function.Predicate;
 
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockRenderView;
+import io.vram.frex.impl.world.RenderRegionBakeListenerImpl;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-import grondag.frex.impl.event.RenderRegionBakeListenerImpl;
-
 @Environment(EnvType.CLIENT)
+@Deprecated
 @FunctionalInterface
-public interface RenderRegionBakeListener {
-	void bake(RenderRegionContext context, BlockStateRenderer blockStateRenderer);
-
-	static void register(Predicate<RenderRegionContext> predicate, RenderRegionBakeListener listener) {
+public interface RenderRegionBakeListener extends io.vram.frex.api.world.RenderRegionBakeListener {
+	static void register(Predicate<? super io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext> predicate, io.vram.frex.api.world.RenderRegionBakeListener listener) {
 		RenderRegionBakeListenerImpl.register(predicate, listener);
 	}
 
@@ -42,65 +35,14 @@ public interface RenderRegionBakeListener {
 	 * instance and if populated, invoking all listeners in the list at the appropriate time. Renderer must
 	 * also clear the list instance if needed before calling.
 	 */
-	static void prepareInvocations(RenderRegionContext context, List<RenderRegionBakeListener> listeners) {
+	static void prepareInvocations(io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext context, List<io.vram.frex.api.world.RenderRegionBakeListener> listeners) {
 		RenderRegionBakeListenerImpl.prepareInvocations(context, listeners);
 	}
 
 	@Environment(EnvType.CLIENT)
-	public interface RenderRegionContext {
-		/**
-		 * Not available until chunk baking.  Predicate tests must
-		 * be done based on block position only.
-		 */
-		@Nullable BlockRenderView blockView();
-
-		/**
-		 * Min position (inclusive) of the area being built.
-		 * The region backing {@link #blockView()} will typically have some padding
-		 * extending beyond this.
-		 */
-		BlockPos origin();
-
-		/**
-		 * Size of the area being built, on x-axis,, including the origin.
-		 * The region backing {@link #blockView()} will typically have some padding
-		 * extending beyond this.
-		 *
-		 * <p>In vanilla, regions are consistently 16x16x16.  A renderer mod
-		 * could change region size so this should not be assumed.
-		 */
-		default int xSize() {
-			return 16;
-		}
-
-		/**
-		 * Size of the area being built, on y-axis,, including the origin.
-		 * The region backing {@link #blockView()} will typically have some padding
-		 * extending beyond this.
-		 *
-		 * <p>In vanilla, regions are consistently 16x16x16.  A renderer mod
-		 * could change region size so this should not be assumed.
-		 */
-		default int ySize() {
-			return 16;
-		}
-
-		/**
-		 * Size of the area being built, on z-axis, including the origin.
-		 * The region backing {@link #blockView()} will typically have some padding
-		 * extending beyond this.
-		 *
-		 * <p>In vanilla, regions are consistently 16x16x16.  A renderer mod
-		 * could change region size so this should not be assumed.
-		 */
-		default int zSize() {
-			return 16;
-		}
-	}
+	public interface RenderRegionContext extends io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext { }
 
 	@Environment(EnvType.CLIENT)
 	@FunctionalInterface
-	public interface BlockStateRenderer {
-		void bake(BlockPos pos, BlockState state);
-	}
+	public interface BlockStateRenderer extends io.vram.frex.api.world.RenderRegionBakeListener.BlockStateRenderer { }
 }

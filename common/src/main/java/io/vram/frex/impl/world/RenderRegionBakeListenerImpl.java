@@ -12,32 +12,26 @@
  *  the License.
  */
 
-package grondag.frex.impl.event;
+package io.vram.frex.impl.world;
 
 import java.util.List;
 import java.util.function.Predicate;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.event.Event;
-import net.fabricmc.fabric.api.event.EventFactory;
+import io.vram.frex.api.world.RenderRegionBakeListener;
+import io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
-import grondag.frex.api.event.RenderRegionBakeListener;
-import grondag.frex.api.event.RenderRegionBakeListener.RenderRegionContext;
-
-@Environment(EnvType.CLIENT)
 public class RenderRegionBakeListenerImpl {
-	@Environment(EnvType.CLIENT)
 	@FunctionalInterface
 	private interface BakeHandler {
 		void handle(RenderRegionContext context, List<RenderRegionBakeListener> list);
 	}
 
 	private static class BakeHandlerImpl implements BakeHandler {
-		private final Predicate<RenderRegionContext> predicate;
+		private final Predicate<? super RenderRegionContext> predicate;
 		private final RenderRegionBakeListener listener;
 
-		private BakeHandlerImpl(Predicate<RenderRegionContext> predicate, RenderRegionBakeListener listener) {
+		private BakeHandlerImpl(Predicate<? super RenderRegionContext> predicate, RenderRegionBakeListener listener) {
 			this.predicate = predicate;
 			this.listener = listener;
 		}
@@ -50,17 +44,26 @@ public class RenderRegionBakeListenerImpl {
 		}
 	}
 
-	private static final Event<BakeHandler> EVENT = EventFactory.createArrayBacked(BakeHandler.class, listeners -> (context, list) -> {
-		for (final BakeHandler handler : listeners) {
-			handler.handle(context, list);
-		}
-	});
+	private static final ObjectArrayList<BakeHandler> LISTENERS = new ObjectArrayList<>();
+	private static BakeHandler active = (context, list) -> { };
 
-	public static void register(Predicate<RenderRegionContext> predicate, RenderRegionBakeListener handler) {
-		EVENT.register(new BakeHandlerImpl(predicate, handler));
+	public static void register(Predicate<? super RenderRegionContext> predicate, RenderRegionBakeListener handler) {
+		LISTENERS.add(new BakeHandlerImpl(predicate, handler));
+
+		if (LISTENERS.size() == 1) {
+			active = LISTENERS.get(0);
+		} else if (LISTENERS.size() == 2) {
+			active = (context, list) -> {
+				final int limit = LISTENERS.size();
+
+				for (int i = 0; i < limit; ++i) {
+					LISTENERS.get(i).handle(context, list);
+				}
+			};
+		}
 	}
 
 	public static void prepareInvocations(RenderRegionContext context, List<RenderRegionBakeListener> list) {
-		EVENT.invoker().handle(context, list);
+		active.handle(context, list);
 	}
 }

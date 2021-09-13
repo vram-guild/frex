@@ -33,6 +33,7 @@ import grondag.frex.api.material.MaterialFinder;
  * for model lighting, buffering and rendering. Such plug-ins implement the
  * enhanced model rendering interfaces specified by the Fabric API.
  */
+@Deprecated
 public interface Renderer extends net.fabricmc.fabric.api.renderer.v1.Renderer {
 	/** Will throw exception if not implemented. Check {@link Frex#isAvailable()} before calling. */
 	static Renderer get() {

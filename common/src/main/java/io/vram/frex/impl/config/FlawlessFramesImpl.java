@@ -22,8 +22,6 @@ import java.util.function.Function;
 
 import io.vram.frex.impl.FrexLog;
 
-import net.fabricmc.loader.api.FabricLoader;
-
 public class FlawlessFramesImpl {
 	private static class Controller implements Consumer<Boolean> {
 		final String owner;
@@ -61,10 +59,8 @@ public class FlawlessFramesImpl {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public static void onClientInitialization() {
-		final Function<String, Consumer<Boolean>> provider = Controller::new;
-		FabricLoader.getInstance().getEntrypoints("frex_flawless_frames", Consumer.class).forEach(api -> api.accept(provider));
+	public static Function<String, Consumer<Boolean>> providerFactory() {
+		return Controller::new;
 	}
 
 	private static final Set<Controller> ACTIVE = Collections.newSetFromMap(new IdentityHashMap<Controller, Boolean>());

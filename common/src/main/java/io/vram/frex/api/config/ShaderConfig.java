@@ -12,7 +12,7 @@
  *  the License.
  */
 
-package grondag.frex.api.config;
+package io.vram.frex.api.config;
 
 import java.util.function.Supplier;
 
@@ -55,7 +55,6 @@ import net.minecraft.util.Identifier;
  * <p>The renderer implementation is responsible for detecting multiple/nested {code #include}
  * statements for the same token and for ignoring all duplicate occurrences.
  */
-@Deprecated
 public interface ShaderConfig {
 	/**
 	 * Registers a supplier of configuration declarations that will replace the given

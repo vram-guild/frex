@@ -14,6 +14,7 @@
 
 package grondag.frex.mixin;
 
+import io.vram.frex.api.world.RenderRegionBakeListener;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -30,7 +31,6 @@ import net.minecraft.world.chunk.WorldChunk;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-import grondag.frex.api.event.RenderRegionBakeListener;
 import grondag.frex.impl.event.ChunkRenderConditionContext;
 import grondag.frex.impl.event.ChunkRenderConditionContext.RenderRegionListenerProvider;
 

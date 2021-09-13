@@ -16,6 +16,8 @@ package grondag.frex;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
 import io.vram.frex.api.renderer.Renderer;
@@ -70,6 +72,7 @@ public class Frex implements ClientModInitializer {
 	/**
 	 * All Fabric-specific hooks needed for core API should be here for now.
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onInitializeClient() {
 		RendererAccess.INSTANCE.registerRenderer(FabricRenderer.of(Renderer.get()));
@@ -83,7 +86,8 @@ public class Frex implements ClientModInitializer {
 		FabricLoader.getInstance().getEntrypoints("frex", FrexInitializer.class).forEach(
 			api -> api.onInitalizeFrex());
 
-		FlawlessFramesImpl.onClientInitialization();
+		final Function<String, Consumer<Boolean>> provider = FlawlessFramesImpl.providerFactory();
+		FabricLoader.getInstance().getEntrypoints("frex_flawless_frames", Consumer.class).forEach(api -> api.accept(provider));
 
 		InvalidateRenderStateCallback.EVENT.register(FluidModelImpl::reload);
 	}

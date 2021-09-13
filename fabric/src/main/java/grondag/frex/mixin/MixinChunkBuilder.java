@@ -17,6 +17,8 @@ package grondag.frex.mixin;
 import java.util.Random;
 import java.util.Set;
 
+import io.vram.frex.api.world.RenderRegionBakeListener;
+import io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -39,8 +41,6 @@ import net.minecraft.world.BlockRenderView;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-import grondag.frex.api.event.RenderRegionBakeListener;
-import grondag.frex.api.event.RenderRegionBakeListener.RenderRegionContext;
 import grondag.frex.impl.event.BlockStateRendererImpl;
 import grondag.frex.impl.event.ChunkRenderConditionContext.RenderRegionListenerProvider;
 

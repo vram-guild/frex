@@ -14,14 +14,13 @@
 
 package grondag.frex.impl.event;
 
+import io.vram.frex.api.world.RenderRegionBakeListener;
+import io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
-
-import grondag.frex.api.event.RenderRegionBakeListener;
-import grondag.frex.api.event.RenderRegionBakeListener.RenderRegionContext;
 
 public class ChunkRenderConditionContext implements RenderRegionContext {
 	public final ObjectArrayList<RenderRegionBakeListener> listeners = new ObjectArrayList<>();

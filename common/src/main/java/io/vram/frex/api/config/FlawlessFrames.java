@@ -12,7 +12,7 @@
  *  the License.
  */
 
-package grondag.frex.api.config;
+package io.vram.frex.api.config;
 
 import io.vram.frex.impl.config.FlawlessFramesImpl;
 

@@ -12,21 +12,14 @@
  *  the License.
  */
 
-package grondag.frex.api.event;
+package io.vram.frex.api.light;
 
-import io.vram.frex.api.light.ItemLight;
+import io.vram.frex.impl.light.HeldItemLightListenerImpl;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.event.Event;
-import net.fabricmc.fabric.api.event.EventFactory;
-
-@Environment(EnvType.CLIENT)
 @FunctionalInterface
-@Deprecated
 public interface HeldItemLightListener {
 	/**
 	 * Use this event to add or modify held item lighting due to effects, worn items
@@ -53,15 +46,14 @@ public interface HeldItemLightListener {
 	 * @return              The light that should be used. Return {@link ItemLight#NONE} to disable
 	 *                      held light. Can be modified by subsequent listener invocations.
 	 */
-	@Deprecated
 	ItemLight onGetHeldItemLight(LivingEntity holdingEntity, ItemStack heldStack, ItemLight defaultResult, ItemLight currentResult);
 
-	@Deprecated
-	Event<HeldItemLightListener> EVENT = EventFactory.createArrayBacked(HeldItemLightListener.class, listeners -> (holdingEntity, heldStack, defaultResult, currentResult) -> {
-		for (final HeldItemLightListener handler : listeners) {
-			currentResult = handler.onGetHeldItemLight(holdingEntity, heldStack, defaultResult, currentResult);
-		}
+	static void register(HeldItemLightListener listener) {
+		HeldItemLightListenerImpl.register(listener);
+	}
 
-		return currentResult;
-	});
+	/** For use by renderer implementations. */
+	static ItemLight apply(LivingEntity holdingEntity, ItemStack heldStack, ItemLight defaultResult) {
+		return HeldItemLightListenerImpl.apply(holdingEntity, heldStack, defaultResult);
+	}
 }

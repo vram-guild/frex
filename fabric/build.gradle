@@ -46,12 +46,12 @@ processResources {
 }
 
 license {
-	header rootProject.file("HEADER")
+	header rootProject.file("../HEADER")
 	include "**/*.java"
 }
 
 checkstyle {
-	configFile = rootProject.file("checkstyle.xml")
+	configFile = rootProject.file("../checkstyle.xml")
 	toolVersion = "8.31"
 }
 

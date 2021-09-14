@@ -80,10 +80,12 @@ public final class WorldRenderEvent {
 		}
 	});
 
+	@Deprecated
 	public interface BeforeWorldRender {
 		void beforeWorldRender(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f);
 	}
 
+	@Deprecated
 	public interface AfterWorldRender {
 		void afterWorldRender(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f);
 	}

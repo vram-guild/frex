@@ -26,6 +26,7 @@ import io.vram.frex.impl.config.FlawlessFramesImpl;
 import io.vram.frex.impl.light.ItemLightLoader;
 import io.vram.frex.impl.material.MaterialMapLoader;
 import io.vram.frex.impl.model.FluidModelImpl;
+import io.vram.frex.impl.model.SimpleFluidSpriteProvider;
 import io.vram.frex.impl.texture.SpriteFinderImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -89,7 +90,11 @@ public class Frex implements ClientModInitializer {
 		final Function<String, Consumer<Boolean>> provider = FlawlessFramesImpl.providerFactory();
 		FabricLoader.getInstance().getEntrypoints("frex_flawless_frames", Consumer.class).forEach(api -> api.accept(provider));
 
-		InvalidateRenderStateCallback.EVENT.register(FluidModelImpl::reload);
+		// WIP: should be on resource reload
+		InvalidateRenderStateCallback.EVENT.register(() -> {
+			FluidModelImpl.reload();
+			SimpleFluidSpriteProvider.reload();
+		});
 	}
 
 	private final SimpleSynchronousResourceReloadListener materialMapListener = new SimpleSynchronousResourceReloadListener() {

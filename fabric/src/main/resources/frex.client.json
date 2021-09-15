@@ -9,7 +9,6 @@
     "MixinFabricBakedModel",
     "MixinFabricSpriteFinder",
     "MixinFluidAppearanceImpl",
-    "MixinFluidAppearanceRegistryImpl",
     "MixinFluidRenderHandler",
   	"MixinWorldRendererOldEvents"
   ],

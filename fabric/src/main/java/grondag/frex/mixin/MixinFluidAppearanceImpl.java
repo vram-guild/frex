@@ -14,11 +14,34 @@
 
 package grondag.frex.mixin;
 
+import io.vram.frex.api.model.FluidAppearance;
 import io.vram.frex.impl.model.FluidAppearanceImpl;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
+
+import net.minecraft.fluid.Fluid;
 
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 
+//WIP: turn off via mixin config when FAPI lib not present
 // Maxes FluidRenderHandler and FluidRenderHandler cross-compatible
 @Mixin(FluidAppearanceImpl.class)
-public abstract class MixinFluidAppearanceImpl implements FluidRenderHandler { }
+public abstract class MixinFluidAppearanceImpl implements FluidRenderHandler {
+	/**
+	 * @reason how we control interop on FAPI
+	 */
+	@Overwrite
+	public static FluidAppearance get(Fluid fluid) {
+		return (FluidAppearance) FluidRenderHandlerRegistry.INSTANCE.get(fluid);
+	}
+
+	/**
+	 * @reason how we control interop on FAPI
+	 */
+	@Overwrite
+	private static FluidAppearance register(Fluid fluid, FluidAppearance appearance) {
+		FluidRenderHandlerRegistry.INSTANCE.register(fluid, (FluidRenderHandler) appearance);
+		return appearance;
+	}
+}

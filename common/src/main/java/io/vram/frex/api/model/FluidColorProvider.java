@@ -16,6 +16,7 @@ package io.vram.frex.api.model;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
@@ -31,4 +32,11 @@ import net.minecraft.world.BlockRenderView;
 @FunctionalInterface
 public interface FluidColorProvider {
 	int getFluidColor(@Nullable BlockRenderView view, @Nullable BlockPos pos, FluidState state);
+
+	static FluidColorProvider of(int color) {
+		return (v, p, s) -> color;
+	}
+
+	FluidColorProvider WHITE_COLOR = (v, p, s) -> -1;
+	FluidColorProvider WATER_COLOR = (v, p, s) -> BiomeColors.getWaterColor(v, p);
 }

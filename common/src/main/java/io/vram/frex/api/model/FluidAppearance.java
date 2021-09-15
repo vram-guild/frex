@@ -14,37 +14,22 @@
 
 package io.vram.frex.api.model;
 
-import io.vram.frex.impl.model.FluidAppearanceRegistryImpl;
+import io.vram.frex.impl.model.FluidAppearanceImpl;
 
 import net.minecraft.fluid.Fluid;
-import net.minecraft.util.Identifier;
+import net.minecraft.fluid.Fluids;
 
 public interface FluidAppearance extends FluidColorProvider, FluidSpriteProvider {
 	static FluidAppearance get(Fluid fluid) {
-		return FluidAppearanceRegistryImpl.get(fluid);
+		return FluidAppearanceImpl.get(fluid);
 	}
 
-	static void register(Fluid fluid, FluidColorProvider colorProvider, FluidSpriteProvider spriteProvider) {
-		FluidAppearanceRegistryImpl.register(fluid, colorProvider, spriteProvider);
+	static FluidAppearance register(Fluid fluid, FluidColorProvider colorProvider, FluidSpriteProvider spriteProvider) {
+		return FluidAppearanceImpl.register(fluid, colorProvider, spriteProvider);
 	}
 
-	static void register(Fluid fluid, int color, FluidSpriteProvider spriteProvider) {
-		FluidAppearanceRegistryImpl.register(fluid, (v, p, s) -> color, spriteProvider);
-	}
-
-	static void register(Fluid fluid, FluidColorProvider colorProvider, String stillSpriteName, String flowingSpriteName) {
-		FluidAppearanceRegistryImpl.register(fluid, colorProvider, new Identifier(stillSpriteName), new Identifier(flowingSpriteName));
-	}
-
-	static void register(Fluid fluid, int color, String stillSpriteName, String flowingSpriteName) {
-		FluidAppearanceRegistryImpl.register(fluid, (v, p, s) -> color, new Identifier(stillSpriteName), new Identifier(flowingSpriteName));
-	}
-
-	static void register(Fluid fluid, FluidColorProvider colorProvider, Identifier stillSpriteName, Identifier flowingSpriteName) {
-		FluidAppearanceRegistryImpl.register(fluid, colorProvider, stillSpriteName, flowingSpriteName);
-	}
-
-	static void register(Fluid fluid, int color, Identifier stillSpriteName, Identifier flowingSpriteName) {
-		FluidAppearanceRegistryImpl.register(fluid, (v, p, s) -> color, stillSpriteName, flowingSpriteName);
-	}
+	FluidAppearance STILL_WATER_APPEARANCE = register(Fluids.WATER, FluidColorProvider.WATER_COLOR, FluidSpriteProvider.WATER_SPRITES);
+	FluidAppearance FLOWING_WATER_APPEARANCE = register(Fluids.FLOWING_WATER, FluidColorProvider.WATER_COLOR, FluidSpriteProvider.WATER_SPRITES);
+	FluidAppearance STILL_LAVA_APPEARANCE = register(Fluids.LAVA, FluidColorProvider.WHITE_COLOR, FluidSpriteProvider.LAVA_SPRITES);
+	FluidAppearance FLOWING_LAVA_APPEARANCE = register(Fluids.FLOWING_LAVA, FluidColorProvider.WHITE_COLOR, FluidSpriteProvider.LAVA_SPRITES);
 }

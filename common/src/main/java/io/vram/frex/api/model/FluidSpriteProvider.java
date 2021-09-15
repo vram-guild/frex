@@ -14,10 +14,12 @@
 
 package io.vram.frex.api.model;
 
+import io.vram.frex.impl.model.SimpleFluidSpriteProvider;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.fluid.FluidState;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
 
@@ -29,10 +31,31 @@ import net.minecraft.world.BlockRenderView;
  * @param view  The world view pertaining to the fluid. May be null!
  * @param pos   The position of the fluid in the world. May be null!
  * @param state The current state of the fluid.
- * @return An array of size two: the first entry contains the "still" sprite,
- * while the second entry contains the "flowing" sprite.
+ * @return An array of size two or three: the first entry contains the "still" sprite,
+ * while the second entry contains the "flowing" sprite. If the array is size three,
+ * the third sprite is the "overlay" sprite and its presence indicates an overlay
+ * sprite should be used.
  */
 @FunctionalInterface
 public interface FluidSpriteProvider {
 	Sprite[] getFluidSprites(@Nullable BlockRenderView view, @Nullable BlockPos pos, FluidState state);
+
+	static FluidSpriteProvider of(String stillSpriteName, String flowingSpriteName, @Nullable String overlaySpriteName) {
+		return SimpleFluidSpriteProvider.of(new Identifier(stillSpriteName), new Identifier(flowingSpriteName), overlaySpriteName == null ? null : new Identifier(overlaySpriteName));
+	}
+
+	static FluidSpriteProvider of(String stillSpriteName, String flowingSpriteName) {
+		return of(stillSpriteName, flowingSpriteName, null);
+	}
+
+	static FluidSpriteProvider of(Identifier stillSpriteName, Identifier flowingSpriteName, @Nullable Identifier overlaySpriteName) {
+		return SimpleFluidSpriteProvider.of(stillSpriteName, flowingSpriteName, overlaySpriteName);
+	}
+
+	static FluidSpriteProvider of(Identifier stillSpriteName, Identifier flowingSpriteName) {
+		return of(stillSpriteName, flowingSpriteName, null);
+	}
+
+	FluidSpriteProvider WATER_SPRITES = of("minecraft:blocks/water_still", "minecraft:blocks/water_flow", "minecraft:blocks/water_overlay");
+	FluidSpriteProvider LAVA_SPRITES = of("minecraft:blocks/lava_still", "minecraft:blocks/lava_flow");
 }

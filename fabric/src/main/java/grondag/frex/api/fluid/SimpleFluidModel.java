@@ -16,6 +16,7 @@ package grondag.frex.api.fluid;
 
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.mesh.QuadEditor;
+import io.vram.frex.api.model.FluidAppearance;
 import io.vram.frex.api.model.FluidModel;
 import io.vram.frex.api.model.ModelRenderContext;
 
@@ -35,45 +36,45 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
 
-import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
-
 /**
  * Implementation of {@link FluidModel}  with vanilla-like geometry.
  */
-// WIP: decouple from Fabric class and move to core
-public abstract class AbstractFluidModel implements FluidModel, FluidRenderHandler {
+public class SimpleFluidModel implements FluidModel {
 	protected final RenderMaterial material;
 	protected final boolean blendColors;
+	protected final FluidAppearance appearance;
 
-	protected AbstractFluidModel(RenderMaterial material, boolean blendColors) {
+	protected SimpleFluidModel(RenderMaterial material, boolean blendColors, FluidAppearance appearance) {
 		this.material = material;
 		this.blendColors = blendColors;
+		this.appearance = appearance;
 	}
 
 	// PERF: caching - would still need to colorize at buffer time
 	// or at least pass in normalized UVs so don't have to de-interpolate in renderer
 	@Override
 	public void renderAsBlock(BlockRenderView world, BlockState state, BlockPos centerPos, ModelRenderContext context) {
+		final var appearance = this.appearance;
 		final QuadEditor qe = context.quadEmitter();
 		final FluidState fluidState = state.getFluidState();
 		final BlockState blockState = world.getBlockState(centerPos);
-		final Sprite[] sprites = getFluidSprites(world, centerPos, fluidState);
+		final Sprite[] sprites = appearance.getFluidSprites(world, centerPos, fluidState);
 		final BlockPos.Mutable searchPos = SEARCH_POS.get();
 
-		final int centerColor = getFluidColor(world, centerPos, fluidState) | 0xFF000000;
+		final int centerColor = appearance.getFluidColor(world, centerPos, fluidState) | 0xFF000000;
 
 		final int nwColor, swColor, neColor, seColor;
 
 		if (blendColors) {
-			final int n = getFluidColor(world, searchPos.set(centerPos, Direction.NORTH), fluidState);
-			final int w = getFluidColor(world, searchPos.set(centerPos, Direction.WEST), fluidState);
-			final int s = getFluidColor(world, searchPos.set(centerPos, Direction.SOUTH), fluidState);
-			final int e = getFluidColor(world, searchPos.set(centerPos, Direction.EAST), fluidState);
+			final int n = appearance.getFluidColor(world, searchPos.set(centerPos, Direction.NORTH), fluidState);
+			final int w = appearance.getFluidColor(world, searchPos.set(centerPos, Direction.WEST), fluidState);
+			final int s = appearance.getFluidColor(world, searchPos.set(centerPos, Direction.SOUTH), fluidState);
+			final int e = appearance.getFluidColor(world, searchPos.set(centerPos, Direction.EAST), fluidState);
 
-			final int ne = getFluidColor(world, searchPos.set(centerPos, Direction.NORTH).move(Direction.EAST), fluidState);
-			final int nw = getFluidColor(world, searchPos.set(centerPos, Direction.NORTH).move(Direction.WEST), fluidState);
-			final int se = getFluidColor(world, searchPos.set(centerPos, Direction.SOUTH).move(Direction.EAST), fluidState);
-			final int sw = getFluidColor(world, searchPos.set(centerPos, Direction.SOUTH).move(Direction.WEST), fluidState);
+			final int ne = appearance.getFluidColor(world, searchPos.set(centerPos, Direction.NORTH).move(Direction.EAST), fluidState);
+			final int nw = appearance.getFluidColor(world, searchPos.set(centerPos, Direction.NORTH).move(Direction.WEST), fluidState);
+			final int se = appearance.getFluidColor(world, searchPos.set(centerPos, Direction.SOUTH).move(Direction.EAST), fluidState);
+			final int sw = appearance.getFluidColor(world, searchPos.set(centerPos, Direction.SOUTH).move(Direction.WEST), fluidState);
 
 			nwColor = colorMix4(centerColor, n, w, nw) | 0xFF000000;
 			swColor = colorMix4(centerColor, s, w, sw) | 0xFF000000;
@@ -251,11 +252,11 @@ public abstract class AbstractFluidModel implements FluidModel, FluidRenderHandl
 					final boolean overlay;
 					final Sprite sideSprite;
 
-					if (needsOverlay()) {
+					if (sprites.length >= 3) {
 						final Block sideBlock = world.getBlockState(searchPos.set(centerPos, face)).getBlock();
 
 						if (sideBlock instanceof TransparentBlock || sideBlock instanceof LeavesBlock) {
-							sideSprite = overlaySprite();
+							sideSprite = sprites[2];
 							overlay = true;
 						} else {
 							sideSprite = sprites[1];
@@ -292,14 +293,6 @@ public abstract class AbstractFluidModel implements FluidModel, FluidRenderHandl
 				}
 			}
 		}
-	}
-
-	protected boolean needsOverlay() {
-		return false;
-	}
-
-	protected Sprite overlaySprite() {
-		return null;
 	}
 
 	private static boolean isSideBlocked(BlockView blockView, Direction direction, float height, BlockPos blockPos, BlockState blockState) {

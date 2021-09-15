@@ -17,10 +17,12 @@ package io.vram.frex.impl.model;
 import io.vram.frex.api.model.FluidAppearance;
 import io.vram.frex.api.model.FluidColorProvider;
 import io.vram.frex.api.model.FluidSpriteProvider;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
@@ -43,5 +45,20 @@ public class FluidAppearanceImpl implements FluidAppearance {
 	@Override
 	public Sprite[] getFluidSprites(@Nullable BlockRenderView view, @Nullable BlockPos pos, FluidState state) {
 		return spriteProvider.getFluidSprites(view, pos, state);
+	}
+
+	private static final Object2ObjectOpenHashMap<Fluid, FluidAppearance> MAP = new Object2ObjectOpenHashMap<>();
+
+	public static FluidAppearance get(Fluid fluid) {
+		return MAP.get(fluid);
+	}
+
+	private static FluidAppearance register(Fluid fluid, FluidAppearance appearance) {
+		MAP.put(fluid, appearance);
+		return appearance;
+	}
+
+	public static FluidAppearance register(Fluid fluid, FluidColorProvider colorProvider, FluidSpriteProvider spriteProvider) {
+		return register(fluid, new FluidAppearanceImpl(colorProvider, spriteProvider));
 	}
 }

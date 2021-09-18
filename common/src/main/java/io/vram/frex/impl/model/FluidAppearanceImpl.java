@@ -53,12 +53,13 @@ public class FluidAppearanceImpl implements FluidAppearance {
 		return MAP.get(fluid);
 	}
 
-	private static FluidAppearance register(Fluid fluid, FluidAppearance appearance) {
-		MAP.put(fluid, appearance);
-		return appearance;
+	public static void register(FluidAppearance appearance, Fluid[] fluids) {
+		for (final var f : fluids) {
+			MAP.put(f, appearance);
+		}
 	}
 
-	public static FluidAppearance register(Fluid fluid, FluidColorProvider colorProvider, FluidSpriteProvider spriteProvider) {
-		return register(fluid, new FluidAppearanceImpl(colorProvider, spriteProvider));
+	public static FluidAppearance of(FluidColorProvider colorProvider, FluidSpriteProvider spriteProvider) {
+		return new FluidAppearanceImpl(colorProvider, spriteProvider);
 	}
 }

@@ -44,14 +44,16 @@ public class SimpleFluidModel implements FluidModel {
 	protected final boolean blendColors;
 	protected final FluidAppearance appearance;
 
-	protected SimpleFluidModel(RenderMaterial material, boolean blendColors, FluidAppearance appearance) {
+	public SimpleFluidModel(RenderMaterial material, boolean blendColors, FluidAppearance appearance) {
 		this.material = material;
 		this.blendColors = blendColors;
 		this.appearance = appearance;
 	}
 
 	// PERF: caching - would still need to colorize at buffer time
-	// or at least pass in normalized UVs so don't have to de-interpolate in renderer
+	// or at least pass in normalized UVs so don't have to deinterpolate in renderer
+
+	// WIP: handle degenerate quads by emitting two triangles so that face normals are correct
 	@Override
 	public void renderAsBlock(BlockRenderView world, BlockState state, BlockPos centerPos, ModelRenderContext context) {
 		final var appearance = this.appearance;

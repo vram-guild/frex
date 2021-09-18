@@ -40,8 +40,9 @@ public abstract class MixinFluidAppearanceImpl implements FluidRenderHandler {
 	 * @reason how we control interop on FAPI
 	 */
 	@Overwrite
-	private static FluidAppearance register(Fluid fluid, FluidAppearance appearance) {
-		FluidRenderHandlerRegistry.INSTANCE.register(fluid, (FluidRenderHandler) appearance);
-		return appearance;
+	public static void register(FluidAppearance appearance, Fluid[] fluids) {
+		for (final var f : fluids) {
+			FluidRenderHandlerRegistry.INSTANCE.register(f, (FluidRenderHandler) appearance);
+		}
 	}
 }

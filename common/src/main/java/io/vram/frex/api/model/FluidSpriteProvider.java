@@ -56,6 +56,6 @@ public interface FluidSpriteProvider {
 		return of(stillSpriteName, flowingSpriteName, null);
 	}
 
-	FluidSpriteProvider WATER_SPRITES = of("minecraft:blocks/water_still", "minecraft:blocks/water_flow", "minecraft:blocks/water_overlay");
-	FluidSpriteProvider LAVA_SPRITES = of("minecraft:blocks/lava_still", "minecraft:blocks/lava_flow");
+	FluidSpriteProvider WATER_SPRITES = of("minecraft:block/water_still", "minecraft:block/water_flow", "minecraft:block/water_overlay");
+	FluidSpriteProvider LAVA_SPRITES = of("minecraft:block/lava_still", "minecraft:block/lava_flow");
 }

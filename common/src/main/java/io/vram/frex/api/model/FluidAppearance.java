@@ -20,16 +20,24 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 
 public interface FluidAppearance extends FluidColorProvider, FluidSpriteProvider {
+	static FluidAppearance of(FluidColorProvider colorProvider, FluidSpriteProvider spriteProvider) {
+		return FluidAppearanceImpl.of(colorProvider, spriteProvider);
+	}
+
 	static FluidAppearance get(Fluid fluid) {
 		return FluidAppearanceImpl.get(fluid);
 	}
 
-	static FluidAppearance register(Fluid fluid, FluidColorProvider colorProvider, FluidSpriteProvider spriteProvider) {
-		return FluidAppearanceImpl.register(fluid, colorProvider, spriteProvider);
+	static void register(FluidAppearance appearance, Fluid... fluids) {
+		FluidAppearanceImpl.register(appearance, fluids);
 	}
 
-	FluidAppearance STILL_WATER_APPEARANCE = register(Fluids.WATER, FluidColorProvider.WATER_COLOR, FluidSpriteProvider.WATER_SPRITES);
-	FluidAppearance FLOWING_WATER_APPEARANCE = register(Fluids.FLOWING_WATER, FluidColorProvider.WATER_COLOR, FluidSpriteProvider.WATER_SPRITES);
-	FluidAppearance STILL_LAVA_APPEARANCE = register(Fluids.LAVA, FluidColorProvider.WHITE_COLOR, FluidSpriteProvider.LAVA_SPRITES);
-	FluidAppearance FLOWING_LAVA_APPEARANCE = register(Fluids.FLOWING_LAVA, FluidColorProvider.WHITE_COLOR, FluidSpriteProvider.LAVA_SPRITES);
+	static FluidAppearance register(FluidColorProvider colorProvider, FluidSpriteProvider spriteProvider, Fluid... fluids) {
+		final var appearance = of(colorProvider, spriteProvider);
+		register(appearance, fluids);
+		return appearance;
+	}
+
+	FluidAppearance WATER_APPEARANCE = register(FluidColorProvider.WATER_COLOR, FluidSpriteProvider.WATER_SPRITES, Fluids.WATER, Fluids.FLOWING_WATER);
+	FluidAppearance LAVA_APPEARANCE = register(FluidColorProvider.WHITE_COLOR, FluidSpriteProvider.LAVA_SPRITES, Fluids.LAVA, Fluids.FLOWING_LAVA);
 }

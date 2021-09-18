@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "frex",
+  "id": "frex-fabric",
   "version": "${version}",
   "name": "FREX",
-  "description": "Advanced rendering features for Fabric mods",
+  "description": "FREX implementation support for Fabric platform",
   "authors": [
     "Grondag"
   ],

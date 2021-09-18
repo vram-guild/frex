@@ -3,7 +3,7 @@
   "id": "frex-core",
   "version": "${version}",
   "name": "FREX",
-  "description": "Advanced rendering features for mods",
+  "description": "Flexible Rendering Extensions library",
   "authors": [
     "Grondag"
   ],

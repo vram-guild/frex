@@ -16,8 +16,8 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}"
 	modImplementation "net.fabricmc:fabric-loader:${loader_version}"
 
-	modImplementation "grondag:frex-core-${project.mc_tag}:${project.frex_core_version}.+"
-	modImplementation "grondag:frex-fabric-${project.mc_tag}:${project.frex_fabric_version}.+"
+	modImplementation "grondag:frex-core-${project.mc_tag}:${project.frex_core_version}.+" { transitive = false; changing = true; }
+	modImplementation "grondag:frex-fabric-${project.mc_tag}:${project.frex_fabric_version}.+" { transitive = false; changing = true; }
 
 	if (!(gradle.startParameter.taskNames.contains("publish") || gradle.startParameter.taskNames.contains("publishToMavenLocal"))) {
 		include "grondag:frex-core-${project.mc_tag}:${project.frex_core_version}.+"

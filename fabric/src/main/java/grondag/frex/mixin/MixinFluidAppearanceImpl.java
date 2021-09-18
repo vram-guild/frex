@@ -29,6 +29,7 @@ import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 @Mixin(FluidAppearanceImpl.class)
 public abstract class MixinFluidAppearanceImpl implements FluidRenderHandler {
 	/**
+	 * @author Grondag
 	 * @reason how we control interop on FAPI
 	 */
 	@Overwrite
@@ -37,6 +38,7 @@ public abstract class MixinFluidAppearanceImpl implements FluidRenderHandler {
 	}
 
 	/**
+	 * @author Grondag
 	 * @reason how we control interop on FAPI
 	 */
 	@Overwrite

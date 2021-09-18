@@ -1,7 +1,7 @@
 echo ====================================
-echo "publishing frex-core"
+echo "publishing frex-common"
 echo ====================================
-cd core
+cd common
 ../gradlew publish --rerun-tasks
 cd ..
 

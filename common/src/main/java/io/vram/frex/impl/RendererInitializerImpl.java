@@ -44,4 +44,9 @@ public class RendererInitializerImpl {
 			isFallback = isFallbackIn;
 		}
 	}
+
+	// WIP: remove, use wrapping/Blu as default
+	public static boolean hasCandidate() {
+		return bestCandidate != null;
+	}
 }

@@ -1,0 +1,26 @@
+repositories {
+	mavenLocal()
+    jcenter();
+    maven {
+    	name = "Fabric"
+    	url "https://maven.fabricmc.net/"
+	}
+    maven {
+    	name = "dblsaiko"
+    	url = "https://maven.dblsaiko.net/"
+    }
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}"
+	modImplementation "net.fabricmc:fabric-loader:${loader_version}"
+
+	modImplementation "grondag:frex-core-${project.mc_tag}:${project.frex_core_version}.+"
+	modImplementation "grondag:frex-fabric-${project.mc_tag}:${project.frex_fabric_version}.+"
+
+	if (!(gradle.startParameter.taskNames.contains("publish") || gradle.startParameter.taskNames.contains("publishToMavenLocal"))) {
+		include "grondag:frex-core-${project.mc_tag}:${project.frex_core_version}.+"
+		include "grondag:frex-fabric-${project.mc_tag}:${project.frex_fabric_version}.+"
+ 	}
+}

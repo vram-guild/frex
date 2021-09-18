@@ -22,6 +22,7 @@ import java.util.function.Function;
 import com.google.common.collect.ImmutableList;
 import io.vram.frex.api.renderer.Renderer;
 import io.vram.frex.compat.fabric.FabricRenderer;
+import io.vram.frex.impl.RendererInitializerImpl;
 import io.vram.frex.impl.config.FlawlessFramesImpl;
 import io.vram.frex.impl.light.ItemLightLoader;
 import io.vram.frex.impl.material.MaterialMapLoader;
@@ -76,7 +77,9 @@ public class Frex implements ClientModInitializer {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onInitializeClient() {
-		RendererAccess.INSTANCE.registerRenderer(FabricRenderer.of(Renderer.get()));
+		if (RendererInitializerImpl.hasCandidate()) {
+			RendererAccess.INSTANCE.registerRenderer(FabricRenderer.of(Renderer.get()));
+		}
 
 		SpriteFinderImpl.init(a -> (io.vram.frex.api.texture.SpriteFinder) SpriteFinder.get(null));
 

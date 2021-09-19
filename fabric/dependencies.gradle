@@ -13,8 +13,8 @@ repositories {
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}"
-	modApi "net.fabricmc:fabric-loader:${project.loader_version}"
+	mappings loom.officialMojangMappings()
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	
 	modImplementation("grondag:frex-core-${project.mc_tag}:${project.frex_core_version}.+") { transitive = false; changing = true; }
 	

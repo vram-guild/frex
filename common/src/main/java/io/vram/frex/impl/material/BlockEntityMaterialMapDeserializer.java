@@ -36,15 +36,15 @@ import io.vram.frex.impl.material.predicate.StateOnly;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.predicate.StatePredicate;
-import net.minecraft.resource.Resource;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 @Internal
 public class BlockEntityMaterialMapDeserializer {
-	public static void deserialize(BlockEntityType<?> key, Identifier idForLog, List<Resource> orderedResourceList, IdentityHashMap<BlockEntityType<?>, BlockEntityMaterialMap> map) {
+	public static void deserialize(BlockEntityType<?> key, ResourceLocation idForLog, List<Resource> orderedResourceList, IdentityHashMap<BlockEntityType<?>, BlockEntityMaterialMap> map) {
 		try {
 			final JsonObject[] reversedJsonList = new JsonObject[orderedResourceList.size()];
 			final String[] packIds = new String[orderedResourceList.size()];
@@ -58,10 +58,10 @@ public class BlockEntityMaterialMapDeserializer {
 
 			for (int i = orderedResourceList.size(); i-- > 0; ) {
 				final InputStreamReader reader = new InputStreamReader(orderedResourceList.get(i).getInputStream(), StandardCharsets.UTF_8);
-				final JsonObject json = JsonHelper.deserialize(reader);
+				final JsonObject json = GsonHelper.parse(reader);
 
 				reversedJsonList[j] = json;
-				packIds[j] = orderedResourceList.get(i).getResourcePackName();
+				packIds[j] = orderedResourceList.get(i).getSourceName();
 
 				// Only read top-most resource for defaultMaterial
 				if (json.has("defaultMaterial") && defaultTransform == MaterialTransform.IDENTITY) {
@@ -143,10 +143,10 @@ public class BlockEntityMaterialMapDeserializer {
 	}
 
 	private static StateBiPredicate loadPredicate(JsonObject obj) {
-		final StatePredicate statePredicate = StatePredicate.fromJson(obj.get("statePredicate"));
+		final StatePropertiesPredicate statePredicate = StatePropertiesPredicate.fromJson(obj.get("statePredicate"));
 		final MaterialPredicate materialPredicate = MaterialPredicateDeserializer.deserialize(obj.get("materialPredicate").getAsJsonObject());
 
-		if (statePredicate == StatePredicate.ANY) {
+		if (statePredicate == StatePropertiesPredicate.ANY) {
 			if (materialPredicate == MATERIAL_ALWAYS_TRUE) {
 				return BLOCK_ALWAYS_TRUE;
 			} else {

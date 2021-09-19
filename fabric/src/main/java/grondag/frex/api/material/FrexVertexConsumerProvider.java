@@ -14,7 +14,7 @@
 
 package grondag.frex.api.material;
 
-import net.minecraft.client.render.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 
 /**
  * Extension of {@code VertexConsumerProvider} that provides consumers

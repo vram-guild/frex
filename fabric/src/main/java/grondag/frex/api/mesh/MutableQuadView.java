@@ -14,13 +14,13 @@
 
 package grondag.frex.api.mesh;
 
+import com.mojang.math.Vector3f;
 import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.Direction;
 
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 
@@ -54,20 +54,20 @@ public interface MutableQuadView extends net.fabricmc.fabric.api.renderer.v1.mes
 	MutableQuadView pos(int vertexIndex, float x, float y, float z);
 
 	@Override
-	default MutableQuadView pos(int vertexIndex, Vec3f vec) {
-		return pos(vertexIndex, vec.getX(), vec.getY(), vec.getZ());
+	default MutableQuadView pos(int vertexIndex, Vector3f vec) {
+		return pos(vertexIndex, vec.x(), vec.y(), vec.z());
 	}
 
 	@Override
 	MutableQuadView normal(int vertexIndex, float x, float y, float z);
 
 	@Override
-	default MutableQuadView normal(int vertexIndex, Vec3f vec) {
-		return normal(vertexIndex, vec.getX(), vec.getY(), vec.getZ());
+	default MutableQuadView normal(int vertexIndex, Vector3f vec) {
+		return normal(vertexIndex, vec.x(), vec.y(), vec.z());
 	}
 
-	default MutableQuadView tangent(int vertexIndex, Vec3f vec) {
-		tangent(vertexIndex, vec.getX(), vec.getY(), vec.getZ());
+	default MutableQuadView tangent(int vertexIndex, Vector3f vec) {
+		tangent(vertexIndex, vec.x(), vec.y(), vec.z());
 		return this;
 	}
 
@@ -130,7 +130,7 @@ public interface MutableQuadView extends net.fabricmc.fabric.api.renderer.v1.mes
 	@Override
 	@Deprecated
 	@ScheduledForRemoval
-	default MutableQuadView spriteBake(int spriteIndex, Sprite sprite, int bakeFlags) {
+	default MutableQuadView spriteBake(int spriteIndex, TextureAtlasSprite sprite, int bakeFlags) {
 		return spriteBake(sprite, bakeFlags);
 	}
 
@@ -140,5 +140,5 @@ public interface MutableQuadView extends net.fabricmc.fabric.api.renderer.v1.mes
 	 * by passing additive combinations of the BAKE_ flags defined in this interface.
 	 * Behavior for {@code spriteIndex > 0} is currently undefined.
 	 */
-	MutableQuadView spriteBake(Sprite sprite, int bakeFlags);
+	MutableQuadView spriteBake(TextureAtlasSprite sprite, int bakeFlags);
 }

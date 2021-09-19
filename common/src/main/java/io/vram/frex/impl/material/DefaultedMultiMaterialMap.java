@@ -15,19 +15,17 @@
 package io.vram.frex.impl.material;
 
 import java.util.IdentityHashMap;
-
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.api.material.RenderMaterial;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
-import net.minecraft.client.texture.Sprite;
-
 @Internal
 class DefaultedMultiMaterialMap implements MaterialMap {
-	protected final IdentityHashMap<Sprite, RenderMaterial> spriteMap;
+	protected final IdentityHashMap<TextureAtlasSprite, RenderMaterial> spriteMap;
 	protected final RenderMaterial defaultMaterial;
 
-	DefaultedMultiMaterialMap(RenderMaterial defaultMaterial, IdentityHashMap<Sprite, RenderMaterial> spriteMap) {
+	DefaultedMultiMaterialMap(RenderMaterial defaultMaterial, IdentityHashMap<TextureAtlasSprite, RenderMaterial> spriteMap) {
 		this.defaultMaterial = defaultMaterial;
 		this.spriteMap = spriteMap;
 	}
@@ -38,7 +36,7 @@ class DefaultedMultiMaterialMap implements MaterialMap {
 	}
 
 	@Override
-	public RenderMaterial getMapped(Sprite sprite) {
+	public RenderMaterial getMapped(TextureAtlasSprite sprite) {
 		return spriteMap.getOrDefault(sprite, defaultMaterial);
 	}
 }

@@ -19,7 +19,7 @@ import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.material.RenderMaterial;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 
@@ -125,7 +125,7 @@ public class FabricMaterial implements grondag.frex.api.material.RenderMaterial 
 	}
 
 	@Override
-	public Identifier fragmentShaderId() {
+	public ResourceLocation fragmentShaderId() {
 		return wrapped.fragmentShaderId();
 	}
 
@@ -155,7 +155,7 @@ public class FabricMaterial implements grondag.frex.api.material.RenderMaterial 
 	}
 
 	@Override
-	public Identifier textureId() {
+	public ResourceLocation textureId() {
 		return wrapped.textureId();
 	}
 
@@ -175,7 +175,7 @@ public class FabricMaterial implements grondag.frex.api.material.RenderMaterial 
 	}
 
 	@Override
-	public Identifier vertexShaderId() {
+	public ResourceLocation vertexShaderId() {
 		return wrapped.vertexShaderId();
 	}
 

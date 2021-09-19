@@ -14,43 +14,43 @@
 
 package io.vram.frex.api.mesh;
 
+import com.mojang.math.Vector3f;
 import io.vram.frex.api.material.RenderMaterial;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.Direction;
 
 public interface QuadEditor extends QuadView {
 	/**
 	 * Causes texture to appear with no rotation.
-	 * Pass in bakeFlags parameter to {@link #spriteBake(int, Sprite, int)}.
+	 * Pass in bakeFlags parameter to {@link #spriteBake(int, TextureAtlasSprite, int)}.
 	 */
 	int BAKE_ROTATE_NONE = 0;
 
 	/**
 	 * Causes texture to appear rotated 90 deg. relative to nominal face.
-	 * Pass in bakeFlags parameter to {@link #spriteBake(int, Sprite, int)}.
+	 * Pass in bakeFlags parameter to {@link #spriteBake(int, TextureAtlasSprite, int)}.
 	 */
 	int BAKE_ROTATE_90 = 1;
 
 	/**
 	 * Causes texture to appear rotated 180 deg. relative to nominal face.
-	 * Pass in bakeFlags parameter to {@link #spriteBake(int, Sprite, int)}.
+	 * Pass in bakeFlags parameter to {@link #spriteBake(int, TextureAtlasSprite, int)}.
 	 */
 	int BAKE_ROTATE_180 = 2;
 
 	/**
 	 * Causes texture to appear rotated 270 deg. relative to nominal face.
-	 * Pass in bakeFlags parameter to {@link #spriteBake(int, Sprite, int)}.
+	 * Pass in bakeFlags parameter to {@link #spriteBake(int, TextureAtlasSprite, int)}.
 	 */
 	int BAKE_ROTATE_270 = 3;
 
 	/**
 	 * When enabled, texture coordinate are assigned based on vertex position.
 	 * Any existing uv coordinates will be replaced.
-	 * Pass in bakeFlags parameter to {@link #spriteBake(int, Sprite, int)}.
+	 * Pass in bakeFlags parameter to {@link #spriteBake(int, TextureAtlasSprite, int)}.
 	 *
 	 * <p>UV lock always derives texture coordinates based on nominal face, even
 	 * when the quad is not co-planar with that face, and the result is
@@ -64,7 +64,7 @@ public interface QuadEditor extends QuadView {
 	 * flipped as part of baking. Can be useful for some randomization
 	 * and texture mapping scenarios. Results are different than what
 	 * can be obtained via rotation and both can be applied.
-	 * Pass in bakeFlags parameter to {@link #spriteBake(int, Sprite, int)}.
+	 * Pass in bakeFlags parameter to {@link #spriteBake(int, TextureAtlasSprite, int)}.
 	 */
 	int BAKE_FLIP_U = 8;
 
@@ -78,7 +78,7 @@ public interface QuadEditor extends QuadView {
 	 * with conventional Minecraft model format. This is scaled to 0-1 during
 	 * baking before interpolation. Model loaders that already have 0-1 coordinates
 	 * can avoid wasteful multiplication/division by passing 0-1 coordinates directly.
-	 * Pass in bakeFlags parameter to {@link #spriteBake(int, Sprite, int)}.
+	 * Pass in bakeFlags parameter to {@link #spriteBake(int, TextureAtlasSprite, int)}.
 	 */
 	int BAKE_NORMALIZED = 32;
 
@@ -100,18 +100,18 @@ public interface QuadEditor extends QuadView {
 
 	QuadEditor pos(int vertexIndex, float x, float y, float z);
 
-	default QuadEditor pos(int vertexIndex, Vec3f vec) {
-		return pos(vertexIndex, vec.getX(), vec.getY(), vec.getZ());
+	default QuadEditor pos(int vertexIndex, Vector3f vec) {
+		return pos(vertexIndex, vec.x(), vec.y(), vec.z());
 	}
 
 	QuadEditor normal(int vertexIndex, float x, float y, float z);
 
-	default QuadEditor normal(int vertexIndex, Vec3f vec) {
-		return normal(vertexIndex, vec.getX(), vec.getY(), vec.getZ());
+	default QuadEditor normal(int vertexIndex, Vector3f vec) {
+		return normal(vertexIndex, vec.x(), vec.y(), vec.z());
 	}
 
-	default QuadEditor tangent(int vertexIndex, Vec3f vec) {
-		tangent(vertexIndex, vec.getX(), vec.getY(), vec.getZ());
+	default QuadEditor tangent(int vertexIndex, Vector3f vec) {
+		tangent(vertexIndex, vec.x(), vec.y(), vec.z());
 		return this;
 	}
 
@@ -155,7 +155,7 @@ public interface QuadEditor extends QuadView {
 	 * by passing additive combinations of the BAKE_ flags defined in this interface.
 	 * Behavior for {@code spriteIndex > 0} is currently undefined.
 	 */
-	QuadEditor spriteBake(Sprite sprite, int bakeFlags);
+	QuadEditor spriteBake(TextureAtlasSprite sprite, int bakeFlags);
 
 	/**
 	 * Tolerance for determining if the depth parameter to {@link #square(Direction, float, float, float, float, float)}

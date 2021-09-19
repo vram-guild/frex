@@ -14,12 +14,11 @@
 
 package io.vram.frex.api.mesh;
 
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Matrix3f;
+import com.mojang.math.Matrix4f;
 import io.vram.frex.api.material.RenderMaterial;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.util.math.Matrix3f;
-import net.minecraft.util.math.Matrix4f;
 
 @Experimental
 public interface FrexVertexConsumer extends VertexConsumer {
@@ -55,13 +54,13 @@ public interface FrexVertexConsumer extends VertexConsumer {
 	FrexVertexConsumer color(int red, int green, int blue, int alpha);
 
 	@Override
-	FrexVertexConsumer texture(float u, float v);
+	FrexVertexConsumer uv(float u, float v);
 
 	@Override
-	FrexVertexConsumer overlay(int u, int v);
+	FrexVertexConsumer overlayCoords(int u, int v);
 
 	@Override
-	FrexVertexConsumer light(int u, int v);
+	FrexVertexConsumer uv2(int u, int v);
 
 	@Override
 	FrexVertexConsumer normal(float x, float y, float z);

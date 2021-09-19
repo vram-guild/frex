@@ -18,8 +18,8 @@ import io.vram.frex.api.light.HeldItemLightListener;
 import io.vram.frex.api.light.ItemLight;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 
 public abstract class HeldItemLightListenerImpl {
 	private HeldItemLightListenerImpl() { }

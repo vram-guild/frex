@@ -33,9 +33,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
 
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.ResourceManager;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.InvalidateRenderStateCallback;
@@ -83,9 +83,9 @@ public class Frex implements ClientModInitializer {
 
 		SpriteFinderImpl.init(a -> (io.vram.frex.api.texture.SpriteFinder) SpriteFinder.get(null));
 
-		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(materialMapListener);
+		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(materialMapListener);
 
-		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(lightListener);
+		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(lightListener);
 
 		FabricLoader.getInstance().getEntrypoints("frex", FrexInitializer.class).forEach(
 			api -> api.onInitalizeFrex());
@@ -101,41 +101,41 @@ public class Frex implements ClientModInitializer {
 	}
 
 	private final SimpleSynchronousResourceReloadListener materialMapListener = new SimpleSynchronousResourceReloadListener() {
-		private final List<Identifier> deps = ImmutableList.of(ResourceReloadListenerKeys.MODELS, ResourceReloadListenerKeys.TEXTURES);
-		private final Identifier id = new Identifier("frex:material_map");
+		private final List<ResourceLocation> deps = ImmutableList.of(ResourceReloadListenerKeys.MODELS, ResourceReloadListenerKeys.TEXTURES);
+		private final ResourceLocation id = new ResourceLocation("frex:material_map");
 
 		@Override
-		public Identifier getFabricId() {
+		public ResourceLocation getFabricId() {
 			return id;
 		}
 
 		@Override
-		public Collection<Identifier> getFabricDependencies() {
+		public Collection<ResourceLocation> getFabricDependencies() {
 			return deps;
 		}
 
 		@Override
-		public void reload(ResourceManager resourceManager) {
+		public void onResourceManagerReload(ResourceManager resourceManager) {
 			MaterialMapLoader.INSTANCE.reload(resourceManager);
 		}
 	};
 
 	private final SimpleSynchronousResourceReloadListener lightListener = new SimpleSynchronousResourceReloadListener() {
-		private final List<Identifier> deps = ImmutableList.of();
-		private final Identifier id = new Identifier("frex:item_light");
+		private final List<ResourceLocation> deps = ImmutableList.of();
+		private final ResourceLocation id = new ResourceLocation("frex:item_light");
 
 		@Override
-		public Identifier getFabricId() {
+		public ResourceLocation getFabricId() {
 			return id;
 		}
 
 		@Override
-		public Collection<Identifier> getFabricDependencies() {
+		public Collection<ResourceLocation> getFabricDependencies() {
 			return deps;
 		}
 
 		@Override
-		public void reload(ResourceManager resourceManager) {
+		public void onResourceManagerReload(ResourceManager resourceManager) {
 			ItemLightLoader.INSTANCE.reload(resourceManager);
 		}
 	};

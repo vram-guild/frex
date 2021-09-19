@@ -26,14 +26,14 @@ import io.vram.frex.impl.FrexLog;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.block.BlockModels;
-import net.minecraft.client.texture.MissingSprite;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.state.State;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.BlockModelShaper;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.level.block.state.StateHolder;
 
 @Internal
 public final class MaterialMapDeserializer {
@@ -51,12 +51,12 @@ public final class MaterialMapDeserializer {
 			}
 
 			if (mapObject.has("spriteMap")) {
-				final SpriteAtlasTexture blockAtlas = MinecraftClient.getInstance().getBakedModelManager().getAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE);
-				final Sprite missingSprite = blockAtlas.getSprite(MissingSprite.getMissingSpriteId());
+				final TextureAtlas blockAtlas = Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS);
+				final TextureAtlasSprite missingSprite = blockAtlas.getSprite(MissingTextureAtlasSprite.getLocation());
 
 				final JsonArray jsonArray = mapObject.getAsJsonArray("spriteMap");
 				final int limit = jsonArray.size();
-				final IdentityHashMap<Sprite, RenderMaterial> spriteMap = new IdentityHashMap<>();
+				final IdentityHashMap<TextureAtlasSprite, RenderMaterial> spriteMap = new IdentityHashMap<>();
 
 				for (int i = 0; i < limit; ++i) {
 					final JsonObject obj = jsonArray.get(i).getAsJsonObject();
@@ -66,7 +66,7 @@ public final class MaterialMapDeserializer {
 						continue;
 					}
 
-					final Sprite sprite = MaterialLoaderImpl.loadSprite(idForLog, obj.get("sprite").getAsString(), blockAtlas, missingSprite);
+					final TextureAtlasSprite sprite = MaterialLoaderImpl.loadSprite(idForLog, obj.get("sprite").getAsString(), blockAtlas, missingSprite);
 
 					if (sprite == null) {
 						continue;
@@ -90,9 +90,9 @@ public final class MaterialMapDeserializer {
 		}
 	}
 
-	public static <T extends State<?, ?>> void deserialize(List<T> states, Identifier idForLog, InputStreamReader reader, IdentityHashMap<T, MaterialMap> map) {
+	public static <T extends StateHolder<?, ?>> void deserialize(List<T> states, ResourceLocation idForLog, InputStreamReader reader, IdentityHashMap<T, MaterialMap> map) {
 		try {
-			final JsonObject json = JsonHelper.deserialize(reader);
+			final JsonObject json = GsonHelper.parse(reader);
 			final String idString = idForLog.toString();
 
 			final MaterialMap globalDefaultMap = MaterialMapLoader.DEFAULT_MAP;
@@ -123,7 +123,7 @@ public final class MaterialMapDeserializer {
 				MaterialMap result = defaultMap;
 
 				if (variants != null) {
-					final String stateId = BlockModels.propertyMapToString(state.getEntries());
+					final String stateId = BlockModelShaper.statePropertiesToString(state.getValues());
 					result = loadMaterialMap(idString + "#" + stateId, variants.getAsJsonObject(stateId), defaultMap, defaultMaterial);
 				}
 

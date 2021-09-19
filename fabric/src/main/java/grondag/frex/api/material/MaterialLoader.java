@@ -17,7 +17,7 @@ package grondag.frex.api.material;
 import io.vram.frex.compat.fabric.FabricMaterial;
 import org.jetbrains.annotations.ApiStatus.Experimental;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 
@@ -41,15 +41,15 @@ public interface MaterialLoader {
 	 * @param id domain and path of material json. See notes above.
 	 * @return  Loaded material if successful, null if file not found or specified features are unsupported.
 	 */
-	static RenderMaterial getOrLoadMaterial(Identifier id) {
+	static RenderMaterial getOrLoadMaterial(ResourceLocation id) {
 		return FabricMaterial.of(io.vram.frex.impl.material.MaterialLoaderImpl.loadMaterial(id));
 	}
 
 	/**
-	 * @deprecated Use the better-named {@link #getOrLoadMaterial(Identifier)}
+	 * @deprecated Use the better-named {@link #getOrLoadMaterial(ResourceLocation)}
 	 */
 	@Deprecated
-	static RenderMaterial loadMaterial(Identifier id) {
+	static RenderMaterial loadMaterial(ResourceLocation id) {
 		return getOrLoadMaterial(id);
 	}
 }

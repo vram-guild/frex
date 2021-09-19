@@ -14,23 +14,24 @@
 
 package grondag.frex.impl.event;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.block.BlockRenderManager;
-import net.minecraft.client.render.chunk.ChunkRendererRegion;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.BlockPos;
+import com.mojang.blaze3d.vertex.PoseStack;
+
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.chunk.RenderChunkRegion;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 import net.fabricmc.fabric.impl.client.indigo.renderer.accessor.AccessChunkRendererRegion;
 
 import grondag.frex.api.event.RenderRegionBakeListener.BlockStateRenderer;
 
 public class BlockStateRendererImpl implements BlockStateRenderer {
-	private BlockRenderManager blockRenderManager;
-	private MatrixStack matrixStack;
-	private ChunkRendererRegion chunkRendererRegion;
+	private BlockRenderDispatcher blockRenderManager;
+	private PoseStack matrixStack;
+	private RenderChunkRegion chunkRendererRegion;
 
-	public void prepare(BlockRenderManager blockRenderManager, MatrixStack matrixStack, ChunkRendererRegion chunkRendererRegion) {
+	public void prepare(BlockRenderDispatcher blockRenderManager, PoseStack matrixStack, RenderChunkRegion chunkRendererRegion) {
 		this.blockRenderManager = blockRenderManager;
 		this.matrixStack = matrixStack;
 		this.chunkRendererRegion = chunkRendererRegion;
@@ -38,11 +39,11 @@ public class BlockStateRendererImpl implements BlockStateRenderer {
 
 	@Override
 	public void bake(BlockPos pos, BlockState state) {
-		final BakedModel model = blockRenderManager.getModel(state);
+		final BakedModel model = blockRenderManager.getBlockModel(state);
 
-		matrixStack.push();
+		matrixStack.pushPose();
 		matrixStack.translate(pos.getX() & 15, pos.getY() & 15, pos.getZ() & 15);
 		((AccessChunkRendererRegion) chunkRendererRegion).fabric_getRenderer().tesselateBlock(state, pos, model, matrixStack);
-		matrixStack.pop();
+		matrixStack.popPose();
 	}
 }

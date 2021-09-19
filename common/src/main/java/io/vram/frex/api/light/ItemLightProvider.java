@@ -14,7 +14,7 @@
 
 package io.vram.frex.api.light;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Implement on items to return light sources programmatically.

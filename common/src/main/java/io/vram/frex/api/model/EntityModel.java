@@ -14,7 +14,7 @@
 
 package io.vram.frex.api.model;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 
 @FunctionalInterface
 public interface EntityModel {

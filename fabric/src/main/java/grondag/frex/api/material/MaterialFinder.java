@@ -18,7 +18,7 @@ import io.vram.frex.api.material.MaterialCondition;
 import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 
@@ -252,9 +252,9 @@ public interface MaterialFinder extends net.fabricmc.fabric.api.renderer.v1.mate
 	 */
 	MaterialFinder lines(boolean lines);
 
-	MaterialFinder shader(@Nullable Identifier vertexSourceId, @Nullable Identifier fragmentSourceId);
+	MaterialFinder shader(@Nullable ResourceLocation vertexSourceId, @Nullable ResourceLocation fragmentSourceId);
 
-	MaterialFinder shader(@Nullable Identifier vertexSourceId, @Nullable Identifier fragmentSourceId, @Nullable Identifier depthVertexSourceId, @Nullable Identifier depthFragmentSourceId);
+	MaterialFinder shader(@Nullable ResourceLocation vertexSourceId, @Nullable ResourceLocation fragmentSourceId, @Nullable ResourceLocation depthVertexSourceId, @Nullable ResourceLocation depthFragmentSourceId);
 
 	/**
 	 * For transparent materials, enables sorting of quads by
@@ -297,7 +297,7 @@ public interface MaterialFinder extends net.fabricmc.fabric.api.renderer.v1.mate
 	 * @param id namespaced id of texture or texture atlas for base color. {@code null} to disable texturing.
 	 * @return finder instance for ease of chaining calls
 	 */
-	MaterialFinder texture(@Nullable Identifier id);
+	MaterialFinder texture(@Nullable ResourceLocation id);
 
 	/**
 	 * Parameters to {@link MaterialFinder#transparency(int)}.

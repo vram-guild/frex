@@ -16,7 +16,7 @@ package io.vram.frex.impl.material.predicate;
 
 import io.vram.frex.api.material.RenderMaterial;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 
 public class EntityMaterialBoth extends EntityBiPredicate {
 	private final EntityOnly entityOnly;

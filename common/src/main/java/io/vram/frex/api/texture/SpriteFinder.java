@@ -17,16 +17,15 @@ package io.vram.frex.api.texture;
 import io.vram.frex.api.mesh.QuadEditor;
 import io.vram.frex.api.mesh.QuadView;
 import io.vram.frex.impl.texture.SpriteFinderImpl;
-
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 /**
  * Indexes a texture atlas to allow fast lookup of Sprites from
  * baked vertex coordinates.  Main use is for {@link Mesh}-based models
  * to generate vanilla quads on demand without tracking and retaining
  * the sprites that were baked into the mesh. In other words, this class
- * supplies the sprite parameter for {@link QuadView#toBakedQuad(int, Sprite, boolean)}.
+ * supplies the sprite parameter for {@link QuadView#toBakedQuad(int, TextureAtlasSprite, boolean)}.
  */
 @FunctionalInterface
 public interface SpriteFinder {
@@ -36,7 +35,7 @@ public interface SpriteFinder {
 	 * refreshed whenever there is a resource reload or other event
 	 * that causes atlas textures to be re-stitched.
 	 */
-	static SpriteFinder get(SpriteAtlasTexture atlas) {
+	static SpriteFinder get(TextureAtlas atlas) {
 		return SpriteFinderImpl.get(atlas);
 	}
 
@@ -49,7 +48,7 @@ public interface SpriteFinder {
 	 * Note that all the above refers to u,v coordinates. Geometric vertex does not matter,
 	 * except to the extent it was used to determine u,v.
 	 */
-	default Sprite find(QuadView quad) {
+	default TextureAtlasSprite find(QuadView quad) {
 		final float u = quad.spriteU(0) + quad.spriteU(1) + quad.spriteU(2) + quad.spriteU(3);
 		final float v = quad.spriteV(0) + quad.spriteV(1) + quad.spriteV(2) + quad.spriteV(3);
 		return find(u * 0.25f, v * 0.25f);
@@ -59,12 +58,12 @@ public interface SpriteFinder {
 	 * Alternative to {@link #find(QuadView)} when vertex centroid is already
 	 * known or unsuitable.  Expects normalized (0-1) coordinates on the atlas texture,
 	 * which should already be the case for u,v values in vanilla baked quads and in
-	 * {@link QuadView} after calling {@link QuadEditor#spriteBake(int, Sprite, int)}.
+	 * {@link QuadView} after calling {@link QuadEditor#spriteBake(int, TextureAtlasSprite, int)}.
 	 *
 	 * <p>Coordinates must be in the sprite interior for reliable results. Generally will
 	 * be easier to use {@link #find(QuadView, int)} unless you know the vertex
 	 * centroid will somehow not be in the quad interior. This method will be slightly
 	 * faster if you already have the centroid or another appropriate value.
 	 */
-	Sprite find(float u, float v);
+	TextureAtlasSprite find(float u, float v);
 }

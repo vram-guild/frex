@@ -16,10 +16,10 @@ package io.vram.frex.api.model;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.client.color.world.BiomeColors;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.material.FluidState;
 
 /**
  * Get the tint color for a fluid being rendered at a given position.
@@ -31,12 +31,12 @@ import net.minecraft.world.BlockRenderView;
  */
 @FunctionalInterface
 public interface FluidColorProvider {
-	int getFluidColor(@Nullable BlockRenderView view, @Nullable BlockPos pos, FluidState state);
+	int getFluidColor(@Nullable BlockAndTintGetter view, @Nullable BlockPos pos, FluidState state);
 
 	static FluidColorProvider of(int color) {
 		return (v, p, s) -> color;
 	}
 
 	FluidColorProvider WHITE_COLOR = (v, p, s) -> -1;
-	FluidColorProvider WATER_COLOR = (v, p, s) -> BiomeColors.getWaterColor(v, p);
+	FluidColorProvider WATER_COLOR = (v, p, s) -> BiomeColors.getAverageWaterColor(v, p);
 }

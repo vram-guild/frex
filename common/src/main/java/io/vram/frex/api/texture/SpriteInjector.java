@@ -16,25 +16,25 @@ package io.vram.frex.api.texture;
 
 import java.util.function.Consumer;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 @FunctionalInterface
 public interface SpriteInjector {
-	void inject(Identifier spriteId, boolean includeColor);
+	void inject(ResourceLocation spriteId, boolean includeColor);
 
-	default void inject (Identifier spriteId) {
+	default void inject (ResourceLocation spriteId) {
 		inject (spriteId, true);
 	}
 
-	static void register(Identifier atlasId, Consumer<SpriteInjector> listener) {
+	static void register(ResourceLocation atlasId, Consumer<SpriteInjector> listener) {
 		// TODO
 	}
 
-	static void forEachColorSprite(Identifier atlasId, Consumer<Identifier> consumer) {
+	static void forEachColorSprite(ResourceLocation atlasId, Consumer<ResourceLocation> consumer) {
 		// TODO
 	}
 
-	static void forEachPhysicalSprite(Identifier atlasId, Consumer<Identifier> consumer) {
+	static void forEachPhysicalSprite(ResourceLocation atlasId, Consumer<ResourceLocation> consumer) {
 		// TODO
 	}
 }

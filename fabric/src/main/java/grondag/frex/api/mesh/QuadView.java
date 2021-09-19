@@ -14,12 +14,12 @@
 
 package grondag.frex.api.mesh;
 
+import com.mojang.math.Vector3f;
 import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 import grondag.frex.api.material.RenderMaterial;
 
@@ -73,7 +73,7 @@ public interface QuadView extends net.fabricmc.fabric.api.renderer.v1.mesh.QuadV
 	@Override
 	@Deprecated
 	@ScheduledForRemoval
-	default BakedQuad toBakedQuad(int spriteIndex, Sprite sprite, boolean isItem) {
+	default BakedQuad toBakedQuad(int spriteIndex, TextureAtlasSprite sprite, boolean isItem) {
 		return toBakedQuad(sprite);
 	}
 
@@ -94,7 +94,7 @@ public interface QuadView extends net.fabricmc.fabric.api.renderer.v1.mesh.QuadV
 	 * supported by vanilla features. Will retain emissive light maps, for example,
 	 * but the standard Minecraft renderer will not use them.
 	 */
-	default BakedQuad toBakedQuad(Sprite sprite) {
+	default BakedQuad toBakedQuad(TextureAtlasSprite sprite) {
 		final int[] vertexData = new int[VANILLA_QUAD_STRIDE];
 		toVanilla(vertexData, 0);
 		return new BakedQuad(vertexData, colorIndex(), lightFace(), sprite, true);
@@ -147,7 +147,7 @@ public interface QuadView extends net.fabricmc.fabric.api.renderer.v1.mesh.QuadV
 	 * Otherwise returns a new instance. Returns null if tangent not present.
 	 */
 	@Nullable
-	Vec3f copyTangent(int vertexIndex, @Nullable Vec3f target);
+	Vector3f copyTangent(int vertexIndex, @Nullable Vector3f target);
 
 	/**
 	 * Will return {@link Float#NaN} if tangent not present.

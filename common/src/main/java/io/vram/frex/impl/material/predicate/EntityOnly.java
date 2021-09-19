@@ -19,17 +19,17 @@ import com.google.gson.JsonObject;
 import io.vram.frex.api.material.RenderMaterial;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.CatEntity;
-import net.minecraft.predicate.NbtPredicate;
-import net.minecraft.predicate.PlayerPredicate;
-import net.minecraft.predicate.entity.EntityEffectPredicate;
-import net.minecraft.predicate.entity.EntityEquipmentPredicate;
-import net.minecraft.predicate.entity.EntityFlagsPredicate;
-import net.minecraft.predicate.entity.FishingHookPredicate;
-import net.minecraft.scoreboard.AbstractTeam;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
+import net.minecraft.advancements.critereon.EntityEquipmentPredicate;
+import net.minecraft.advancements.critereon.EntityFlagsPredicate;
+import net.minecraft.advancements.critereon.FishingHookPredicate;
+import net.minecraft.advancements.critereon.MobEffectsPredicate;
+import net.minecraft.advancements.critereon.NbtPredicate;
+import net.minecraft.advancements.critereon.PlayerPredicate;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.scores.Team;
 
 /**
  * Stripped-down adaptation of vanilla class used for entity loot predicates.
@@ -37,16 +37,16 @@ import net.minecraft.util.JsonHelper;
 public class EntityOnly extends EntityBiPredicate {
 	public static final EntityOnly ANY;
 
-	private final EntityEffectPredicate effects;
+	private final MobEffectsPredicate effects;
 	private final NbtPredicate nbt;
 	private final EntityFlagsPredicate flags;
 	private final EntityEquipmentPredicate equipment;
 	private final PlayerPredicate player;
 	private final FishingHookPredicate fishingHook;
 	@Nullable private final String team;
-	@Nullable private final Identifier catType;
+	@Nullable private final ResourceLocation catType;
 
-	private EntityOnly(EntityEffectPredicate effects, NbtPredicate nbt, EntityFlagsPredicate flags, EntityEquipmentPredicate equipment, PlayerPredicate player, FishingHookPredicate fishingHook, @Nullable String team, @Nullable Identifier catType) {
+	private EntityOnly(MobEffectsPredicate effects, NbtPredicate nbt, EntityFlagsPredicate flags, EntityEquipmentPredicate equipment, PlayerPredicate player, FishingHookPredicate fishingHook, @Nullable String team, @Nullable ResourceLocation catType) {
 		this.effects = effects;
 		this.nbt = nbt;
 		this.flags = flags;
@@ -68,43 +68,43 @@ public class EntityOnly extends EntityBiPredicate {
 		} else if (entity == null) {
 			return false;
 		} else {
-			if (!effects.test(entity)) {
+			if (!effects.matches(entity)) {
 				return false;
-			} else if (!nbt.test(entity)) {
+			} else if (!nbt.matches(entity)) {
 				return false;
-			} else if (!flags.test(entity)) {
+			} else if (!flags.matches(entity)) {
 				return false;
-			} else if (!equipment.test(entity)) {
+			} else if (!equipment.matches(entity)) {
 				return false;
-			} else if (!player.test(entity)) {
+			} else if (!player.matches(entity)) {
 				return false;
-			} else if (!fishingHook.test(entity)) {
+			} else if (!fishingHook.matches(entity)) {
 				return false;
 			} else {
 				if (team != null) {
-					final AbstractTeam abstractTeam = entity.getScoreboardTeam();
+					final Team abstractTeam = entity.getTeam();
 
 					if (abstractTeam == null || !team.equals(abstractTeam.getName())) {
 						return false;
 					}
 				}
 
-				return catType == null || entity instanceof CatEntity && ((CatEntity) entity).getTexture().equals(catType);
+				return catType == null || entity instanceof Cat && ((Cat) entity).getResourceLocation().equals(catType);
 			}
 		}
 	}
 
 	public static EntityOnly fromJson(@Nullable JsonElement json) {
 		if (json != null && !json.isJsonNull()) {
-			final JsonObject jsonObject = JsonHelper.asObject(json, "entity");
-			final EntityEffectPredicate effects = EntityEffectPredicate.fromJson(jsonObject.get("effects"));
+			final JsonObject jsonObject = GsonHelper.convertToJsonObject(json, "entity");
+			final MobEffectsPredicate effects = MobEffectsPredicate.fromJson(jsonObject.get("effects"));
 			final NbtPredicate nbt = NbtPredicate.fromJson(jsonObject.get("nbt"));
 			final EntityFlagsPredicate flags = EntityFlagsPredicate.fromJson(jsonObject.get("flags"));
 			final EntityEquipmentPredicate equipment = EntityEquipmentPredicate.fromJson(jsonObject.get("equipment"));
 			final PlayerPredicate player = PlayerPredicate.fromJson(jsonObject.get("player"));
 			final FishingHookPredicate fishHook = FishingHookPredicate.fromJson(jsonObject.get("fishing_hook"));
-			final String team = JsonHelper.getString(jsonObject, "team", (String) null);
-			final Identifier catType = jsonObject.has("catType") ? new Identifier(JsonHelper.getString(jsonObject, "catType")) : null;
+			final String team = GsonHelper.getAsString(jsonObject, "team", (String) null);
+			final ResourceLocation catType = jsonObject.has("catType") ? new ResourceLocation(GsonHelper.getAsString(jsonObject, "catType")) : null;
 
 			return new EntityOnly(effects, nbt, flags, equipment, player, fishHook, team, catType);
 		} else {
@@ -113,7 +113,7 @@ public class EntityOnly extends EntityBiPredicate {
 	}
 
 	static {
-		ANY = new EntityOnly(EntityEffectPredicate.EMPTY, NbtPredicate.ANY, EntityFlagsPredicate.ANY, EntityEquipmentPredicate.ANY, PlayerPredicate.ANY, FishingHookPredicate.ANY, (String) null, (Identifier) null);
+		ANY = new EntityOnly(MobEffectsPredicate.ANY, NbtPredicate.ANY, EntityFlagsPredicate.ANY, EntityEquipmentPredicate.ANY, PlayerPredicate.ANY, FishingHookPredicate.ANY, (String) null, (ResourceLocation) null);
 	}
 
 	@Override

@@ -14,12 +14,12 @@
 
 package io.vram.frex.compat.fabric;
 
+import com.mojang.math.Vector3f;
 import io.vram.frex.api.mesh.QuadView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.core.Direction;
 
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 
@@ -76,7 +76,7 @@ public class FabricQuadView<T extends QuadView> implements grondag.frex.api.mesh
 	}
 
 	@Override
-	public Vec3f faceNormal() {
+	public Vector3f faceNormal() {
 		return wrapped.faceNormal();
 	}
 
@@ -86,7 +86,7 @@ public class FabricQuadView<T extends QuadView> implements grondag.frex.api.mesh
 	}
 
 	@Override
-	public Vec3f copyPos(int vertexIndex, @Nullable Vec3f target) {
+	public Vector3f copyPos(int vertexIndex, @Nullable Vector3f target) {
 		return wrapped.copyPos(vertexIndex, target);
 	}
 
@@ -116,7 +116,7 @@ public class FabricQuadView<T extends QuadView> implements grondag.frex.api.mesh
 	}
 
 	@Override
-	public @Nullable Vec3f copyNormal(int vertexIndex, @Nullable Vec3f target) {
+	public @Nullable Vector3f copyNormal(int vertexIndex, @Nullable Vector3f target) {
 		return wrapped.copyNormal(vertexIndex, target);
 	}
 
@@ -181,7 +181,7 @@ public class FabricQuadView<T extends QuadView> implements grondag.frex.api.mesh
 	}
 
 	@Override
-	public @Nullable Vec3f copyTangent(int vertexIndex, @Nullable Vec3f target) {
+	public @Nullable Vector3f copyTangent(int vertexIndex, @Nullable Vector3f target) {
 		return wrapped.copyTangent(vertexIndex, target);
 	}
 

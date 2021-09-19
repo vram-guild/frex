@@ -14,11 +14,11 @@
 
 package grondag.frex.api.mesh;
 
+import com.mojang.math.Vector3f;
 import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
 
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.Direction;
 
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 
@@ -46,7 +46,7 @@ public interface QuadEmitter extends net.fabricmc.fabric.api.renderer.v1.mesh.Qu
 	QuadEmitter pos(int vertexIndex, float x, float y, float z);
 
 	@Override
-	default QuadEmitter pos(int vertexIndex, Vec3f vec) {
+	default QuadEmitter pos(int vertexIndex, Vector3f vec) {
 		MutableQuadView.super.pos(vertexIndex, vec);
 		return this;
 	}
@@ -55,13 +55,13 @@ public interface QuadEmitter extends net.fabricmc.fabric.api.renderer.v1.mesh.Qu
 	QuadEmitter normal(int vertexIndex, float x, float y, float z);
 
 	@Override
-	default QuadEmitter normal(int vertexIndex, Vec3f vec) {
+	default QuadEmitter normal(int vertexIndex, Vector3f vec) {
 		MutableQuadView.super.normal(vertexIndex, vec);
 		return this;
 	}
 
 	@Override
-	default QuadEmitter tangent(int vertexIndex, Vec3f vec) {
+	default QuadEmitter tangent(int vertexIndex, Vector3f vec) {
 		MutableQuadView.super.tangent(vertexIndex, vec);
 		return this;
 	}
@@ -116,7 +116,7 @@ public interface QuadEmitter extends net.fabricmc.fabric.api.renderer.v1.mesh.Qu
 	@Override
 	@Deprecated
 	@ScheduledForRemoval
-	default QuadEmitter spriteBake(int spriteIndex, Sprite sprite, int bakeFlags) {
+	default QuadEmitter spriteBake(int spriteIndex, TextureAtlasSprite sprite, int bakeFlags) {
 		spriteBake(sprite, bakeFlags);
 		return this;
 	}

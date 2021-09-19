@@ -17,11 +17,11 @@ package io.vram.frex.api.material;
 import io.vram.frex.impl.material.MaterialMapLoader;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particle.ParticleType;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 
 public interface MaterialMap {
 	/**
@@ -33,7 +33,7 @@ public interface MaterialMap {
 	/**
 	 * Returns null if sprite is unmapped or if this is the default material map.
 	 */
-	@Nullable RenderMaterial getMapped(@Nullable Sprite sprite);
+	@Nullable RenderMaterial getMapped(@Nullable TextureAtlasSprite sprite);
 
 	static MaterialMap get(BlockState state) {
 		return MaterialMapLoader.INSTANCE.get(state);

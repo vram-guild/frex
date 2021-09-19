@@ -16,21 +16,21 @@ package io.vram.frex.impl.material.predicate;
 
 import io.vram.frex.api.material.RenderMaterial;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.predicate.StatePredicate;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class StateMaterialBoth extends StateBiPredicate {
-	private final StatePredicate statePredicate;
+	private final StatePropertiesPredicate statePredicate;
 	private final MaterialPredicate materialPredicate;
 
-	public StateMaterialBoth(StatePredicate statePredicate, MaterialPredicate materialPredicate) {
+	public StateMaterialBoth(StatePropertiesPredicate statePredicate, MaterialPredicate materialPredicate) {
 		this.statePredicate = statePredicate;
 		this.materialPredicate = materialPredicate;
 	}
 
 	@Override
 	public boolean test(BlockState blockState, RenderMaterial renderMaterial) {
-		return statePredicate.test(blockState) && materialPredicate.test(renderMaterial);
+		return statePredicate.matches(blockState) && materialPredicate.test(renderMaterial);
 	}
 
 	@Override

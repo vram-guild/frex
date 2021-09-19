@@ -22,15 +22,15 @@ import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.impl.FrexLog;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
-import net.minecraft.particle.ParticleType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
 
 @Internal
 public class ParticleMaterialMapDeserializer {
-	public static void deserialize(ParticleType<?> particleType, Identifier idForLog, InputStreamReader reader, IdentityHashMap<ParticleType<?>, MaterialMap> map) {
+	public static void deserialize(ParticleType<?> particleType, ResourceLocation idForLog, InputStreamReader reader, IdentityHashMap<ParticleType<?>, MaterialMap> map) {
 		try {
-			final JsonObject json = JsonHelper.deserialize(reader);
+			final JsonObject json = GsonHelper.parse(reader);
 
 			if (json.has("material")) {
 				final MaterialMap result = new SingleMaterialMap(MaterialLoaderImpl.loadMaterial(json.get("material").getAsString(), null));

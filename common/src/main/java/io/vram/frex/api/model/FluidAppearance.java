@@ -16,8 +16,8 @@ package io.vram.frex.api.model;
 
 import io.vram.frex.impl.model.FluidAppearanceImpl;
 
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 
 public interface FluidAppearance extends FluidColorProvider, FluidSpriteProvider {
 	static FluidAppearance of(FluidColorProvider colorProvider, FluidSpriteProvider spriteProvider) {

@@ -18,11 +18,11 @@ import io.vram.frex.api.model.BlockModel;
 import io.vram.frex.api.model.ItemModel;
 import io.vram.frex.api.model.ModelRenderContext;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.json.ModelTransformation.Mode;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 
@@ -41,12 +41,12 @@ public class FabricModelWrapper implements BlockModel, ItemModel {
 	private final FabricContextWrapper contextWrapper = new FabricContextWrapper();
 
 	@Override
-	public void renderAsItem(ItemStack itemStack, Mode mode, ModelRenderContext context) {
+	public void renderAsItem(ItemStack itemStack, TransformType mode, ModelRenderContext context) {
 		wrapped.emitItemQuads(itemStack, context::random, contextWrapper.wrap(context));
 	}
 
 	@Override
-	public void renderAsBlock(BlockRenderView blockView, BlockState state, BlockPos pos, ModelRenderContext context) {
+	public void renderAsBlock(BlockAndTintGetter blockView, BlockState state, BlockPos pos, ModelRenderContext context) {
 		wrapped.emitBlockQuads(blockView, state, pos, context::random, contextWrapper.wrap(context));
 	}
 }

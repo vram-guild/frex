@@ -19,7 +19,7 @@ import io.vram.frex.api.material.RenderMaterial;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 @Internal
 class SingleMaterialMap implements MaterialMap {
@@ -35,7 +35,7 @@ class SingleMaterialMap implements MaterialMap {
 	}
 
 	@Override
-	public @Nullable RenderMaterial getMapped(Sprite sprite) {
+	public @Nullable RenderMaterial getMapped(TextureAtlasSprite sprite) {
 		return material;
 	}
 }

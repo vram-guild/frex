@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 
 import io.vram.frex.api.model.ModelRenderContext;
 
-import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.resources.model.BakedModel;
 
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;

@@ -15,32 +15,30 @@
 package io.vram.frex.impl.light;
 
 import java.io.InputStreamReader;
-
+import net.minecraft.util.GsonHelper;
 import com.google.gson.JsonObject;
 import io.vram.frex.api.light.ItemLight;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.JsonHelper;
 
 @Internal
 public class ItemLightDeserializer {
 	private ItemLightDeserializer() { }
 
 	public static ItemLight deserialize(InputStreamReader reader) {
-		final JsonObject obj = JsonHelper.deserialize(reader);
+		final JsonObject obj = GsonHelper.parse(reader);
 
-		final float intensity = JsonHelper.getFloat(obj, "intensity", 0f);
+		final float intensity = GsonHelper.getAsFloat(obj, "intensity", 0f);
 
 		if (intensity == 0) {
 			return ItemLight.NONE;
 		}
 
-		final float red = JsonHelper.getFloat(obj, "red", 1f);
-		final float green = JsonHelper.getFloat(obj, "green", 1f);
-		final float blue = JsonHelper.getFloat(obj, "blue", 1f);
-		final boolean worksInFluid = JsonHelper.getBoolean(obj, "worksInFluid", true);
-		final int innerConeAngleDegrees = JsonHelper.getInt(obj, "innerConeAngleDegrees", 360);
-		final int outerConeAngleDegrees = JsonHelper.getInt(obj, "outerConeAngleDegrees", innerConeAngleDegrees);
+		final float red = GsonHelper.getAsFloat(obj, "red", 1f);
+		final float green = GsonHelper.getAsFloat(obj, "green", 1f);
+		final float blue = GsonHelper.getAsFloat(obj, "blue", 1f);
+		final boolean worksInFluid = GsonHelper.getAsBoolean(obj, "worksInFluid", true);
+		final int innerConeAngleDegrees = GsonHelper.getAsInt(obj, "innerConeAngleDegrees", 360);
+		final int outerConeAngleDegrees = GsonHelper.getAsInt(obj, "outerConeAngleDegrees", innerConeAngleDegrees);
 
 		return ItemLight.of(intensity, red, green, blue, worksInFluid, innerConeAngleDegrees, outerConeAngleDegrees);
 	}

@@ -18,18 +18,18 @@ import java.nio.ByteBuffer;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.client.resource.metadata.AnimationResourceMetadata;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
 
 public interface PhysicalTextureSet extends AutoCloseable {
-	Identifier baseColorId();
+	ResourceLocation baseColorId();
 
 	int imageWidth();
 
 	int imageHeight();
 
-	AnimationResourceMetadata animationData();
+	AnimationMetadataSection animationData();
 
 	default int pixels() {
 		return imageWidth() * imageHeight();
@@ -147,7 +147,7 @@ public interface PhysicalTextureSet extends AutoCloseable {
 	 * @param id
 	 * @return
 	 */
-	static @Nullable PhysicalTextureSet load(ResourceManager rm, Identifier id) {
+	static @Nullable PhysicalTextureSet load(ResourceManager rm, ResourceLocation id) {
 		return null;
 	}
 }

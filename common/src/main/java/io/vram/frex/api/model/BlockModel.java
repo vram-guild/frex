@@ -14,12 +14,12 @@
 
 package io.vram.frex.api.model;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 
 @FunctionalInterface
 public interface BlockModel {
 	// WIP: find way to expose biome info
-	void renderAsBlock(BlockRenderView blockView, BlockState state, BlockPos pos, ModelRenderContext context);
+	void renderAsBlock(BlockAndTintGetter blockView, BlockState state, BlockPos pos, ModelRenderContext context);
 }

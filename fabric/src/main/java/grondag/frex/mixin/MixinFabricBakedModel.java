@@ -20,23 +20,23 @@ import io.vram.frex.api.model.ModelRenderContext;
 import io.vram.frex.compat.fabric.FabricModelWrapper;
 import org.spongepowered.asm.mixin.Mixin;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.json.ModelTransformation.Mode;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 
 @Mixin(FabricBakedModel.class)
 public interface MixinFabricBakedModel extends BlockModel, ItemModel {
 	@Override
-	default void renderAsItem(ItemStack itemStack, Mode mode, ModelRenderContext context) {
+	default void renderAsItem(ItemStack itemStack, TransformType mode, ModelRenderContext context) {
 		FabricModelWrapper.wrap((FabricBakedModel) this).renderAsItem(itemStack, mode, context);
 	}
 
 	@Override
-	default void renderAsBlock(BlockRenderView blockView, BlockState state, BlockPos pos, ModelRenderContext context) {
+	default void renderAsBlock(BlockAndTintGetter blockView, BlockState state, BlockPos pos, ModelRenderContext context) {
 		FabricModelWrapper.wrap((FabricBakedModel) this).renderAsBlock(blockView, state, pos, context);
 	}
 }

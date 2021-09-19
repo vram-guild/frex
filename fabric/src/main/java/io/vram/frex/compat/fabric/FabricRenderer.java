@@ -20,7 +20,7 @@ import io.vram.frex.api.material.MaterialCondition;
 import io.vram.frex.api.renderer.Renderer;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 
@@ -50,12 +50,12 @@ public class FabricRenderer implements grondag.frex.api.Renderer {
 	}
 
 	@Override
-	public @Nullable RenderMaterial materialById(Identifier id) {
+	public @Nullable RenderMaterial materialById(ResourceLocation id) {
 		return FabricMaterial.of(wrapped.materialById(id));
 	}
 
 	@Override
-	public boolean registerMaterial(Identifier id, net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial material) {
+	public boolean registerMaterial(ResourceLocation id, net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial material) {
 		return wrapped.registerMaterial(id, ((FabricMaterial) material).wrapped);
 	}
 
@@ -70,12 +70,12 @@ public class FabricRenderer implements grondag.frex.api.Renderer {
 	}
 
 	@Override
-	public MaterialCondition conditionById(Identifier id) {
+	public MaterialCondition conditionById(ResourceLocation id) {
 		return wrapped.conditionById(id);
 	}
 
 	@Override
-	public boolean registerCondition(Identifier id, MaterialCondition pipeline) {
+	public boolean registerCondition(ResourceLocation id, MaterialCondition pipeline) {
 		return wrapped.registerCondition(id, pipeline);
 	}
 }

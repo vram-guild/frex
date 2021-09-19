@@ -21,7 +21,7 @@ import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.RenderMaterial;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 
 @Internal
 class EntityMultiMaterialMap implements EntityMaterialMap {

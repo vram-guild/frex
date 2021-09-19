@@ -22,7 +22,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.function.BiPredicate;
-
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.entity.EntityType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.vram.frex.api.material.EntityMaterialMap;
@@ -36,14 +39,9 @@ import io.vram.frex.impl.material.predicate.MaterialPredicateDeserializer;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.resource.Resource;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
-
 @Internal
 public class EntityMaterialMapDeserializer {
-	public static void deserialize(EntityType<?> entityType, Identifier idForLog, List<Resource> orderedResourceList, IdentityHashMap<EntityType<?>, EntityMaterialMap> map) {
+	public static void deserialize(EntityType<?> entityType, ResourceLocation idForLog, List<Resource> orderedResourceList, IdentityHashMap<EntityType<?>, EntityMaterialMap> map) {
 		try {
 			final JsonObject[] reversedJsonList = new JsonObject[orderedResourceList.size()];
 			final String[] packIds = new String[orderedResourceList.size()];
@@ -56,10 +54,10 @@ public class EntityMaterialMapDeserializer {
 
 			for (int i = orderedResourceList.size(); i-- > 0; ) {
 				final InputStreamReader reader = new InputStreamReader(orderedResourceList.get(i).getInputStream(), StandardCharsets.UTF_8);
-				final JsonObject json = JsonHelper.deserialize(reader);
+				final JsonObject json = GsonHelper.parse(reader);
 
 				reversedJsonList[j] = json;
-				packIds[j] = orderedResourceList.get(i).getResourcePackName();
+				packIds[j] = orderedResourceList.get(i).getSourceName();
 
 				// Only read top-most resource for defaultMaterial
 				if (json.has("defaultMaterial") && defaultTransform == MaterialTransform.IDENTITY) {

@@ -18,16 +18,16 @@ import java.util.function.Function;
 
 import io.vram.frex.api.texture.SpriteFinder;
 
-import net.minecraft.client.texture.SpriteAtlasTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 
 public class SpriteFinderImpl {
-	private static Function<SpriteAtlasTexture, SpriteFinder> accessFunction;
+	private static Function<TextureAtlas, SpriteFinder> accessFunction;
 
-	public static void init(Function<SpriteAtlasTexture, SpriteFinder> accessFunction) {
+	public static void init(Function<TextureAtlas, SpriteFinder> accessFunction) {
 		SpriteFinderImpl.accessFunction = accessFunction;
 	}
 
-	public static SpriteFinder get(SpriteAtlasTexture atlas) {
+	public static SpriteFinder get(TextureAtlas atlas) {
 		return accessFunction.apply(atlas);
 	}
 }

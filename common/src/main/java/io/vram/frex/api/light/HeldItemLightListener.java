@@ -16,8 +16,8 @@ package io.vram.frex.api.light;
 
 import io.vram.frex.impl.light.HeldItemLightListenerImpl;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 
 @FunctionalInterface
 public interface HeldItemLightListener {

@@ -14,10 +14,10 @@
 
 package io.vram.frex.api.model;
 
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.world.item.ItemStack;
 
 @FunctionalInterface
 public interface ItemModel {
-	void renderAsItem(ItemStack itemStack, ModelTransformation.Mode mode, ModelRenderContext context);
+	void renderAsItem(ItemStack itemStack, ItemTransforms.TransformType mode, ModelRenderContext context);
 }

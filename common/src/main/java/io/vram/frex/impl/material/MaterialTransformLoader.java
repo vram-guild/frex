@@ -16,22 +16,21 @@ package io.vram.frex.impl.material;
 
 import io.vram.frex.impl.FrexLog;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.resource.Resource;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.util.Identifier;
 
 @Internal
 public final class MaterialTransformLoader {
 	private MaterialTransformLoader() { }
 
-	private static final ObjectOpenHashSet<Identifier> CAUGHT = new ObjectOpenHashSet<>();
+	private static final ObjectOpenHashSet<ResourceLocation> CAUGHT = new ObjectOpenHashSet<>();
 
 	static MaterialTransform loadTransform(String idForLog, String materialString, MaterialTransform defaultValue) {
 		try {
-			final MaterialTransform result = loadTransformInner(new Identifier(materialString));
+			final MaterialTransform result = loadTransformInner(new ResourceLocation(materialString));
 			return result == null ? defaultValue : result;
 		} catch (final Exception e) {
 			FrexLog.warn("Unable to load material transform " + materialString + " for material map " + idForLog + " because of exception. Using default transform.", e);
@@ -39,11 +38,11 @@ public final class MaterialTransformLoader {
 		}
 	}
 
-	private static MaterialTransform loadTransformInner(Identifier idIn) {
-		final Identifier id = new Identifier(idIn.getNamespace(), "materials/" + idIn.getPath() + ".json");
+	private static MaterialTransform loadTransformInner(ResourceLocation idIn) {
+		final ResourceLocation id = new ResourceLocation(idIn.getNamespace(), "materials/" + idIn.getPath() + ".json");
 
 		MaterialTransform result = null;
-		final ResourceManager rm = MinecraftClient.getInstance().getResourceManager();
+		final ResourceManager rm = Minecraft.getInstance().getResourceManager();
 
 		try (Resource res = rm.getResource(id)) {
 			result = MaterialTransformDeserializer.deserialize(MaterialLoaderImpl.readJsonObject(res));

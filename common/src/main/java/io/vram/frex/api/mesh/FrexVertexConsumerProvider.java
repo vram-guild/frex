@@ -16,7 +16,7 @@ package io.vram.frex.api.mesh;
 
 import io.vram.frex.api.material.RenderMaterial;
 
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.renderer.MultiBufferSource;
 
 /**
  * Extension of {@code VertexConsumerProvider} that provides consumers
@@ -29,7 +29,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
  * However, some mods could make calls to block or entity renderer such that
  * this interface isn't available there.
  */
-public interface FrexVertexConsumerProvider extends VertexConsumerProvider {
+public interface FrexVertexConsumerProvider extends MultiBufferSource {
 	/**
 	 * Obtain the appropriate vertex consumer for the given material.
 	 * @param material  The material of one or more polygons to be rendered.

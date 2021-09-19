@@ -23,7 +23,7 @@ import io.vram.frex.api.mesh.MeshBuilder;
 import io.vram.frex.impl.RendererHolder;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Interface for rendering plug-ins that provide enhanced capabilities
@@ -46,12 +46,12 @@ public interface Renderer {
 	 */
 	MaterialFinder materialFinder();
 
-	@Nullable RenderMaterial materialById(Identifier id);
+	@Nullable RenderMaterial materialById(ResourceLocation id);
 
-	boolean registerMaterial(Identifier id, RenderMaterial material);
+	boolean registerMaterial(ResourceLocation id, RenderMaterial material);
 
 	/**
-	 * Identical to {@link #registerMaterial(Identifier, RenderMaterial)} except registrations
+	 * Identical to {@link #registerMaterial(ResourceLocation, RenderMaterial)} except registrations
 	 * are replaced if they already exist.  Meant to be used for materials that are loaded
 	 * from resources and need to be updated during resource reload.
 	 *
@@ -59,17 +59,17 @@ public interface Renderer {
 	 * use the new material definition unless they re-query.  Material maps will handle this
 	 * automatically but mods must be designed to do so.
 	 *
-	 * <p>If this feature is not supported by the renderer, behaves like {@link #registerMaterial(Identifier, RenderMaterial)}.
+	 * <p>If this feature is not supported by the renderer, behaves like {@link #registerMaterial(ResourceLocation, RenderMaterial)}.
 	 *
 	 * <p>Returns false if a material with the given identifier was already present.
 	 */
-	default boolean registerOrUpdateMaterial(Identifier id, RenderMaterial material) {
+	default boolean registerOrUpdateMaterial(ResourceLocation id, RenderMaterial material) {
 		return registerMaterial(id, material);
 	}
 
 	MaterialCondition createCondition(BooleanSupplier supplier, boolean affectBlocks, boolean affectItems);
 
-	MaterialCondition conditionById(Identifier id);
+	MaterialCondition conditionById(ResourceLocation id);
 
-	boolean registerCondition(Identifier id, MaterialCondition pipeline);
+	boolean registerCondition(ResourceLocation id, MaterialCondition pipeline);
 }

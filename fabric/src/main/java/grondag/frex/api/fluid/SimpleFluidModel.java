@@ -20,21 +20,21 @@ import io.vram.frex.api.model.FluidAppearance;
 import io.vram.frex.api.model.FluidModel;
 import io.vram.frex.api.model.ModelRenderContext;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.LeavesBlock;
-import net.minecraft.block.TransparentBlock;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockRenderView;
-import net.minecraft.world.BlockView;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HalfTransparentBlock;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * Implementation of {@link FluidModel}  with vanilla-like geometry.
@@ -55,28 +55,28 @@ public class SimpleFluidModel implements FluidModel {
 
 	// WIP: handle degenerate quads by emitting two triangles so that face normals are correct
 	@Override
-	public void renderAsBlock(BlockRenderView world, BlockState state, BlockPos centerPos, ModelRenderContext context) {
+	public void renderAsBlock(BlockAndTintGetter world, BlockState state, BlockPos centerPos, ModelRenderContext context) {
 		final var appearance = this.appearance;
 		final QuadEditor qe = context.quadEmitter();
 		final FluidState fluidState = state.getFluidState();
 		final BlockState blockState = world.getBlockState(centerPos);
-		final Sprite[] sprites = appearance.getFluidSprites(world, centerPos, fluidState);
-		final BlockPos.Mutable searchPos = SEARCH_POS.get();
+		final TextureAtlasSprite[] sprites = appearance.getFluidSprites(world, centerPos, fluidState);
+		final BlockPos.MutableBlockPos searchPos = SEARCH_POS.get();
 
 		final int centerColor = appearance.getFluidColor(world, centerPos, fluidState) | 0xFF000000;
 
 		final int nwColor, swColor, neColor, seColor;
 
 		if (blendColors) {
-			final int n = appearance.getFluidColor(world, searchPos.set(centerPos, Direction.NORTH), fluidState);
-			final int w = appearance.getFluidColor(world, searchPos.set(centerPos, Direction.WEST), fluidState);
-			final int s = appearance.getFluidColor(world, searchPos.set(centerPos, Direction.SOUTH), fluidState);
-			final int e = appearance.getFluidColor(world, searchPos.set(centerPos, Direction.EAST), fluidState);
+			final int n = appearance.getFluidColor(world, searchPos.setWithOffset(centerPos, Direction.NORTH), fluidState);
+			final int w = appearance.getFluidColor(world, searchPos.setWithOffset(centerPos, Direction.WEST), fluidState);
+			final int s = appearance.getFluidColor(world, searchPos.setWithOffset(centerPos, Direction.SOUTH), fluidState);
+			final int e = appearance.getFluidColor(world, searchPos.setWithOffset(centerPos, Direction.EAST), fluidState);
 
-			final int ne = appearance.getFluidColor(world, searchPos.set(centerPos, Direction.NORTH).move(Direction.EAST), fluidState);
-			final int nw = appearance.getFluidColor(world, searchPos.set(centerPos, Direction.NORTH).move(Direction.WEST), fluidState);
-			final int se = appearance.getFluidColor(world, searchPos.set(centerPos, Direction.SOUTH).move(Direction.EAST), fluidState);
-			final int sw = appearance.getFluidColor(world, searchPos.set(centerPos, Direction.SOUTH).move(Direction.WEST), fluidState);
+			final int ne = appearance.getFluidColor(world, searchPos.setWithOffset(centerPos, Direction.NORTH).move(Direction.EAST), fluidState);
+			final int nw = appearance.getFluidColor(world, searchPos.setWithOffset(centerPos, Direction.NORTH).move(Direction.WEST), fluidState);
+			final int se = appearance.getFluidColor(world, searchPos.setWithOffset(centerPos, Direction.SOUTH).move(Direction.EAST), fluidState);
+			final int sw = appearance.getFluidColor(world, searchPos.setWithOffset(centerPos, Direction.SOUTH).move(Direction.WEST), fluidState);
 
 			nwColor = colorMix4(centerColor, n, w, nw) | 0xFF000000;
 			swColor = colorMix4(centerColor, s, w, sw) | 0xFF000000;
@@ -89,84 +89,84 @@ public class SimpleFluidModel implements FluidModel {
 			seColor = centerColor;
 		}
 
-		final Fluid fluid = fluidState.getFluid();
-		final boolean isUpVisible = !world.getFluidState(searchPos.set(centerPos, Direction.UP)).getFluid().matchesType(fluid);
+		final Fluid fluid = fluidState.getType();
+		final boolean isUpVisible = !world.getFluidState(searchPos.setWithOffset(centerPos, Direction.UP)).getType().isSame(fluid);
 
 		final boolean isDownVisible = (!isSideBlocked(world, Direction.DOWN.getOpposite(), 1.0F, centerPos, blockState)
-			&& !world.getFluidState(searchPos.set(centerPos, Direction.DOWN)).getFluid().matchesType(fluid))
-			&& !isSideBlocked(world, searchPos.set(centerPos, Direction.DOWN), Direction.DOWN, 0.8888889F);
+			&& !world.getFluidState(searchPos.setWithOffset(centerPos, Direction.DOWN)).getType().isSame(fluid))
+			&& !isSideBlocked(world, searchPos.setWithOffset(centerPos, Direction.DOWN), Direction.DOWN, 0.8888889F);
 
 		final boolean isNorthVisible = (!isSideBlocked(world, Direction.NORTH.getOpposite(), 1.0F, centerPos, blockState)
-			&& !world.getFluidState(searchPos.set(centerPos, Direction.NORTH)).getFluid().matchesType(fluid));
+			&& !world.getFluidState(searchPos.setWithOffset(centerPos, Direction.NORTH)).getType().isSame(fluid));
 
 		final boolean isSouthVisible = (!isSideBlocked(world, Direction.SOUTH.getOpposite(), 1.0F, centerPos, blockState)
-			&& !world.getFluidState(searchPos.set(centerPos, Direction.SOUTH)).getFluid().matchesType(fluid));
+			&& !world.getFluidState(searchPos.setWithOffset(centerPos, Direction.SOUTH)).getType().isSame(fluid));
 
 		final boolean isWestVisible = (!isSideBlocked(world, Direction.WEST.getOpposite(), 1.0F, centerPos, blockState)
-			&& !world.getFluidState(searchPos.set(centerPos, Direction.WEST)).getFluid().matchesType(fluid));
+			&& !world.getFluidState(searchPos.setWithOffset(centerPos, Direction.WEST)).getType().isSame(fluid));
 
 		final boolean isEastVisible = (!isSideBlocked(world, Direction.EAST.getOpposite(), 1.0F, centerPos, blockState)
-			&& !world.getFluidState(searchPos.set(centerPos, Direction.EAST)).getFluid().matchesType(fluid));
+			&& !world.getFluidState(searchPos.setWithOffset(centerPos, Direction.EAST)).getType().isSame(fluid));
 
 		if (isUpVisible || isDownVisible || isEastVisible || isWestVisible || isNorthVisible || isSouthVisible) {
-			final Sprite stillSprite = sprites[0];
+			final TextureAtlasSprite stillSprite = sprites[0];
 			float centerNwHeight = nwHeight(world, searchPos.set(centerPos), fluid);
-			float southNwHeight = nwHeight(world, searchPos.set(centerPos, Direction.SOUTH), fluid);
-			float southEastNwHeight = nwHeight(world, searchPos.set(centerPos, Direction.SOUTH).move(Direction.EAST), fluid);
-			float eastNwHeight = nwHeight(world, searchPos.set(centerPos, Direction.EAST), fluid);
+			float southNwHeight = nwHeight(world, searchPos.setWithOffset(centerPos, Direction.SOUTH), fluid);
+			float southEastNwHeight = nwHeight(world, searchPos.setWithOffset(centerPos, Direction.SOUTH).move(Direction.EAST), fluid);
+			float eastNwHeight = nwHeight(world, searchPos.setWithOffset(centerPos, Direction.EAST), fluid);
 			final float downBasedOffset = isDownVisible ? 0.001F : 0.0F;
 
 			// PERF: move additional up-visible check outside block and don't enter if results in NOOP
-			if (isUpVisible && !isSideBlocked(world, searchPos.set(centerPos, Direction.UP), Direction.UP, Math.min(Math.min(centerNwHeight, southNwHeight), Math.min(southEastNwHeight, eastNwHeight)))) {
+			if (isUpVisible && !isSideBlocked(world, searchPos.setWithOffset(centerPos, Direction.UP), Direction.UP, Math.min(Math.min(centerNwHeight, southNwHeight), Math.min(southEastNwHeight, eastNwHeight)))) {
 				centerNwHeight -= 0.001F;
 				southNwHeight -= 0.001F;
 				southEastNwHeight -= 0.001F;
 				eastNwHeight -= 0.001F;
-				final Vec3d velocity = fluidState.getVelocity(world, centerPos);
-				Sprite topSprite;
+				final Vec3 velocity = fluidState.getFlow(world, centerPos);
+				TextureAtlasSprite topSprite;
 
 				float u0, u1, u2, u3, v0, v1, v2, v3;
 
 				if (velocity.x == 0.0D && velocity.z == 0.0D) {
 					topSprite = stillSprite;
-					u0 = topSprite.getFrameU(0.0D);
-					v0 = topSprite.getFrameV(0.0D);
+					u0 = topSprite.getU(0.0D);
+					v0 = topSprite.getV(0.0D);
 					u1 = u0;
-					v1 = topSprite.getFrameV(16.0D);
-					u2 = topSprite.getFrameU(16.0D);
+					v1 = topSprite.getV(16.0D);
+					u2 = topSprite.getU(16.0D);
 					v2 = v1;
 					u3 = u2;
 					v3 = v0;
 				} else {
 					topSprite = sprites[1];
-					final float angle = (float) MathHelper.atan2(velocity.z, velocity.x) - 1.5707964F;
-					final float dx = MathHelper.sin(angle) * 0.25F;
-					final float dy = MathHelper.cos(angle) * 0.25F;
-					u0 = topSprite.getFrameU(8.0F + (-dy - dx) * 16.0F);
-					v0 = topSprite.getFrameV(8.0F + (-dy + dx) * 16.0F);
-					u1 = topSprite.getFrameU(8.0F + (-dy + dx) * 16.0F);
-					v1 = topSprite.getFrameV(8.0F + (dy + dx) * 16.0F);
-					u2 = topSprite.getFrameU(8.0F + (dy + dx) * 16.0F);
-					v2 = topSprite.getFrameV(8.0F + (dy - dx) * 16.0F);
-					u3 = topSprite.getFrameU(8.0F + (dy - dx) * 16.0F);
-					v3 = topSprite.getFrameV(8.0F + (-dy - dx) * 16.0F);
+					final float angle = (float) Mth.atan2(velocity.z, velocity.x) - 1.5707964F;
+					final float dx = Mth.sin(angle) * 0.25F;
+					final float dy = Mth.cos(angle) * 0.25F;
+					u0 = topSprite.getU(8.0F + (-dy - dx) * 16.0F);
+					v0 = topSprite.getV(8.0F + (-dy + dx) * 16.0F);
+					u1 = topSprite.getU(8.0F + (-dy + dx) * 16.0F);
+					v1 = topSprite.getV(8.0F + (dy + dx) * 16.0F);
+					u2 = topSprite.getU(8.0F + (dy + dx) * 16.0F);
+					v2 = topSprite.getV(8.0F + (dy - dx) * 16.0F);
+					u3 = topSprite.getU(8.0F + (dy - dx) * 16.0F);
+					v3 = topSprite.getV(8.0F + (-dy - dx) * 16.0F);
 				}
 
 				final float uCentroid = (u0 + u1 + u2 + u3) / 4.0F;
 				final float vCentroid = (v0 + v1 + v2 + v3) / 4.0F;
 
-				final float dx = stillSprite.getWidth() / (stillSprite.getMaxU() - stillSprite.getMinU());
-				final float dy = stillSprite.getHeight() / (stillSprite.getMaxV() - stillSprite.getMinV());
+				final float dx = stillSprite.getWidth() / (stillSprite.getU1() - stillSprite.getU0());
+				final float dy = stillSprite.getHeight() / (stillSprite.getV1() - stillSprite.getV0());
 				final float centerScale = 4.0F / Math.max(dy, dx);
 
-				u0 = MathHelper.lerp(centerScale, u0, uCentroid);
-				u1 = MathHelper.lerp(centerScale, u1, uCentroid);
-				u2 = MathHelper.lerp(centerScale, u2, uCentroid);
-				u3 = MathHelper.lerp(centerScale, u3, uCentroid);
-				v0 = MathHelper.lerp(centerScale, v0, vCentroid);
-				v1 = MathHelper.lerp(centerScale, v1, vCentroid);
-				v2 = MathHelper.lerp(centerScale, v2, vCentroid);
-				v3 = MathHelper.lerp(centerScale, v3, vCentroid);
+				u0 = Mth.lerp(centerScale, u0, uCentroid);
+				u1 = Mth.lerp(centerScale, u1, uCentroid);
+				u2 = Mth.lerp(centerScale, u2, uCentroid);
+				u3 = Mth.lerp(centerScale, u3, uCentroid);
+				v0 = Mth.lerp(centerScale, v0, vCentroid);
+				v1 = Mth.lerp(centerScale, v1, vCentroid);
+				v2 = Mth.lerp(centerScale, v2, vCentroid);
+				v3 = Mth.lerp(centerScale, v3, vCentroid);
 
 				qe.pos(0, 0, centerNwHeight, 0).sprite(0, u0, v0).vertexColor(0, nwColor)
 				.pos(1, 0, southNwHeight, 1).sprite(1, u1, v1).vertexColor(1, swColor)
@@ -175,7 +175,7 @@ public class SimpleFluidModel implements FluidModel {
 				.material(material).emit();
 
 				// backface
-				if (fluidState.method_15756(world, searchPos.set(centerPos, Direction.UP))) {
+				if (fluidState.shouldRenderBackwardUpFace(world, searchPos.setWithOffset(centerPos, Direction.UP))) {
 					qe.pos(0, 0, centerNwHeight, 0).sprite(0, u0, v0).vertexColor(0, nwColor)
 					.pos(1, 1, eastNwHeight, 0).sprite(1, u3, v3).vertexColor(1, neColor)
 					.pos(2, 1, southEastNwHeight, 1).sprite(2, u2, v2).vertexColor(2, seColor)
@@ -187,10 +187,10 @@ public class SimpleFluidModel implements FluidModel {
 			if (isDownVisible) {
 				float u0, u1, v1, v0;
 
-				u0 = stillSprite.getMinU();
-				u1 = stillSprite.getMaxU();
-				v1 = stillSprite.getMinV();
-				v0 = stillSprite.getMaxV();
+				u0 = stillSprite.getU0();
+				u1 = stillSprite.getU1();
+				v1 = stillSprite.getV0();
+				v0 = stillSprite.getV1();
 
 				qe.pos(0, 0, downBasedOffset, 1).sprite(0, u0, v0).vertexColor(0, swColor)
 				.pos(1, 0, downBasedOffset, 0).sprite(1, u0, v1).vertexColor(1, nwColor)
@@ -250,14 +250,14 @@ public class SimpleFluidModel implements FluidModel {
 					z1 = 1F;
 				}
 
-				if (!isSideBlocked(world, searchPos.set(centerPos, face), face, Math.max(y0, y1))) {
+				if (!isSideBlocked(world, searchPos.setWithOffset(centerPos, face), face, Math.max(y0, y1))) {
 					final boolean overlay;
-					final Sprite sideSprite;
+					final TextureAtlasSprite sideSprite;
 
 					if (sprites.length >= 3) {
-						final Block sideBlock = world.getBlockState(searchPos.set(centerPos, face)).getBlock();
+						final Block sideBlock = world.getBlockState(searchPos.setWithOffset(centerPos, face)).getBlock();
 
-						if (sideBlock instanceof TransparentBlock || sideBlock instanceof LeavesBlock) {
+						if (sideBlock instanceof HalfTransparentBlock || sideBlock instanceof LeavesBlock) {
 							sideSprite = sprites[2];
 							overlay = true;
 						} else {
@@ -269,11 +269,11 @@ public class SimpleFluidModel implements FluidModel {
 						overlay = false;
 					}
 
-					final float u0 = sideSprite.getFrameU(0.0D);
-					final float u1 = sideSprite.getFrameU(8.0D);
-					final float v0 = sideSprite.getFrameV((1.0F - y0) * 16.0F * 0.5F);
-					final float v1 = sideSprite.getFrameV((1.0F - y1) * 16.0F * 0.5F);
-					final float vCenter = sideSprite.getFrameV(8.0D);
+					final float u0 = sideSprite.getU(0.0D);
+					final float u1 = sideSprite.getU(8.0D);
+					final float v0 = sideSprite.getV((1.0F - y0) * 16.0F * 0.5F);
+					final float v1 = sideSprite.getV((1.0F - y1) * 16.0F * 0.5F);
+					final float vCenter = sideSprite.getV(8.0D);
 
 					qe.pos(0, x0, y0, z0).sprite(0, u0, v0).vertexColor(0, c0)
 					.pos(1, x1, y1, z1).sprite(1, u1, v1).vertexColor(1, c1)
@@ -297,21 +297,21 @@ public class SimpleFluidModel implements FluidModel {
 		}
 	}
 
-	private static boolean isSideBlocked(BlockView blockView, Direction direction, float height, BlockPos blockPos, BlockState blockState) {
-		if (blockState.isOpaque()) {
-			final VoxelShape voxelShape = VoxelShapes.cuboid(0.0D, 0.0D, 0.0D, 1.0D, height, 1.0D);
-			final VoxelShape voxelShape2 = blockState.getCullingShape(blockView, blockPos);
-			return VoxelShapes.isSideCovered(voxelShape, voxelShape2, direction);
+	private static boolean isSideBlocked(BlockGetter blockView, Direction direction, float height, BlockPos blockPos, BlockState blockState) {
+		if (blockState.canOcclude()) {
+			final VoxelShape voxelShape = Shapes.box(0.0D, 0.0D, 0.0D, 1.0D, height, 1.0D);
+			final VoxelShape voxelShape2 = blockState.getOcclusionShape(blockView, blockPos);
+			return Shapes.blockOccudes(voxelShape, voxelShape2, direction);
 		} else {
 			return false;
 		}
 	}
 
-	private static boolean isSideBlocked(BlockView world, BlockPos pos, Direction direction, float height) {
+	private static boolean isSideBlocked(BlockGetter world, BlockPos pos, Direction direction, float height) {
 		return isSideBlocked(world, direction, height, pos, world.getBlockState(pos));
 	}
 
-	private static float nwHeight(BlockView world, BlockPos.Mutable searchPos, Fluid fluid) {
+	private static float nwHeight(BlockGetter world, BlockPos.MutableBlockPos searchPos, Fluid fluid) {
 		final long posIn = searchPos.asLong();
 
 		int w = 0;
@@ -321,7 +321,7 @@ public class SimpleFluidModel implements FluidModel {
 			//  set to y+1 first for up check
 			searchPos.set(posIn).move(-(j & 1), 1, -(j >> 1 & 1));
 
-			if (world.getFluidState(searchPos).getFluid().matchesType(fluid)) {
+			if (world.getFluidState(searchPos).getType().isSame(fluid)) {
 				return 1.0F;
 			}
 
@@ -330,7 +330,7 @@ public class SimpleFluidModel implements FluidModel {
 
 			final FluidState fluidState = world.getFluidState(searchPos);
 
-			if (fluidState.getFluid().matchesType(fluid)) {
+			if (fluidState.getType().isSame(fluid)) {
 				final float g = fluidState.getHeight(world, searchPos);
 
 				if (g >= 0.8F) {
@@ -355,5 +355,5 @@ public class SimpleFluidModel implements FluidModel {
 		return red | green | blue;
 	}
 
-	private static final ThreadLocal<BlockPos.Mutable> SEARCH_POS = ThreadLocal.withInitial(BlockPos.Mutable::new);
+	private static final ThreadLocal<BlockPos.MutableBlockPos> SEARCH_POS = ThreadLocal.withInitial(BlockPos.MutableBlockPos::new);
 }

@@ -17,9 +17,9 @@ package io.vram.frex.compat.fabric;
 import io.vram.frex.api.mesh.QuadEditor;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.math.Direction;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.Direction;
 
 import grondag.frex.api.mesh.QuadEmitter;
 
@@ -112,7 +112,7 @@ public class FabricQuadEmitter extends FabricQuadView<QuadEditor> implements gro
 	}
 
 	@Override
-	public grondag.frex.api.mesh.QuadEmitter spriteBake(int spriteIndex, Sprite sprite, int bakeFlags) {
+	public grondag.frex.api.mesh.QuadEmitter spriteBake(int spriteIndex, TextureAtlasSprite sprite, int bakeFlags) {
 		wrapped.spriteBake(sprite, bakeFlags);
 		return this;
 	}
@@ -136,7 +136,7 @@ public class FabricQuadEmitter extends FabricQuadView<QuadEditor> implements gro
 	}
 
 	@Override
-	public grondag.frex.api.mesh.QuadEmitter spriteBake(Sprite sprite, int bakeFlags) {
+	public grondag.frex.api.mesh.QuadEmitter spriteBake(TextureAtlasSprite sprite, int bakeFlags) {
 		wrapped.spriteBake(sprite, bakeFlags);
 		return this;
 	}

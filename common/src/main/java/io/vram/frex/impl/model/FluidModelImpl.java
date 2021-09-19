@@ -17,19 +17,17 @@ package io.vram.frex.impl.model;
 import java.util.IdentityHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
 import io.vram.frex.api.model.FluidModel;
 import io.vram.frex.impl.FrexLog;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
-import net.minecraft.fluid.Fluid;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-
 @Internal
 public class FluidModelImpl {
-	private static final Object2ObjectOpenHashMap<Identifier, Function<Fluid, FluidModel>> FACTORIES = new Object2ObjectOpenHashMap<>();
+	private static final Object2ObjectOpenHashMap<ResourceLocation, Function<Fluid, FluidModel>> FACTORIES = new Object2ObjectOpenHashMap<>();
 	private static final IdentityHashMap<Fluid, FluidModel> SUPPLIERS = new IdentityHashMap<>();
 	private static BiFunction<Fluid, Function<Fluid, FluidModel>, FluidModel> handler;
 
@@ -38,7 +36,7 @@ public class FluidModelImpl {
 
 		if (handler != null) {
 			Registry.FLUID.forEach(fluid -> {
-				final Function<Fluid, FluidModel> factory = FACTORIES.get(Registry.FLUID.getId(fluid));
+				final Function<Fluid, FluidModel> factory = FACTORIES.get(Registry.FLUID.getKey(fluid));
 				SUPPLIERS.put(fluid, handler.apply(fluid, factory));
 			});
 		}
@@ -48,7 +46,7 @@ public class FluidModelImpl {
 		return SUPPLIERS.get(forFluid);
 	}
 
-	public static void registerFactory(Function<Fluid, FluidModel> factory, Identifier forFluidId) {
+	public static void registerFactory(Function<Fluid, FluidModel> factory, ResourceLocation forFluidId) {
 		if (FACTORIES.put(forFluidId, factory) != null) {
 			FrexLog.warn("A FluidModel was registered more than once for fluid " + forFluidId.toString() + ". This is probably a mod conflict and the fluid may not render correctly.");
 		}

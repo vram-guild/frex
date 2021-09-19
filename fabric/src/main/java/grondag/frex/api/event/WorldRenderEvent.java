@@ -14,13 +14,14 @@
 
 package grondag.frex.api.event;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.profiler.Profiler;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Matrix4f;
+
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.util.profiling.ProfilerFiller;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -40,7 +41,7 @@ public final class WorldRenderEvent {
 	@Deprecated
 	public static final Event<BeforeWorldRender> BEFORE_WORLD_RENDER = EventFactory.createArrayBacked(BeforeWorldRender.class, callbacks -> (matrices, tickDelta, limitTime, renderBlockOutline, camera, gameRenderer, lightmapTextureManager, matrix4f) -> {
 		if (EventFactory.isProfilingEnabled()) {
-			final Profiler profiler = MinecraftClient.getInstance().getProfiler();
+			final ProfilerFiller profiler = Minecraft.getInstance().getProfiler();
 			profiler.push("frexBeforeWorldRender");
 
 			for (final BeforeWorldRender event : callbacks) {
@@ -63,7 +64,7 @@ public final class WorldRenderEvent {
 	@Deprecated
 	public static final Event<AfterWorldRender> AFTER_WORLD_RENDER = EventFactory.createArrayBacked(AfterWorldRender.class, callbacks -> (matrices, tickDelta, limitTime, renderBlockOutline, camera, gameRenderer, lightmapTextureManager, matrix4f) -> {
 		if (EventFactory.isProfilingEnabled()) {
-			final Profiler profiler = MinecraftClient.getInstance().getProfiler();
+			final ProfilerFiller profiler = Minecraft.getInstance().getProfiler();
 			profiler.push("frexAfterWorldRender");
 
 			for (final AfterWorldRender event : callbacks) {
@@ -82,11 +83,11 @@ public final class WorldRenderEvent {
 
 	@Deprecated
 	public interface BeforeWorldRender {
-		void beforeWorldRender(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f);
+		void beforeWorldRender(PoseStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightmapTextureManager, Matrix4f matrix4f);
 	}
 
 	@Deprecated
 	public interface AfterWorldRender {
-		void afterWorldRender(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f);
+		void afterWorldRender(PoseStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightmapTextureManager, Matrix4f matrix4f);
 	}
 }

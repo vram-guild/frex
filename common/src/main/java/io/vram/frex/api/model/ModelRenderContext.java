@@ -15,15 +15,13 @@
 package io.vram.frex.api.model;
 
 import java.util.Random;
-
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.level.block.state.BlockState;
+import com.mojang.blaze3d.vertex.PoseStack;
 import io.vram.frex.api.mesh.FrexVertexConsumerProvider;
 import io.vram.frex.api.mesh.Mesh;
 import io.vram.frex.api.mesh.QuadEditor;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.util.math.MatrixStack;
 
 public interface ModelRenderContext {
 	void accept(Mesh mesh);
@@ -38,7 +36,7 @@ public interface ModelRenderContext {
 
 	void popTransform();
 
-	MatrixStack matrixStack();
+	PoseStack matrixStack();
 
 	Random random();
 }

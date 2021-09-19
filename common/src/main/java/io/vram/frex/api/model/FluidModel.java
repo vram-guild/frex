@@ -16,11 +16,9 @@ package io.vram.frex.api.model;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
-
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
 import io.vram.frex.impl.model.FluidModelImpl;
-
-import net.minecraft.fluid.Fluid;
-import net.minecraft.util.Identifier;
 
 /**
  * Identical in operation to {@link BlockModel} but for fluids.
@@ -42,7 +40,7 @@ public interface FluidModel extends BlockModel {
 	 * is invalidated. This allows implementations to cache sprites or other elements of
 	 * render state without checking for or handling reloads.
 	 */
-	static void registerFactory(Function<Fluid, FluidModel> factory, Identifier forFluid) {
+	static void registerFactory(Function<Fluid, FluidModel> factory, ResourceLocation forFluid) {
 		FluidModelImpl.registerFactory(factory, forFluid);
 	}
 

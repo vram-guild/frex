@@ -24,15 +24,15 @@ import io.vram.frex.impl.FrexLog;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.item.Item;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.Item;
 
 @Internal
 public class ItemMaterialMapDeserializer {
-	public static void deserialize(Item item, Identifier idForLog, InputStreamReader reader, IdentityHashMap<Item, MaterialMap> itemMap) {
+	public static void deserialize(Item item, ResourceLocation idForLog, InputStreamReader reader, IdentityHashMap<Item, MaterialMap> itemMap) {
 		try {
-			final JsonObject json = JsonHelper.deserialize(reader);
+			final JsonObject json = GsonHelper.parse(reader);
 			final String idString = idForLog.toString();
 
 			final MaterialMap globalDefaultMap = MaterialMapLoader.DEFAULT_MAP;

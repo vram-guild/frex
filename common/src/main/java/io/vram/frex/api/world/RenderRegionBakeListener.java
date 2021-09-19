@@ -20,9 +20,9 @@ import java.util.function.Predicate;
 import io.vram.frex.impl.world.RenderRegionBakeListenerImpl;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 
 @FunctionalInterface
 public interface RenderRegionBakeListener {
@@ -46,7 +46,7 @@ public interface RenderRegionBakeListener {
 		 * Not available until chunk baking.  Predicate tests must
 		 * be done based on block position only.
 		 */
-		@Nullable BlockRenderView blockView();
+		@Nullable BlockAndTintGetter blockView();
 
 		/**
 		 * Min position (inclusive) of the area being built.

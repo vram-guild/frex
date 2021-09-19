@@ -20,7 +20,7 @@ import io.vram.frex.api.material.MaterialCondition;
 import org.jetbrains.annotations.ApiStatus.Experimental;
 import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
@@ -62,13 +62,13 @@ public interface Renderer extends net.fabricmc.fabric.api.renderer.v1.Renderer {
 	MaterialCondition createCondition(BooleanSupplier supplier, boolean affectBlocks, boolean affectItems);
 
 	@Experimental
-	MaterialCondition conditionById(Identifier id);
+	MaterialCondition conditionById(ResourceLocation id);
 
 	@Experimental
-	boolean registerCondition(Identifier id, MaterialCondition pipeline);
+	boolean registerCondition(ResourceLocation id, MaterialCondition pipeline);
 
 	/**
-	 * Identical to {@link #registerMaterial(Identifier, RenderMaterial)} except registrations
+	 * Identical to {@link #registerMaterial(ResourceLocation, RenderMaterial)} except registrations
 	 * are replaced if they already exist.  Meant to be used for materials that are loaded
 	 * from resources and need to be updated during resource reload.
 	 *
@@ -76,11 +76,11 @@ public interface Renderer extends net.fabricmc.fabric.api.renderer.v1.Renderer {
 	 * use the new material definition unless they re-query.  Material maps will handle this
 	 * automatically but mods must be designed to do so.
 	 *
-	 * <p>If this feature is not supported by the renderer, behaves like {@link #registerMaterial(Identifier, RenderMaterial)}.
+	 * <p>If this feature is not supported by the renderer, behaves like {@link #registerMaterial(ResourceLocation, RenderMaterial)}.
 	 *
 	 * <p>Returns false if a material with the given identifier was already present.
 	 */
-	default boolean registerOrUpdateMaterial(Identifier id, RenderMaterial material) {
+	default boolean registerOrUpdateMaterial(ResourceLocation id, RenderMaterial material) {
 		return registerMaterial(id, material);
 	}
 }

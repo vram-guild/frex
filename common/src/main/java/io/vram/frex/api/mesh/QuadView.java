@@ -14,19 +14,19 @@
 
 package io.vram.frex.api.mesh;
 
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.math.Vector3f;
 import io.vram.frex.api.material.RenderMaterial;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.Direction;
 
 public interface QuadView {
 	/** Count of integers in a conventional (un-modded) block or item vertex. */
-	int VANILLA_VERTEX_STRIDE = VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL.getVertexSizeInteger();
+	int VANILLA_VERTEX_STRIDE = DefaultVertexFormat.BLOCK.getIntegerSize();
 
 	/** Count of integers in a conventional (un-modded) block or item quad. */
 	int VANILLA_QUAD_STRIDE = VANILLA_VERTEX_STRIDE * 4;
@@ -44,7 +44,7 @@ public interface QuadView {
 	int colorIndex();
 
 	/**
-	 * Equivalent to {@link BakedQuad#getFace()}. This is the face used for vanilla lighting
+	 * Equivalent to {@link BakedQuad#getDirection()}. This is the face used for vanilla lighting
 	 * calculations and will be the block face to which the quad is most closely aligned. Always
 	 * the same as cull face for quads that are on a block face, but never null.
 	 */
@@ -72,7 +72,7 @@ public interface QuadView {
 	 * <p>Not typically needed by models. Exposed to enable standard lighting
 	 * utility functions for use by renderers.
 	 */
-	Vec3f faceNormal();
+	Vector3f faceNormal();
 
 	/**
 	 * Retrieves the integer tag encoded with this quad via {@link QuadEditor#tag(int)}.
@@ -84,7 +84,7 @@ public interface QuadView {
 	 * Pass a non-null target to avoid allocation - will be returned with values.
 	 * Otherwise returns a new instance.
 	 */
-	Vec3f copyPos(int vertexIndex, @Nullable Vec3f target);
+	Vector3f copyPos(int vertexIndex, @Nullable Vector3f target);
 
 	/**
 	 * Convenience: access x, y, z by index 0-2.
@@ -117,7 +117,7 @@ public interface QuadView {
 	 * Otherwise returns a new instance. Returns null if normal not present.
 	 */
 	@Nullable
-	Vec3f copyNormal(int vertexIndex, @Nullable Vec3f target);
+	Vector3f copyNormal(int vertexIndex, @Nullable Vector3f target);
 
 	/**
 	 * Will return {@link Float#NaN} if normal not present.
@@ -178,7 +178,7 @@ public interface QuadView {
 	 * supported by vanilla features. Will retain emissive light maps, for example,
 	 * but the standard Minecraft renderer will not use them.
 	 */
-	default BakedQuad toBakedQuad(Sprite sprite) {
+	default BakedQuad toBakedQuad(TextureAtlasSprite sprite) {
 		final int[] vertexData = new int[VANILLA_QUAD_STRIDE];
 		toVanilla(vertexData, 0);
 		return new BakedQuad(vertexData, colorIndex(), lightFace(), sprite, true);
@@ -210,7 +210,7 @@ public interface QuadView {
 	 * Otherwise returns a new instance. Returns null if tangent not present.
 	 */
 	@Nullable
-	Vec3f copyTangent(int vertexIndex, @Nullable Vec3f target);
+	Vector3f copyTangent(int vertexIndex, @Nullable Vector3f target);
 
 	/**
 	 * Will return {@link Float#NaN} if tangent not present.

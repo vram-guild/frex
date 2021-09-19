@@ -19,7 +19,7 @@ import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.material.MaterialFinder;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 
@@ -207,13 +207,13 @@ public class FabricMaterialFinder implements grondag.frex.api.material.MaterialF
 	}
 
 	@Override
-	public grondag.frex.api.material.MaterialFinder shader(@Nullable Identifier vertexSourceId, @Nullable Identifier fragmentSourceId) {
+	public grondag.frex.api.material.MaterialFinder shader(@Nullable ResourceLocation vertexSourceId, @Nullable ResourceLocation fragmentSourceId) {
 		wrapped.shader(vertexSourceId, fragmentSourceId);
 		return this;
 	}
 
 	@Override
-	public grondag.frex.api.material.MaterialFinder shader(@Nullable Identifier vertexSourceId, @Nullable Identifier fragmentSourceId, @Nullable Identifier depthVertexSourceId, @Nullable Identifier depthFragmentSourceId) {
+	public grondag.frex.api.material.MaterialFinder shader(@Nullable ResourceLocation vertexSourceId, @Nullable ResourceLocation fragmentSourceId, @Nullable ResourceLocation depthVertexSourceId, @Nullable ResourceLocation depthFragmentSourceId) {
 		wrapped.shader(vertexSourceId, fragmentSourceId, depthVertexSourceId, depthFragmentSourceId);
 		return this;
 	}
@@ -231,7 +231,7 @@ public class FabricMaterialFinder implements grondag.frex.api.material.MaterialF
 	}
 
 	@Override
-	public grondag.frex.api.material.MaterialFinder texture(@Nullable Identifier id) {
+	public grondag.frex.api.material.MaterialFinder texture(@Nullable ResourceLocation id) {
 		wrapped.texture(id);
 		return this;
 	}

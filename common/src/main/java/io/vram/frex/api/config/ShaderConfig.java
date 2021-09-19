@@ -18,8 +18,8 @@ import java.util.function.Supplier;
 
 import io.vram.frex.impl.config.ShaderConfigImpl;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Use this to inject constant declarations that are managed by the mod into shaders .
@@ -62,7 +62,7 @@ public interface ShaderConfig {
 	 *
 	 * <p>Will warn if the same token is registered twice and the last registration will be used.
 	 */
-	static void registerShaderConfigSupplier(Identifier token, Supplier<String> supplier) {
+	static void registerShaderConfigSupplier(ResourceLocation token, Supplier<String> supplier) {
 		ShaderConfigImpl.registerShaderConfigSupplier(token, supplier);
 	}
 
@@ -73,7 +73,7 @@ public interface ShaderConfig {
 	 * <p>If the token is not registered, will return a default supplier that outputs
 	 * a GLSL-friendly comment explaining it was not found.
 	 */
-	static Supplier<String> getShaderConfigSupplier(Identifier token) {
+	static Supplier<String> getShaderConfigSupplier(ResourceLocation token) {
 		return ShaderConfigImpl.getShaderConfigSupplier(token);
 	}
 
@@ -83,6 +83,6 @@ public interface ShaderConfig {
 	 */
 	@SuppressWarnings("resource")
 	static void invalidateShaderConfig() {
-		MinecraftClient.getInstance().worldRenderer.reload();
+		Minecraft.getInstance().levelRenderer.allChanged();
 	}
 }

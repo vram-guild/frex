@@ -20,27 +20,25 @@ import java.nio.charset.StandardCharsets;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
-
+import net.minecraft.core.Registry;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import io.vram.frex.api.material.BlockEntityMaterialMap;
 import io.vram.frex.api.material.EntityMaterialMap;
 import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.impl.FrexLog;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.EntityType;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particle.ParticleType;
-import net.minecraft.resource.Resource;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 @Internal
 public class MaterialMapLoader {
@@ -118,12 +116,12 @@ public class MaterialMapLoader {
 	}
 
 	private void loadBlock(ResourceManager manager, Block block) {
-		final Identifier blockId = Registry.BLOCK.getId(block);
+		final ResourceLocation blockId = Registry.BLOCK.getKey(block);
 
-		final Identifier id = new Identifier(blockId.getNamespace(), "materialmaps/block/" + blockId.getPath() + ".json");
+		final ResourceLocation id = new ResourceLocation(blockId.getNamespace(), "materialmaps/block/" + blockId.getPath() + ".json");
 
 		try (Resource res = manager.getResource(id)) {
-			MaterialMapDeserializer.deserialize(block.getStateManager().getStates(), id, new InputStreamReader(res.getInputStream(), StandardCharsets.UTF_8), BLOCK_MAP);
+			MaterialMapDeserializer.deserialize(block.getStateDefinition().getPossibleStates(), id, new InputStreamReader(res.getInputStream(), StandardCharsets.UTF_8), BLOCK_MAP);
 		} catch (final FileNotFoundException e) {
 			// eat these, material maps are not required
 		} catch (final Exception e) {
@@ -132,12 +130,12 @@ public class MaterialMapLoader {
 	}
 
 	private void loadFluid(ResourceManager manager, Fluid fluid) {
-		final Identifier blockId = Registry.FLUID.getId(fluid);
+		final ResourceLocation blockId = Registry.FLUID.getKey(fluid);
 
-		final Identifier id = new Identifier(blockId.getNamespace(), "materialmaps/fluid/" + blockId.getPath() + ".json");
+		final ResourceLocation id = new ResourceLocation(blockId.getNamespace(), "materialmaps/fluid/" + blockId.getPath() + ".json");
 
 		try (Resource res = manager.getResource(id)) {
-			MaterialMapDeserializer.deserialize(fluid.getStateManager().getStates(), id, new InputStreamReader(res.getInputStream(), StandardCharsets.UTF_8), FLUID_MAP);
+			MaterialMapDeserializer.deserialize(fluid.getStateDefinition().getPossibleStates(), id, new InputStreamReader(res.getInputStream(), StandardCharsets.UTF_8), FLUID_MAP);
 		} catch (final FileNotFoundException e) {
 			// eat these, material maps are not required
 		} catch (final Exception e) {
@@ -146,9 +144,9 @@ public class MaterialMapLoader {
 	}
 
 	private void loadItem(ResourceManager manager, Item item) {
-		final Identifier itemId = Registry.ITEM.getId(item);
+		final ResourceLocation itemId = Registry.ITEM.getKey(item);
 
-		final Identifier id = new Identifier(itemId.getNamespace(), "materialmaps/item/" + itemId.getPath() + ".json");
+		final ResourceLocation id = new ResourceLocation(itemId.getNamespace(), "materialmaps/item/" + itemId.getPath() + ".json");
 
 		try (Resource res = manager.getResource(id)) {
 			ItemMaterialMapDeserializer.deserialize(item, id, new InputStreamReader(res.getInputStream(), StandardCharsets.UTF_8), ITEM_MAP);
@@ -157,7 +155,7 @@ public class MaterialMapLoader {
 			// otherwise eat these, material maps are not required
 
 			if (item instanceof BlockItem) {
-				final MaterialMap map = BLOCK_MAP.get(((BlockItem) item).getBlock().getDefaultState());
+				final MaterialMap map = BLOCK_MAP.get(((BlockItem) item).getBlock().defaultBlockState());
 
 				if (map != null) {
 					ITEM_MAP.put(item, map);
@@ -169,9 +167,9 @@ public class MaterialMapLoader {
 	}
 
 	private void loadParticle(ResourceManager manager, ParticleType<?> particleType) {
-		final Identifier particleId = Registry.PARTICLE_TYPE.getId(particleType);
+		final ResourceLocation particleId = Registry.PARTICLE_TYPE.getKey(particleType);
 
-		final Identifier id = new Identifier(particleId.getNamespace(), "materialmaps/particle/" + particleId.getPath() + ".json");
+		final ResourceLocation id = new ResourceLocation(particleId.getNamespace(), "materialmaps/particle/" + particleId.getPath() + ".json");
 
 		try (Resource res = manager.getResource(id)) {
 			ParticleMaterialMapDeserializer.deserialize(particleType, id, new InputStreamReader(res.getInputStream(), StandardCharsets.UTF_8), PARTICLE_MAP);
@@ -183,11 +181,11 @@ public class MaterialMapLoader {
 	}
 
 	private void loadBlockEntity(ResourceManager manager, BlockEntityType<?> blockEntityType) {
-		final Identifier blockEntityId = Registry.BLOCK_ENTITY_TYPE.getId(blockEntityType);
-		final Identifier id = new Identifier(blockEntityId.getNamespace(), "materialmaps/block_entity/" + blockEntityId.getPath() + ".json");
+		final ResourceLocation blockEntityId = Registry.BLOCK_ENTITY_TYPE.getKey(blockEntityType);
+		final ResourceLocation id = new ResourceLocation(blockEntityId.getNamespace(), "materialmaps/block_entity/" + blockEntityId.getPath() + ".json");
 
 		try {
-			final List<Resource> resources = manager.getAllResources(id);
+			final List<Resource> resources = manager.getResources(id);
 
 			if (resources.size() > 0) {
 				BlockEntityMaterialMapDeserializer.deserialize(blockEntityType, id, resources, BLOCK_ENTITY_MAP);
@@ -200,11 +198,11 @@ public class MaterialMapLoader {
 	}
 
 	private void loadEntity(ResourceManager manager, EntityType<?> entityType) {
-		final Identifier entityId = Registry.ENTITY_TYPE.getId(entityType);
-		final Identifier id = new Identifier(entityId.getNamespace(), "materialmaps/entity/" + entityId.getPath() + ".json");
+		final ResourceLocation entityId = Registry.ENTITY_TYPE.getKey(entityType);
+		final ResourceLocation id = new ResourceLocation(entityId.getNamespace(), "materialmaps/entity/" + entityId.getPath() + ".json");
 
 		try {
-			final List<Resource> resources = manager.getAllResources(id);
+			final List<Resource> resources = manager.getResources(id);
 
 			if (resources.size() > 0) {
 				EntityMaterialMapDeserializer.deserialize(entityType, id, resources, ENTITY_MAP);

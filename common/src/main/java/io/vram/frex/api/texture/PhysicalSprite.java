@@ -14,10 +14,10 @@
 
 package io.vram.frex.api.texture;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 public interface PhysicalSprite {
-	Identifier id();
+	ResourceLocation id();
 
 	PhysicalSpriteAtlas atlas();
 }

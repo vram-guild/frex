@@ -16,7 +16,7 @@ package io.vram.frex.api.material;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Finds standard {@link RenderMaterial} instances used to communicate
@@ -147,9 +147,9 @@ public interface MaterialFinder {
 	 */
 	MaterialFinder lines(boolean lines);
 
-	MaterialFinder shader(@Nullable Identifier vertexSourceId, @Nullable Identifier fragmentSourceId);
+	MaterialFinder shader(@Nullable ResourceLocation vertexSourceId, @Nullable ResourceLocation fragmentSourceId);
 
-	MaterialFinder shader(@Nullable Identifier vertexSourceId, @Nullable Identifier fragmentSourceId, @Nullable Identifier depthVertexSourceId, @Nullable Identifier depthFragmentSourceId);
+	MaterialFinder shader(@Nullable ResourceLocation vertexSourceId, @Nullable ResourceLocation fragmentSourceId, @Nullable ResourceLocation depthVertexSourceId, @Nullable ResourceLocation depthFragmentSourceId);
 
 	/**
 	 * For transparent materials, enables sorting of quads by
@@ -181,7 +181,7 @@ public interface MaterialFinder {
 	 * @param id namespaced id of texture or texture atlas for base color. {@code null} to disable texturing.
 	 * @return finder instance for ease of chaining calls
 	 */
-	MaterialFinder texture(@Nullable Identifier id);
+	MaterialFinder texture(@Nullable ResourceLocation id);
 
 	/**
 	 * Enables or disables texture blending and sets blending mode.

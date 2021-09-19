@@ -19,12 +19,12 @@ import io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
 
 public class ChunkRenderConditionContext implements RenderRegionContext {
 	public final ObjectArrayList<RenderRegionBakeListener> listeners = new ObjectArrayList<>();
-	private final BlockPos.Mutable origin = new BlockPos.Mutable();
+	private final BlockPos.MutableBlockPos origin = new BlockPos.MutableBlockPos();
 
 	public ChunkRenderConditionContext prepare(int x, int y, int z) {
 		listeners.clear();
@@ -41,7 +41,7 @@ public class ChunkRenderConditionContext implements RenderRegionContext {
 	}
 
 	@Override
-	public BlockRenderView blockView() {
+	public BlockAndTintGetter blockView() {
 		return null;
 	}
 

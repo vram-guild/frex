@@ -14,10 +14,10 @@
 
 package io.vram.frex.api.material;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 public interface RenderMaterial {
-	Identifier MATERIAL_STANDARD = new Identifier("frex", "standard");
+	ResourceLocation MATERIAL_STANDARD = new ResourceLocation("frex", "standard");
 
 	int preset();
 
@@ -47,7 +47,7 @@ public interface RenderMaterial {
 
 	boolean fog();
 
-	Identifier fragmentShaderId();
+	ResourceLocation fragmentShaderId();
 
 	String fragmentShader();
 
@@ -59,7 +59,7 @@ public interface RenderMaterial {
 
 	int target();
 
-	Identifier textureId();
+	ResourceLocation textureId();
 
 	String texture();
 
@@ -67,7 +67,7 @@ public interface RenderMaterial {
 
 	boolean unmipped();
 
-	Identifier vertexShaderId();
+	ResourceLocation vertexShaderId();
 
 	String vertexShader();
 

@@ -15,13 +15,12 @@
 package io.vram.frex.api.model;
 
 import io.vram.frex.impl.model.SimpleFluidSpriteProvider;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.material.FluidState;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockRenderView;
 
 /**
  * Get the sprites for a fluid being rendered at a given position.
@@ -38,21 +37,21 @@ import net.minecraft.world.BlockRenderView;
  */
 @FunctionalInterface
 public interface FluidSpriteProvider {
-	Sprite[] getFluidSprites(@Nullable BlockRenderView view, @Nullable BlockPos pos, FluidState state);
+	TextureAtlasSprite[] getFluidSprites(@Nullable BlockAndTintGetter view, @Nullable BlockPos pos, FluidState state);
 
 	static FluidSpriteProvider of(String stillSpriteName, String flowingSpriteName, @Nullable String overlaySpriteName) {
-		return SimpleFluidSpriteProvider.of(new Identifier(stillSpriteName), new Identifier(flowingSpriteName), overlaySpriteName == null ? null : new Identifier(overlaySpriteName));
+		return SimpleFluidSpriteProvider.of(new ResourceLocation(stillSpriteName), new ResourceLocation(flowingSpriteName), overlaySpriteName == null ? null : new ResourceLocation(overlaySpriteName));
 	}
 
 	static FluidSpriteProvider of(String stillSpriteName, String flowingSpriteName) {
 		return of(stillSpriteName, flowingSpriteName, null);
 	}
 
-	static FluidSpriteProvider of(Identifier stillSpriteName, Identifier flowingSpriteName, @Nullable Identifier overlaySpriteName) {
+	static FluidSpriteProvider of(ResourceLocation stillSpriteName, ResourceLocation flowingSpriteName, @Nullable ResourceLocation overlaySpriteName) {
 		return SimpleFluidSpriteProvider.of(stillSpriteName, flowingSpriteName, overlaySpriteName);
 	}
 
-	static FluidSpriteProvider of(Identifier stillSpriteName, Identifier flowingSpriteName) {
+	static FluidSpriteProvider of(ResourceLocation stillSpriteName, ResourceLocation flowingSpriteName) {
 		return of(stillSpriteName, flowingSpriteName, null);
 	}
 

@@ -51,15 +51,15 @@ import io.vram.frex.api.material.MaterialFinder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
 
 @Internal
 public class MaterialTransformDeserializer {
 	private MaterialTransformDeserializer() { }
 
 	public static MaterialTransform deserialize(JsonObject json) {
-		if (!JsonHelper.getBoolean(json, "transform", false)) {
+		if (!GsonHelper.getAsBoolean(json, "transform", false)) {
 			return MaterialTransform.constant(MaterialDeserializer.deserialize(json));
 		}
 
@@ -98,49 +98,49 @@ public class MaterialTransformDeserializer {
 		final boolean hasVertex = json.has("vertexSource");
 
 		if (hasFragment || hasVertex) {
-			final Identifier vs = hasVertex ? new Identifier(JsonHelper.getString(json, "vertexSource")) : null;
-			final Identifier fs = hasFragment ? new Identifier(JsonHelper.getString(json, "fragmentSource")) : null;
+			final ResourceLocation vs = hasVertex ? new ResourceLocation(GsonHelper.getAsString(json, "vertexSource")) : null;
+			final ResourceLocation fs = hasFragment ? new ResourceLocation(GsonHelper.getAsString(json, "fragmentSource")) : null;
 			transforms.add(finder -> finder.shader(vs, fs));
 		}
 
 		// We test for tags even though getBoolean also does so because we don't necessarily know the correct default value
 		if (json.has("disableAo")) {
-			final boolean val = JsonHelper.getBoolean(json, "disableAo", true);
+			final boolean val = GsonHelper.getAsBoolean(json, "disableAo", true);
 			transforms.add(finder -> finder.disableAo(val));
 		}
 
 		if (json.has("disableColorIndex")) {
-			final boolean val = JsonHelper.getBoolean(json, "disableColorIndex", true);
+			final boolean val = GsonHelper.getAsBoolean(json, "disableColorIndex", true);
 			transforms.add(finder -> finder.disableColorIndex(val));
 		}
 
 		if (json.has("disableDiffuse")) {
-			final boolean val = JsonHelper.getBoolean(json, "disableDiffuse", true);
+			final boolean val = GsonHelper.getAsBoolean(json, "disableDiffuse", true);
 			transforms.add(finder -> finder.disableDiffuse(val));
 		}
 
 		if (json.has("emissive")) {
-			final boolean val = JsonHelper.getBoolean(json, "emissive", true);
+			final boolean val = GsonHelper.getAsBoolean(json, "emissive", true);
 			transforms.add(finder -> finder.emissive(val));
 		}
 
 		if (json.has("blendMode")) {
-			final int val = MaterialDeserializer.readPreset(JsonHelper.getString(json, "blendMode"));
+			final int val = MaterialDeserializer.readPreset(GsonHelper.getAsString(json, "blendMode"));
 			transforms.add(finder -> finder.preset(val));
 		}
 
 		if (json.has("preset")) {
-			final int val = MaterialDeserializer.readPreset(JsonHelper.getString(json, "preset"));
+			final int val = MaterialDeserializer.readPreset(GsonHelper.getAsString(json, "preset"));
 			transforms.add(finder -> finder.preset(val));
 		}
 
 		if (json.has("blur")) {
-			final boolean val = JsonHelper.getBoolean(json, "blur", true);
+			final boolean val = GsonHelper.getAsBoolean(json, "blur", true);
 			transforms.add(finder -> finder.blur(val));
 		}
 
 		if (json.has("cull")) {
-			final boolean val = JsonHelper.getBoolean(json, "cull", true);
+			final boolean val = GsonHelper.getAsBoolean(json, "cull", true);
 			transforms.add(finder -> finder.cull(val));
 		}
 
@@ -187,32 +187,32 @@ public class MaterialTransformDeserializer {
 		}
 
 		if (json.has("discardsTexture")) {
-			final boolean val = JsonHelper.getBoolean(json, "discardsTexture", true);
+			final boolean val = GsonHelper.getAsBoolean(json, "discardsTexture", true);
 			transforms.add(finder -> finder.discardsTexture(val));
 		}
 
 		if (json.has("flashOverlay")) {
-			final boolean val = JsonHelper.getBoolean(json, "flashOverlay", true);
+			final boolean val = GsonHelper.getAsBoolean(json, "flashOverlay", true);
 			transforms.add(finder -> finder.flashOverlay(val));
 		}
 
 		if (json.has("fog")) {
-			final boolean val = JsonHelper.getBoolean(json, "fog", false);
+			final boolean val = GsonHelper.getAsBoolean(json, "fog", false);
 			transforms.add(finder -> finder.fog(val));
 		}
 
 		if (json.has("hurtOverlay")) {
-			final boolean val = JsonHelper.getBoolean(json, "hurtOverlay", true);
+			final boolean val = GsonHelper.getAsBoolean(json, "hurtOverlay", true);
 			transforms.add(finder -> finder.hurtOverlay(val));
 		}
 
 		if (json.has("lines")) {
-			final boolean val = JsonHelper.getBoolean(json, "lines", true);
+			final boolean val = GsonHelper.getAsBoolean(json, "lines", true);
 			transforms.add(finder -> finder.lines(val));
 		}
 
 		if (json.has("sorted")) {
-			final boolean val = JsonHelper.getBoolean(json, "sorted", true);
+			final boolean val = GsonHelper.getAsBoolean(json, "sorted", true);
 			transforms.add(finder -> finder.sorted(val));
 		}
 
@@ -237,7 +237,7 @@ public class MaterialTransformDeserializer {
 		}
 
 		if (json.has("texture")) {
-			final Identifier texture = new Identifier(JsonHelper.getString(json, "texture"));
+			final ResourceLocation texture = new ResourceLocation(GsonHelper.getAsString(json, "texture"));
 			transforms.add(finder -> finder.texture(texture));
 		}
 
@@ -262,7 +262,7 @@ public class MaterialTransformDeserializer {
 		}
 
 		if (json.has("unmipped")) {
-			final boolean val = JsonHelper.getBoolean(json, "unmipped", true);
+			final boolean val = GsonHelper.getAsBoolean(json, "unmipped", true);
 			transforms.add(finder -> finder.unmipped(val));
 		}
 
@@ -279,7 +279,7 @@ public class MaterialTransformDeserializer {
 		}
 
 		if (json.has("castShadows")) {
-			final boolean val = JsonHelper.getBoolean(json, "castShadows", true);
+			final boolean val = GsonHelper.getAsBoolean(json, "castShadows", true);
 			transforms.add(finder -> finder.castShadows(val));
 		}
 	}

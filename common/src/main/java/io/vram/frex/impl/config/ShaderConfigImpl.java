@@ -21,19 +21,19 @@ import io.vram.frex.impl.FrexLog;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 @Internal
 public class ShaderConfigImpl {
-	private static final Object2ObjectOpenHashMap<Identifier, Supplier<String>> MAP = new Object2ObjectOpenHashMap<>();
+	private static final Object2ObjectOpenHashMap<ResourceLocation, Supplier<String>> MAP = new Object2ObjectOpenHashMap<>();
 
-	public static Supplier<String> getShaderConfigSupplier(Identifier token) {
+	public static Supplier<String> getShaderConfigSupplier(ResourceLocation token) {
 		Preconditions.checkNotNull(token, "Encountered null shader config token. This is a bug in a mod.");
 
 		return MAP.getOrDefault(token, () -> "// WARNING - INCLUDE TOKEN NOT FOUND: " + token.toString());
 	}
 
-	public static void registerShaderConfigSupplier(Identifier token, Supplier<String> supplier) {
+	public static void registerShaderConfigSupplier(ResourceLocation token, Supplier<String> supplier) {
 		Preconditions.checkNotNull(token, "Encountered null shader config token. This is a bug in a mod.");
 		Preconditions.checkNotNull(supplier, "Encountered null shader config supplier. This is a bug in a mod.");
 

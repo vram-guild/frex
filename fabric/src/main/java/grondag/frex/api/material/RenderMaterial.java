@@ -18,7 +18,7 @@ import io.vram.frex.api.material.MaterialCondition;
 import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 
@@ -96,7 +96,7 @@ public interface RenderMaterial extends net.fabricmc.fabric.api.renderer.v1.mate
 		return false;
 	}
 
-	Identifier fragmentShaderId();
+	ResourceLocation fragmentShaderId();
 
 	String fragmentShader();
 
@@ -115,7 +115,7 @@ public interface RenderMaterial extends net.fabricmc.fabric.api.renderer.v1.mate
 
 	int target();
 
-	Identifier textureId();
+	ResourceLocation textureId();
 
 	String texture();
 
@@ -123,7 +123,7 @@ public interface RenderMaterial extends net.fabricmc.fabric.api.renderer.v1.mate
 
 	boolean unmipped();
 
-	Identifier vertexShaderId();
+	ResourceLocation vertexShaderId();
 
 	String vertexShader();
 

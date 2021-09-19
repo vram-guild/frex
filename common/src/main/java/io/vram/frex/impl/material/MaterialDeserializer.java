@@ -45,7 +45,8 @@ import static io.vram.frex.api.material.MaterialConstants.WRITE_MASK_COLOR_DEPTH
 import static io.vram.frex.api.material.MaterialConstants.WRITE_MASK_DEPTH;
 
 import java.util.Locale;
-
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.vram.frex.api.material.MaterialConstants;
@@ -53,9 +54,6 @@ import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.renderer.Renderer;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
 
 @Internal
 public class MaterialDeserializer {
@@ -70,7 +68,7 @@ public class MaterialDeserializer {
 		// "layers" tag still support for old multi-layer format but
 		// only first layer is used. Layer is not required.
 		if (json.has("layers")) {
-			final JsonArray layers = JsonHelper.asArray(json.get("layers"), "layers");
+			final JsonArray layers = GsonHelper.convertToJsonArray(json.get("layers"), "layers");
 
 			if (!layers.isJsonNull() && layers.size() >= 1) {
 				readMaterial(layers.get(0).getAsJsonObject(), finder);
@@ -84,15 +82,15 @@ public class MaterialDeserializer {
 	}
 
 	private static void readMaterial(JsonObject obj, io.vram.frex.api.material.MaterialFinder finder) {
-		final String vertexSource = JsonHelper.getString(obj, "vertexSource", null);
-		final String fragmentSource = JsonHelper.getString(obj, "fragmentSource", null);
-		final String depthVertexSource = JsonHelper.getString(obj, "depthVertexSource", null);
-		final String depthFragmentSource = JsonHelper.getString(obj, "depthFragmentSource", null);
+		final String vertexSource = GsonHelper.getAsString(obj, "vertexSource", null);
+		final String fragmentSource = GsonHelper.getAsString(obj, "fragmentSource", null);
+		final String depthVertexSource = GsonHelper.getAsString(obj, "depthVertexSource", null);
+		final String depthFragmentSource = GsonHelper.getAsString(obj, "depthFragmentSource", null);
 
-		final Identifier vertexSourceId = vertexSource != null && Identifier.isValid(vertexSource) ? new Identifier(vertexSource) : null;
-		final Identifier fragmentSourceId = fragmentSource != null && Identifier.isValid(fragmentSource) ? new Identifier(fragmentSource) : null;
-		final Identifier depthVertexSourceId = depthVertexSource != null && Identifier.isValid(depthVertexSource) ? new Identifier(depthVertexSource) : null;
-		final Identifier depthFragmentSourceId = depthFragmentSource != null && Identifier.isValid(depthFragmentSource) ? new Identifier(depthFragmentSource) : null;
+		final ResourceLocation vertexSourceId = vertexSource != null && ResourceLocation.isValidResourceLocation(vertexSource) ? new ResourceLocation(vertexSource) : null;
+		final ResourceLocation fragmentSourceId = fragmentSource != null && ResourceLocation.isValidResourceLocation(fragmentSource) ? new ResourceLocation(fragmentSource) : null;
+		final ResourceLocation depthVertexSourceId = depthVertexSource != null && ResourceLocation.isValidResourceLocation(depthVertexSource) ? new ResourceLocation(depthVertexSource) : null;
+		final ResourceLocation depthFragmentSourceId = depthFragmentSource != null && ResourceLocation.isValidResourceLocation(depthFragmentSource) ? new ResourceLocation(depthFragmentSource) : null;
 
 		if (fragmentSourceId != null || vertexSourceId != null || depthFragmentSourceId != null || depthVertexSourceId != null) {
 			finder.shader(vertexSourceId, fragmentSourceId, depthVertexSourceId, depthFragmentSourceId);
@@ -100,35 +98,35 @@ public class MaterialDeserializer {
 
 		// We test for tags even though getBoolean also does so because we don't necessarily know the correct default value
 		if (obj.has("disableAo")) {
-			finder.disableAo(JsonHelper.getBoolean(obj, "disableAo", false));
+			finder.disableAo(GsonHelper.getAsBoolean(obj, "disableAo", false));
 		}
 
 		if (obj.has("disableColorIndex")) {
-			finder.disableColorIndex(JsonHelper.getBoolean(obj, "disableColorIndex", false));
+			finder.disableColorIndex(GsonHelper.getAsBoolean(obj, "disableColorIndex", false));
 		}
 
 		if (obj.has("disableDiffuse")) {
-			finder.disableDiffuse(JsonHelper.getBoolean(obj, "disableDiffuse", false));
+			finder.disableDiffuse(GsonHelper.getAsBoolean(obj, "disableDiffuse", false));
 		}
 
 		if (obj.has("emissive")) {
-			finder.emissive(JsonHelper.getBoolean(obj, "emissive", false));
+			finder.emissive(GsonHelper.getAsBoolean(obj, "emissive", false));
 		}
 
 		if (obj.has("blendMode")) {
-			finder.preset(readPreset(JsonHelper.getString(obj, "blendMode")));
+			finder.preset(readPreset(GsonHelper.getAsString(obj, "blendMode")));
 		}
 
 		if (obj.has("preset")) {
-			finder.preset(readPreset(JsonHelper.getString(obj, "preset")));
+			finder.preset(readPreset(GsonHelper.getAsString(obj, "preset")));
 		}
 
 		if (obj.has("blur")) {
-			finder.blur(JsonHelper.getBoolean(obj, "blur", false));
+			finder.blur(GsonHelper.getAsBoolean(obj, "blur", false));
 		}
 
 		if (obj.has("cull")) {
-			finder.cull(JsonHelper.getBoolean(obj, "cull", false));
+			finder.cull(GsonHelper.getAsBoolean(obj, "cull", false));
 		}
 
 		if (obj.has("cutout")) {
@@ -174,27 +172,27 @@ public class MaterialDeserializer {
 		}
 
 		if (obj.has("discardsTexture")) {
-			finder.discardsTexture(JsonHelper.getBoolean(obj, "discardsTexture", false));
+			finder.discardsTexture(GsonHelper.getAsBoolean(obj, "discardsTexture", false));
 		}
 
 		if (obj.has("flashOverlay")) {
-			finder.flashOverlay(JsonHelper.getBoolean(obj, "flashOverlay", false));
+			finder.flashOverlay(GsonHelper.getAsBoolean(obj, "flashOverlay", false));
 		}
 
 		if (obj.has("fog")) {
-			finder.fog(JsonHelper.getBoolean(obj, "fog", true));
+			finder.fog(GsonHelper.getAsBoolean(obj, "fog", true));
 		}
 
 		if (obj.has("hurtOverlay")) {
-			finder.hurtOverlay(JsonHelper.getBoolean(obj, "hurtOverlay", false));
+			finder.hurtOverlay(GsonHelper.getAsBoolean(obj, "hurtOverlay", false));
 		}
 
 		if (obj.has("lines")) {
-			finder.lines(JsonHelper.getBoolean(obj, "lines", false));
+			finder.lines(GsonHelper.getAsBoolean(obj, "lines", false));
 		}
 
 		if (obj.has("sorted")) {
-			finder.sorted(JsonHelper.getBoolean(obj, "sorted", false));
+			finder.sorted(GsonHelper.getAsBoolean(obj, "sorted", false));
 		}
 
 		if (obj.has("target")) {
@@ -218,7 +216,7 @@ public class MaterialDeserializer {
 		}
 
 		if (obj.has("texture")) {
-			finder.texture(new Identifier(JsonHelper.getString(obj, "texture")));
+			finder.texture(new ResourceLocation(GsonHelper.getAsString(obj, "texture")));
 		}
 
 		if (obj.has("transparency")) {
@@ -242,7 +240,7 @@ public class MaterialDeserializer {
 		}
 
 		if (obj.has("unmipped")) {
-			finder.unmipped(JsonHelper.getBoolean(obj, "unmipped", false));
+			finder.unmipped(GsonHelper.getAsBoolean(obj, "unmipped", false));
 		}
 
 		if (obj.has("writeMask")) {
@@ -258,7 +256,7 @@ public class MaterialDeserializer {
 		}
 
 		if (obj.has("castShadows")) {
-			finder.castShadows(JsonHelper.getBoolean(obj, "castShadows", true));
+			finder.castShadows(GsonHelper.getAsBoolean(obj, "castShadows", true));
 		}
 	}
 

@@ -15,11 +15,13 @@
 package io.vram.frex.impl.material;
 
 import java.util.function.BiPredicate;
-import net.minecraft.world.entity.Entity;
+
 import io.vram.frex.api.material.EntityMaterialMap;
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.RenderMaterial;
 import org.jetbrains.annotations.ApiStatus.Internal;
+
+import net.minecraft.world.entity.Entity;
 
 @Internal
 class EntitySingleMaterialMap implements EntityMaterialMap {

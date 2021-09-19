@@ -16,9 +16,11 @@ package io.vram.frex.api.model;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
+
+import io.vram.frex.impl.model.FluidModelImpl;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
-import io.vram.frex.impl.model.FluidModelImpl;
 
 /**
  * Identical in operation to {@link BlockModel} but for fluids.

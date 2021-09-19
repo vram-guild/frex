@@ -20,6 +20,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import io.vram.frex.api.material.BlockEntityMaterialMap;
+import io.vram.frex.api.material.EntityMaterialMap;
+import io.vram.frex.api.material.MaterialMap;
+import io.vram.frex.impl.FrexLog;
+import org.jetbrains.annotations.ApiStatus.Internal;
+
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
@@ -34,11 +41,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import io.vram.frex.api.material.BlockEntityMaterialMap;
-import io.vram.frex.api.material.EntityMaterialMap;
-import io.vram.frex.api.material.MaterialMap;
-import io.vram.frex.impl.FrexLog;
-import org.jetbrains.annotations.ApiStatus.Internal;
 
 @Internal
 public class MaterialMapLoader {

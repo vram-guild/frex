@@ -4,13 +4,12 @@
   "package": "grondag.frex.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "MixinChunkBuilder",
-    "MixinChunkRendererRegion",
+    "MixinChunkRebuildTask",
+    "MixinRenderChunkRegion",
     "MixinFabricBakedModel",
     "MixinFabricSpriteFinder",
     "MixinFluidAppearanceImpl",
-    "MixinFluidRenderHandler",
-  	"MixinWorldRendererOldEvents"
+    "MixinFluidRenderHandler"
   ],
   "injectors": {
     "defaultRequire": 1

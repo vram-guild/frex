@@ -45,8 +45,7 @@ import static io.vram.frex.api.material.MaterialConstants.WRITE_MASK_COLOR_DEPTH
 import static io.vram.frex.api.material.MaterialConstants.WRITE_MASK_DEPTH;
 
 import java.util.Locale;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.vram.frex.api.material.MaterialConstants;
@@ -54,6 +53,9 @@ import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.renderer.Renderer;
 import org.jetbrains.annotations.ApiStatus.Internal;
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
 
 @Internal
 public class MaterialDeserializer {

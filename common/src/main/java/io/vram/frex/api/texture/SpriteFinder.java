@@ -17,6 +17,7 @@ package io.vram.frex.api.texture;
 import io.vram.frex.api.mesh.QuadEditor;
 import io.vram.frex.api.mesh.QuadView;
 import io.vram.frex.impl.texture.SpriteFinderImpl;
+
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 

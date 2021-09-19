@@ -15,10 +15,12 @@
 package io.vram.frex.impl.light;
 
 import java.io.InputStreamReader;
-import net.minecraft.util.GsonHelper;
+
 import com.google.gson.JsonObject;
 import io.vram.frex.api.light.ItemLight;
 import org.jetbrains.annotations.ApiStatus.Internal;
+
+import net.minecraft.util.GsonHelper;
 
 @Internal
 public class ItemLightDeserializer {

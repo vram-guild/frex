@@ -15,10 +15,12 @@
 package io.vram.frex.impl.material;
 
 import java.util.IdentityHashMap;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+
 import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.api.material.RenderMaterial;
 import org.jetbrains.annotations.ApiStatus.Internal;
+
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 @Internal
 class DefaultedMultiMaterialMap implements MaterialMap {

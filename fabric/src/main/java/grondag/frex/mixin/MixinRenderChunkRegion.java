@@ -36,14 +36,14 @@ import grondag.frex.impl.event.ChunkRenderConditionContext.RenderRegionListenerP
 
 @Environment(EnvType.CLIENT)
 @Mixin(RenderChunkRegion.class)
-public class MixinChunkRendererRegion implements RenderRegionListenerProvider {
+public class MixinRenderChunkRegion implements RenderRegionListenerProvider {
 	@Unique
 	private @Nullable RenderRegionBakeListener[] listeners;
 
 	private static final ThreadLocal<ChunkRenderConditionContext> TRANSFER_POOL = ThreadLocal.withInitial(ChunkRenderConditionContext::new);
 
-	@Inject(method = "isEmptyBetween", at = @At("RETURN"), cancellable = true)
-	private static void isChunkEmpty(BlockPos startPos, BlockPos endPos, int i, int j, LevelChunk[][] worldChunks, CallbackInfoReturnable<Boolean> cir) {
+	@Inject(method = "isAllEmpty", at = @At("RETURN"), cancellable = true)
+	private static void isChunkEmpty(BlockPos startPos, BlockPos endPos, int i, int j, LevelChunk[][] levelChunks, CallbackInfoReturnable<Boolean> cir) {
 		// even if region not empty we still test here and capture listeners here
 		final ChunkRenderConditionContext context = TRANSFER_POOL.get().prepare(startPos.getX() + 1, startPos.getY() + 1, startPos.getZ() + 1);
 		RenderRegionBakeListener.prepareInvocations(context, context.listeners);

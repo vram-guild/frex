@@ -45,9 +45,9 @@ import grondag.frex.impl.event.BlockStateRendererImpl;
 import grondag.frex.impl.event.ChunkRenderConditionContext.RenderRegionListenerProvider;
 
 @Environment(EnvType.CLIENT)
-@Mixin(targets = "net/minecraft/client/render/chunk/ChunkBuilder$BuiltChunk$RebuildTask")
-public class MixinChunkBuilder implements RenderRegionContext {
-	@Shadow protected RenderChunk field_20839;
+@Mixin(targets = "net/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask")
+public class MixinChunkRebuildTask implements RenderRegionContext {
+	@Shadow protected RenderChunk this$1;
 
 	@Unique
 	private final BlockStateRendererImpl blockStateRenderer = new BlockStateRendererImpl();
@@ -56,8 +56,9 @@ public class MixinChunkBuilder implements RenderRegionContext {
 	@Unique
 	private RenderChunkRegion contextRegion;
 
-	@Inject(method = "Lnet/minecraft/client/render/chunk/ChunkBuilder$BuiltChunk$RebuildTask;render(FFFLnet/minecraft/client/render/chunk/ChunkBuilder$ChunkData;Lnet/minecraft/client/render/chunk/BlockBufferBuilderStorage;)Ljava/util/Set;", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/BlockPos;iterate(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/BlockPos;)Ljava/lang/Iterable;"), locals = LocalCapture.CAPTURE_FAILHARD)
-	private void onRender(float cameraX, float cameraY, float cameraZ, ChunkRenderDispatcher.CompiledChunk data, ChunkBufferBuilderPack buffers, CallbackInfoReturnable<Set<BlockEntity>> cir, int i, BlockPos blockPos, BlockPos blockPos2, VisGraph chunkOcclusionDataBuilder, Set<BlockEntity> set, RenderChunkRegion chunkRendererRegion, PoseStack matrixStack, Random random, BlockRenderDispatcher blockRenderManager) {
+	@Inject(method = "Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask;compile(FFFLnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$CompiledChunk;Lnet/minecraft/client/renderer/ChunkBufferBuilderPack;)Ljava/util/Set;",
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/core/BlockPos;betweenClosed(Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/BlockPos;)Ljava/lang/Iterable;"), locals = LocalCapture.CAPTURE_FAILHARD)
+	private void onCompile(float cameraX, float cameraY, float cameraZ, ChunkRenderDispatcher.CompiledChunk data, ChunkBufferBuilderPack buffers, CallbackInfoReturnable<Set<BlockEntity>> cir, int i, BlockPos blockPos, BlockPos blockPos2, VisGraph chunkOcclusionDataBuilder, Set<BlockEntity> set, RenderChunkRegion chunkRendererRegion, PoseStack matrixStack, Random random, BlockRenderDispatcher blockRenderManager) {
 		if (chunkRendererRegion != null) {
 			final RenderRegionBakeListener[] listeners = ((RenderRegionListenerProvider) chunkRendererRegion).frex_getRenderRegionListeners();
 
@@ -82,6 +83,6 @@ public class MixinChunkBuilder implements RenderRegionContext {
 
 	@Override
 	public BlockPos origin() {
-		return field_20839.getOrigin();
+		return this$1.getOrigin();
 	}
 }

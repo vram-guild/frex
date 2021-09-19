@@ -15,6 +15,7 @@
 package io.vram.frex.impl.material.predicate;
 
 import io.vram.frex.api.material.RenderMaterial;
+
 import net.minecraft.world.level.block.state.BlockState;
 
 public class StateMaterialOnly extends StateBiPredicate {

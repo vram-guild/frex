@@ -17,7 +17,7 @@ package grondag.frex.mixin;
 import io.vram.frex.api.model.BlockModel;
 import io.vram.frex.api.model.ItemModel;
 import io.vram.frex.api.model.ModelRenderContext;
-import io.vram.frex.compat.fabric.FabricModelWrapper;
+import io.vram.frex.compat.fabric.FabricContextWrapper;
 import org.spongepowered.asm.mixin.Mixin;
 
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
@@ -32,11 +32,11 @@ import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 public interface MixinFabricBakedModel extends BlockModel, ItemModel {
 	@Override
 	default void renderAsItem(ItemStack itemStack, TransformType mode, ModelRenderContext context) {
-		FabricModelWrapper.wrap((FabricBakedModel) this).renderAsItem(itemStack, mode, context);
+		((FabricBakedModel) this).emitItemQuads(itemStack, context::random, FabricContextWrapper.wrap(context));
 	}
 
 	@Override
 	default void renderAsBlock(BlockAndTintGetter blockView, BlockState state, BlockPos pos, ModelRenderContext context) {
-		FabricModelWrapper.wrap((FabricBakedModel) this).renderAsBlock(blockView, state, pos, context);
+		((FabricBakedModel) this).emitBlockQuads(blockView, state, pos, context::random, FabricContextWrapper.wrap(context));
 	}
 }

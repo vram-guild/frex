@@ -38,7 +38,6 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.InvalidateRenderStateCallback;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -83,24 +82,17 @@ public class Frex implements ClientModInitializer {
 
 		SpriteFinderImpl.init(a -> (io.vram.frex.api.texture.SpriteFinder) SpriteFinder.get(null));
 
-		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(materialMapListener);
+		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(modelTextureListener);
 
 		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(lightListener);
 
-		FabricLoader.getInstance().getEntrypoints("frex", FrexInitializer.class).forEach(
-			api -> api.onInitalizeFrex());
+		FabricLoader.getInstance().getEntrypoints("frex", FrexInitializer.class).forEach(api -> api.onInitalizeFrex());
 
 		final Function<String, Consumer<Boolean>> provider = FlawlessFramesImpl.providerFactory();
 		FabricLoader.getInstance().getEntrypoints("frex_flawless_frames", Consumer.class).forEach(api -> api.accept(provider));
-
-		// WIP: should be on resource reload
-		InvalidateRenderStateCallback.EVENT.register(() -> {
-			FluidModelImpl.reload();
-			SimpleFluidSpriteProvider.reload();
-		});
 	}
 
-	private final SimpleSynchronousResourceReloadListener materialMapListener = new SimpleSynchronousResourceReloadListener() {
+	private final SimpleSynchronousResourceReloadListener modelTextureListener = new SimpleSynchronousResourceReloadListener() {
 		private final List<ResourceLocation> deps = ImmutableList.of(ResourceReloadListenerKeys.MODELS, ResourceReloadListenerKeys.TEXTURES);
 		private final ResourceLocation id = new ResourceLocation("frex:material_map");
 
@@ -117,6 +109,8 @@ public class Frex implements ClientModInitializer {
 		@Override
 		public void onResourceManagerReload(ResourceManager resourceManager) {
 			MaterialMapLoader.INSTANCE.reload(resourceManager);
+			SimpleFluidSpriteProvider.reload();
+			FluidModelImpl.reload();
 		}
 	};
 

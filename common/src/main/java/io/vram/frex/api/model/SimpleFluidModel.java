@@ -12,13 +12,10 @@
  *  the License.
  */
 
-package grondag.frex.api.fluid;
+package io.vram.frex.api.model;
 
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.mesh.QuadEditor;
-import io.vram.frex.api.model.FluidAppearance;
-import io.vram.frex.api.model.FluidModel;
-import io.vram.frex.api.model.ModelRenderContext;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;

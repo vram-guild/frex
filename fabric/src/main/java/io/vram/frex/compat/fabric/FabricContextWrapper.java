@@ -27,11 +27,6 @@ import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 public class FabricContextWrapper implements RenderContext {
 	private ModelRenderContext wrapped;
 
-	public FabricContextWrapper wrap(ModelRenderContext wrapped) {
-		this.wrapped = wrapped;
-		return this;
-	}
-
 	private final Consumer<Mesh> meshConsumer = m -> {
 		wrapped.accept(((FabricMesh) m).wrapped);
 	};
@@ -65,5 +60,13 @@ public class FabricContextWrapper implements RenderContext {
 	@Override
 	public void popTransform() {
 		wrapped.popTransform();
+	}
+
+	private static final ThreadLocal<FabricContextWrapper> POOL = ThreadLocal.withInitial(FabricContextWrapper::new);
+
+	public static FabricContextWrapper wrap(ModelRenderContext wrapped) {
+		final var result = POOL.get();
+		result.wrapped = wrapped;
+		return result;
 	}
 }

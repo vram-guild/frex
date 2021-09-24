@@ -17,7 +17,8 @@ package io.vram.frex.api.material;
 import net.minecraft.resources.ResourceLocation;
 
 public interface RenderMaterial {
-	ResourceLocation MATERIAL_STANDARD = new ResourceLocation("frex", "standard");
+	ResourceLocation STANDARD_MATERIAL_KEY = new ResourceLocation("frex", "standard");
+	ResourceLocation MISSING_MATERIAL_KEY = new ResourceLocation("frex", "missing");
 
 	int preset();
 

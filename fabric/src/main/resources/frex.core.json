@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.vram.frex.mixin.core",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "AccessCompositeState",
+    "AccessTextureStateShard"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

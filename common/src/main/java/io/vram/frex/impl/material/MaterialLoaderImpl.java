@@ -47,7 +47,7 @@ public final class MaterialLoaderImpl {
 
 	static {
 		STANDARD_MATERIAL_IDS.add(new ResourceLocation ("fabric", "standard"));
-		STANDARD_MATERIAL_IDS.add(RenderMaterial.MATERIAL_STANDARD);
+		STANDARD_MATERIAL_IDS.add(RenderMaterial.STANDARD_MATERIAL_KEY);
 	}
 
 	/** Clear load cache and errors. Call at start of loading each pass. */

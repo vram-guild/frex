@@ -18,7 +18,8 @@
 
   "environment": "client",
   "mixins": [
-    "frex.client.json"
+    "frex.client.json",
+    "frex.core.json"
   ],
   "entrypoints": {
     "client": [ "grondag.frex.Frex" ]

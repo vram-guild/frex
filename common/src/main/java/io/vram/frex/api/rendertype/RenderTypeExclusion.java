@@ -1,4 +1,4 @@
-package io.vram.frex.api.material;
+package io.vram.frex.api.rendertype;
 
 import java.util.function.Predicate;
 

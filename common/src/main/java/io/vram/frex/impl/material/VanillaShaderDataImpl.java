@@ -22,26 +22,50 @@ import static io.vram.frex.api.material.MaterialConstants.CUTOUT_NONE;
 import static io.vram.frex.api.material.MaterialConstants.CUTOUT_TENTH;
 import static io.vram.frex.api.material.MaterialConstants.CUTOUT_ZERO;
 
+import io.vram.frex.api.rendertype.VanillaShaderData;
 import it.unimi.dsi.fastutil.Hash;
-import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
-// segregates render layer references from mod init
-public final class MojangShaderData {
+import net.minecraft.client.renderer.RenderStateShard.ShaderStateShard;
+
+@Internal
+public final class VanillaShaderDataImpl implements VanillaShaderData {
 	public final boolean fog;
 	public final int cutout;
 	public final boolean diffuse;
-	public final boolean glint;
+	public final boolean foil;
 
-	private MojangShaderData(boolean fog, boolean glint, int cutout, boolean diffuse) {
+	private VanillaShaderDataImpl(boolean fog, boolean foil, int cutout, boolean diffuse) {
 		this.fog = fog;
-		this.glint = glint;
+		this.foil = foil;
 		this.cutout = cutout;
 		this.diffuse = diffuse;
 	}
 
-	private static final Reference2ObjectOpenHashMap<String, MojangShaderData> MAP = new Reference2ObjectOpenHashMap<>(64, Hash.VERY_FAST_LOAD_FACTOR);
+	@Override
+	public boolean fog() {
+		return fog;
+	}
 
-	public static final MojangShaderData MISSING = of(false, false, CUTOUT_NONE);
+	@Override
+	public int cutout() {
+		return cutout;
+	}
+
+	@Override
+	public boolean diffuse() {
+		return diffuse;
+	}
+
+	@Override
+	public boolean foil() {
+		return foil;
+	}
+
+	private static final Object2ObjectOpenHashMap<String, VanillaShaderDataImpl> MAP = new Object2ObjectOpenHashMap<>(64, Hash.VERY_FAST_LOAD_FACTOR);
+
+	public static final VanillaShaderDataImpl MISSING = of(false, false, CUTOUT_NONE);
 
 	static {
 		MAP.put("block", of(false, CUTOUT_NONE));
@@ -98,19 +122,24 @@ public final class MojangShaderData {
 		MAP.put("rendertype_tripwire", of(false, CUTOUT_TENTH));
 	}
 
-	public static MojangShaderData get(String shader) {
-		return MAP.getOrDefault(shader, MISSING);
+	public static VanillaShaderDataImpl get(ShaderStateShard shaderStateShard) {
+		final var shader = shaderStateShard.shader;
+		return shader.isPresent() ? get(shader.get().get().name) : MISSING;
 	}
 
-	private static MojangShaderData of(boolean fog, int cutout) {
-		return new MojangShaderData(fog, false, cutout, false);
+	private static VanillaShaderDataImpl get(String shaderName) {
+		return MAP.getOrDefault(shaderName, MISSING);
 	}
 
-	private static MojangShaderData of(boolean fog, int cutout, boolean diffuse) {
-		return new MojangShaderData(fog, false, cutout, diffuse);
+	private static VanillaShaderDataImpl of(boolean fog, int cutout) {
+		return new VanillaShaderDataImpl(fog, false, cutout, false);
 	}
 
-	private static MojangShaderData of(boolean fog, boolean glint, int cutout) {
-		return new MojangShaderData(fog, glint, cutout, false);
+	private static VanillaShaderDataImpl of(boolean fog, int cutout, boolean diffuse) {
+		return new VanillaShaderDataImpl(fog, false, cutout, diffuse);
+	}
+
+	private static VanillaShaderDataImpl of(boolean fog, boolean glint, int cutout) {
+		return new VanillaShaderDataImpl(fog, glint, cutout, false);
 	}
 }

@@ -14,24 +14,26 @@
  *  the License.
  */
 
-package io.vram.frex.mixin.core;
+package io.vram.frex.api.rendertype;
 
-import java.util.Optional;
+import io.vram.frex.impl.material.VanillaShaderDataImpl;
+import org.jetbrains.annotations.ApiStatus.NonExtendable;
 
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import net.minecraft.client.renderer.RenderStateShard.ShaderStateShard;
 
-import net.minecraft.client.renderer.RenderStateShard.TextureStateShard;
-import net.minecraft.resources.ResourceLocation;
+@NonExtendable
+public interface VanillaShaderData {
+	boolean fog();
 
-@Mixin(TextureStateShard.class)
-public interface AccessTextureStateShard {
-	@Accessor
-	boolean getBlur();
+	int cutout();
 
-	@Accessor
-	boolean getMipmap();
+	boolean diffuse();
 
-	@Accessor
-	Optional<ResourceLocation> getTexture();
+	boolean foil();
+
+	VanillaShaderData MISSING = VanillaShaderDataImpl.MISSING;
+
+	static VanillaShaderData get(ShaderStateShard shaderStateShard) {
+		return VanillaShaderDataImpl.get(shaderStateShard);
+	}
 }

@@ -14,6 +14,7 @@
 
 package io.vram.frex.api.material;
 
+import io.vram.frex.impl.material.MaterialFinderPool;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.resources.ResourceLocation;
@@ -125,6 +126,8 @@ public interface MaterialFinder {
 	 */
 	MaterialFinder flashOverlay(boolean flashOverlay);
 
+	MaterialFinder foilOverlay(boolean foilOverlay);
+
 	/**
 	 * Enable or disables atmospheric fog for this material.
 	 */
@@ -230,4 +233,10 @@ public interface MaterialFinder {
 	 * @return finder instance for ease of chaining calls
 	 */
 	MaterialFinder castShadows(boolean castShadows);
+
+	static MaterialFinder threadLocal() {
+		return MaterialFinderPool.threadLocal();
+	}
+
+	MaterialFinder label(String name);
 }

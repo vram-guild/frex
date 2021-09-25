@@ -91,6 +91,9 @@ accessible   field   net/minecraft/client/renderer/RenderStateShard   LINES_SHAD
 accessible   field  com/mojang/blaze3d/pipeline/RenderTarget       colorTextureId I
 accessible   field  com/mojang/blaze3d/pipeline/RenderTarget       depthBufferId I
 
+accessible field net/minecraft/client/renderer/RenderType sortOnUpload Z
+accessible field net/minecraft/client/renderer/RenderStateShard name Ljava/lang/String;
+
 accessible class net/minecraft/client/renderer/RenderType$OutlineProperty
 accessible class net/minecraft/client/renderer/RenderType$CompositeState
 accessible class net/minecraft/client/renderer/RenderStateShard$TextureStateShard

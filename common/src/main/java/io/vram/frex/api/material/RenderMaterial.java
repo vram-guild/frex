@@ -75,13 +75,19 @@ public interface RenderMaterial {
 	int writeMask();
 
 	/**
-	 * If this material is derived from and/or represents a vanilla {@code RenderLayer}
-	 * and that layer has an associated name (given by Mojang) the name of that layer.
-	 * Value is undefined in other cases.
+	 * A name associated with this material for diagnostic purposes.
 	 *
-	 * @return name of associated vanilla {@code RenderLayer} if any, undefined otherwise
+	 * <p>This name is not reliable and renderers will generally not treat it as part
+	 * of material state - if two materials have identical properties aside from name,
+	 * most renderers will treat those as the same material.  Thus, this name will
+	 * probably be the name assigned by whatever process requested it first, if any.
+	 *
+	 * <p>For materials that are derived from vanilla RenderType instances, FREX will
+	 * attempt to label them with the an associated name (given by Mojang) of that type.
+	 *
+	 * @return label associated vanilla {@code RenderLayer} if any, undefined otherwise
 	 */
-	String renderLayerName();
+	String label();
 
 	/**
 	 * True when material should cast shadows. Pipelines that lack

@@ -47,7 +47,9 @@ public class ArrayPredicate extends MaterialPredicate {
 		addOrNull(sparsePredicates, compactPredicates, json, "texture", e -> MaterialTester.createString(e, MaterialTester.TEXTURE_TEST));
 		addOrNull(sparsePredicates, compactPredicates, json, "vertexSource", e -> MaterialTester.createString(e, MaterialTester.VERTEX_SOURCE_TEST));
 		addOrNull(sparsePredicates, compactPredicates, json, "fragmentSource", e -> MaterialTester.createString(e, MaterialTester.FRAGMENT_SOURCE_TEST));
-		addOrNull(sparsePredicates, compactPredicates, json, "renderLayerName", e -> MaterialTester.createString(e, MaterialTester.RENDER_LAYER_NAME_TEST));
+		// TODO: add/update docs to indicate that renderLayerName is deprecated - use label instead
+		addOrNull(sparsePredicates, compactPredicates, json, "renderLayerName", e -> MaterialTester.createString(e, MaterialTester.LABEL_TEST));
+		addOrNull(sparsePredicates, compactPredicates, json, "label", e -> MaterialTester.createString(e, MaterialTester.LABEL_TEST));
 		addOrNull(sparsePredicates, compactPredicates, json, "disableAo", e -> MaterialTester.createBoolean(e, MaterialTester.DISABLE_AO_TEST));
 		addOrNull(sparsePredicates, compactPredicates, json, "disableColorIndex", e -> MaterialTester.createBoolean(e, MaterialTester.DISABLE_COLOR_INDEX_TEST));
 		addOrNull(sparsePredicates, compactPredicates, json, "disableDiffuse", e -> MaterialTester.createBoolean(e, MaterialTester.DISABLE_DIFFUSE_TEST));

@@ -191,7 +191,7 @@ public class FabricMaterial implements grondag.frex.api.material.RenderMaterial 
 
 	@Override
 	public String renderLayerName() {
-		return wrapped.renderLayerName();
+		return wrapped.label();
 	}
 
 	@Override

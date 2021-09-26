@@ -12,12 +12,13 @@
  *  the License.
  */
 
-package grondag.frex.mixin;
+package io.vram.frex.mixin;
 
-import io.vram.frex.api.texture.SpriteFinder;
+import io.vram.frex.api.model.fluid.FluidAppearance;
 import org.spongepowered.asm.mixin.Mixin;
 
-import net.fabricmc.fabric.impl.renderer.SpriteFinderImpl;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 
-@Mixin(SpriteFinderImpl.class)
-public abstract class MixinFabricSpriteFinder implements SpriteFinder { }
+// Makes FluidRenderHandler and FREX equivalents cross-compatible
+@Mixin(FluidRenderHandler.class)
+public interface MixinFluidRenderHandler extends FluidAppearance { }

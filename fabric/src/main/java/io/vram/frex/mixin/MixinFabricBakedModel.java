@@ -12,7 +12,7 @@
  *  the License.
  */
 
-package grondag.frex.mixin;
+package io.vram.frex.mixin;
 
 import io.vram.frex.api.model.BlockModel;
 import io.vram.frex.api.model.ItemModel;

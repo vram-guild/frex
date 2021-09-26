@@ -1,17 +1,21 @@
 {
-  "required": true,
-  "minVersion": "0.8",
-  "package": "grondag.frex.mixin",
-  "compatibilityLevel": "JAVA_16",
-  "mixins": [
-    "MixinChunkRebuildTask",
-    "MixinRenderChunkRegion",
-    "MixinFabricBakedModel",
-    "MixinFabricSpriteFinder",
-    "MixinFluidAppearanceImpl",
-    "MixinFluidRenderHandler"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+	"required": true,
+	"minVersion": "0.8",
+	"package": "io.vram.frex.mixin",
+	"compatibilityLevel": "JAVA_16",
+	"plugin": "io.vram.frex.mixin.FrexMixinPlugin",
+	"mixins": [
+		"MixinChunkRebuildTask",
+		"MixinRenderChunkRegion",
+		"MixinFabricBakedModel",
+		"MixinFabricSpriteFinder",
+		"MixinFluidAppearanceImpl",
+		"MixinFluidRenderHandler"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"conformVisibility": true
+	}
 }

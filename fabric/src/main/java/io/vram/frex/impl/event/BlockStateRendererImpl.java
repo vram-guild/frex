@@ -12,7 +12,7 @@
  *  the License.
  */
 
-package grondag.frex.impl.event;
+package io.vram.frex.impl.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 

@@ -12,7 +12,7 @@
  *  the License.
  */
 
-package grondag.frex.impl.event;
+package io.vram.frex.impl.event;
 
 import io.vram.frex.api.world.RenderRegionBakeListener;
 import io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext;

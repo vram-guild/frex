@@ -147,12 +147,12 @@ public class FabricQuadView<T extends QuadView> implements grondag.frex.api.mesh
 
 	@Override
 	public float spriteU(int vertexIndex, int spriteIndex) {
-		return wrapped.spriteU(vertexIndex);
+		return wrapped.u(vertexIndex);
 	}
 
 	@Override
 	public float spriteV(int vertexIndex, int spriteIndex) {
-		return wrapped.spriteV(vertexIndex);
+		return wrapped.v(vertexIndex);
 	}
 
 	@Override
@@ -167,12 +167,12 @@ public class FabricQuadView<T extends QuadView> implements grondag.frex.api.mesh
 
 	@Override
 	public float spriteU(int vertexIndex) {
-		return wrapped.spriteU(vertexIndex);
+		return wrapped.u(vertexIndex);
 	}
 
 	@Override
 	public float spriteV(int vertexIndex) {
-		return wrapped.spriteV(vertexIndex);
+		return wrapped.v(vertexIndex);
 	}
 
 	@Override

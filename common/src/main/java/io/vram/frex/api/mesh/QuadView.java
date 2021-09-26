@@ -190,14 +190,42 @@ public interface QuadView {
 	int vertexColor(int vertexIndex);
 
 	/**
-	 * Retrieve horizontal sprite atlas coordinates.
+	 * Retrieve horizontal texture coordinates.
+	 *
+	 * <p>For sprite atlas textures, the coordinates will be
+	 * relative to the atlas texture, not relative to the sprite.
 	 */
-	float spriteU(int vertexIndex);
+	float u(int vertexIndex);
 
 	/**
-	 * Retrieve vertical sprite atlas coordinates.
+	 * Retrieve vertical texture coordinate.
+	 *
+	 * <p>For sprite atlas textures, the coordinates will be
+	 * relative to the atlas texture, not relative to the sprite.
 	 */
-	float spriteV(int vertexIndex);
+	float v(int vertexIndex);
+
+	/**
+	 * Retrieve sprite-relative horizontal texture coordinates.
+	 *
+	 * <p>For sprite atlas textures, the coordinates will be
+	 * relative to the sprite texture, not relative to the atlas.
+	 *
+	 * <p>For non-atlas textures, the result will be the
+	 * same as #{@link #u(int)}
+	 */
+	float uSprite(int vertexIndex);
+
+	/**
+	 * Retrieve sprite-relative vertical texture coordinate.
+	 *
+	 * <p>For sprite atlas textures, the coordinates will be
+	 * relative to the sprite texture, not relative to the atlas.
+	 *
+	 * <p>For non-atlas textures, the result will be the
+	 * same as #{@link #v(int)}
+	 */
+	float vSprite(int vertexIndex);
 
 	/**
 	 * If false, no vertex tangent was provided.

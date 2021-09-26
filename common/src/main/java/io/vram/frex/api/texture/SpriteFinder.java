@@ -50,8 +50,8 @@ public interface SpriteFinder {
 	 * except to the extent it was used to determine u,v.
 	 */
 	default TextureAtlasSprite find(QuadView quad) {
-		final float u = quad.spriteU(0) + quad.spriteU(1) + quad.spriteU(2) + quad.spriteU(3);
-		final float v = quad.spriteV(0) + quad.spriteV(1) + quad.spriteV(2) + quad.spriteV(3);
+		final float u = quad.u(0) + quad.u(1) + quad.u(2) + quad.u(3);
+		final float v = quad.v(0) + quad.v(1) + quad.v(2) + quad.v(3);
 		return find(u * 0.25f, v * 0.25f);
 	}
 

@@ -144,9 +144,26 @@ public interface QuadEditor extends QuadView {
 	}
 
 	/**
-	 * Set texture coordinates.
+	 * Set texture coordinates relative to the "raw" texture.
+	 * For sprite atlas textures, the coordinates must be
+	 * relative to the atlas texture, not relative to the sprite.
 	 */
 	QuadEditor uv(int vertexIndex, float u, float v);
+
+	/**
+	 * Sets texture coordinates relative to the given texture sprite.
+	 * For sprite atlas textures, this may be more convenient than
+	 * interpolating the coordinates directly.  Additionally, this method
+	 * will often be more performant for renderers that need to track
+	 * sprite identity within meshes or that use sprite-relative coordinates
+	 * in shaders.
+	 *
+	 * <p>Note that the material for this quad must be associated with a
+	 * sprite atlas texture, and the sprite must belong to that atlas texture.
+	 * If this condition is unmet, or if the sprite is null, will operate
+	 * as if {@link #uv(int, float, float)} had been called for all four vertices.
+	 */
+	QuadEditor uvSprite(@Nullable TextureAtlasSprite sprite, float u0, float v0, float u1, float v1, float u2, float v2, float u3, float v3);
 
 	/**
 	 * Assigns sprite atlas u,v coordinates to this quad for the given sprite.

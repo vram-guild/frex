@@ -32,16 +32,31 @@ public interface FrexFeature {
 
 	// IDs 0 - 4095 are reserved for FREX.
 
-	/** Present when registerOrUpdateMaterial is supported. */
+	/**
+	 * Present when registerOrUpdateMaterial is supported.
+	 * If not present, materials cannot be changed once registered.
+	 * Renderer-dependent, unavailable with Fabric API implementations.
+	 */
 	int UPDATE_MATERIAL_REGISTRATION = 0;
 
-	int MATERIAL_SHADERS = 1;
+	/**
+	 * Present when renderer uses held item light API.
+	 * Renderer-dependent, unavailable with Fabric API implementations.
+	 * This feature is also pipeline-dependent.
+	 *
+	 * <p>Note that JSON loading and the event API are
+	 * provided by FREX and will always be available - no
+	 * special handling is required to create a soft dependency.
+	 */
+	int HELD_ITEM_LIGHTS = 1;
+
+	int MATERIAL_SHADERS = 1024;
 
 	/**
 	 * Present when the renderer consumes physical texture maps from FREX and
 	 * makes them available to shaders to enable physically-based-rendering.
 	 */
-	int PHYSICAL_TEXTURES = 2;
+	int PHYSICAL_TEXTURES = 1025;
 
 	/** Third-party extension features begin numbering here. */
 	int EXTENSION_BASE = 4096;

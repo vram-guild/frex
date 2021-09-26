@@ -14,6 +14,7 @@
 
 package io.vram.frex.api.light;
 
+import io.vram.frex.api.config.FrexFeature;
 import io.vram.frex.impl.light.HeldItemLightListenerImpl;
 
 import net.minecraft.world.entity.LivingEntity;
@@ -52,7 +53,10 @@ public interface HeldItemLightListener {
 		HeldItemLightListenerImpl.register(listener);
 	}
 
-	/** For use by renderer implementations. */
+	/**
+	 * For use by renderer implementations.
+	 * Renderers that implement item lights should declare {@link FrexFeature#HELD_ITEM_LIGHTS}.
+	 */
 	static ItemLight apply(LivingEntity holdingEntity, ItemStack heldStack, ItemLight defaultResult) {
 		return HeldItemLightListenerImpl.apply(holdingEntity, heldStack, defaultResult);
 	}

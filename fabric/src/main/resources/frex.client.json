@@ -10,7 +10,8 @@
 		"MixinFabricBakedModel",
 		"MixinFabricSpriteFinder",
 		"MixinFluidAppearanceImpl",
-		"MixinFluidRenderHandler"
+		"MixinFluidRenderHandler",
+		"MixinLevelRenderer"
 	],
 	"injectors": {
 		"defaultRequire": 1

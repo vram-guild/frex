@@ -12,10 +12,11 @@
  *  the License.
  */
 
-package io.vram.frex.api.model;
+package io.vram.frex.api.model.fluid;
 
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.mesh.QuadEditor;
+import io.vram.frex.api.model.ModelRenderContext;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
@@ -165,18 +166,18 @@ public class SimpleFluidModel implements FluidModel {
 				v2 = Mth.lerp(centerScale, v2, vCentroid);
 				v3 = Mth.lerp(centerScale, v3, vCentroid);
 
-				qe.pos(0, 0, centerNwHeight, 0).sprite(0, u0, v0).vertexColor(0, nwColor)
-				.pos(1, 0, southNwHeight, 1).sprite(1, u1, v1).vertexColor(1, swColor)
-				.pos(2, 1, southEastNwHeight, 1).sprite(2, u2, v2).vertexColor(2, seColor)
-				.pos(3, 1, eastNwHeight, 0).sprite(3, u3, v3).vertexColor(3, neColor)
+				qe.pos(0, 0, centerNwHeight, 0).uv(0, u0, v0).vertexColor(0, nwColor)
+				.pos(1, 0, southNwHeight, 1).uv(1, u1, v1).vertexColor(1, swColor)
+				.pos(2, 1, southEastNwHeight, 1).uv(2, u2, v2).vertexColor(2, seColor)
+				.pos(3, 1, eastNwHeight, 0).uv(3, u3, v3).vertexColor(3, neColor)
 				.material(material).emit();
 
 				// backface
 				if (fluidState.shouldRenderBackwardUpFace(world, searchPos.setWithOffset(centerPos, Direction.UP))) {
-					qe.pos(0, 0, centerNwHeight, 0).sprite(0, u0, v0).vertexColor(0, nwColor)
-					.pos(1, 1, eastNwHeight, 0).sprite(1, u3, v3).vertexColor(1, neColor)
-					.pos(2, 1, southEastNwHeight, 1).sprite(2, u2, v2).vertexColor(2, seColor)
-					.pos(3, 0, southNwHeight, 1).sprite(3, u1, v1).vertexColor(3, swColor)
+					qe.pos(0, 0, centerNwHeight, 0).uv(0, u0, v0).vertexColor(0, nwColor)
+					.pos(1, 1, eastNwHeight, 0).uv(1, u3, v3).vertexColor(1, neColor)
+					.pos(2, 1, southEastNwHeight, 1).uv(2, u2, v2).vertexColor(2, seColor)
+					.pos(3, 0, southNwHeight, 1).uv(3, u1, v1).vertexColor(3, swColor)
 					.material(material).emit();
 				}
 			}
@@ -189,10 +190,10 @@ public class SimpleFluidModel implements FluidModel {
 				v1 = stillSprite.getV0();
 				v0 = stillSprite.getV1();
 
-				qe.pos(0, 0, downBasedOffset, 1).sprite(0, u0, v0).vertexColor(0, swColor)
-				.pos(1, 0, downBasedOffset, 0).sprite(1, u0, v1).vertexColor(1, nwColor)
-				.pos(2, 1, downBasedOffset, 0).sprite(2, u1, v1).vertexColor(2, neColor)
-				.pos(3, 1, downBasedOffset, 1).sprite(3, u1, v0).vertexColor(3, seColor)
+				qe.pos(0, 0, downBasedOffset, 1).uv(0, u0, v0).vertexColor(0, swColor)
+				.pos(1, 0, downBasedOffset, 0).uv(1, u0, v1).vertexColor(1, nwColor)
+				.pos(2, 1, downBasedOffset, 0).uv(2, u1, v1).vertexColor(2, neColor)
+				.pos(3, 1, downBasedOffset, 1).uv(3, u1, v0).vertexColor(3, seColor)
 				.material(material).emit();
 			}
 
@@ -272,21 +273,21 @@ public class SimpleFluidModel implements FluidModel {
 					final float v1 = sideSprite.getV((1.0F - y1) * 16.0F * 0.5F);
 					final float vCenter = sideSprite.getV(8.0D);
 
-					qe.pos(0, x0, y0, z0).sprite(0, u0, v0).vertexColor(0, c0)
-					.pos(1, x1, y1, z1).sprite(1, u1, v1).vertexColor(1, c1)
-					.pos(2, x1, downBasedOffset, z1).sprite(2, u1, vCenter).vertexColor(2, c1)
-					.pos(3, x0, downBasedOffset, z0).sprite(3, u0, vCenter).vertexColor(3, c0)
+					qe.pos(0, x0, y0, z0).uv(0, u0, v0).vertexColor(0, c0)
+					.pos(1, x1, y1, z1).uv(1, u1, v1).vertexColor(1, c1)
+					.pos(2, x1, downBasedOffset, z1).uv(2, u1, vCenter).vertexColor(2, c1)
+					.pos(3, x0, downBasedOffset, z0).uv(3, u0, vCenter).vertexColor(3, c0)
 					// WIP: why do this here if set vertex colors earlier?
-					.quadColor(centerColor, centerColor, centerColor, centerColor)
+					.vertexColor(centerColor, centerColor, centerColor, centerColor)
 					.material(material).emit();
 
 					if (!overlay) {
-						qe.pos(0, x0, downBasedOffset, z0).sprite(0, u0, vCenter).vertexColor(0, c0)
-						.pos(1, x1, downBasedOffset, z1).sprite(1, u1, vCenter).vertexColor(1, c1)
-						.pos(2, x1, y1, z1).sprite(2, u1, v1).vertexColor(2, c1)
-						.pos(3, x0, y0, z0).sprite(3, u0, v0).vertexColor(3, c0)
+						qe.pos(0, x0, downBasedOffset, z0).uv(0, u0, vCenter).vertexColor(0, c0)
+						.pos(1, x1, downBasedOffset, z1).uv(1, u1, vCenter).vertexColor(1, c1)
+						.pos(2, x1, y1, z1).uv(2, u1, v1).vertexColor(2, c1)
+						.pos(3, x0, y0, z0).uv(3, u0, v0).vertexColor(3, c0)
 						// WIP: why do this here if set vertex colors earlier?
-						.quadColor(centerColor, centerColor, centerColor, centerColor)
+						.vertexColor(centerColor, centerColor, centerColor, centerColor)
 						.material(material).emit();
 					}
 				}

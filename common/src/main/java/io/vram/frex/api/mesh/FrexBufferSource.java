@@ -19,17 +19,17 @@ import io.vram.frex.api.material.RenderMaterial;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 /**
- * Extension of {@code VertexConsumerProvider} that provides consumers
- * via {@code RenderMaterial} in addition to render layer.  Use this to
+ * Extension of {link MultiBufferSource} that provides consumers
+ * via {@link RenderMaterial} in addition to render layer.  Use this to
  * emit polygons in Entity and BlockEntity renderers that rely on a custom
- * {@code RenderMaterial}.
+ * {@link RenderMaterial}.
  *
- * <p>If the renderer implementation supports this feature, then {@code VertexConsumerProvider}
+ * <p>If the renderer implementation supports this feature, then {@link RenderMaterial}
  * parameters passed during world rendering can probably be safely cast to this interface.
  * However, some mods could make calls to block or entity renderer such that
  * this interface isn't available there.
  */
-public interface FrexVertexConsumerProvider extends MultiBufferSource {
+public interface FrexBufferSource extends MultiBufferSource {
 	/**
 	 * Obtain the appropriate vertex consumer for the given material.
 	 * @param material  The material of one or more polygons to be rendered.

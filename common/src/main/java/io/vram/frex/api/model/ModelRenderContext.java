@@ -17,7 +17,7 @@ package io.vram.frex.api.model;
 import java.util.Random;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import io.vram.frex.api.mesh.FrexVertexConsumerProvider;
+import io.vram.frex.api.mesh.FrexBufferSource;
 import io.vram.frex.api.mesh.Mesh;
 import io.vram.frex.api.mesh.QuadEditor;
 import org.jetbrains.annotations.Nullable;
@@ -32,7 +32,7 @@ public interface ModelRenderContext {
 
 	QuadEditor quadEmitter();
 
-	FrexVertexConsumerProvider vertexConsumers();
+	FrexBufferSource vertexConsumers();
 
 	void pushTransform(QuadTransform transform);
 

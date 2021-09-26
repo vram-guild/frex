@@ -14,7 +14,7 @@
 
 package grondag.frex.mixin;
 
-import io.vram.frex.api.model.FluidAppearance;
+import io.vram.frex.api.model.fluid.FluidAppearance;
 import org.spongepowered.asm.mixin.Mixin;
 
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;

@@ -20,7 +20,7 @@ import static io.vram.frex.api.material.MaterialConstants.CUTOUT_NONE;
 import static io.vram.frex.api.material.MaterialConstants.CUTOUT_TENTH;
 import static io.vram.frex.api.material.MaterialConstants.CUTOUT_ZERO;
 
-import io.vram.frex.api.rendertype.VanillaShaderData;
+import io.vram.frex.api.rendertype.VanillaShaderInfo;
 import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus.Internal;
@@ -28,13 +28,13 @@ import org.jetbrains.annotations.ApiStatus.Internal;
 import net.minecraft.client.renderer.RenderStateShard.ShaderStateShard;
 
 @Internal
-public final class VanillaShaderDataImpl implements VanillaShaderData {
+public final class VanillaShaderInfoImpl implements VanillaShaderInfo {
 	public final boolean fog;
 	public final int cutout;
 	public final boolean diffuse;
 	public final boolean foil;
 
-	private VanillaShaderDataImpl(boolean fog, boolean foil, int cutout, boolean diffuse) {
+	private VanillaShaderInfoImpl(boolean fog, boolean foil, int cutout, boolean diffuse) {
 		this.fog = fog;
 		this.foil = foil;
 		this.cutout = cutout;
@@ -61,9 +61,9 @@ public final class VanillaShaderDataImpl implements VanillaShaderData {
 		return foil;
 	}
 
-	private static final Object2ObjectOpenHashMap<String, VanillaShaderDataImpl> MAP = new Object2ObjectOpenHashMap<>(64, Hash.VERY_FAST_LOAD_FACTOR);
+	private static final Object2ObjectOpenHashMap<String, VanillaShaderInfoImpl> MAP = new Object2ObjectOpenHashMap<>(64, Hash.VERY_FAST_LOAD_FACTOR);
 
-	public static final VanillaShaderDataImpl MISSING = of(false, false, CUTOUT_NONE);
+	public static final VanillaShaderInfoImpl MISSING = of(false, false, CUTOUT_NONE);
 
 	static {
 		MAP.put("block", of(false, CUTOUT_NONE));
@@ -120,24 +120,24 @@ public final class VanillaShaderDataImpl implements VanillaShaderData {
 		MAP.put("rendertype_tripwire", of(false, CUTOUT_TENTH));
 	}
 
-	public static VanillaShaderDataImpl get(ShaderStateShard shaderStateShard) {
-		final var shader = shaderStateShard.shader;
+	public static VanillaShaderInfoImpl get(Object shaderStateShard) {
+		final var shader = ((ShaderStateShard) shaderStateShard).shader;
 		return shader.isPresent() ? get(shader.get().get().name) : MISSING;
 	}
 
-	private static VanillaShaderDataImpl get(String shaderName) {
+	public static VanillaShaderInfoImpl get(String shaderName) {
 		return MAP.getOrDefault(shaderName, MISSING);
 	}
 
-	private static VanillaShaderDataImpl of(boolean fog, int cutout) {
-		return new VanillaShaderDataImpl(fog, false, cutout, false);
+	private static VanillaShaderInfoImpl of(boolean fog, int cutout) {
+		return new VanillaShaderInfoImpl(fog, false, cutout, false);
 	}
 
-	private static VanillaShaderDataImpl of(boolean fog, int cutout, boolean diffuse) {
-		return new VanillaShaderDataImpl(fog, false, cutout, diffuse);
+	private static VanillaShaderInfoImpl of(boolean fog, int cutout, boolean diffuse) {
+		return new VanillaShaderInfoImpl(fog, false, cutout, diffuse);
 	}
 
-	private static VanillaShaderDataImpl of(boolean fog, boolean glint, int cutout) {
-		return new VanillaShaderDataImpl(fog, glint, cutout, false);
+	private static VanillaShaderInfoImpl of(boolean fog, boolean glint, int cutout) {
+		return new VanillaShaderInfoImpl(fog, glint, cutout, false);
 	}
 }

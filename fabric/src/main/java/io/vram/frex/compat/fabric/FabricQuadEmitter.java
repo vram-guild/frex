@@ -107,7 +107,7 @@ public class FabricQuadEmitter extends FabricQuadView<QuadEditor> implements gro
 
 	@Override
 	public grondag.frex.api.mesh.QuadEmitter sprite(int vertexIndex, int spriteIndex, float u, float v) {
-		wrapped.sprite(vertexIndex, u, v);
+		wrapped.uv(vertexIndex, u, v);
 		return this;
 	}
 
@@ -131,7 +131,7 @@ public class FabricQuadEmitter extends FabricQuadView<QuadEditor> implements gro
 
 	@Override
 	public grondag.frex.api.mesh.QuadEmitter sprite(int vertexIndex, float u, float v) {
-		wrapped.sprite(vertexIndex, u, v);
+		wrapped.uv(vertexIndex, u, v);
 		return this;
 	}
 

@@ -132,11 +132,10 @@ public interface QuadEditor extends QuadView {
 	 */
 	QuadEditor vertexColor(int vertexIndex, int color);
 
-	// WIP: name is bad
 	/**
 	 * Convenience: set color for all vertices at once.
 	 */
-	default QuadEditor quadColor(int c0, int c1, int c2, int c3) {
+	default QuadEditor vertexColor(int c0, int c1, int c2, int c3) {
 		vertexColor(0, c0);
 		vertexColor(1, c1);
 		vertexColor(2, c2);
@@ -145,9 +144,9 @@ public interface QuadEditor extends QuadView {
 	}
 
 	/**
-	 * Set sprite atlas coordinates.
+	 * Set texture coordinates.
 	 */
-	QuadEditor sprite(int vertexIndex, float u, float v);
+	QuadEditor uv(int vertexIndex, float u, float v);
 
 	/**
 	 * Assigns sprite atlas u,v coordinates to this quad for the given sprite.

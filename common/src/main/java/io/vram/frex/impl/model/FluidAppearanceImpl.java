@@ -14,9 +14,9 @@
 
 package io.vram.frex.impl.model;
 
-import io.vram.frex.api.model.FluidAppearance;
-import io.vram.frex.api.model.FluidColorProvider;
-import io.vram.frex.api.model.FluidSpriteProvider;
+import io.vram.frex.api.model.fluid.FluidAppearance;
+import io.vram.frex.api.model.fluid.FluidColorProvider;
+import io.vram.frex.api.model.fluid.FluidSpriteProvider;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;

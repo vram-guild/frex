@@ -14,7 +14,7 @@
 
 package grondag.frex.mixin;
 
-import io.vram.frex.api.model.FluidAppearance;
+import io.vram.frex.api.model.fluid.FluidAppearance;
 import io.vram.frex.impl.model.FluidAppearanceImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;

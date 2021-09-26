@@ -12,7 +12,7 @@
  *  the License.
  */
 
-package io.vram.frex.api.model;
+package io.vram.frex.api.model.fluid;
 
 import io.vram.frex.impl.model.SimpleFluidSpriteProvider;
 import org.jetbrains.annotations.Nullable;

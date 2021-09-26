@@ -28,7 +28,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
  * this interface isn't available there.
  */
 @Deprecated
-public interface FrexVertexConsumerProvider extends io.vram.frex.api.mesh.FrexVertexConsumerProvider {
+public interface FrexVertexConsumerProvider extends io.vram.frex.api.mesh.FrexBufferSource {
 	/**
 	 * Obtain the appropriate vertex consumer for the given material.
 	 * @param material  The material of one or more polygons to be rendered.

@@ -19,7 +19,7 @@ import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.renderer.Renderer;
 import io.vram.frex.api.rendertype.RenderTypeExclusion;
-import io.vram.frex.api.rendertype.VanillaShaderData;
+import io.vram.frex.api.rendertype.VanillaShaderInfo;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.client.renderer.RenderStateShard;
@@ -46,7 +46,7 @@ public final class RenderTypeUtilImpl {
 		final var compositeState = ((CompositeRenderType) renderType).state;
 		final EmptyTextureStateShard texBase = compositeState.textureState;
 
-		final VanillaShaderData sd = VanillaShaderData.get(compositeState.shaderState);
+		final VanillaShaderInfo sd = VanillaShaderInfoImpl.get(compositeState.shaderState);
 
 		if (texBase != null && texBase instanceof TextureStateShard) {
 			final TextureStateShard tex = (TextureStateShard) compositeState.textureState;

@@ -16,7 +16,7 @@ package io.vram.frex.impl.model;
 
 import java.util.function.Function;
 
-import io.vram.frex.api.model.FluidSpriteProvider;
+import io.vram.frex.api.model.fluid.FluidSpriteProvider;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.Nullable;
 

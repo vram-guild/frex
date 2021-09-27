@@ -1,0 +1,19 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "io.vram.frex.mixin.worldrenderevents",
+	"compatibilityLevel": "JAVA_16",
+	"plugin": "io.vram.frex.mixin.worldrenderevents.FrexWorldRenderEventsMixinPlugin",
+	"mixins": [
+		"MixinFabricWorldRenderContext",
+		"MixinFabricWorldRenderEvents",
+		"MixinLevelRendererEvents",
+		"MixinWorldRenderContext"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"conformVisibility": true
+	}
+}

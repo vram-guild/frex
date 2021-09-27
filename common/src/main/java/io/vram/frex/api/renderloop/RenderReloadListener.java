@@ -12,9 +12,9 @@
  *  the License.
  */
 
-package io.vram.frex.api.event;
+package io.vram.frex.api.renderloop;
 
-import io.vram.frex.impl.event.RenderReloadListenerImpl;
+import io.vram.frex.impl.renderloop.RenderReloadListenerImpl;
 
 /**
  * Called when the world renderer reloads, usually as result of changing resource pack

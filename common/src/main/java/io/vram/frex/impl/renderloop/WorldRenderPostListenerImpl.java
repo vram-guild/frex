@@ -12,32 +12,33 @@
  *  the License.
  */
 
-package io.vram.frex.impl.event;
+package io.vram.frex.impl.renderloop;
 
-import io.vram.frex.api.event.RenderReloadListener;
+import io.vram.frex.api.renderloop.WorldRenderContext;
+import io.vram.frex.api.renderloop.WorldRenderPostListener;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
-public class RenderReloadListenerImpl {
-	private static final ObjectArrayList<RenderReloadListener> LISTENERS = new ObjectArrayList<>();
-	private static RenderReloadListener active = () -> { };
+public class WorldRenderPostListenerImpl {
+	private static final ObjectArrayList<WorldRenderPostListener> LISTENERS = new ObjectArrayList<>();
+	private static WorldRenderPostListener active = ctx -> { };
 
-	public static void register(RenderReloadListener listener) {
+	public static void register(WorldRenderPostListener listener) {
 		LISTENERS.add(listener);
 
 		if (LISTENERS.size() == 1) {
 			active = LISTENERS.get(0);
 		} else if (LISTENERS.size() == 2) {
-			active = () -> {
+			active = ctx -> {
 				final int limit = LISTENERS.size();
 
 				for (int i = 0; i < limit; ++i) {
-					LISTENERS.get(i).onRenderReload();
+					LISTENERS.get(i).afterWorldRender(ctx);
 				}
 			};
 		}
 	}
 
-	public static void invoke() {
-		active.onRenderReload();
+	public static void invoke(WorldRenderContext ctx) {
+		active.afterWorldRender(ctx);
 	}
 }

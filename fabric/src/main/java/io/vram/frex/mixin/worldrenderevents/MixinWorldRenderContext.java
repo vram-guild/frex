@@ -12,20 +12,13 @@
  *  the License.
  */
 
-package io.vram.frex.mixin;
+package io.vram.frex.mixin.worldrenderevents;
 
-import io.vram.frex.api.renderloop.RenderReloadListener;
+import io.vram.frex.impl.renderloop.WorldRenderContextImpl;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.minecraft.client.renderer.LevelRenderer;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext.BlockOutlineContext;
 
-@Mixin(LevelRenderer.class)
-public class MixinLevelRenderer {
-	@Inject(method = "Lnet/minecraft/client/renderer/LevelRenderer;allChanged()V", at = @At("HEAD"))
-	private void onReload(CallbackInfo ci) {
-		RenderReloadListener.invoke();
-	}
-}
+@Mixin(WorldRenderContextImpl.class)
+public abstract class MixinWorldRenderContext implements WorldRenderContext, BlockOutlineContext { }

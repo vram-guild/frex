@@ -20,8 +20,6 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.HitResult;
 
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-
 /**
  * Called before default block outline rendering and before checks are
  * done to determine if it should happen. Can optionally cancel the default
@@ -41,7 +39,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
  * <p>This event should NOT be used for general-purpose replacement of
  * the default block outline rendering because it will interfere with mod-specific
  * renders.  Mods that replace the default block outline for specific blocks
- * should instead subscribe to {@link #BLOCK_OUTLINE}.
+ * should instead subscribe to {@link BlockOutlineListener}.
  */
 @FunctionalInterface
 public interface BlockOutlinePreListener {
@@ -52,7 +50,7 @@ public interface BlockOutlinePreListener {
 	 * @param hitResult The game object currently under the crosshair target.
 	 * Normally equivalent to {@link Minecraft#hitResult}. Provided for convenience.
 	 * @return true if vanilla block outline rendering should happen.
-	 * Returning false prevents {@link WorldRenderEvents#BLOCK_OUTLINE} from invoking
+	 * Returning false prevents {@link BlockOutlineListener} from invoking
 	 * and also skips the vanilla block outline render, but has no effect on other subscribers to this event.
 	 */
 	boolean beforeBlockOutline(WorldRenderContext context, @Nullable HitResult hitResult);

@@ -13,8 +13,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.util.profiling.ProfilerFiller;
 
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-
 /**
  * Except as noted below, the properties exposed here match the parameters passed to
  * {@link LevelRenderer#renderLevel(PoseStack, float, long, boolean, Camera, GameRenderer, LightTexture, Matrix4f)}.
@@ -28,6 +26,10 @@ public interface WorldRenderContext {
 	LevelRenderer worldRenderer();
 
 	PoseStack poseStack();
+
+	default PoseStack matrixStack() {
+		return poseStack();
+	}
 
 	float tickDelta();
 
@@ -79,17 +81,17 @@ public interface WorldRenderContext {
 	 * be consistent with other quads emitted by the world renderer and other mods.  If this isn't
 	 * possible, caller should use a separate "immediate" instance.
 	 *
-	 * <p>This property is {@code null} before {@link WorldRenderEvents#BEFORE_ENTITIES} and after
-	 * {@link WorldRenderEvents#BEFORE_DEBUG_RENDER} because the consumer buffers are not available before or
+	 * <p>This property is {@code null} before {@link EntityRenderPreListener} and after
+	 * {@link DebugRenderListener} because the consumer buffers are not available before or
 	 * drawn after that in vanilla world rendering.  Renders that cannot draw in one of the supported events
-	 * must be drawn directly to the frame buffer, preferably in {@link WorldRenderEvents#LAST} to avoid being
+	 * must be drawn directly to the frame buffer, preferably in {@link WorldRenderLastListener} to avoid being
 	 * overdrawn or cleared.
 	 */
 	@Nullable MultiBufferSource consumers();
 
 	/**
 	 * View frustum, after it is initialized. Will be {@code null} during
-	 * {@link WorldRenderEvents#START}.
+	 * {@link WorldRenderStartListener}.
 	 */
 	@Nullable Frustum frustum();
 }

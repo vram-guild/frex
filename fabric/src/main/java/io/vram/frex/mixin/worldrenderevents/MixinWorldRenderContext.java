@@ -14,11 +14,11 @@
 
 package io.vram.frex.mixin.worldrenderevents;
 
-import io.vram.frex.impl.renderloop.WorldRenderContextImpl;
+import io.vram.frex.api.renderloop.WorldRenderContextBase;
 import org.spongepowered.asm.mixin.Mixin;
 
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext.BlockOutlineContext;
 
-@Mixin(WorldRenderContextImpl.class)
+@Mixin(WorldRenderContextBase.class)
 public abstract class MixinWorldRenderContext implements WorldRenderContext, BlockOutlineContext { }

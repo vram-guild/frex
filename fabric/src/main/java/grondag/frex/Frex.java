@@ -80,7 +80,7 @@ public class Frex implements ClientModInitializer {
 			RendererAccess.INSTANCE.registerRenderer(FabricRenderer.of(Renderer.get()));
 		}
 
-		SpriteFinderImpl.init(a -> (io.vram.frex.api.texture.SpriteFinder) SpriteFinder.get(null));
+		SpriteFinderImpl.init(a -> (io.vram.frex.api.texture.SpriteFinder) SpriteFinder.get(a));
 
 		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(modelTextureListener);
 

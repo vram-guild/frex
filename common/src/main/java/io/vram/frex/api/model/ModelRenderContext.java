@@ -16,19 +16,29 @@ package io.vram.frex.api.model;
 
 import java.util.Random;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import io.vram.frex.api.mesh.FrexBufferSource;
-import io.vram.frex.api.mesh.Mesh;
-import io.vram.frex.api.mesh.QuadEditor;
 import org.jetbrains.annotations.Nullable;
+
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.level.block.state.BlockState;
 
+import io.vram.frex.api.mesh.FrexBufferSource;
+import io.vram.frex.api.mesh.Mesh;
+import io.vram.frex.api.mesh.QuadEditor;
+
 public interface ModelRenderContext {
-	void accept(Mesh mesh);
+	void accept(Mesh mesh, @Nullable BlockState blockState);
 
 	void accept(BakedModel model, @Nullable BlockState blockState);
+
+	default void accept(Mesh mesh) {
+		accept(mesh, null);
+	}
+
+	default void accept(BakedModel model) {
+		accept(model, null);
+	}
 
 	QuadEditor quadEmitter();
 

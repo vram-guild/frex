@@ -1,1 +1,1 @@
-# frex-core
+# Flexible Rendering Extensions

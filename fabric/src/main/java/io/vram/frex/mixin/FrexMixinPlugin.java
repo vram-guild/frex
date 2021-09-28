@@ -1,8 +1,23 @@
+/*
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ *  use this file except in compliance with the License.  You may obtain a copy
+ *  of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ *  License for the specific language governing permissions and limitations under
+ *  the License.
+ */
+
 package io.vram.frex.mixin;
 
 import java.util.List;
 import java.util.Set;
 
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.tree.ClassNode;
@@ -13,6 +28,21 @@ import net.fabricmc.loader.api.FabricLoader;
 
 public class FrexMixinPlugin implements IMixinConfigPlugin {
 	private final int packagePrefixLen = "io.vram.frex.mixin.".length();
+
+	final ObjectOpenHashSet<String> inactiveSet = new ObjectOpenHashSet<>();
+
+	public FrexMixinPlugin() {
+		if (!FabricLoader.getInstance().isModLoaded("fabric-renderer-api-v1")) {
+			inactiveSet.add("MixinFabricSpriteFinder");
+			inactiveSet.add("MixinFabricBakedModel");
+			inactiveSet.add("MixinSpriteFinderHolder");
+			inactiveSet.add("MixinFrex");
+		}
+
+		if (!FabricLoader.getInstance().isModLoaded("fabric-rendering-fluids-v1")) {
+			inactiveSet.add("MixinFluidRenderHandler");
+		}
+	}
 
 	@SuppressWarnings("unused")
 	private final Logger log = LogManager.getLogger("FREX");
@@ -29,19 +59,7 @@ public class FrexMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-		final var className = mixinClassName.substring(packagePrefixLen);
-
-		if (className.equals("MixinFabricSpriteFinder") || className.equals("MixinFabricBakedModel")) {
-			return FabricLoader.getInstance().isModLoaded("fabric-renderer-api-v1");
-		} else if (className.equals("MixinFluidRenderHandler")) {
-			return FabricLoader.getInstance().isModLoaded("fabric-rendering-fluids-v1");
-		} else {
-			//MixinChunkRebuildTask
-			//MixinRenderChunkRegion
-			//MixinFluidAppearanceImpl
-			//MixinLevelRenderer
-			return true;
-		}
+		return !inactiveSet.contains(mixinClassName.substring(packagePrefixLen));
 	}
 
 	@Override

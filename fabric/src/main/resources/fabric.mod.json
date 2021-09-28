@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "frex-fabric",
+  "id": "frex",
   "version": "${version}",
   "name": "FREX",
-  "description": "FREX implementation support for Fabric platform",
+  "description": "Advanced rendering features for Minecraft mods",
   "authors": [
     "Grondag"
   ],
@@ -12,10 +12,8 @@
     "issues": "https://github.com/grondag/frex/issues",
     "sources": "https://github.com/grondag/frex"
   },
-
   "license": "Apache-2.0",
   "icon": "assets/frex/frex_icon.png",
-
   "environment": "client",
   "mixins": [
     "frex.client.json",
@@ -27,8 +25,7 @@
   "depends": {
     "fabricloader": ">=0.11.3",
     "minecraft": "1.17.x",
-    "java": ">=16",
-    "fabric": "*"
+    "java": ">=16"
   },
   "custom": {
     "modmenu": {

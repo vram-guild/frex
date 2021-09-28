@@ -20,15 +20,11 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
-import io.vram.frex.api.renderer.Renderer;
-import io.vram.frex.compat.fabric.FabricRenderer;
-import io.vram.frex.impl.RendererInitializerImpl;
 import io.vram.frex.impl.config.FlawlessFramesImpl;
 import io.vram.frex.impl.light.ItemLightLoader;
 import io.vram.frex.impl.material.MaterialMapLoader;
 import io.vram.frex.impl.model.FluidModelImpl;
 import io.vram.frex.impl.model.SimpleFluidSpriteProvider;
-import io.vram.frex.impl.texture.SpriteFinderImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
@@ -38,8 +34,6 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
-import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -76,11 +70,7 @@ public class Frex implements ClientModInitializer {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onInitializeClient() {
-		if (RendererInitializerImpl.hasCandidate()) {
-			RendererAccess.INSTANCE.registerRenderer(FabricRenderer.of(Renderer.get()));
-		}
-
-		SpriteFinderImpl.init(a -> (io.vram.frex.api.texture.SpriteFinder) SpriteFinder.get(a));
+		setupRenderer();
 
 		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(modelTextureListener);
 
@@ -90,6 +80,10 @@ public class Frex implements ClientModInitializer {
 
 		final Function<String, Consumer<Boolean>> provider = FlawlessFramesImpl.providerFactory();
 		FabricLoader.getInstance().getEntrypoints("frex_flawless_frames", Consumer.class).forEach(api -> api.accept(provider));
+	}
+
+	private static void setupRenderer() {
+		// Code is replaced via mixin depending on what other renderers are loaded.
 	}
 
 	private final SimpleSynchronousResourceReloadListener modelTextureListener = new SimpleSynchronousResourceReloadListener() {

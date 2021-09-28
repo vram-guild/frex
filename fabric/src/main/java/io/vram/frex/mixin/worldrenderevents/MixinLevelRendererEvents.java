@@ -53,16 +53,17 @@ import net.minecraft.world.level.block.state.BlockState;
 // Only loaded when Fabric API is not present
 @Mixin(LevelRenderer.class)
 public class MixinLevelRendererEvents {
-	@Shadow private RenderBuffers bufferBuilders;
-	@Shadow private ClientLevel world;
-	@Shadow private PostChain transparencyShader;
-	@Shadow private Minecraft client;
+	@Shadow private RenderBuffers renderBuffers;
+	@Shadow private ClientLevel level;
+	@Shadow private PostChain transparencyChain;
+	@Shadow private Minecraft minecraft;
+
 	@Unique private final WorldRenderContextBase context = new WorldRenderContextBase();
 	@Unique private boolean didRenderParticles;
 
 	@Inject(method = "renderLevel", at = @At("HEAD"))
 	private void beforeRenderLevel(PoseStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightmapTextureManager, Matrix4f matrix4f, CallbackInfo ci) {
-		context.prepare((LevelRenderer) (Object) this, matrices, tickDelta, limitTime, renderBlockOutline, camera, gameRenderer, lightmapTextureManager, matrix4f, bufferBuilders.bufferSource(), world.getProfiler(), transparencyShader != null, world);
+		context.prepare((LevelRenderer) (Object) this, matrices, tickDelta, limitTime, renderBlockOutline, camera, gameRenderer, lightmapTextureManager, matrix4f, renderBuffers.bufferSource(), level.getProfiler(), transparencyChain != null, level);
 		WorldRenderStartListener.invoke(context);
 		didRenderParticles = false;
 	}
@@ -77,7 +78,7 @@ public class MixinLevelRendererEvents {
 			method = "renderLevel",
 			at = @At(
 				value = "INVOKE",
-				target = "Lnet/minecraft/client/renderer/LevelRenderer;renderLevel(Lcom/mojang/blaze3d/vertex/PoseStack;FJZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lcom/mojang/math/Matrix4f;)V",
+				target = "Lnet/minecraft/client/renderer/LevelRenderer;renderChunkLayer(Lnet/minecraft/client/renderer/RenderType;Lcom/mojang/blaze3d/vertex/PoseStack;DDDLcom/mojang/math/Matrix4f;)V",
 				ordinal = 2,
 				shift = Shift.AFTER
 			)
@@ -101,7 +102,7 @@ public class MixinLevelRendererEvents {
 			)
 	)
 	private void beforeRenderOutline(CallbackInfo ci) {
-		context.renderBlockOutline = BlockOutlinePreListener.invoke(context, client.hitResult);
+		context.renderBlockOutline = BlockOutlinePreListener.invoke(context, minecraft.hitResult);
 	}
 
 	@Inject(method = "renderHitOutline", at = @At("HEAD"), cancellable = true)

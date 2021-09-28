@@ -11,7 +11,9 @@
 		"MixinFabricSpriteFinder",
 		"MixinFluidAppearanceImpl",
 		"MixinFluidRenderHandler",
-		"MixinLevelRenderer"
+		"MixinFrex",
+		"MixinLevelRenderer",
+		"MixinSpriteFinderHolder"
 	],
 	"injectors": {
 		"defaultRequire": 1

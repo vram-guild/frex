@@ -16,7 +16,7 @@ package io.vram.frex.api.texture;
 
 import io.vram.frex.api.mesh.QuadEditor;
 import io.vram.frex.api.mesh.QuadView;
-import io.vram.frex.impl.texture.SpriteFinderImpl;
+import io.vram.frex.impl.texture.SpriteFinderHolder;
 
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -37,7 +37,7 @@ public interface SpriteFinder {
 	 * that causes atlas textures to be re-stitched.
 	 */
 	static SpriteFinder get(TextureAtlas atlas) {
-		return SpriteFinderImpl.get(atlas);
+		return SpriteFinderHolder.get(atlas);
 	}
 
 	/**

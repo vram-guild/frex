@@ -99,23 +99,22 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 
 sourceSets {
 	main {
-	        java {
-	        	include 'io/**/*'
-	            include 'grondag/**/*'
-	            exclude '*.DS_Store'
-	        }
-	        resources
-	        {
-	        	include '**/*'
-	        	exclude '*.DS_Store'
-	        	exclude 'assets/frex/shaders/api/*'
-	        }
-	    }
-    test {
-        java {
-            exclude 'grondag/**'
-        }
-    }
+		java {
+			srcDirs = ['../common/src/main/java', 'src/main/java']
+			include '**/*'
+			exclude '*.DS_Store'
+		}
+		resources {
+			srcDirs = ['../common/src/main/resources', 'src/main/resources']
+			include '**/*'
+			exclude '*.DS_Store'
+		}
+	}
+	test {
+			java {
+				exclude '**/*'
+			}
+	}
 }
 
 publishing {
@@ -134,20 +133,20 @@ publishing {
 
 	repositories {
 		mavenLocal()
-        maven {
-            url = 's3://maven-vram-io/releases'
-            credentials(AwsCredentials) {
-            	if (project.hasProperty('aws_id')){
-					accessKey = project.getProperty('aws_id')
+				maven {
+					url = 's3://maven-vram-io/releases'
+					credentials(AwsCredentials) {
+						if (project.hasProperty('aws_id')) {
+							accessKey = project.getProperty('aws_id')
+						}
+						if (project.hasProperty('aws_key')){
+							secretKey = project.getProperty('aws_key')
+						}
+					}
 				}
-				if (project.hasProperty('aws_key')){
-					secretKey = project.getProperty('aws_key')
-				}
-            }
-        }
-        maven {
-            url 'sftp://dblsaiko.net:22/var/maven'
-            credentials {
+				maven {
+					url 'sftp://dblsaiko.net:22/var/maven'
+					credentials {
 				if (project.hasProperty('maven_user_2')){
 					username = project.getProperty('maven_user_2')
 				}
@@ -155,7 +154,7 @@ publishing {
 					password = project.getProperty('maven_password_2')
 				}
 			}
-        }
+		}
 	}
 }
 
@@ -230,7 +229,7 @@ curseforge {
 				uploadTask.dependsOn remapSourcesJar
 			}
 		}
-		
+
 		options {
 			forgeGradleIntegration = false
 		}

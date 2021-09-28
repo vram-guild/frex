@@ -14,9 +14,6 @@
 
 package io.vram.frex.mixin;
 
-import io.vram.frex.api.world.RenderRegionBakeListener;
-import io.vram.frex.impl.event.ChunkRenderConditionContext;
-import io.vram.frex.impl.event.ChunkRenderConditionContext.RenderRegionListenerProvider;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -32,6 +29,10 @@ import net.minecraft.world.level.chunk.LevelChunk;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+
+import io.vram.frex.api.world.RenderRegionBakeListener;
+import io.vram.frex.impl.event.ChunkRenderConditionContext;
+import io.vram.frex.impl.event.ChunkRenderConditionContext.RenderRegionListenerProvider;
 
 @Environment(EnvType.CLIENT)
 @Mixin(RenderChunkRegion.class)

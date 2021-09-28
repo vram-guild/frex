@@ -14,14 +14,16 @@
 
 package io.vram.frex.mixin.worldrenderevents;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import io.vram.frex.api.renderloop.BlockOutlineListener.BlockOutlineContext;
-import io.vram.frex.api.renderloop.WorldRenderContext;
 import org.spongepowered.asm.mixin.Mixin;
+
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.renderer.LightTexture;
 
 import net.fabricmc.fabric.impl.client.rendering.WorldRenderContextImpl;
+
+import io.vram.frex.api.renderloop.BlockOutlineListener.BlockOutlineContext;
+import io.vram.frex.api.renderloop.WorldRenderContext;
 
 @Mixin(WorldRenderContextImpl.class)
 public abstract class MixinFabricWorldRenderContext implements WorldRenderContext, BlockOutlineContext {

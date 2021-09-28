@@ -16,13 +16,13 @@ package io.vram.frex.compat.fabric;
 
 import java.util.function.Consumer;
 
-import io.vram.frex.api.model.ModelRenderContext;
-
 import net.minecraft.client.resources.model.BakedModel;
 
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+
+import io.vram.frex.api.model.ModelRenderContext;
 
 public class FabricContextWrapper implements RenderContext {
 	private ModelRenderContext wrapped;

@@ -14,10 +14,11 @@
 
 package io.vram.frex.mixin;
 
-import io.vram.frex.api.texture.SpriteFinder;
 import org.spongepowered.asm.mixin.Mixin;
 
 import net.fabricmc.fabric.impl.renderer.SpriteFinderImpl;
+
+import io.vram.frex.api.texture.SpriteFinder;
 
 @Mixin(SpriteFinderImpl.class)
 public abstract class MixinFabricSpriteFinder implements SpriteFinder { }

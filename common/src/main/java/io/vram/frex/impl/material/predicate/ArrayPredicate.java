@@ -18,8 +18,9 @@ import java.util.function.Function;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.vram.frex.api.material.RenderMaterial;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
+import io.vram.frex.api.material.RenderMaterial;
 
 public class ArrayPredicate extends MaterialPredicate {
 	private final MaterialPredicate[] compact;

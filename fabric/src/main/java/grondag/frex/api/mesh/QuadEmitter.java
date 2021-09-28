@@ -14,8 +14,9 @@
 
 package grondag.frex.api.mesh;
 
-import com.mojang.math.Vector3f;
 import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
+
+import com.mojang.math.Vector3f;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;

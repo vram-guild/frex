@@ -14,15 +14,17 @@
 
 package io.vram.frex.api.mesh;
 
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.math.Vector3f;
-import io.vram.frex.api.material.RenderMaterial;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.math.Vector3f;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
+
+import io.vram.frex.api.material.RenderMaterial;
 
 public interface QuadView {
 	/** Count of integers in a conventional (un-modded) block or item vertex. */

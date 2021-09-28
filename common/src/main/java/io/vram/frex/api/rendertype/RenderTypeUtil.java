@@ -14,12 +14,13 @@
 
 package io.vram.frex.api.rendertype;
 
-import io.vram.frex.api.material.MaterialFinder;
-import io.vram.frex.api.material.RenderMaterial;
-import io.vram.frex.impl.material.RenderTypeUtilImpl;
 import org.jetbrains.annotations.ApiStatus.NonExtendable;
 
 import net.minecraft.client.renderer.RenderType;
+
+import io.vram.frex.api.material.MaterialFinder;
+import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.impl.material.RenderTypeUtilImpl;
 
 @NonExtendable
 public interface RenderTypeUtil {

@@ -14,9 +14,9 @@
 
 package io.vram.frex.api.mesh;
 
-import io.vram.frex.api.material.RenderMaterial;
-
 import net.minecraft.client.renderer.MultiBufferSource;
+
+import io.vram.frex.api.material.RenderMaterial;
 
 /**
  * Extension of {link MultiBufferSource} that provides consumers

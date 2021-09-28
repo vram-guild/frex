@@ -25,6 +25,14 @@ import java.util.function.BiPredicate;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import org.jetbrains.annotations.ApiStatus.Internal;
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.entity.EntityType;
+
 import io.vram.frex.api.material.EntityMaterialMap;
 import io.vram.frex.impl.FrexLog;
 import io.vram.frex.impl.material.predicate.EntityBiPredicate;
@@ -33,13 +41,6 @@ import io.vram.frex.impl.material.predicate.EntityMaterialOnly;
 import io.vram.frex.impl.material.predicate.EntityOnly;
 import io.vram.frex.impl.material.predicate.MaterialPredicate;
 import io.vram.frex.impl.material.predicate.MaterialPredicateDeserializer;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.entity.EntityType;
 
 @Internal
 public class EntityMaterialMapDeserializer {

@@ -16,14 +16,15 @@ package io.vram.frex.api.renderer;
 
 import java.util.function.BooleanSupplier;
 
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.resources.ResourceLocation;
+
 import io.vram.frex.api.material.MaterialCondition;
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.mesh.MeshBuilder;
 import io.vram.frex.impl.RendererHolder;
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.resources.ResourceLocation;
 
 /**
  * Interface for rendering plug-ins that provide enhanced capabilities

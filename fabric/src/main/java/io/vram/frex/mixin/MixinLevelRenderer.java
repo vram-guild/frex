@@ -14,13 +14,14 @@
 
 package io.vram.frex.mixin;
 
-import io.vram.frex.api.renderloop.RenderReloadListener;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.renderer.LevelRenderer;
+
+import io.vram.frex.api.renderloop.RenderReloadListener;
 
 @Mixin(LevelRenderer.class)
 public class MixinLevelRenderer {

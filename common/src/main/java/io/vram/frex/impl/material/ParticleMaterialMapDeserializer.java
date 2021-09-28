@@ -18,13 +18,14 @@ import java.io.InputStreamReader;
 import java.util.IdentityHashMap;
 
 import com.google.gson.JsonObject;
-import io.vram.frex.api.material.MaterialMap;
-import io.vram.frex.impl.FrexLog;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+
+import io.vram.frex.api.material.MaterialMap;
+import io.vram.frex.impl.FrexLog;
 
 @Internal
 public class ParticleMaterialMapDeserializer {

@@ -16,9 +16,9 @@ package io.vram.frex.compat.fabric;
 
 import java.util.function.Consumer;
 
-import io.vram.frex.api.mesh.Mesh;
-
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadView;
+
+import io.vram.frex.api.mesh.Mesh;
 
 public class FabricMesh implements net.fabricmc.fabric.api.renderer.v1.mesh.Mesh {
 	public static FabricMesh of(Mesh wrapped) {

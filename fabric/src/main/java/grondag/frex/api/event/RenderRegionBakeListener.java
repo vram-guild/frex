@@ -17,10 +17,10 @@ package grondag.frex.api.event;
 import java.util.List;
 import java.util.function.Predicate;
 
-import io.vram.frex.impl.world.RenderRegionBakeListenerImpl;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+
+import io.vram.frex.impl.world.RenderRegionBakeListenerImpl;
 
 @Environment(EnvType.CLIENT)
 @Deprecated

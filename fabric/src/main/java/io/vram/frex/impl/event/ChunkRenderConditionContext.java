@@ -14,13 +14,14 @@
 
 package io.vram.frex.impl.event;
 
-import io.vram.frex.api.world.RenderRegionBakeListener;
-import io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
+
+import io.vram.frex.api.world.RenderRegionBakeListener;
+import io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext;
 
 public class ChunkRenderConditionContext implements RenderRegionContext {
 	public final ObjectArrayList<RenderRegionBakeListener> listeners = new ObjectArrayList<>();

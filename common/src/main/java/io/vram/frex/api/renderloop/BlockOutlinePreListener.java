@@ -14,11 +14,12 @@
 
 package io.vram.frex.api.renderloop;
 
-import io.vram.frex.impl.renderloop.BlockOutlinePreListenerImpl;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.HitResult;
+
+import io.vram.frex.impl.renderloop.BlockOutlinePreListenerImpl;
 
 /**
  * Called before default block outline rendering and before checks are

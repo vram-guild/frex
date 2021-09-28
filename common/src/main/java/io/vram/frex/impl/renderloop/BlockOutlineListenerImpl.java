@@ -14,10 +14,11 @@
 
 package io.vram.frex.impl.renderloop;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 import io.vram.frex.api.renderloop.BlockOutlineListener;
 import io.vram.frex.api.renderloop.BlockOutlineListener.BlockOutlineContext;
 import io.vram.frex.api.renderloop.WorldRenderContext;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 public class BlockOutlineListenerImpl {
 	private static final ObjectArrayList<BlockOutlineListener> LISTENERS = new ObjectArrayList<>();

@@ -14,9 +14,10 @@
 
 package io.vram.frex.impl.renderloop;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 import io.vram.frex.api.renderloop.DebugRenderListener;
 import io.vram.frex.api.renderloop.WorldRenderContext;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 public class DebugRenderListenerImpl {
 	private static final ObjectArrayList<DebugRenderListener> LISTENERS = new ObjectArrayList<>();

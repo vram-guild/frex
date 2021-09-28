@@ -14,12 +14,13 @@
 
 package io.vram.frex.compat.fabric;
 
-import io.vram.frex.api.mesh.QuadEditor;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
+
+import io.vram.frex.api.mesh.QuadEditor;
 
 import grondag.frex.api.mesh.QuadEmitter;
 

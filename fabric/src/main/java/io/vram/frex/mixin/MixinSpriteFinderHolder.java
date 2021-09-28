@@ -14,14 +14,15 @@
 
 package io.vram.frex.mixin;
 
-import io.vram.frex.api.texture.SpriteFinder;
-import io.vram.frex.impl.texture.SpriteFinderHolder;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
 import net.minecraft.client.renderer.texture.TextureAtlas;
 
 import net.fabricmc.fabric.impl.renderer.SpriteFinderImpl;
+
+import io.vram.frex.api.texture.SpriteFinder;
+import io.vram.frex.impl.texture.SpriteFinderHolder;
 
 @Mixin(SpriteFinderHolder.class)
 public abstract class MixinSpriteFinderHolder {

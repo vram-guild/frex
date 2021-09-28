@@ -16,9 +16,9 @@ package io.vram.frex.impl.material.predicate;
 
 import java.util.function.BiPredicate;
 
-import io.vram.frex.api.material.RenderMaterial;
-
 import net.minecraft.world.level.block.state.BlockState;
+
+import io.vram.frex.api.material.RenderMaterial;
 
 public abstract class StateBiPredicate implements BiPredicate<BlockState, RenderMaterial> {
 	public static StateBiPredicate BLOCK_ALWAYS_TRUE = new StateBiPredicate() {

@@ -14,9 +14,10 @@
 
 package io.vram.frex.impl.renderloop;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 import io.vram.frex.api.renderloop.FrustumSetupListener;
 import io.vram.frex.api.renderloop.WorldRenderContext;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 public class FrustumSetupListenerImpl {
 	private static final ObjectArrayList<FrustumSetupListener> LISTENERS = new ObjectArrayList<>();

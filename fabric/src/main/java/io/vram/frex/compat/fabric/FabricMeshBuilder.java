@@ -14,10 +14,10 @@
 
 package io.vram.frex.compat.fabric;
 
-import io.vram.frex.api.mesh.MeshBuilder;
-
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
+
+import io.vram.frex.api.mesh.MeshBuilder;
 
 /**
  * Interface for rendering plug-ins that provide enhanced capabilities

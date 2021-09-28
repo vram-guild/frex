@@ -14,9 +14,10 @@
 
 package io.vram.frex.impl.material;
 
+import org.jetbrains.annotations.ApiStatus.Internal;
+
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.renderer.Renderer;
-import org.jetbrains.annotations.ApiStatus.Internal;
 
 @Internal
 public final class MaterialFinderPool {

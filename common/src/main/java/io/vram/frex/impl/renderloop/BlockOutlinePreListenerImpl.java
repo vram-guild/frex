@@ -14,11 +14,12 @@
 
 package io.vram.frex.impl.renderloop;
 
-import io.vram.frex.api.renderloop.BlockOutlinePreListener;
-import io.vram.frex.api.renderloop.WorldRenderContext;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import net.minecraft.world.phys.HitResult;
+
+import io.vram.frex.api.renderloop.BlockOutlinePreListener;
+import io.vram.frex.api.renderloop.WorldRenderContext;
 
 public class BlockOutlinePreListenerImpl {
 	private static final ObjectArrayList<BlockOutlinePreListener> LISTENERS = new ObjectArrayList<>();

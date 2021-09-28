@@ -18,10 +18,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.math.Vector3f;
-import io.vram.frex.api.mesh.Mesh;
-import io.vram.frex.api.texture.SpriteFinder;
 import org.jetbrains.annotations.Contract;
+
+import com.mojang.math.Vector3f;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -29,6 +28,9 @@ import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.Direction;
+
+import io.vram.frex.api.mesh.Mesh;
+import io.vram.frex.api.texture.SpriteFinder;
 
 /**
  * Collection of utilities for model implementations.

@@ -17,12 +17,12 @@ package io.vram.frex.impl.texture;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import io.vram.frex.api.texture.SpriteFinder;
-
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
+
+import io.vram.frex.api.texture.SpriteFinder;
 
 /**
  * Indexes an atlas sprite to allow fast lookup of Sprites from

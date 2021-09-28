@@ -20,15 +20,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 
-import io.vram.frex.api.light.ItemLight;
-import io.vram.frex.impl.FrexLog;
-
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+
+import io.vram.frex.api.light.ItemLight;
+import io.vram.frex.impl.FrexLog;
 
 public class ItemLightLoader {
 	private ItemLightLoader() { }

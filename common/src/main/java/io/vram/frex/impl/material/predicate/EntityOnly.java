@@ -16,7 +16,6 @@ package io.vram.frex.impl.material.predicate;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.vram.frex.api.material.RenderMaterial;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.advancements.critereon.EntityEquipmentPredicate;
@@ -30,6 +29,8 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.scores.Team;
+
+import io.vram.frex.api.material.RenderMaterial;
 
 /**
  * Stripped-down adaptation of vanilla class used for entity loot predicates.

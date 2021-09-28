@@ -16,7 +16,6 @@ package io.vram.frex.mixin.worldrenderevents;
 
 import java.util.function.Function;
 
-import io.vram.frex.compat.fabric.FabricWorldRenderEventBypass;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -24,6 +23,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
+
+import io.vram.frex.compat.fabric.FabricWorldRenderEventBypass;
 
 @Mixin(WorldRenderEvents.class)
 public class MixinFabricWorldRenderEvents {

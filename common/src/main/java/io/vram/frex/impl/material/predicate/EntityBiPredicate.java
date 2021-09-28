@@ -16,9 +16,9 @@ package io.vram.frex.impl.material.predicate;
 
 import java.util.function.BiPredicate;
 
-import io.vram.frex.api.material.RenderMaterial;
-
 import net.minecraft.world.entity.Entity;
+
+import io.vram.frex.api.material.RenderMaterial;
 
 public abstract class EntityBiPredicate implements BiPredicate<Entity, RenderMaterial> {
 	public static EntityBiPredicate ENTITY_ALWAYS_TRUE = new EntityBiPredicate() {

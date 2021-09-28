@@ -16,10 +16,11 @@ package io.vram.frex.api.rendertype;
 
 import java.util.function.Predicate;
 
-import io.vram.frex.impl.material.RenderTypeExclusionImpl;
 import org.jetbrains.annotations.ApiStatus.NonExtendable;
 
 import net.minecraft.client.renderer.RenderType;
+
+import io.vram.frex.impl.material.RenderTypeExclusionImpl;
 
 @NonExtendable
 public interface RenderTypeExclusion {

@@ -14,13 +14,14 @@
 
 package io.vram.frex.mixin;
 
-import io.vram.frex.api.renderer.Renderer;
-import io.vram.frex.compat.fabric.FabricRenderer;
-import io.vram.frex.impl.RendererInitializerImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
+
+import io.vram.frex.api.renderer.Renderer;
+import io.vram.frex.compat.fabric.FabricRenderer;
+import io.vram.frex.impl.RendererInitializerImpl;
 
 import grondag.frex.Frex;
 

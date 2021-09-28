@@ -14,10 +14,13 @@
 
 package io.vram.frex.api.material;
 
-import io.vram.frex.impl.material.MaterialFinderPool;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.resources.ResourceLocation;
+
+import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+
+import io.vram.frex.impl.material.MaterialFinderPool;
 
 /**
  * Finds standard {@link RenderMaterial} instances used to communicate

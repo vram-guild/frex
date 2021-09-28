@@ -14,10 +14,10 @@
 
 package io.vram.frex.api.material;
 
-import io.vram.frex.impl.material.MaterialMapLoader;
-
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
+import io.vram.frex.impl.material.MaterialMapLoader;
 
 /**
  * Transforms materials for block entities.

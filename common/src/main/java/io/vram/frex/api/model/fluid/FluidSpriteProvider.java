@@ -14,7 +14,6 @@
 
 package io.vram.frex.api.model.fluid;
 
-import io.vram.frex.impl.model.SimpleFluidSpriteProvider;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -22,6 +21,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.material.FluidState;
+
+import io.vram.frex.impl.model.SimpleFluidSpriteProvider;
 
 /**
  * Get the sprites for a fluid being rendered at a given position.

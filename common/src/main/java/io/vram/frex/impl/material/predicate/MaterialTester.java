@@ -48,6 +48,7 @@ import java.util.Locale;
 import java.util.function.BiPredicate;
 
 import com.google.gson.JsonElement;
+
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.impl.material.MaterialDeserializer;
 

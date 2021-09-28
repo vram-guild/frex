@@ -14,8 +14,9 @@
 
 package io.vram.frex.impl.renderloop;
 
-import io.vram.frex.api.renderloop.RenderReloadListener;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
+import io.vram.frex.api.renderloop.RenderReloadListener;
 
 public class RenderReloadListenerImpl {
 	private static final ObjectArrayList<RenderReloadListener> LISTENERS = new ObjectArrayList<>();

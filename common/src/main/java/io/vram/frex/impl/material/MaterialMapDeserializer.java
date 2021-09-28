@@ -20,9 +20,6 @@ import java.util.List;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import io.vram.frex.api.material.MaterialMap;
-import io.vram.frex.api.material.RenderMaterial;
-import io.vram.frex.impl.FrexLog;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,6 +31,10 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.block.state.StateHolder;
+
+import io.vram.frex.api.material.MaterialMap;
+import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.impl.FrexLog;
 
 @Internal
 public final class MaterialMapDeserializer {

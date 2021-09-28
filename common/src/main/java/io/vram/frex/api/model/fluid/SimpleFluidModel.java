@@ -14,10 +14,6 @@
 
 package io.vram.frex.api.model.fluid;
 
-import io.vram.frex.api.material.RenderMaterial;
-import io.vram.frex.api.mesh.QuadEditor;
-import io.vram.frex.api.model.ModelRenderContext;
-
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -33,6 +29,10 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.mesh.QuadEditor;
+import io.vram.frex.api.model.ModelRenderContext;
 
 /**
  * Implementation of {@link FluidModel}  with vanilla-like geometry.

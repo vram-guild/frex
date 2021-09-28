@@ -14,9 +14,9 @@
 
 package io.vram.frex.api.renderloop;
 
-import io.vram.frex.impl.renderloop.WorldRenderStartListenerImpl;
-
 import net.minecraft.client.renderer.LevelRenderer;
+
+import io.vram.frex.impl.renderloop.WorldRenderStartListenerImpl;
 
 /**
  * Called before world rendering executes. Input parameters are available but frustum is not.

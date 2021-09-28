@@ -14,9 +14,10 @@
 
 package io.vram.frex.impl.renderloop;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 import io.vram.frex.api.renderloop.TranslucentPostListener;
 import io.vram.frex.api.renderloop.WorldRenderContext;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 public class TranslucentPostListenerImpl {
 	private static final ObjectArrayList<TranslucentPostListener> LISTENERS = new ObjectArrayList<>();

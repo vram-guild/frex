@@ -14,9 +14,10 @@
 
 package grondag.frex.api.mesh;
 
-import com.mojang.math.Vector3f;
 import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
 import org.jetbrains.annotations.Nullable;
+
+import com.mojang.math.Vector3f;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;

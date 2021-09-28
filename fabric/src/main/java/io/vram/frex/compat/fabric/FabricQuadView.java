@@ -14,14 +14,16 @@
 
 package io.vram.frex.compat.fabric;
 
-import com.mojang.math.Vector3f;
-import io.vram.frex.api.mesh.QuadView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import com.mojang.math.Vector3f;
 
 import net.minecraft.core.Direction;
 
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
+
+import io.vram.frex.api.mesh.QuadView;
 
 @SuppressWarnings("deprecation")
 public class FabricQuadView<T extends QuadView> implements grondag.frex.api.mesh.QuadView {

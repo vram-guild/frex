@@ -14,12 +14,13 @@
 
 package io.vram.frex.impl.light;
 
-import io.vram.frex.api.light.HeldItemLightListener;
-import io.vram.frex.api.light.ItemLight;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+
+import io.vram.frex.api.light.HeldItemLightListener;
+import io.vram.frex.api.light.ItemLight;
 
 public abstract class HeldItemLightListenerImpl {
 	private HeldItemLightListenerImpl() { }

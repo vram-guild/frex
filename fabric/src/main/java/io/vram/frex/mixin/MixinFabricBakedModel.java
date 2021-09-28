@@ -14,10 +14,6 @@
 
 package io.vram.frex.mixin;
 
-import io.vram.frex.api.model.BlockModel;
-import io.vram.frex.api.model.ItemModel;
-import io.vram.frex.api.model.ModelRenderContext;
-import io.vram.frex.compat.fabric.FabricContextWrapper;
 import org.spongepowered.asm.mixin.Mixin;
 
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
@@ -27,6 +23,11 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
+
+import io.vram.frex.api.model.BlockModel;
+import io.vram.frex.api.model.ItemModel;
+import io.vram.frex.api.model.ModelRenderContext;
+import io.vram.frex.compat.fabric.FabricContextWrapper;
 
 @Mixin(FabricBakedModel.class)
 public interface MixinFabricBakedModel extends BlockModel, ItemModel {

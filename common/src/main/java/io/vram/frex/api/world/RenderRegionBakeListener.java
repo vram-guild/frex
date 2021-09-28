@@ -17,12 +17,13 @@ package io.vram.frex.api.world;
 import java.util.List;
 import java.util.function.Predicate;
 
-import io.vram.frex.impl.world.RenderRegionBakeListenerImpl;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
+
+import io.vram.frex.impl.world.RenderRegionBakeListenerImpl;
 
 @FunctionalInterface
 public interface RenderRegionBakeListener {

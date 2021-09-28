@@ -17,11 +17,6 @@ package io.vram.frex.mixin;
 import java.util.Random;
 import java.util.Set;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import io.vram.frex.api.world.RenderRegionBakeListener;
-import io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext;
-import io.vram.frex.impl.event.BlockStateRendererImpl;
-import io.vram.frex.impl.event.ChunkRenderConditionContext.RenderRegionListenerProvider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -29,6 +24,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.renderer.ChunkBufferBuilderPack;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -42,6 +39,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+
+import io.vram.frex.api.world.RenderRegionBakeListener;
+import io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext;
+import io.vram.frex.impl.event.BlockStateRendererImpl;
+import io.vram.frex.impl.event.ChunkRenderConditionContext.RenderRegionListenerProvider;
 
 @Environment(EnvType.CLIENT)
 @Mixin(targets = "net/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask")

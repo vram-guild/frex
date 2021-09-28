@@ -16,7 +16,6 @@ package grondag.frex.api;
 
 import java.util.function.BooleanSupplier;
 
-import io.vram.frex.api.material.MaterialCondition;
 import org.jetbrains.annotations.ApiStatus.Experimental;
 import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
 
@@ -24,6 +23,8 @@ import net.minecraft.resources.ResourceLocation;
 
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
+
+import io.vram.frex.api.material.MaterialCondition;
 
 import grondag.frex.Frex;
 import grondag.frex.api.material.MaterialFinder;

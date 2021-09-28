@@ -14,11 +14,13 @@
 
 package io.vram.frex.api.mesh;
 
+import org.jetbrains.annotations.ApiStatus.Experimental;
+
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
+
 import io.vram.frex.api.material.RenderMaterial;
-import org.jetbrains.annotations.ApiStatus.Experimental;
 
 @Experimental
 public interface FrexVertexConsumer extends VertexConsumer {

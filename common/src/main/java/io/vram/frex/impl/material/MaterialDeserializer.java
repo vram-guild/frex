@@ -48,14 +48,15 @@ import java.util.Locale;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import io.vram.frex.api.material.MaterialConstants;
-import io.vram.frex.api.material.MaterialFinder;
-import io.vram.frex.api.material.RenderMaterial;
-import io.vram.frex.api.renderer.Renderer;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+
+import io.vram.frex.api.material.MaterialConstants;
+import io.vram.frex.api.material.MaterialFinder;
+import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.renderer.Renderer;
 
 @Internal
 public class MaterialDeserializer {

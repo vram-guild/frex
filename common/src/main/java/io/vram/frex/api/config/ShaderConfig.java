@@ -16,10 +16,10 @@ package io.vram.frex.api.config;
 
 import java.util.function.Supplier;
 
-import io.vram.frex.impl.config.ShaderConfigImpl;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+
+import io.vram.frex.impl.config.ShaderConfigImpl;
 
 /**
  * Use this to inject constant declarations that are managed by the mod into shaders .

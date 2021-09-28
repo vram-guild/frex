@@ -14,7 +14,6 @@
 
 package io.vram.frex.impl.material;
 
-import io.vram.frex.impl.FrexLog;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
@@ -22,6 +21,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+
+import io.vram.frex.impl.FrexLog;
 
 @Internal
 public final class MaterialTransformLoader {

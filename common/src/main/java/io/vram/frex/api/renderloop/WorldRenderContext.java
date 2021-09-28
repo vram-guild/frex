@@ -14,9 +14,10 @@
 
 package io.vram.frex.api.renderloop;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
-import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;

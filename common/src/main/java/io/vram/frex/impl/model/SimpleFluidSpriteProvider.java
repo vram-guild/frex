@@ -16,7 +16,6 @@ package io.vram.frex.impl.model;
 
 import java.util.function.Function;
 
-import io.vram.frex.api.model.fluid.FluidSpriteProvider;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,6 +26,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.material.FluidState;
+
+import io.vram.frex.api.model.fluid.FluidSpriteProvider;
 
 public class SimpleFluidSpriteProvider implements FluidSpriteProvider {
 	private final ResourceLocation stillSpriteName;

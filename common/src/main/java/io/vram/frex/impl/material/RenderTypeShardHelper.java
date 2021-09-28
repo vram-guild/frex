@@ -14,14 +14,14 @@
 
 package io.vram.frex.impl.material;
 
-import io.vram.frex.api.material.MaterialConstants;
-
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderStateShard.DepthTestStateShard;
 import net.minecraft.client.renderer.RenderStateShard.LayeringStateShard;
 import net.minecraft.client.renderer.RenderStateShard.OutputStateShard;
 import net.minecraft.client.renderer.RenderStateShard.TransparencyStateShard;
 import net.minecraft.client.renderer.RenderStateShard.WriteMaskStateShard;
+
+import io.vram.frex.api.material.MaterialConstants;
 
 public class RenderTypeShardHelper {
 	public static int toMaterialDecal(LayeringStateShard phase) {

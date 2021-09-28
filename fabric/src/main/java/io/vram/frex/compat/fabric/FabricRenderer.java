@@ -16,13 +16,14 @@ package io.vram.frex.compat.fabric;
 
 import java.util.function.BooleanSupplier;
 
-import io.vram.frex.api.material.MaterialCondition;
-import io.vram.frex.api.renderer.Renderer;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.resources.ResourceLocation;
 
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
+
+import io.vram.frex.api.material.MaterialCondition;
+import io.vram.frex.api.renderer.Renderer;
 
 import grondag.frex.api.material.MaterialFinder;
 import grondag.frex.api.material.RenderMaterial;

@@ -14,9 +14,10 @@
 
 package io.vram.frex.impl.renderloop;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 import io.vram.frex.api.renderloop.EntityRenderPreListener;
 import io.vram.frex.api.renderloop.WorldRenderContext;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 public class EntityRenderPreListenerImpl {
 	private static final ObjectArrayList<EntityRenderPreListener> LISTENERS = new ObjectArrayList<>();

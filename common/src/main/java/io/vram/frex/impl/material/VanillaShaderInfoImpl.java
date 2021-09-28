@@ -20,12 +20,13 @@ import static io.vram.frex.api.material.MaterialConstants.CUTOUT_NONE;
 import static io.vram.frex.api.material.MaterialConstants.CUTOUT_TENTH;
 import static io.vram.frex.api.material.MaterialConstants.CUTOUT_ZERO;
 
-import io.vram.frex.api.rendertype.VanillaShaderInfo;
 import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.client.renderer.RenderStateShard.ShaderStateShard;
+
+import io.vram.frex.api.rendertype.VanillaShaderInfo;
 
 @Internal
 public final class VanillaShaderInfoImpl implements VanillaShaderInfo {

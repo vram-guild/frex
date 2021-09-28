@@ -16,12 +16,13 @@ package io.vram.frex.impl.material;
 
 import java.util.function.BiPredicate;
 
-import io.vram.frex.api.material.BlockEntityMaterialMap;
-import io.vram.frex.api.material.MaterialFinder;
-import io.vram.frex.api.material.RenderMaterial;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.world.level.block.state.BlockState;
+
+import io.vram.frex.api.material.BlockEntityMaterialMap;
+import io.vram.frex.api.material.MaterialFinder;
+import io.vram.frex.api.material.RenderMaterial;
 
 @Internal
 class BlockEntitySingleMaterialMap implements BlockEntityMaterialMap {

@@ -14,12 +14,13 @@
 
 package grondag.frex.api.material;
 
-import io.vram.frex.compat.fabric.FabricMaterial;
 import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.resources.ResourceLocation;
 
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
+
+import io.vram.frex.compat.fabric.FabricMaterial;
 
 /**
  * For use by model loading libraries - handles deserialization of material JSON

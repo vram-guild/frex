@@ -14,14 +14,15 @@
 
 package io.vram.frex.compat.fabric;
 
-import io.vram.frex.api.material.MaterialCondition;
-import io.vram.frex.api.material.MaterialConstants;
-import io.vram.frex.api.material.MaterialFinder;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.resources.ResourceLocation;
 
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
+
+import io.vram.frex.api.material.MaterialCondition;
+import io.vram.frex.api.material.MaterialConstants;
+import io.vram.frex.api.material.MaterialFinder;
 
 import grondag.frex.api.material.RenderMaterial;
 

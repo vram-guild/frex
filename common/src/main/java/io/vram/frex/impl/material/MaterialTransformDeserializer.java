@@ -47,12 +47,13 @@ import static io.vram.frex.api.material.MaterialConstants.WRITE_MASK_DEPTH;
 import java.util.Locale;
 
 import com.google.gson.JsonObject;
-import io.vram.frex.api.material.MaterialFinder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+
+import io.vram.frex.api.material.MaterialFinder;
 
 @Internal
 public class MaterialTransformDeserializer {

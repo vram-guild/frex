@@ -14,6 +14,9 @@
 
 package io.vram.frex.compat.fabric;
 
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.event.Event;
+
 import io.vram.frex.api.renderloop.BlockOutlineListener;
 import io.vram.frex.api.renderloop.BlockOutlineListener.BlockOutlineContext;
 import io.vram.frex.api.renderloop.BlockOutlinePreListener;
@@ -26,9 +29,6 @@ import io.vram.frex.api.renderloop.WorldRenderContext;
 import io.vram.frex.api.renderloop.WorldRenderLastListener;
 import io.vram.frex.api.renderloop.WorldRenderPostListener;
 import io.vram.frex.api.renderloop.WorldRenderStartListener;
-
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.fabricmc.fabric.api.event.Event;
 
 public class FabricWorldRenderEventBypass {
 	public static final Event<WorldRenderEvents.Start> START = new Event<>() {

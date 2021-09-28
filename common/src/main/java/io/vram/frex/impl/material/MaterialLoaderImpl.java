@@ -19,10 +19,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 import com.google.gson.JsonObject;
-import io.vram.frex.api.config.FrexFeature;
-import io.vram.frex.api.material.RenderMaterial;
-import io.vram.frex.api.renderer.Renderer;
-import io.vram.frex.impl.FrexLog;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -35,6 +31,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
+
+import io.vram.frex.api.config.FrexFeature;
+import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.renderer.Renderer;
+import io.vram.frex.impl.FrexLog;
 
 @Internal
 public final class MaterialLoaderImpl {

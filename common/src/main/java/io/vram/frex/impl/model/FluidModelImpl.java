@@ -18,14 +18,15 @@ import java.util.IdentityHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import io.vram.frex.api.model.fluid.FluidModel;
-import io.vram.frex.impl.FrexLog;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
+
+import io.vram.frex.api.model.fluid.FluidModel;
+import io.vram.frex.impl.FrexLog;
 
 @Internal
 public class FluidModelImpl {

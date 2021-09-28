@@ -17,11 +17,12 @@ package io.vram.frex.impl.config;
 import java.util.function.Supplier;
 
 import com.google.common.base.Preconditions;
-import io.vram.frex.impl.FrexLog;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.resources.ResourceLocation;
+
+import io.vram.frex.impl.FrexLog;
 
 @Internal
 public class ShaderConfigImpl {

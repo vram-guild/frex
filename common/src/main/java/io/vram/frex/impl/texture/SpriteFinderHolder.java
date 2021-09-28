@@ -14,9 +14,9 @@
 
 package io.vram.frex.impl.texture;
 
-import io.vram.frex.api.texture.SpriteFinder;
-
 import net.minecraft.client.renderer.texture.TextureAtlas;
+
+import io.vram.frex.api.texture.SpriteFinder;
 
 public class SpriteFinderHolder {
 	// When Fabric API is present, this is changed via Mixin to use the fabric variant

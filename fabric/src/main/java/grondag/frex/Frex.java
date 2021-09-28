@@ -20,11 +20,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
-import io.vram.frex.impl.config.FlawlessFramesImpl;
-import io.vram.frex.impl.light.ItemLightLoader;
-import io.vram.frex.impl.material.MaterialMapLoader;
-import io.vram.frex.impl.model.FluidModelImpl;
-import io.vram.frex.impl.model.SimpleFluidSpriteProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
@@ -39,6 +34,12 @@ import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
+
+import io.vram.frex.impl.config.FlawlessFramesImpl;
+import io.vram.frex.impl.light.ItemLightLoader;
+import io.vram.frex.impl.material.MaterialMapLoader;
+import io.vram.frex.impl.model.FluidModelImpl;
+import io.vram.frex.impl.model.SimpleFluidSpriteProvider;
 
 public class Frex implements ClientModInitializer {
 	public static Logger LOG = LogManager.getLogger("FREX");

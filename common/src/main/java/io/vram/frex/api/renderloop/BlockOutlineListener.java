@@ -14,12 +14,12 @@
 
 package io.vram.frex.api.renderloop;
 
-import io.vram.frex.impl.renderloop.BlockOutlineListenerImpl;
-
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
+
+import io.vram.frex.impl.renderloop.BlockOutlineListenerImpl;
 
 /**
  * Called after block outline render checks are made and before the

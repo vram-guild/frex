@@ -14,13 +14,14 @@
 
 package grondag.frex.api.material;
 
-import io.vram.frex.api.material.MaterialCondition;
 import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.resources.ResourceLocation;
 
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
+
+import io.vram.frex.api.material.MaterialCondition;
 
 @Deprecated
 public interface RenderMaterial extends net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial {

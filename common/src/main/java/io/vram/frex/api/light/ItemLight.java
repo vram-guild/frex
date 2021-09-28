@@ -14,10 +14,10 @@
 
 package io.vram.frex.api.light;
 
+import net.minecraft.world.item.ItemStack;
+
 import io.vram.frex.impl.light.ItemLightLoader;
 import io.vram.frex.impl.light.SimpleItemLight;
-
-import net.minecraft.world.item.ItemStack;
 
 @FunctionalInterface
 public interface ItemLight {

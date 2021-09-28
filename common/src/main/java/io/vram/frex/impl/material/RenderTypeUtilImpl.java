@@ -14,12 +14,6 @@
 
 package io.vram.frex.impl.material;
 
-import io.vram.frex.api.material.MaterialConstants;
-import io.vram.frex.api.material.MaterialFinder;
-import io.vram.frex.api.material.RenderMaterial;
-import io.vram.frex.api.renderer.Renderer;
-import io.vram.frex.api.rendertype.RenderTypeExclusion;
-import io.vram.frex.api.rendertype.VanillaShaderInfo;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.client.renderer.RenderStateShard;
@@ -28,6 +22,13 @@ import net.minecraft.client.renderer.RenderStateShard.TextureStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderType.CompositeRenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
+
+import io.vram.frex.api.material.MaterialConstants;
+import io.vram.frex.api.material.MaterialFinder;
+import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.renderer.Renderer;
+import io.vram.frex.api.rendertype.RenderTypeExclusion;
+import io.vram.frex.api.rendertype.VanillaShaderInfo;
 
 @Internal
 public final class RenderTypeUtilImpl {

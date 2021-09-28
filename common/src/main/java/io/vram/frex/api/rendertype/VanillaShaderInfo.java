@@ -14,11 +14,12 @@
 
 package io.vram.frex.api.rendertype;
 
-import io.vram.frex.impl.material.VanillaShaderInfoImpl;
 import org.jetbrains.annotations.ApiStatus.NonExtendable;
 
 import net.minecraft.client.renderer.RenderStateShard.ShaderStateShard;
 import net.minecraft.client.renderer.ShaderInstance;
+
+import io.vram.frex.impl.material.VanillaShaderInfoImpl;
 
 @NonExtendable
 public interface VanillaShaderInfo {

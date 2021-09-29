@@ -48,6 +48,10 @@ public class FrexMixinPlugin implements IMixinConfigPlugin {
 		if (!FabricLoader.getInstance().isModLoaded("fabric-rendering-fluids-v1")) {
 			inactiveSet.add("MixinFluidRenderHandler");
 		}
+
+		if (!FabricLoader.getInstance().isModLoaded("fabric-rendering-data-attachment-v1")) {
+			inactiveSet.add("MixinBlockEntityRenderDataImpl");
+		}
 	}
 
 	@SuppressWarnings("unused")

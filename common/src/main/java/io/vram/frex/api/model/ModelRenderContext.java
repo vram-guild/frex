@@ -27,11 +27,13 @@ import org.jetbrains.annotations.Nullable;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.api.mesh.FrexBufferSource;
 import io.vram.frex.api.mesh.Mesh;
 import io.vram.frex.api.mesh.QuadEditor;
+import io.vram.frex.api.world.BlockEntityRenderData;
 
 public interface ModelRenderContext {
 	void accept(Mesh mesh, @Nullable BlockState blockState);
@@ -57,4 +59,16 @@ public interface ModelRenderContext {
 	PoseStack matrixStack();
 
 	Random random();
+
+	/**
+	 * In terrain rendering this will hold the result of functions
+	 * registered via {@link BlockEntityRenderData#registerProvider(net.minecraft.world.level.block.entity.BlockEntityType, java.util.function.Function)}
+	 * for the block entity at the given position.
+	 *
+	 * <p>If outside of terrain rendering, or if no function is registered,
+	 * or if no BlockEntity is present at the given position, will return null.
+	 * @return Result of a registered block entity render data function, or null if none
+	 * registered or not applicable.
+	 */
+	@Nullable Object blockEntityRenderData(BlockPos pos);
 }

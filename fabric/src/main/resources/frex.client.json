@@ -5,6 +5,8 @@
 	"compatibilityLevel": "JAVA_16",
 	"plugin": "io.vram.frex.mixin.FrexMixinPlugin",
 	"mixins": [
+		"MixinBlockEntityRenderDataImpl",
+		"MixinBlockEntityType",
 		"MixinChunkRebuildTask",
 		"MixinRenderChunkRegion",
 		"MixinFabricBakedModel",

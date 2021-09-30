@@ -19,7 +19,7 @@ def version_tag = project.mod_name.replaceAll('-', '_') + '_version'
 
 loom {
 	mixin.defaultRefmapName = project.mod_name + "-refmap.json"
-	accessWidenerPath = file("src/main/resources/frex.accesswidener")
+	accessWidenerPath = file("src/main/resources/${project.mod_name}.accesswidener")
 }
 
 def artifact_name = project.mod_name + "-" + project.mc_tag
@@ -53,7 +53,7 @@ license {
 
 checkstyle {
 	configFile = rootProject.file("../checkstyle.xml")
-	toolVersion = "8.31"
+	toolVersion = "8.44"
 }
 
 def eclipseName =  project.mod_name;

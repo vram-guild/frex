@@ -158,6 +158,14 @@ public interface QuadEditor extends QuadView {
 	 */
 	QuadEditor uv(int vertexIndex, float u, float v);
 
+	default QuadEditor uvUnitSquare() {
+		uv(0, 0, 0);
+		uv(1, 0, 1);
+		uv(2, 1, 1);
+		uv(3, 1, 0);
+		return this;
+	}
+
 	/**
 	 * Sets texture coordinates relative to the given texture sprite.
 	 * For sprite atlas textures, this may be more convenient than

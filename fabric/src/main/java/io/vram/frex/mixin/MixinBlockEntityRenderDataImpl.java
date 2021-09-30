@@ -39,7 +39,7 @@ public class MixinBlockEntityRenderDataImpl {
 	 * @author Grondag
 	 * @reason how we control interop on FAPI
 	 */
-	@Overwrite
+	@Overwrite(remap = false)
 	public static Function<BlockEntity, Object> defaultProvider() {
 		return FABRIC_PROVIDER;
 	}

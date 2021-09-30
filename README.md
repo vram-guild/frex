@@ -1,1 +1,1 @@
-# Flexible Rendering Extensions
+# FREX Rendering Extensions

@@ -20,20 +20,29 @@
 
 package io.vram.frex.impl;
 
+import java.util.ServiceLoader;
+
 import io.vram.frex.api.renderer.Renderer;
+import io.vram.frex.api.renderer.RendererProvider;
 
 public class RendererHolder {
 	private static Renderer renderer = null;
 
 	public static Renderer get() {
 		if (renderer == null) {
-			renderer = (Renderer) RendererInitializerImpl.run();
+			final var loader = ServiceLoader.load(RendererProvider.class);
+
+			RendererProvider best = null;
+
+			for (final var rp : loader) {
+				if (best == null || rp.priority() < best.priority()) {
+					best = rp;
+				}
+			}
+
+			renderer = best.getRenderer();
 		}
 
 		return renderer;
-	}
-
-	public static void set(Renderer rendererIn) {
-		renderer = rendererIn;
 	}
 }

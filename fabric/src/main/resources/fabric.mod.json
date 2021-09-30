@@ -28,6 +28,7 @@
     "java": ">=16"
   },
   "custom": {
+  	"fabric-renderer-api-v1:contains_renderer": true,
     "modmenu": {
         "badges": [ "library" ]
     }

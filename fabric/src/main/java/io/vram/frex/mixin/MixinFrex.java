@@ -27,7 +27,6 @@ import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 
 import io.vram.frex.api.renderer.Renderer;
 import io.vram.frex.compat.fabric.FabricRenderer;
-import io.vram.frex.impl.RendererInitializerImpl;
 
 import grondag.frex.Frex;
 
@@ -39,8 +38,6 @@ public abstract class MixinFrex {
 	 */
 	@Overwrite(remap = false)
 	private static void setupRenderer() {
-		if (RendererInitializerImpl.hasCandidate()) {
-			RendererAccess.INSTANCE.registerRenderer(FabricRenderer.of(Renderer.get()));
-		}
+		RendererAccess.INSTANCE.registerRenderer(FabricRenderer.of(Renderer.get()));
 	}
 }

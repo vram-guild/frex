@@ -3,19 +3,13 @@
 	"minVersion": "0.8",
 	"package": "io.vram.frex.mixin",
 	"compatibilityLevel": "JAVA_16",
-	"plugin": "io.vram.frex.mixin.FrexMixinPlugin",
 	"mixins": [
-		"MixinBlockEntityRenderDataImpl",
+		"MixinBlockColors",
 		"MixinBlockEntityType",
 		"MixinChunkRebuildTask",
-		"MixinRenderChunkRegion",
-		"MixinFabricBakedModel",
-		"MixinFabricSpriteFinder",
-		"MixinFluidAppearanceImpl",
-		"MixinFluidRenderHandler",
-		"MixinFrex",
+		"MixinItemColors",
 		"MixinLevelRenderer",
-		"MixinSpriteFinderHolder"
+		"MixinRenderChunkRegion"
 	],
 	"injectors": {
 		"defaultRequire": 1

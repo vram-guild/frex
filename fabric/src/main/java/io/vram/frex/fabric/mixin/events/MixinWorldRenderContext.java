@@ -18,28 +18,14 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.mixin.worldrenderevents;
+package io.vram.frex.fabric.mixin.events;
 
 import org.spongepowered.asm.mixin.Mixin;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext.BlockOutlineContext;
 
-import net.minecraft.client.renderer.LightTexture;
+import io.vram.frex.api.renderloop.WorldRenderContextBase;
 
-import net.fabricmc.fabric.impl.client.rendering.WorldRenderContextImpl;
-
-import io.vram.frex.api.renderloop.BlockOutlineListener.BlockOutlineContext;
-import io.vram.frex.api.renderloop.WorldRenderContext;
-
-@Mixin(WorldRenderContextImpl.class)
-public abstract class MixinFabricWorldRenderContext implements WorldRenderContext, BlockOutlineContext {
-	@Override
-	public LightTexture lightmapTexture() {
-		return ((net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext) this).lightmapTextureManager();
-	}
-
-	@Override
-	public PoseStack poseStack() {
-		return ((net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext) this).matrixStack();
-	}
-}
+@Mixin(WorldRenderContextBase.class)
+public abstract class MixinWorldRenderContext implements WorldRenderContext, BlockOutlineContext { }

@@ -18,29 +18,29 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.mixin;
+package io.vram.frex.fabric.mixin;
+
+import java.util.function.Function;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
-import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
-import net.fabricmc.fabric.impl.renderer.SpriteFinderImpl;
+import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 
-import io.vram.frex.api.texture.SpriteFinder;
-import io.vram.frex.impl.texture.SpriteFinderHolder;
+import io.vram.frex.impl.world.BlockEntityRenderDataImpl;
 
-@Mixin(SpriteFinderHolder.class)
-public abstract class MixinSpriteFinderHolder {
+@Mixin(BlockEntityRenderDataImpl.class)
+public class MixinBlockEntityRenderDataImpl {
+	private static final Function<BlockEntity, Object> FABRIC_PROVIDER = be -> ((RenderAttachmentBlockEntity) be).getRenderAttachmentData();
+
 	/**
-	 * We use the Fabric implementation when it is available.
-	 * It's the same code either way - I wrote it. (Grondag)
-	 *
-	 * @author grondag
-	 * @reason Fabric API compatibility
+	 * @author Grondag
+	 * @reason how we control interop on FAPI
 	 */
 	@Overwrite(remap = false)
-	public static SpriteFinder get(TextureAtlas atlas) {
-		return (SpriteFinder) SpriteFinderImpl.get(atlas);
+	public static Function<BlockEntity, Object> defaultProvider() {
+		return FABRIC_PROVIDER;
 	}
 }

@@ -18,7 +18,7 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.mixin.worldrenderevents;
+package io.vram.frex.fabric.mixin.events;
 
 import java.util.List;
 import java.util.Set;
@@ -32,7 +32,7 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class FrexWorldRenderEventsMixinPlugin implements IMixinConfigPlugin {
-	private final int packagePrefixLen = "io.vram.frex.mixin.worldrenderevents.".length();
+	private final int packagePrefixLen = "io.vram.frex.fabric.mixin.events.".length();
 
 	@SuppressWarnings("unused")
 	private final Logger log = LogManager.getLogger("FREX");

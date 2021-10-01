@@ -20,27 +20,19 @@
 
 package io.vram.frex.mixin;
 
-import java.util.function.Function;
-
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.client.color.item.ItemColors;
 
-import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
+import io.vram.frex.impl.world.ColorRegistryImpl;
 
-import io.vram.frex.impl.world.BlockEntityRenderDataImpl;
-
-@Mixin(BlockEntityRenderDataImpl.class)
-public class MixinBlockEntityRenderDataImpl {
-	private static final Function<BlockEntity, Object> FABRIC_PROVIDER = be -> ((RenderAttachmentBlockEntity) be).getRenderAttachmentData();
-
-	/**
-	 * @author Grondag
-	 * @reason how we control interop on FAPI
-	 */
-	@Overwrite(remap = false)
-	public static Function<BlockEntity, Object> defaultProvider() {
-		return FABRIC_PROVIDER;
+@Mixin(ItemColors.class)
+public class MixinItemColors {
+	@Inject(method = "createDefault", at = @At("RETURN"))
+	private static void onCreateDefault(CallbackInfoReturnable<ItemColors> ci) {
+		ColorRegistryImpl.setItemColors(ci.getReturnValue());
 	}
 }

@@ -18,14 +18,26 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.mixin.worldrenderevents;
+package io.vram.frex.fabric.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext.BlockOutlineContext;
+import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 
-import io.vram.frex.api.renderloop.WorldRenderContextBase;
+import io.vram.frex.api.renderer.Renderer;
+import io.vram.frex.compat.fabric.FabricRenderer;
 
-@Mixin(WorldRenderContextBase.class)
-public abstract class MixinWorldRenderContext implements WorldRenderContext, BlockOutlineContext { }
+import grondag.frex.Frex;
+
+@Mixin(Frex.class)
+public abstract class MixinFrex {
+	/**
+	 * @author grondag
+	 * @reason Fabric API compatibility
+	 */
+	@Overwrite(remap = false)
+	private static void setupRenderer() {
+		RendererAccess.INSTANCE.registerRenderer(FabricRenderer.of(Renderer.get()));
+	}
+}

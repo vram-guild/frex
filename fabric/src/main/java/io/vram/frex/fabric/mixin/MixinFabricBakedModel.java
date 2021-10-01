@@ -18,7 +18,7 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.mixin;
+package io.vram.frex.fabric.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 

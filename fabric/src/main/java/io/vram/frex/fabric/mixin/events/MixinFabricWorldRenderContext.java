@@ -18,13 +18,28 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.mixin;
+package io.vram.frex.fabric.mixin.events;
 
 import org.spongepowered.asm.mixin.Mixin;
 
-import net.fabricmc.fabric.impl.renderer.SpriteFinderImpl;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import io.vram.frex.api.texture.SpriteFinder;
+import net.minecraft.client.renderer.LightTexture;
 
-@Mixin(SpriteFinderImpl.class)
-public abstract class MixinFabricSpriteFinder implements SpriteFinder { }
+import net.fabricmc.fabric.impl.client.rendering.WorldRenderContextImpl;
+
+import io.vram.frex.api.renderloop.BlockOutlineListener.BlockOutlineContext;
+import io.vram.frex.api.renderloop.WorldRenderContext;
+
+@Mixin(WorldRenderContextImpl.class)
+public abstract class MixinFabricWorldRenderContext implements WorldRenderContext, BlockOutlineContext {
+	@Override
+	public LightTexture lightmapTexture() {
+		return ((net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext) this).lightmapTextureManager();
+	}
+
+	@Override
+	public PoseStack poseStack() {
+		return ((net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext) this).matrixStack();
+	}
+}

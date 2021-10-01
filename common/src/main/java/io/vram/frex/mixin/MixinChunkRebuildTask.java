@@ -43,15 +43,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-
 import io.vram.frex.api.world.RenderRegionBakeListener;
 import io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext;
 import io.vram.frex.impl.event.BlockStateRendererImpl;
 import io.vram.frex.impl.event.ChunkRenderConditionContext.RenderRegionListenerProvider;
 
-@Environment(EnvType.CLIENT)
 @Mixin(targets = "net/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask")
 public class MixinChunkRebuildTask implements RenderRegionContext {
 	@Shadow protected RenderChunk this$1;

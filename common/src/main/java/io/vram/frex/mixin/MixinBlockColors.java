@@ -21,11 +21,18 @@
 package io.vram.frex.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
+import net.minecraft.client.color.block.BlockColors;
 
-import io.vram.frex.api.model.fluid.FluidAppearance;
+import io.vram.frex.impl.world.ColorRegistryImpl;
 
-// Makes FluidRenderHandler and FREX equivalents cross-compatible
-@Mixin(FluidRenderHandler.class)
-public interface MixinFluidRenderHandler extends FluidAppearance { }
+@Mixin(BlockColors.class)
+public class MixinBlockColors {
+	@Inject(method = "createDefault", at = @At("RETURN"))
+	private static void onCreateDefault(CallbackInfoReturnable<BlockColors> ci) {
+		ColorRegistryImpl.setBlockColors(ci.getReturnValue());
+	}
+}

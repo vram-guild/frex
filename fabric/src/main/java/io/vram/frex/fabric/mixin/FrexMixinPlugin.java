@@ -18,7 +18,7 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.mixin;
+package io.vram.frex.fabric.mixin;
 
 import java.util.List;
 import java.util.Set;
@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class FrexMixinPlugin implements IMixinConfigPlugin {
-	private final int packagePrefixLen = "io.vram.frex.mixin.".length();
+	private final int packagePrefixLen = "io.vram.frex.fabric.mixin.".length();
 
 	final ObjectOpenHashSet<String> inactiveSet = new ObjectOpenHashSet<>();
 
@@ -47,6 +47,7 @@ public class FrexMixinPlugin implements IMixinConfigPlugin {
 
 		if (!FabricLoader.getInstance().isModLoaded("fabric-rendering-fluids-v1")) {
 			inactiveSet.add("MixinFluidRenderHandler");
+			inactiveSet.add("MixinFluidAppearanceImpl");
 		}
 
 		if (!FabricLoader.getInstance().isModLoaded("fabric-rendering-data-attachment-v1")) {

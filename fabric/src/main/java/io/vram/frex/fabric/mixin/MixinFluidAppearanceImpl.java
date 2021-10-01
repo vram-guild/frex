@@ -18,7 +18,7 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.mixin;
+package io.vram.frex.fabric.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -31,7 +31,6 @@ import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import io.vram.frex.api.model.fluid.FluidAppearance;
 import io.vram.frex.impl.model.FluidAppearanceImpl;
 
-//WIP: turn off via mixin config when FAPI lib not present
 // Maxes FluidRenderHandler and FluidRenderHandler cross-compatible
 @Mixin(FluidAppearanceImpl.class)
 public abstract class MixinFluidAppearanceImpl implements FluidRenderHandler {

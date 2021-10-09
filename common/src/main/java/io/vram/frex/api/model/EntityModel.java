@@ -24,5 +24,5 @@ import net.minecraft.world.entity.Entity;
 
 @FunctionalInterface
 public interface EntityModel {
-	<T extends Entity> void renderAsEntity(T entity, float yawDelta, float tickDelta, int packedLight, ModelRenderContext context);
+	<T extends Entity> void renderAsEntity(T entity, float yawDelta, float tickDelta, int packedLight, ModelOuputContext output);
 }

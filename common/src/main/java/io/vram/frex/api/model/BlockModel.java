@@ -33,7 +33,7 @@ import io.vram.frex.api.world.BlockEntityRenderData;
 @FunctionalInterface
 public interface BlockModel {
 	// WIP: find way to expose biome info
-	void renderAsBlock(BlockInputContext input, ModelRenderContext context);
+	void renderAsBlock(BlockInputContext input, ModelOuputContext output);
 
 	public interface BlockInputContext {
 		BlockAndTintGetter blockView();

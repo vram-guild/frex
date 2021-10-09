@@ -29,7 +29,7 @@ import io.vram.frex.api.mesh.FrexBufferSource;
 import io.vram.frex.api.mesh.Mesh;
 import io.vram.frex.api.mesh.QuadEditor;
 
-public interface ModelRenderContext {
+public interface ModelOuputContext {
 	void accept(BakedModel model, @Nullable BlockState blockState);
 
 	default void accept(Mesh mesh) {

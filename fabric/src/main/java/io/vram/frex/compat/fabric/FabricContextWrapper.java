@@ -28,10 +28,10 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 
-import io.vram.frex.api.model.ModelRenderContext;
+import io.vram.frex.api.model.ModelOuputContext;
 
 public class FabricContextWrapper implements RenderContext {
-	private ModelRenderContext wrapped;
+	private ModelOuputContext wrapped;
 
 	private final Consumer<Mesh> meshConsumer = m -> {
 		wrapped.accept(((FabricMesh) m).wrapped);
@@ -70,7 +70,7 @@ public class FabricContextWrapper implements RenderContext {
 
 	private static final ThreadLocal<FabricContextWrapper> POOL = ThreadLocal.withInitial(FabricContextWrapper::new);
 
-	public static FabricContextWrapper wrap(ModelRenderContext wrapped) {
+	public static FabricContextWrapper wrap(ModelOuputContext wrapped) {
 		final var result = POOL.get();
 		result.wrapped = wrapped;
 		return result;

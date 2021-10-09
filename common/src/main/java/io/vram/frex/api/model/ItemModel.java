@@ -27,7 +27,7 @@ import net.minecraft.world.item.ItemStack;
 
 @FunctionalInterface
 public interface ItemModel {
-	void renderAsItem(ItemInputContext input, ModelRenderContext context);
+	void renderAsItem(ItemInputContext input, ModelOuputContext output);
 
 	public interface ItemInputContext {
 		ItemStack itemStack();

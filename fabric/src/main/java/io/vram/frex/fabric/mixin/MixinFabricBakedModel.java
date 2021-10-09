@@ -26,18 +26,18 @@ import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 
 import io.vram.frex.api.model.BlockModel;
 import io.vram.frex.api.model.ItemModel;
-import io.vram.frex.api.model.ModelRenderContext;
+import io.vram.frex.api.model.ModelOuputContext;
 import io.vram.frex.compat.fabric.FabricContextWrapper;
 
 @Mixin(FabricBakedModel.class)
 public interface MixinFabricBakedModel extends BlockModel, ItemModel {
 	@Override
-	default void renderAsItem(ItemInputContext input, ModelRenderContext context) {
-		((FabricBakedModel) this).emitItemQuads(input.itemStack(), input::random, FabricContextWrapper.wrap(context));
+	default void renderAsItem(ItemInputContext input, ModelOuputContext output) {
+		((FabricBakedModel) this).emitItemQuads(input.itemStack(), input::random, FabricContextWrapper.wrap(output));
 	}
 
 	@Override
-	default void renderAsBlock(BlockInputContext input, ModelRenderContext context) {
-		((FabricBakedModel) this).emitBlockQuads(input.blockView(), input.blockState(), input.pos(), input::random, FabricContextWrapper.wrap(context));
+	default void renderAsBlock(BlockInputContext input, ModelOuputContext output) {
+		((FabricBakedModel) this).emitBlockQuads(input.blockView(), input.blockState(), input.pos(), input::random, FabricContextWrapper.wrap(output));
 	}
 }

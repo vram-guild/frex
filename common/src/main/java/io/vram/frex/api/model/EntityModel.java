@@ -23,6 +23,16 @@ package io.vram.frex.api.model;
 import net.minecraft.world.entity.Entity;
 
 @FunctionalInterface
-public interface EntityModel {
-	<T extends Entity> void renderAsEntity(T entity, float yawDelta, float tickDelta, int packedLight, ModelOuputContext output);
+public interface EntityModel<T extends Entity> {
+	void renderAsEntity(EntityInputContext<T> input, ModelOuputContext output);
+
+	public interface EntityInputContext<E extends Entity> {
+		E entity();
+
+		float yawDelta();
+
+		float tickDelta();
+
+		int packedLight();
+	}
 }

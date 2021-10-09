@@ -24,8 +24,6 @@ import java.util.Random;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
@@ -36,12 +34,10 @@ import io.vram.frex.api.mesh.QuadEditor;
 import io.vram.frex.api.world.BlockEntityRenderData;
 
 public interface ModelRenderContext {
-	void accept(Mesh mesh, @Nullable BlockState blockState);
-
 	void accept(BakedModel model, @Nullable BlockState blockState);
 
 	default void accept(Mesh mesh) {
-		accept(mesh, null);
+		mesh.forEachWithEditor(q -> q.emit(), quadEmitter());
 	}
 
 	default void accept(BakedModel model) {
@@ -56,7 +52,8 @@ public interface ModelRenderContext {
 
 	void popTransform();
 
-	PoseStack matrixStack();
+	// TODO: implement
+	//MatrixStack matrixStack();
 
 	Random random();
 

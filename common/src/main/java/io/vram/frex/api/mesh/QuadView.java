@@ -40,7 +40,7 @@ public interface QuadView {
 	int VANILLA_QUAD_STRIDE = VANILLA_VERTEX_STRIDE * 4;
 
 	/**
-	 * Extracts all quad properties except material to the given {@link QuadEditor} instance.
+	 * Copies all quad properties, including material, to the given {@link QuadEditor} instance.
 	 * Must be used before calling {link QuadEmitter#emit()} on the target instance.
 	 * Meant for re-texturing, analysis and static transformation use cases.
 	 */

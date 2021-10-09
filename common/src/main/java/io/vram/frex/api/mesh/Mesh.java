@@ -39,4 +39,11 @@ public interface Mesh {
 	 * be retained by the consumer.
 	 */
 	void forEach(Consumer<QuadView> consumer);
+
+	default void forEachWithEditor(Consumer<QuadEditor> consumer, QuadEditor editor) {
+		forEach(v -> {
+			v.copyTo(editor);
+			consumer.accept(editor);
+		});
+	}
 }

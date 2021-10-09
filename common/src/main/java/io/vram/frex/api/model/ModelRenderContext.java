@@ -67,5 +67,7 @@ public interface ModelRenderContext {
 	 * @return Result of a registered block entity render data function, or null if none
 	 * registered or not applicable.
 	 */
-	@Nullable Object blockEntityRenderData(BlockPos pos);
+	default @Nullable Object blockEntityRenderData(BlockPos pos) {
+		return null;
+	}
 }

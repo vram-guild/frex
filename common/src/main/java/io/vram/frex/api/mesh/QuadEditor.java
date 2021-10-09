@@ -28,6 +28,8 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 
+import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
+
 import io.vram.frex.api.material.RenderMaterial;
 
 public interface QuadEditor extends QuadView {
@@ -102,7 +104,11 @@ public interface QuadEditor extends QuadView {
 
 	QuadEditor fromVanilla(int[] quadData, int startIndex);
 
-	QuadEditor fromVanilla(BakedQuad quad, RenderMaterial material, Direction cullFace);
+	default QuadEditor fromVanilla(BakedQuad quad, RenderMaterial material, Direction cullFace) {
+		return fromVanilla(quad, material, ModelHelper.toFaceIndex(cullFace));
+	}
+
+	QuadEditor fromVanilla(BakedQuad quad, RenderMaterial material, int cullFaceId);
 
 	QuadEditor tag(int tag);
 

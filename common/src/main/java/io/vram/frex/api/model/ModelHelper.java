@@ -41,26 +41,43 @@ import io.vram.frex.api.texture.SpriteFinder;
 /**
  * Collection of utilities for model implementations.
  */
+// WIP: split up
 public abstract class ModelHelper {
-	private ModelHelper() { }
-
+	public static final int NORTH_INDEX = toFaceIndex(Direction.NORTH);
+	public static final int SOUTH_INDEX = toFaceIndex(Direction.SOUTH);
+	public static final int EAST_INDEX = toFaceIndex(Direction.EAST);
+	public static final int WEST_INDEX = toFaceIndex(Direction.WEST);
+	public static final int UP_INDEX = toFaceIndex(Direction.UP);
+	public static final int DOWN_INDEX = toFaceIndex(Direction.DOWN);
 	/** Result from {@link #toFaceIndex(Direction)} for null values. */
-	public static final int NULL_FACE_ID = 6;
+	public static final int UNASSIGNED_INDEX = 6;
+
+	public static final int NORTH_FLAG = 1 << NORTH_INDEX;
+	public static final int SOUTH_FLAG = 1 << SOUTH_INDEX;
+	public static final int EAST_FLAG = 1 << EAST_INDEX;
+	public static final int WEST_FLAG = 1 << WEST_INDEX;
+	public static final int UP_FLAG = 1 << UP_INDEX;
+	public static final int DOWN_FLAG = 1 << DOWN_INDEX;
+	public static final int UNASSIGNED_FLAG = 1 << UNASSIGNED_INDEX;
+
+	public static final int ALL_REAL_FACE_FLAGS = NORTH_FLAG | SOUTH_FLAG | EAST_FLAG | WEST_FLAG | UP_FLAG | DOWN_FLAG;
+
+	private ModelHelper() { }
 
 	/**
 	 * Convenient way to encode faces that may be null.
-	 * Null is returned as {@link #NULL_FACE_ID}.
+	 * Null is returned as {@link #UNASSIGNED_INDEX}.
 	 * Use {@link #faceFromIndex(int)} to retrieve encoded face.
 	 */
 	public static int toFaceIndex(Direction face) {
-		return face == null ? NULL_FACE_ID : face.get3DDataValue();
+		return face == null ? UNASSIGNED_INDEX : face.get3DDataValue();
 	}
 
 	/**
 	 * Use to decode a result from {@link #toFaceIndex(Direction)}.
 	 * Return value will be null if encoded value was null.
 	 * Can also be used for no-allocation iteration of {@link Direction#values()},
-	 * optionally including the null face. (Use &lt; or  &lt;= {@link #NULL_FACE_ID}
+	 * optionally including the null face. (Use &lt; or  &lt;= {@link #UNASSIGNED_INDEX}
 	 * to exclude or include the null value, respectively.)
 	 */
 	@Contract("null -> null")
@@ -75,7 +92,7 @@ public abstract class ModelHelper {
 	 * Converts a mesh into an array of lists of vanilla baked quads.
 	 * Useful for creating vanilla baked models when required for compatibility.
 	 * The array indexes correspond to {@link Direction#get3DDataValue()} with the
-	 * addition of {@link #NULL_FACE_ID}.
+	 * addition of {@link #UNASSIGNED_INDEX}.
 	 *
 	 * <p>Retrieves sprites from the block texture atlas via {@link SpriteFinder}.
 	 */

@@ -20,10 +20,20 @@
 
 package io.vram.frex.api.model;
 
+import java.util.Random;
+
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.item.ItemStack;
 
 @FunctionalInterface
 public interface ItemModel {
-	void renderAsItem(ItemStack itemStack, ItemTransforms.TransformType mode, ModelRenderContext context);
+	void renderAsItem(ItemInputContext input, ModelRenderContext context);
+
+	public interface ItemInputContext {
+		ItemStack itemStack();
+
+		ItemTransforms.TransformType mode();
+
+		Random random();
+	}
 }

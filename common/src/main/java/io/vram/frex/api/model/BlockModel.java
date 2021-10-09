@@ -20,12 +20,40 @@
 
 package io.vram.frex.api.model;
 
+import java.util.Random;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
+import io.vram.frex.api.world.BlockEntityRenderData;
+
 @FunctionalInterface
 public interface BlockModel {
 	// WIP: find way to expose biome info
-	void renderAsBlock(BlockAndTintGetter blockView, BlockState state, BlockPos pos, ModelRenderContext context);
+	void renderAsBlock(BlockInputContext input, ModelRenderContext context);
+
+	public interface BlockInputContext {
+		BlockAndTintGetter blockView();
+
+		BlockState blockState();
+
+		BlockPos pos();
+
+		Random random();
+
+		/**
+		 * In terrain rendering this will hold the result of functions
+		 * registered via {@link BlockEntityRenderData#registerProvider(net.minecraft.world.level.block.entity.BlockEntityType, java.util.function.Function)}
+		 * for the block entity at the given position.
+		 *
+		 * <p>If outside of terrain rendering, or if no function is registered,
+		 * or if no BlockEntity is present at the given position, will return null.
+		 * @return Result of a registered block entity render data function, or null if none
+		 * registered or not applicable.
+		 */
+		@Nullable Object blockEntityRenderData(BlockPos pos);
+	}
 }

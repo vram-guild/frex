@@ -24,7 +24,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HalfTransparentBlock;
@@ -59,11 +58,13 @@ public class SimpleFluidModel implements FluidModel {
 
 	// WIP: handle degenerate quads by emitting two triangles so that face normals are correct
 	@Override
-	public void renderAsBlock(BlockAndTintGetter world, BlockState state, BlockPos centerPos, ModelRenderContext context) {
+	public void renderAsBlock(BlockInputContext input, ModelRenderContext context) {
 		final var appearance = this.appearance;
 		final QuadEditor qe = context.quadEmitter();
-		final FluidState fluidState = state.getFluidState();
-		final BlockState blockState = world.getBlockState(centerPos);
+		final BlockState blockState = input.blockState();
+		final FluidState fluidState = blockState.getFluidState();
+		final var world = input.blockView();
+		final var centerPos = input.pos();
 		final TextureAtlasSprite[] sprites = appearance.getFluidSprites(world, centerPos, fluidState);
 		final BlockPos.MutableBlockPos searchPos = SEARCH_POS.get();
 

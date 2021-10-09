@@ -22,12 +22,6 @@ package io.vram.frex.fabric.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.block.state.BlockState;
-
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 
 import io.vram.frex.api.model.BlockModel;
@@ -38,12 +32,12 @@ import io.vram.frex.compat.fabric.FabricContextWrapper;
 @Mixin(FabricBakedModel.class)
 public interface MixinFabricBakedModel extends BlockModel, ItemModel {
 	@Override
-	default void renderAsItem(ItemStack itemStack, TransformType mode, ModelRenderContext context) {
-		((FabricBakedModel) this).emitItemQuads(itemStack, context::random, FabricContextWrapper.wrap(context));
+	default void renderAsItem(ItemInputContext input, ModelRenderContext context) {
+		((FabricBakedModel) this).emitItemQuads(input.itemStack(), input::random, FabricContextWrapper.wrap(context));
 	}
 
 	@Override
-	default void renderAsBlock(BlockAndTintGetter blockView, BlockState state, BlockPos pos, ModelRenderContext context) {
-		((FabricBakedModel) this).emitBlockQuads(blockView, state, pos, context::random, FabricContextWrapper.wrap(context));
+	default void renderAsBlock(BlockInputContext input, ModelRenderContext context) {
+		((FabricBakedModel) this).emitBlockQuads(input.blockView(), input.blockState(), input.pos(), input::random, FabricContextWrapper.wrap(context));
 	}
 }

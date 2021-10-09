@@ -3,7 +3,7 @@
 	"minVersion": "0.8",
 	"package": "io.vram.frex.fabric.mixin.events",
 	"compatibilityLevel": "JAVA_16",
-	"plugin": "io.vram.frex.fabric.mixin.events.FrexWorldRenderEventsMixinPlugin",
+	"plugin": "io.vram.frex.fabric.mixin.events.FabricEventsMixinPlugin",
 	"mixins": [
 		"MixinFabricWorldRenderContext",
 		"MixinFabricWorldRenderEvents",

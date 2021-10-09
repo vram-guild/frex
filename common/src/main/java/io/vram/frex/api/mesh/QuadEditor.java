@@ -94,6 +94,8 @@ public interface QuadEditor extends QuadView {
 
 	QuadEditor material(RenderMaterial material);
 
+	QuadEditor defaultMaterial(RenderMaterial material);
+
 	@Nullable
 	QuadEditor cullFace(@Nullable Direction face);
 

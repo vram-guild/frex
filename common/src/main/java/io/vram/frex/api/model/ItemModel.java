@@ -29,11 +29,12 @@ import net.minecraft.world.item.ItemStack;
 public interface ItemModel {
 	void renderAsItem(ItemInputContext input, ModelOuputContext output);
 
-	public interface ItemInputContext {
+	public interface ItemInputContext extends BakedInputContext {
 		ItemStack itemStack();
 
 		ItemTransforms.TransformType mode();
 
+		@Override
 		Random random();
 	}
 }

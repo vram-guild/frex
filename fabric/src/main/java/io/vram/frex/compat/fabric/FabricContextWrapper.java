@@ -28,17 +28,19 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 
+import io.vram.frex.api.model.BakedInputContext;
 import io.vram.frex.api.model.ModelOuputContext;
 
 public class FabricContextWrapper implements RenderContext {
-	private ModelOuputContext wrapped;
+	private BakedInputContext input;
+	private ModelOuputContext output;
 
 	private final Consumer<Mesh> meshConsumer = m -> {
-		wrapped.accept(((FabricMesh) m).wrapped);
+		output.accept(((FabricMesh) m).wrapped);
 	};
 
 	private final Consumer<BakedModel> fallbackConsumer = bm -> {
-		wrapped.accept(bm, null);
+		output.accept(bm, input);
 	};
 
 	private final FabricQuadEmitter qe = FabricQuadEmitter.of(null);
@@ -55,24 +57,25 @@ public class FabricContextWrapper implements RenderContext {
 
 	@Override
 	public QuadEmitter getEmitter() {
-		return qe.wrap(wrapped.quadEmitter());
+		return qe.wrap(output.quadEmitter());
 	}
 
 	@Override
 	public void pushTransform(QuadTransform transform) {
-		wrapped.pushTransform(q -> transform.transform(qe.wrap(q)));
+		output.pushTransform(q -> transform.transform(qe.wrap(q)));
 	}
 
 	@Override
 	public void popTransform() {
-		wrapped.popTransform();
+		output.popTransform();
 	}
 
 	private static final ThreadLocal<FabricContextWrapper> POOL = ThreadLocal.withInitial(FabricContextWrapper::new);
 
-	public static FabricContextWrapper wrap(ModelOuputContext wrapped) {
+	public static FabricContextWrapper wrap(BakedInputContext input, ModelOuputContext output) {
 		final var result = POOL.get();
-		result.wrapped = wrapped;
+		result.input = input;
+		result.output = output;
 		return result;
 	}
 }

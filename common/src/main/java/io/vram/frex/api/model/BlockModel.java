@@ -25,6 +25,7 @@ import java.util.Random;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -35,14 +36,24 @@ public interface BlockModel {
 	// WIP: find way to expose biome info
 	void renderAsBlock(BlockInputContext input, ModelOuputContext output);
 
-	public interface BlockInputContext {
+	public interface BlockInputContext extends BakedInputContext {
 		BlockAndTintGetter blockView();
 
+		@Override
 		BlockState blockState();
 
 		BlockPos pos();
 
+		@Override
 		Random random();
+
+		@Override
+		boolean cullTest(int faceId);
+
+		@Override
+		default boolean cullTest(Direction face) {
+			return cullTest(ModelHelper.toFaceIndex(face));
+		}
 
 		/**
 		 * In terrain rendering this will hold the result of functions

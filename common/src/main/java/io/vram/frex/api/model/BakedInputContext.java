@@ -20,39 +20,28 @@
 
 package io.vram.frex.api.model;
 
-import net.minecraft.client.resources.model.BakedModel;
+import java.util.Random;
 
-import io.vram.frex.api.mesh.FrexBufferSource;
-import io.vram.frex.api.mesh.Mesh;
-import io.vram.frex.api.mesh.QuadEditor;
-import io.vram.frex.base.renderer.context.BaseFallbackConsumer;
+import org.jetbrains.annotations.Nullable;
 
-public interface ModelOuputContext {
-	default void accept(BakedModel model, BakedInputContext input) {
-		BaseFallbackConsumer.accept(model, input, this);
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+
+public interface BakedInputContext {
+	default @Nullable BlockState blockState() {
+		return null;
 	}
 
-	default void accept(Mesh mesh) {
-		mesh.forEachWithEditor(q -> q.emit(), quadEmitter());
+	default @Nullable BlockPos pos() {
+		return null;
 	}
 
-	QuadEditor quadEmitter();
+	Random random();
 
-	FrexBufferSource vertexConsumers();
+	boolean cullTest(int faceId);
 
-	void pushTransform(QuadTransform transform);
-
-	void popTransform();
-
-	// TODO: implement
-	//MatrixStack matrixStack();
-
-	//OutputType type();
-	//
-	//enum OutputType {
-	//	TERRAIN,
-	//	BLOCK,
-	//	ITEM,
-	//	ENTITY
-	//}
+	default boolean cullTest(Direction face) {
+		return cullTest(ModelHelper.toFaceIndex(face));
+	}
 }

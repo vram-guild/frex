@@ -33,11 +33,11 @@ import io.vram.frex.compat.fabric.FabricContextWrapper;
 public interface MixinFabricBakedModel extends BlockModel, ItemModel {
 	@Override
 	default void renderAsItem(ItemInputContext input, ModelOuputContext output) {
-		((FabricBakedModel) this).emitItemQuads(input.itemStack(), input::random, FabricContextWrapper.wrap(output));
+		((FabricBakedModel) this).emitItemQuads(input.itemStack(), input::random, FabricContextWrapper.wrap(input, output));
 	}
 
 	@Override
 	default void renderAsBlock(BlockInputContext input, ModelOuputContext output) {
-		((FabricBakedModel) this).emitBlockQuads(input.blockView(), input.blockState(), input.pos(), input::random, FabricContextWrapper.wrap(output));
+		((FabricBakedModel) this).emitBlockQuads(input.blockView(), input.blockState(), input.pos(), input::random, FabricContextWrapper.wrap(input, output));
 	}
 }

@@ -21,19 +21,19 @@
 package io.vram.frex.base.renderer.context;
 
 import java.util.List;
-import java.util.Random;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.mesh.QuadEditor;
+import io.vram.frex.api.model.BakedInputContext;
 import io.vram.frex.api.model.ModelHelper;
+import io.vram.frex.api.model.ModelOuputContext;
 import io.vram.frex.api.renderer.Renderer;
 
 /**
@@ -55,7 +55,7 @@ import io.vram.frex.api.renderer.Renderer;
  * vertex data is sent to the byte buffer.  Generally POJO array access will be faster than
  * manipulating the data via NIO.
  */
-public class FallbackConsumer {
+public class BaseFallbackConsumer {
 	protected static final RenderMaterial FLAT_MATERIAL;
 	protected static final RenderMaterial SHADED_MATERIAL;
 	protected static final RenderMaterial AO_FLAT_MATERIAL;
@@ -69,56 +69,48 @@ public class FallbackConsumer {
 		AO_SHADED_MATERIAL = finder.clear().preset(MaterialConstants.PRESET_DEFAULT).find();
 	}
 
-	public static void accept(BakedModel model, BlockState blockState, Random random, QuadEditor qe) {
-		final boolean useAo = model.useAmbientOcclusion() && blockState.getLightEmission() == 0 && Minecraft.useAmbientOcclusion();
+	public static void accept(BakedModel model, BakedInputContext input, ModelOuputContext output) {
+		final var blockState = input.blockState();
+		final var random = input.random();
+		final boolean useAo = blockState != null && model.useAmbientOcclusion() && blockState.getLightEmission() == 0 && Minecraft.useAmbientOcclusion();
+		final var qe = output.quadEmitter();
 
-		acceptFaceQuads(ModelHelper.DOWN_INDEX, useAo, model.getQuads(blockState, Direction.DOWN, random), qe);
-		acceptFaceQuads(ModelHelper.UP_INDEX, useAo, model.getQuads(blockState, Direction.UP, random), qe);
-		acceptFaceQuads(ModelHelper.NORTH_INDEX, useAo, model.getQuads(blockState, Direction.NORTH, random), qe);
-		acceptFaceQuads(ModelHelper.SOUTH_INDEX, useAo, model.getQuads(blockState, Direction.SOUTH, random), qe);
-		acceptFaceQuads(ModelHelper.WEST_INDEX, useAo, model.getQuads(blockState, Direction.WEST, random), qe);
-		acceptFaceQuads(ModelHelper.EAST_INDEX, useAo, model.getQuads(blockState, Direction.EAST, random), qe);
+		var quads = model.getQuads(blockState, Direction.DOWN, random);
+		if (!quads.isEmpty() && input.cullTest(ModelHelper.DOWN_INDEX)) acceptFaceQuads(ModelHelper.DOWN_INDEX, useAo, quads, qe);
+
+		quads = model.getQuads(blockState, Direction.UP, random);
+		if (!quads.isEmpty() && input.cullTest(ModelHelper.UP_INDEX)) acceptFaceQuads(ModelHelper.UP_INDEX, useAo, quads, qe);
+
+		quads = model.getQuads(blockState, Direction.NORTH, random);
+		if (!quads.isEmpty() && input.cullTest(ModelHelper.NORTH_INDEX)) acceptFaceQuads(ModelHelper.NORTH_INDEX, useAo, quads, qe);
+
+		quads = model.getQuads(blockState, Direction.SOUTH, random);
+		if (!quads.isEmpty() && input.cullTest(ModelHelper.SOUTH_INDEX)) acceptFaceQuads(ModelHelper.SOUTH_INDEX, useAo, quads, qe);
+
+		quads = model.getQuads(blockState, Direction.WEST, random);
+		if (!quads.isEmpty() && input.cullTest(ModelHelper.WEST_INDEX)) acceptFaceQuads(ModelHelper.WEST_INDEX, useAo, quads, qe);
+
+		quads = model.getQuads(blockState, Direction.EAST, random);
+		if (!quads.isEmpty() && input.cullTest(ModelHelper.EAST_INDEX)) acceptFaceQuads(ModelHelper.EAST_INDEX, useAo, quads, qe);
 
 		acceptInsideQuads(useAo, model.getQuads(blockState, null, random), qe);
-	}
-
-	// WIP: pass in function
-	protected static boolean cullTest(int faceIndex) {
-		return true;
 	}
 
 	protected static void acceptFaceQuads(int faceIndex, boolean useAo, List<BakedQuad> quads, QuadEditor qe) {
 		final int count = quads.size();
 
-		if (count != 0 && cullTest(faceIndex)) {
-			if (count == 1) {
-				final BakedQuad q = quads.get(0);
-				renderQuad(q, faceIndex, q.isShade() ? (useAo ? AO_SHADED_MATERIAL : SHADED_MATERIAL) : (useAo ? AO_FLAT_MATERIAL : FLAT_MATERIAL), qe);
-			} else { // > 1
-				for (int j = 0; j < count; j++) {
-					final BakedQuad q = quads.get(j);
-					renderQuad(q, faceIndex, q.isShade() ? (useAo ? AO_SHADED_MATERIAL : SHADED_MATERIAL) : (useAo ? AO_FLAT_MATERIAL : FLAT_MATERIAL), qe);
-				}
-			}
+		for (int j = 0; j < count; j++) {
+			final BakedQuad q = quads.get(j);
+			qe.fromVanilla(q, q.isShade() ? (useAo ? AO_SHADED_MATERIAL : SHADED_MATERIAL) : (useAo ? AO_FLAT_MATERIAL : FLAT_MATERIAL), faceIndex).emit();
 		}
 	}
 
 	protected static void acceptInsideQuads(boolean useAo, List<BakedQuad> quads, QuadEditor qe) {
 		final int count = quads.size();
 
-		if (count == 1) {
-			final BakedQuad q = quads.get(0);
-			renderQuad(q, ModelHelper.UNASSIGNED_INDEX, q.isShade() ? (useAo ? AO_SHADED_MATERIAL : SHADED_MATERIAL) : (useAo ? AO_FLAT_MATERIAL : FLAT_MATERIAL), qe);
-		} else if (count > 1) {
-			for (int j = 0; j < count; j++) {
-				final BakedQuad q = quads.get(j);
-				renderQuad(q, ModelHelper.UNASSIGNED_INDEX, q.isShade() ? (useAo ? AO_SHADED_MATERIAL : SHADED_MATERIAL) : (useAo ? AO_FLAT_MATERIAL : FLAT_MATERIAL), qe);
-			}
+		for (int j = 0; j < count; j++) {
+			final BakedQuad q = quads.get(j);
+			qe.fromVanilla(q, q.isShade() ? (useAo ? AO_SHADED_MATERIAL : SHADED_MATERIAL) : (useAo ? AO_FLAT_MATERIAL : FLAT_MATERIAL), ModelHelper.UNASSIGNED_INDEX).emit();
 		}
-	}
-
-	protected static void renderQuad(BakedQuad quad, int cullFaceId, RenderMaterial mat, QuadEditor qe) {
-		qe.fromVanilla(quad, mat, cullFaceId);
-		qe.emit();
 	}
 }

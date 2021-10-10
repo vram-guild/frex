@@ -30,10 +30,10 @@ public final class ResourceCache<T> {
 		this.loader = loader;
 	}
 
-	private final Supplier<T> loader;
-	private T value;
+	protected final Supplier<T> loader;
+	protected T value;
 
-	public void invalidate() {
+	protected void invalidate() {
 		value = null;
 	}
 
@@ -45,7 +45,7 @@ public final class ResourceCache<T> {
 		return value;
 	}
 
-	private static final ObjectArrayList<ResourceCache<?>> CACHED = new ObjectArrayList<>(64);
+	protected static final ObjectArrayList<ResourceCache<?>> CACHED = new ObjectArrayList<>(64);
 
 	public static void invalidateAll() {
 		CACHED.forEach(ResourceCache::invalidate);

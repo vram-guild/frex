@@ -41,7 +41,6 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 
-import io.vram.frex.base.renderer.material.MaterialTexture;
 import io.vram.frex.base.renderer.util.ResourceCache;
 import io.vram.frex.impl.config.FlawlessFramesImpl;
 import io.vram.frex.impl.light.ItemLightLoader;
@@ -114,7 +113,6 @@ public class Frex implements ClientModInitializer {
 			MaterialMapLoader.INSTANCE.reload(resourceManager);
 			SimpleFluidSpriteProvider.reload();
 			FluidModelImpl.reload();
-			MaterialTexture.reload();
 		}
 	};
 

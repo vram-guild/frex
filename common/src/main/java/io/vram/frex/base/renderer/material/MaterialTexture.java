@@ -30,44 +30,38 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
 
 import io.vram.frex.api.texture.SpriteFinder;
+import io.vram.frex.base.renderer.util.ResourceCache;
 
 import grondag.frex.Frex;
 
 public class MaterialTexture {
 	public final int index;
 	public final ResourceLocation id;
+	private final ResourceCache<Info> info = new ResourceCache<>(this::retrieveInfo);
 
-	private AbstractTexture texture;
-	private boolean isAtlas;
-	private SpriteFinder spriteFinder;
+	private record Info(AbstractTexture texture, boolean isAtlas, SpriteFinder spriteFinder) { }
 
 	private MaterialTexture(int index, ResourceLocation id) {
 		this.index = index;
 		this.id = id;
 	}
 
-	private void retreiveTexture() {
-		if (texture == null) {
-			final TextureManager tm = Minecraft.getInstance().getTextureManager();
-			// forces registration
-			tm.bindForSetup(id);
-			texture = tm.getTexture(id);
-			isAtlas = texture != null && texture instanceof TextureAtlas;
-
-			if (isAtlas) {
-				spriteFinder = SpriteFinder.get((TextureAtlas) texture);
-			}
-		}
+	private Info retrieveInfo() {
+		final TextureManager tm = Minecraft.getInstance().getTextureManager();
+		// forces registration
+		tm.bindForSetup(id);
+		final var texture = tm.getTexture(id);
+		final var isAtlas = texture != null && texture instanceof TextureAtlas;
+		final SpriteFinder spriteFinder = isAtlas ? SpriteFinder.get((TextureAtlas) texture) : null;
+		return new Info(texture, isAtlas, spriteFinder);
 	}
 
 	public SpriteFinder spriteFinder() {
-		retreiveTexture();
-		return spriteFinder;
+		return info.getOrLoad().spriteFinder;
 	}
 
 	public AbstractTexture texture() {
-		retreiveTexture();
-		return texture;
+		return info.getOrLoad().texture;
 	}
 
 	public TextureAtlas textureAsAtlas() {
@@ -75,8 +69,7 @@ public class MaterialTexture {
 	}
 
 	public boolean isAtlas() {
-		retreiveTexture();
-		return isAtlas;
+		return info.getOrLoad().isAtlas;
 	}
 
 	public static final int MAX_TEXTURE_STATES = 4096;
@@ -127,11 +120,5 @@ public class MaterialTexture {
 		}
 
 		return state;
-	}
-
-	public static void reload() {
-		MAP.values().forEach(t -> {
-			t.texture = null;
-		});
 	}
 }

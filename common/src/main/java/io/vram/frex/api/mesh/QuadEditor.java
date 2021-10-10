@@ -264,4 +264,6 @@ public interface QuadEditor extends QuadView {
 	}
 
 	QuadEditor emit();
+
+	FrexVertexConsumer asVertexConsumer();
 }

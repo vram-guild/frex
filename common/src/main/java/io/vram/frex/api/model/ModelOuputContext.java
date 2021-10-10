@@ -22,7 +22,6 @@ package io.vram.frex.api.model;
 
 import net.minecraft.client.resources.model.BakedModel;
 
-import io.vram.frex.api.mesh.FrexBufferSource;
 import io.vram.frex.api.mesh.Mesh;
 import io.vram.frex.api.mesh.QuadEditor;
 import io.vram.frex.base.renderer.context.BaseFallbackConsumer;
@@ -38,21 +37,10 @@ public interface ModelOuputContext {
 
 	QuadEditor quadEmitter();
 
-	FrexBufferSource vertexConsumers();
-
 	void pushTransform(QuadTransform transform);
 
 	void popTransform();
 
 	// TODO: implement
 	//MatrixStack matrixStack();
-
-	//OutputType type();
-	//
-	//enum OutputType {
-	//	TERRAIN,
-	//	BLOCK,
-	//	ITEM,
-	//	ENTITY
-	//}
 }

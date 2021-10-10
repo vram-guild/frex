@@ -20,28 +20,26 @@
 
 package io.vram.frex.api.texture;
 
-import java.util.function.Consumer;
-
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 
-// WIP: implement or remove
-@FunctionalInterface
-public interface SpriteInjector {
-	void inject(ResourceLocation spriteId, boolean includeColor);
+import io.vram.frex.impl.texture.SpriteIndexImpl;
 
-	default void inject (ResourceLocation spriteId) {
-		inject (spriteId, true);
-	}
+public interface SpriteIndex {
+	TextureAtlasSprite fromIndex(int spriteId);
 
-	static void register(ResourceLocation atlasId, Consumer<SpriteInjector> listener) {
-		// TODO
-	}
+	float mapU(int spriteId, float unmappedU);
 
-	static void forEachColorSprite(ResourceLocation atlasId, Consumer<ResourceLocation> consumer) {
-		// TODO
-	}
+	float mapV(int spriteId, float unmappedV);
 
-	static void forEachPhysicalSprite(ResourceLocation atlasId, Consumer<ResourceLocation> consumer) {
-		// TODO
+	int atlasWidth();
+
+	int atlasHeight();
+
+	TextureAtlas atlas();
+
+	static SpriteIndex getOrCreate(ResourceLocation id) {
+		return SpriteIndexImpl.getOrCreate(id);
 	}
 }

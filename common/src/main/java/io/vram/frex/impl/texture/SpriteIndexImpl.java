@@ -29,30 +29,23 @@ import net.minecraft.client.renderer.texture.TextureAtlas.Preparations;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 
-import io.vram.frex.api.texture.SpriteFinder;
-import io.vram.frex.base.renderer.util.ResourceCache;
+import io.vram.frex.api.texture.SpriteIndex;
 
-public class SpriteIndex {
-	private static final Object2ObjectOpenHashMap<ResourceLocation, SpriteIndex> MAP = new Object2ObjectOpenHashMap<>(64, Hash.VERY_FAST_LOAD_FACTOR);
+public class SpriteIndexImpl implements SpriteIndex {
+	private static final Object2ObjectOpenHashMap<ResourceLocation, SpriteIndexImpl> MAP = new Object2ObjectOpenHashMap<>(64, Hash.VERY_FAST_LOAD_FACTOR);
 
-	public static final SpriteIndex getOrCreate(ResourceLocation id) {
-		return MAP.computeIfAbsent(id, SpriteIndex::new);
+	public static final SpriteIndexImpl getOrCreate(ResourceLocation id) {
+		return MAP.computeIfAbsent(id, SpriteIndexImpl::new);
 	}
 
 	private ObjectArrayList<TextureAtlasSprite> spriteIndexList = null;
 	private TextureAtlas atlas;
-	private ResourceCache<SpriteFinder> spriteFinder;
 	private int atlasWidth;
 	private int atlasHeight;
 	public final ResourceLocation id;
 
-	private SpriteIndex(ResourceLocation id) {
+	private SpriteIndexImpl(ResourceLocation id) {
 		this.id = id;
-		spriteFinder = new ResourceCache<>(this::loadSpriteFinder);
-	}
-
-	private SpriteFinder loadSpriteFinder() {
-		return SpriteFinder.get(atlas);
 	}
 
 	public void reset(Preparations dataIn, ObjectArrayList<TextureAtlasSprite> spriteIndexIn, TextureAtlas atlasIn) {
@@ -63,35 +56,37 @@ public class SpriteIndex {
 		atlasHeight = ((TextureAtlasPreparationExt) dataIn).frex_atlasHeight();
 	}
 
+	@Override
 	public TextureAtlasSprite fromIndex(int spriteId) {
 		return spriteIndexList.get(spriteId);
 	}
 
+	@Override
 	public float mapU(int spriteId, float unmappedU) {
 		final TextureAtlasSprite sprite = spriteIndexList.get(spriteId);
 		final float u0 = sprite.getU0();
 		return u0 + unmappedU * (sprite.getU1() - u0);
 	}
 
+	@Override
 	public float mapV(int spriteId, float unmappedV) {
 		final TextureAtlasSprite sprite = spriteIndexList.get(spriteId);
 		final float v0 = sprite.getV0();
 		return v0 + unmappedV * (sprite.getV1() - v0);
 	}
 
+	@Override
 	public int atlasWidth() {
 		return atlasWidth;
 	}
 
+	@Override
 	public int atlasHeight() {
 		return atlasHeight;
 	}
 
+	@Override
 	public TextureAtlas atlas() {
 		return atlas;
-	}
-
-	public SpriteFinder spriteFinder() {
-		return spriteFinder.getOrLoad();
 	}
 }

@@ -34,7 +34,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 
 import io.vram.frex.impl.texture.IndexedSprite;
-import io.vram.frex.impl.texture.SpriteIndex;
+import io.vram.frex.impl.texture.SpriteIndexImpl;
 
 @Mixin(TextureAtlas.class)
 public class MixinTextureAltasSpriteIndex {
@@ -52,6 +52,6 @@ public class MixinTextureAltasSpriteIndex {
 			spriteExt.frex_index(index++);
 		}
 
-		SpriteIndex.getOrCreate(location).reset(input, spriteIndexList, (TextureAtlas) (Object) this);
+		SpriteIndexImpl.getOrCreate(location).reset(input, spriteIndexList, (TextureAtlas) (Object) this);
 	}
 }

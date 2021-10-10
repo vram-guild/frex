@@ -41,6 +41,8 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 
+import io.vram.frex.base.renderer.material.MaterialTexture;
+import io.vram.frex.base.renderer.util.ResourceCache;
 import io.vram.frex.impl.config.FlawlessFramesImpl;
 import io.vram.frex.impl.light.ItemLightLoader;
 import io.vram.frex.impl.material.MaterialMapLoader;
@@ -95,7 +97,7 @@ public class Frex implements ClientModInitializer {
 
 	private final SimpleSynchronousResourceReloadListener modelTextureListener = new SimpleSynchronousResourceReloadListener() {
 		private final List<ResourceLocation> deps = ImmutableList.of(ResourceReloadListenerKeys.MODELS, ResourceReloadListenerKeys.TEXTURES);
-		private final ResourceLocation id = new ResourceLocation("frex:material_map");
+		private final ResourceLocation id = new ResourceLocation("frex:models_and_textures");
 
 		@Override
 		public ResourceLocation getFabricId() {
@@ -112,12 +114,13 @@ public class Frex implements ClientModInitializer {
 			MaterialMapLoader.INSTANCE.reload(resourceManager);
 			SimpleFluidSpriteProvider.reload();
 			FluidModelImpl.reload();
+			MaterialTexture.reload();
 		}
 	};
 
 	private final SimpleSynchronousResourceReloadListener lightListener = new SimpleSynchronousResourceReloadListener() {
 		private final List<ResourceLocation> deps = ImmutableList.of();
-		private final ResourceLocation id = new ResourceLocation("frex:item_light");
+		private final ResourceLocation id = new ResourceLocation("frex:general");
 
 		@Override
 		public ResourceLocation getFabricId() {
@@ -132,6 +135,7 @@ public class Frex implements ClientModInitializer {
 		@Override
 		public void onResourceManagerReload(ResourceManager resourceManager) {
 			ItemLightLoader.INSTANCE.reload(resourceManager);
+			ResourceCache.invalidateAll();
 		}
 	};
 }

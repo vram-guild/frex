@@ -41,11 +41,11 @@ public interface QuadView {
 	int VANILLA_QUAD_STRIDE = VANILLA_VERTEX_STRIDE * 4;
 
 	/**
-	 * Copies all quad properties, including material, to the given {@link QuadEditor} instance.
+	 * Copies all quad properties, including material, to the given {@link QuadEmitter} instance.
 	 * Must be used before calling {link QuadEmitter#emit()} on the target instance.
 	 * Meant for re-texturing, analysis and static transformation use cases.
 	 */
-	void copyTo(QuadEditor target);
+	void copyTo(QuadEmitter target);
 
 	/**
 	 * Retrieves the quad color index serialized with the quad.
@@ -64,12 +64,12 @@ public interface QuadView {
 	 * If non-null, quad should not be rendered in-world if the
 	 * opposite face of a neighbor block occludes it.
 	 *
-	 * @see QuadEditor#cullFace(Direction)
+	 * @see QuadEmitter#cullFace(Direction)
 	 */
 	@Nullable Direction cullFace();
 
 	/**
-	 * See {@link QuadEditor#nominalFace(Direction)}.
+	 * See {@link QuadEmitter#nominalFace(Direction)}.
 	 */
 	Direction nominalFace();
 
@@ -84,7 +84,7 @@ public interface QuadView {
 	int packedFaceNormal();
 
 	/**
-	 * Retrieves the integer tag encoded with this quad via {@link QuadEditor#tag(int)}.
+	 * Retrieves the integer tag encoded with this quad via {@link QuadEmitter#tag(int)}.
 	 * Will return zero if no tag was set.  For use by models.
 	 */
 	int tag();
@@ -174,7 +174,7 @@ public interface QuadView {
 	 * @param spriteIndex The sprite to be used for the quad.
 	 * Behavior for {@code spriteIndex > 0} is currently undefined.
 	 *
-	 * @param sprite  {@link QuadEditor} does not serialize sprites
+	 * @param sprite  {@link QuadEmitter} does not serialize sprites
 	 * so the sprite must be provided by the caller.
 	 *
 	 * @param isItem If true, will output vertex normals. Otherwise will output

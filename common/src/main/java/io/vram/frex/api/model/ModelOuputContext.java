@@ -20,10 +20,10 @@
 
 package io.vram.frex.api.model;
 
-import io.vram.frex.api.mesh.QuadEditor;
+import io.vram.frex.api.mesh.QuadEmitter;
 
 public interface ModelOuputContext {
-	QuadEditor quadEmitter();
+	QuadEmitter quadEmitter();
 
 	void pushTransform(QuadTransform transform);
 

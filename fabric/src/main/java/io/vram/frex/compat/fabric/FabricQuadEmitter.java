@@ -26,22 +26,20 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 
-import io.vram.frex.api.mesh.QuadEditor;
-
-import grondag.frex.api.mesh.QuadEmitter;
+import io.vram.frex.api.mesh.QuadEmitter;
 
 @SuppressWarnings("deprecation")
-public class FabricQuadEmitter extends FabricQuadView<QuadEditor> implements grondag.frex.api.mesh.MutableQuadView, grondag.frex.api.mesh.QuadEmitter {
-	public static FabricQuadEmitter of(QuadEditor wrapped) {
+public class FabricQuadEmitter extends FabricQuadView<QuadEmitter> implements grondag.frex.api.mesh.MutableQuadView, grondag.frex.api.mesh.QuadEmitter {
+	public static FabricQuadEmitter of(QuadEmitter wrapped) {
 		return new FabricQuadEmitter(wrapped);
 	}
 
-	protected FabricQuadEmitter(QuadEditor wrapped) {
+	protected FabricQuadEmitter(QuadEmitter wrapped) {
 		super(wrapped);
 	}
 
 	@Override
-	public FabricQuadEmitter wrap(QuadEditor wrapped) {
+	public FabricQuadEmitter wrap(QuadEmitter wrapped) {
 		this.wrapped = wrapped;
 		return this;
 	}
@@ -149,7 +147,7 @@ public class FabricQuadEmitter extends FabricQuadView<QuadEditor> implements gro
 	}
 
 	@Override
-	public QuadEmitter emit() {
+	public grondag.frex.api.mesh.QuadEmitter emit() {
 		wrapped.emit();
 		return this;
 	}

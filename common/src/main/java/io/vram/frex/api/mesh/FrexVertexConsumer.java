@@ -73,5 +73,5 @@ public interface FrexVertexConsumer extends VertexConsumer {
 	@Override
 	FrexVertexConsumer normal(float x, float y, float z);
 
-	QuadEditor asQuadEditor();
+	QuadEmitter asQuadEditor();
 }

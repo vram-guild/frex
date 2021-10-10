@@ -30,7 +30,7 @@ import net.minecraft.core.Direction;
 import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.RenderMaterial;
-import io.vram.frex.api.mesh.QuadEditor;
+import io.vram.frex.api.mesh.QuadEmitter;
 import io.vram.frex.api.model.BakedInputContext;
 import io.vram.frex.api.model.ModelOuputContext;
 import io.vram.frex.api.model.util.FaceUtil;
@@ -96,7 +96,7 @@ public class BaseFallbackConsumer {
 		acceptInsideQuads(useAo, model.getQuads(blockState, null, random), qe);
 	}
 
-	protected static void acceptFaceQuads(int faceIndex, boolean useAo, List<BakedQuad> quads, QuadEditor qe) {
+	protected static void acceptFaceQuads(int faceIndex, boolean useAo, List<BakedQuad> quads, QuadEmitter qe) {
 		final int count = quads.size();
 
 		for (int j = 0; j < count; j++) {
@@ -105,7 +105,7 @@ public class BaseFallbackConsumer {
 		}
 	}
 
-	protected static void acceptInsideQuads(boolean useAo, List<BakedQuad> quads, QuadEditor qe) {
+	protected static void acceptInsideQuads(boolean useAo, List<BakedQuad> quads, QuadEmitter qe) {
 		final int count = quads.size();
 
 		for (int j = 0; j < count; j++) {

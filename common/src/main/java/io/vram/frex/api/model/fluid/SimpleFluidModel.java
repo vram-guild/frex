@@ -36,7 +36,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import io.vram.frex.api.material.RenderMaterial;
-import io.vram.frex.api.mesh.QuadEditor;
+import io.vram.frex.api.mesh.QuadEmitter;
 import io.vram.frex.api.model.ModelOuputContext;
 
 /**
@@ -60,7 +60,7 @@ public class SimpleFluidModel implements FluidModel {
 	@Override
 	public void renderAsBlock(BlockInputContext input, ModelOuputContext output) {
 		final var appearance = this.appearance;
-		final QuadEditor qe = output.quadEmitter();
+		final QuadEmitter qe = output.quadEmitter();
 		final BlockState blockState = input.blockState();
 		final FluidState fluidState = blockState.getFluidState();
 		final var world = input.blockView();

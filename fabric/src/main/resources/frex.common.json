@@ -14,6 +14,9 @@
 		"MixinMultipartBakedModel",
 		"MixinRenderChunkRegion",
 		"MixinWeightedBakedModel",
+		"MixinTextureAtlasPreparation",
+		"MixinTextureAtlasSprite",
+		"MixinTextureAltasSpriteIndex",
 		"MixinTextureAltasSpriteLoader"
 	],
 	"injectors": {

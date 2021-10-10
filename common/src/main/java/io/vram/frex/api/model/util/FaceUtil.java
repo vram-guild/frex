@@ -27,10 +27,6 @@ import org.jetbrains.annotations.Contract;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 
-/**
- * Collection of utilities for model implementations.
- */
-// WIP: should be it's own thing
 public abstract class FaceUtil {
 	private FaceUtil() { }
 

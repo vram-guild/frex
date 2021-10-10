@@ -29,6 +29,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
+import io.vram.frex.api.model.InputContext.Type;
 import io.vram.frex.api.model.util.FaceUtil;
 import io.vram.frex.api.world.BlockEntityRenderData;
 
@@ -37,12 +38,24 @@ public interface BlockModel {
 	// WIP: find way to expose biome info
 	void renderAsBlock(BlockInputContext input, ModelOuputContext output);
 
+	default void renderDynamic(InputContext input, ModelOuputContext output) {
+		if (input.type() == Type.BLOCK) {
+			renderAsBlock((BlockInputContext) input, output);
+		}
+	}
+
 	public interface BlockInputContext extends BakedInputContext {
+		@Override
+		default Type type() {
+			return Type.BLOCK;
+		}
+
 		BlockAndTintGetter blockView();
 
 		@Override
 		BlockState blockState();
 
+		@Override
 		BlockPos pos();
 
 		@Override

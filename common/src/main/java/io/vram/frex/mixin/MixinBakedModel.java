@@ -24,13 +24,12 @@ import org.spongepowered.asm.mixin.Mixin;
 
 import net.minecraft.client.resources.model.BakedModel;
 
-import io.vram.frex.api.model.BlockModel;
-import io.vram.frex.api.model.ItemModel;
+import io.vram.frex.api.model.BlockItemModel;
 import io.vram.frex.api.model.ModelOuputContext;
 import io.vram.frex.base.renderer.context.BaseFallbackConsumer;
 
 @Mixin(BakedModel.class)
-public class MixinBakedModel implements BlockModel, ItemModel {
+public class MixinBakedModel implements BlockItemModel {
 	@Override
 	public void renderAsItem(ItemInputContext input, ModelOuputContext output) {
 		BaseFallbackConsumer.accept((BakedModel) this, input, output);

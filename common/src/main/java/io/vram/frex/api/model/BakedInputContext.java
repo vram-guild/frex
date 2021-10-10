@@ -20,8 +20,6 @@
 
 package io.vram.frex.api.model;
 
-import java.util.Random;
-
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
@@ -30,7 +28,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.api.model.util.FaceUtil;
 
-public interface BakedInputContext {
+public interface BakedInputContext extends InputContext {
 	default @Nullable BlockState blockState() {
 		return null;
 	}
@@ -38,8 +36,6 @@ public interface BakedInputContext {
 	default @Nullable BlockPos pos() {
 		return null;
 	}
-
-	Random random();
 
 	boolean cullTest(int faceId);
 

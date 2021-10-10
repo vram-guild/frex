@@ -33,12 +33,12 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.WeightedBakedModel;
 import net.minecraft.world.level.block.state.BlockState;
 
+import io.vram.frex.api.model.BlockItemModel;
 import io.vram.frex.api.model.BlockModel;
-import io.vram.frex.api.model.ItemModel;
 import io.vram.frex.api.model.ModelOuputContext;
 
 @Mixin(WeightedBakedModel.class)
-public class MixinMultipartBakedModel implements BlockModel, ItemModel {
+public class MixinMultipartBakedModel implements BlockItemModel {
 	@Shadow protected List<Pair<Predicate<BlockState>, BakedModel>> selectors;
 	@Shadow protected Map<BlockState, BitSet> selectorCache;
 

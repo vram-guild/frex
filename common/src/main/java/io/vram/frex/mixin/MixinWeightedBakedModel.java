@@ -31,12 +31,13 @@ import net.minecraft.client.resources.model.WeightedBakedModel;
 import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandom;
 
+import io.vram.frex.api.model.BlockItemModel;
 import io.vram.frex.api.model.BlockModel;
 import io.vram.frex.api.model.ItemModel;
 import io.vram.frex.api.model.ModelOuputContext;
 
 @Mixin(WeightedBakedModel.class)
-public class MixinWeightedBakedModel implements BlockModel, ItemModel {
+public class MixinWeightedBakedModel implements BlockItemModel {
 	@Shadow private List<WeightedEntry.Wrapper<BakedModel>> list;
 	@Shadow private int totalWeight;
 

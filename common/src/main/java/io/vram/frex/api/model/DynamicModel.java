@@ -18,25 +18,9 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.fabric.mixin;
+package io.vram.frex.api.model;
 
-import org.spongepowered.asm.mixin.Mixin;
-
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
-
-import io.vram.frex.api.model.BlockItemModel;
-import io.vram.frex.api.model.ModelOuputContext;
-import io.vram.frex.compat.fabric.FabricContextWrapper;
-
-@Mixin(FabricBakedModel.class)
-public interface MixinFabricBakedModel extends BlockItemModel {
-	@Override
-	default void renderAsItem(ItemInputContext input, ModelOuputContext output) {
-		((FabricBakedModel) this).emitItemQuads(input.itemStack(), input::random, FabricContextWrapper.wrap(input, output));
-	}
-
-	@Override
-	default void renderAsBlock(BlockInputContext input, ModelOuputContext output) {
-		((FabricBakedModel) this).emitBlockQuads(input.blockView(), input.blockState(), input.pos(), input::random, FabricContextWrapper.wrap(input, output));
-	}
+@FunctionalInterface
+public interface DynamicModel {
+	void render(InputContext input, ModelOuputContext output);
 }

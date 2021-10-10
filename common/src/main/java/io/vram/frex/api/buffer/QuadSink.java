@@ -20,8 +20,6 @@
 
 package io.vram.frex.api.buffer;
 
-import io.vram.frex.api.model.QuadTransform;
-
 public interface QuadSink {
 	QuadEmitter asQuadEmitter();
 

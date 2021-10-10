@@ -18,10 +18,10 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.api.model;
+package io.vram.frex.api.buffer;
 
-import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.mesh.QuadView;
+import io.vram.frex.api.model.InputContext;
 
 @FunctionalInterface
 public interface QuadTransform {

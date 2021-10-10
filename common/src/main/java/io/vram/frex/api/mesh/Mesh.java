@@ -40,10 +40,10 @@ public interface Mesh {
 	 */
 	void forEach(Consumer<QuadView> consumer);
 
-	default void forEachWithEditor(Consumer<QuadEditor> consumer, QuadEditor editor) {
+	default void outputTo(QuadEditor editor) {
 		forEach(v -> {
 			v.copyTo(editor);
-			consumer.accept(editor);
+			editor.emit();
 		});
 	}
 }

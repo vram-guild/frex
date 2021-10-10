@@ -30,6 +30,7 @@ import net.minecraft.core.Direction;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 
 import io.vram.frex.api.mesh.QuadView;
+import io.vram.frex.api.model.util.PackedVector3f;
 
 @SuppressWarnings("deprecation")
 public class FabricQuadView<T extends QuadView> implements grondag.frex.api.mesh.QuadView {
@@ -85,7 +86,7 @@ public class FabricQuadView<T extends QuadView> implements grondag.frex.api.mesh
 
 	@Override
 	public Vector3f faceNormal() {
-		return wrapped.faceNormal();
+		return PackedVector3f.unpackTo(wrapped.packedFaceNormal(), FACE_NORMAL_THREADLOCAL.get());
 	}
 
 	@Override
@@ -130,17 +131,17 @@ public class FabricQuadView<T extends QuadView> implements grondag.frex.api.mesh
 
 	@Override
 	public float normalX(int vertexIndex) {
-		return wrapped.normalX(vertexIndex);
+		return hasNormal(vertexIndex) ? PackedVector3f.packedX(wrapped.packedNormal(vertexIndex)) : Float.NaN;
 	}
 
 	@Override
 	public float normalY(int vertexIndex) {
-		return wrapped.normalY(vertexIndex);
+		return hasNormal(vertexIndex) ? PackedVector3f.packedY(wrapped.packedNormal(vertexIndex)) : Float.NaN;
 	}
 
 	@Override
 	public float normalZ(int vertexIndex) {
-		return wrapped.normalZ(vertexIndex);
+		return hasNormal(vertexIndex) ? PackedVector3f.packedZ(wrapped.packedNormal(vertexIndex)) : Float.NaN;
 	}
 
 	@Override
@@ -183,28 +184,5 @@ public class FabricQuadView<T extends QuadView> implements grondag.frex.api.mesh
 		return wrapped.v(vertexIndex);
 	}
 
-	@Override
-	public boolean hasTangent(int vertexIndex) {
-		return wrapped.hasTangent(vertexIndex);
-	}
-
-	@Override
-	public @Nullable Vector3f copyTangent(int vertexIndex, @Nullable Vector3f target) {
-		return wrapped.copyTangent(vertexIndex, target);
-	}
-
-	@Override
-	public float tangentX(int vertexIndex) {
-		return wrapped.tangentX(vertexIndex);
-	}
-
-	@Override
-	public float tangentY(int vertexIndex) {
-		return wrapped.tangentY(vertexIndex);
-	}
-
-	@Override
-	public float tangentZ(int vertexIndex) {
-		return wrapped.tangentZ(vertexIndex);
-	}
+	private static final ThreadLocal<Vector3f> FACE_NORMAL_THREADLOCAL = ThreadLocal.withInitial(Vector3f::new);
 }

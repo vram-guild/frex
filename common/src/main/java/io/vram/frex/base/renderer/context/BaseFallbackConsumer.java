@@ -32,8 +32,8 @@ import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.mesh.QuadEditor;
 import io.vram.frex.api.model.BakedInputContext;
-import io.vram.frex.api.model.ModelHelper;
 import io.vram.frex.api.model.ModelOuputContext;
+import io.vram.frex.api.model.util.FaceUtil;
 import io.vram.frex.api.renderer.Renderer;
 
 /**
@@ -76,22 +76,22 @@ public class BaseFallbackConsumer {
 		final var qe = output.quadEmitter();
 
 		var quads = model.getQuads(blockState, Direction.DOWN, random);
-		if (!quads.isEmpty() && input.cullTest(ModelHelper.DOWN_INDEX)) acceptFaceQuads(ModelHelper.DOWN_INDEX, useAo, quads, qe);
+		if (!quads.isEmpty() && input.cullTest(FaceUtil.DOWN_INDEX)) acceptFaceQuads(FaceUtil.DOWN_INDEX, useAo, quads, qe);
 
 		quads = model.getQuads(blockState, Direction.UP, random);
-		if (!quads.isEmpty() && input.cullTest(ModelHelper.UP_INDEX)) acceptFaceQuads(ModelHelper.UP_INDEX, useAo, quads, qe);
+		if (!quads.isEmpty() && input.cullTest(FaceUtil.UP_INDEX)) acceptFaceQuads(FaceUtil.UP_INDEX, useAo, quads, qe);
 
 		quads = model.getQuads(blockState, Direction.NORTH, random);
-		if (!quads.isEmpty() && input.cullTest(ModelHelper.NORTH_INDEX)) acceptFaceQuads(ModelHelper.NORTH_INDEX, useAo, quads, qe);
+		if (!quads.isEmpty() && input.cullTest(FaceUtil.NORTH_INDEX)) acceptFaceQuads(FaceUtil.NORTH_INDEX, useAo, quads, qe);
 
 		quads = model.getQuads(blockState, Direction.SOUTH, random);
-		if (!quads.isEmpty() && input.cullTest(ModelHelper.SOUTH_INDEX)) acceptFaceQuads(ModelHelper.SOUTH_INDEX, useAo, quads, qe);
+		if (!quads.isEmpty() && input.cullTest(FaceUtil.SOUTH_INDEX)) acceptFaceQuads(FaceUtil.SOUTH_INDEX, useAo, quads, qe);
 
 		quads = model.getQuads(blockState, Direction.WEST, random);
-		if (!quads.isEmpty() && input.cullTest(ModelHelper.WEST_INDEX)) acceptFaceQuads(ModelHelper.WEST_INDEX, useAo, quads, qe);
+		if (!quads.isEmpty() && input.cullTest(FaceUtil.WEST_INDEX)) acceptFaceQuads(FaceUtil.WEST_INDEX, useAo, quads, qe);
 
 		quads = model.getQuads(blockState, Direction.EAST, random);
-		if (!quads.isEmpty() && input.cullTest(ModelHelper.EAST_INDEX)) acceptFaceQuads(ModelHelper.EAST_INDEX, useAo, quads, qe);
+		if (!quads.isEmpty() && input.cullTest(FaceUtil.EAST_INDEX)) acceptFaceQuads(FaceUtil.EAST_INDEX, useAo, quads, qe);
 
 		acceptInsideQuads(useAo, model.getQuads(blockState, null, random), qe);
 	}
@@ -110,7 +110,7 @@ public class BaseFallbackConsumer {
 
 		for (int j = 0; j < count; j++) {
 			final BakedQuad q = quads.get(j);
-			qe.fromVanilla(q, q.isShade() ? (useAo ? AO_SHADED_MATERIAL : SHADED_MATERIAL) : (useAo ? AO_FLAT_MATERIAL : FLAT_MATERIAL), ModelHelper.UNASSIGNED_INDEX).emit();
+			qe.fromVanilla(q, q.isShade() ? (useAo ? AO_SHADED_MATERIAL : SHADED_MATERIAL) : (useAo ? AO_FLAT_MATERIAL : FLAT_MATERIAL), FaceUtil.UNASSIGNED_INDEX).emit();
 		}
 	}
 }

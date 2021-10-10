@@ -30,17 +30,18 @@ import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 
 import io.vram.frex.api.model.BakedInputContext;
 import io.vram.frex.api.model.ModelOuputContext;
+import io.vram.frex.base.renderer.context.BaseFallbackConsumer;
 
 public class FabricContextWrapper implements RenderContext {
 	private BakedInputContext input;
 	private ModelOuputContext output;
 
 	private final Consumer<Mesh> meshConsumer = m -> {
-		output.accept(((FabricMesh) m).wrapped);
+		(((FabricMesh) m).wrapped).outputTo(output.quadEmitter());
 	};
 
 	private final Consumer<BakedModel> fallbackConsumer = bm -> {
-		output.accept(bm, input);
+		BaseFallbackConsumer.accept(bm, input, output);
 	};
 
 	private final FabricQuadEmitter qe = FabricQuadEmitter.of(null);

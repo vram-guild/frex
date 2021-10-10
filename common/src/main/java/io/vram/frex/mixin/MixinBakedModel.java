@@ -27,16 +27,17 @@ import net.minecraft.client.resources.model.BakedModel;
 import io.vram.frex.api.model.BlockModel;
 import io.vram.frex.api.model.ItemModel;
 import io.vram.frex.api.model.ModelOuputContext;
+import io.vram.frex.base.renderer.context.BaseFallbackConsumer;
 
 @Mixin(BakedModel.class)
 public class MixinBakedModel implements BlockModel, ItemModel {
 	@Override
 	public void renderAsItem(ItemInputContext input, ModelOuputContext output) {
-		output.accept((BakedModel) this, input);
+		BaseFallbackConsumer.accept((BakedModel) this, input, output);
 	}
 
 	@Override
 	public void renderAsBlock(BlockInputContext input, ModelOuputContext output) {
-		output.accept((BakedModel) this, input);
+		BaseFallbackConsumer.accept((BakedModel) this, input, output);
 	}
 }

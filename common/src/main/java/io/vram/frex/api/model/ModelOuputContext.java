@@ -20,21 +20,9 @@
 
 package io.vram.frex.api.model;
 
-import net.minecraft.client.resources.model.BakedModel;
-
-import io.vram.frex.api.mesh.Mesh;
 import io.vram.frex.api.mesh.QuadEditor;
-import io.vram.frex.base.renderer.context.BaseFallbackConsumer;
 
 public interface ModelOuputContext {
-	default void accept(BakedModel model, BakedInputContext input) {
-		BaseFallbackConsumer.accept(model, input, this);
-	}
-
-	default void accept(Mesh mesh) {
-		mesh.forEachWithEditor(q -> q.emit(), quadEmitter());
-	}
-
 	QuadEditor quadEmitter();
 
 	void pushTransform(QuadTransform transform);

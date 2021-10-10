@@ -29,6 +29,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
+import io.vram.frex.api.model.util.FaceUtil;
 import io.vram.frex.api.world.BlockEntityRenderData;
 
 @FunctionalInterface
@@ -52,7 +53,7 @@ public interface BlockModel {
 
 		@Override
 		default boolean cullTest(Direction face) {
-			return cullTest(ModelHelper.toFaceIndex(face));
+			return cullTest(FaceUtil.toFaceIndex(face));
 		}
 
 		/**

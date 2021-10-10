@@ -30,14 +30,14 @@ import io.vram.frex.api.material.RenderMaterial;
 
 @Experimental
 public interface FrexVertexConsumer extends VertexConsumer {
+	FrexVertexConsumer defaultMaterial(RenderMaterial material);
+
 	/**
 	 * Sets state to be included with normals and material if they are included.  Call once
 	 * whenever material changes, including default state or revert
 	 * to default state of the render state.
 	 */
 	FrexVertexConsumer material(RenderMaterial material);
-
-	FrexVertexConsumer defaultMaterial(RenderMaterial material);
 
 	FrexVertexConsumer vertex(float x, float y, float z);
 

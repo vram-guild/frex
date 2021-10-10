@@ -28,6 +28,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 
+import io.vram.frex.api.model.util.FaceUtil;
+
 public interface BakedInputContext {
 	default @Nullable BlockState blockState() {
 		return null;
@@ -42,6 +44,6 @@ public interface BakedInputContext {
 	boolean cullTest(int faceId);
 
 	default boolean cullTest(Direction face) {
-		return cullTest(ModelHelper.toFaceIndex(face));
+		return cullTest(FaceUtil.toFaceIndex(face));
 	}
 }

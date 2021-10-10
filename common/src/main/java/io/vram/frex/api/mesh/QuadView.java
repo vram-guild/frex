@@ -31,6 +31,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 
 import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.model.util.PackedVector3f;
 
 public interface QuadView {
 	/** Count of integers in a conventional (un-modded) block or item vertex. */
@@ -80,7 +81,7 @@ public interface QuadView {
 	 * <p>Not typically needed by models. Exposed to enable standard lighting
 	 * utility functions for use by renderers.
 	 */
-	Vector3f faceNormal();
+	int packedFaceNormal();
 
 	/**
 	 * Retrieves the integer tag encoded with this quad via {@link QuadEditor#tag(int)}.
@@ -120,27 +121,24 @@ public interface QuadView {
 	 */
 	boolean hasNormal(int vertexIndex);
 
+	int packedNormal(int vertexIndex);
+
 	/**
 	 * Pass a non-null target to avoid allocation - will be returned with values.
 	 * Otherwise returns a new instance. Returns null if normal not present.
 	 */
 	@Nullable
-	Vector3f copyNormal(int vertexIndex, @Nullable Vector3f target);
+	default Vector3f copyNormal(int vertexIndex, @Nullable Vector3f target) {
+		if (hasNormal(vertexIndex)) {
+			if (target == null) {
+				target = new Vector3f();
+			}
 
-	/**
-	 * Will return {@link Float#NaN} if normal not present.
-	 */
-	float normalX(int vertexIndex);
-
-	/**
-	 * Will return {@link Float#NaN} if normal not present.
-	 */
-	float normalY(int vertexIndex);
-
-	/**
-	 * Will return {@link Float#NaN} if normal not present.
-	 */
-	float normalZ(int vertexIndex);
+			return PackedVector3f.unpackTo(this.packedNormal(vertexIndex), target);
+		} else {
+			return null;
+		}
+	}
 
 	/**
 	 * Minimum block brightness. Zero if not set.
@@ -241,25 +239,12 @@ public interface QuadView {
 	 */
 	boolean hasTangent(int vertexIndex);
 
+	int packedTangent(int vertexIndex);
+
 	/**
 	 * Pass a non-null target to avoid allocation - will be returned with values.
 	 * Otherwise returns a new instance. Returns null if tangent not present.
 	 */
 	@Nullable
 	Vector3f copyTangent(int vertexIndex, @Nullable Vector3f target);
-
-	/**
-	 * Will return {@link Float#NaN} if tangent not present.
-	 */
-	float tangentX(int vertexIndex);
-
-	/**
-	 * Will return {@link Float#NaN} if tangent not present.
-	 */
-	float tangentY(int vertexIndex);
-
-	/**
-	 * Will return {@link Float#NaN} if tangent not present.
-	 */
-	float tangentZ(int vertexIndex);
 }

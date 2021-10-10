@@ -18,16 +18,20 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.api.model;
+package io.vram.frex.api.buffer;
 
-import io.vram.frex.api.mesh.QuadEmitter;
+import io.vram.frex.api.model.QuadTransform;
 
-public interface ModelOuputContext {
-	QuadEmitter quadEmitter();
+public interface QuadSink {
+	QuadEmitter asQuadEmitter();
 
-	void pushTransform(QuadTransform transform);
+	FrexVertexConsumer asVertexConsumer();
 
-	void popTransform();
+	// WIP: remove
+	default void pushTransform(QuadTransform transform) { }
+
+	// WIP: remove
+	default void popTransform() { }
 
 	// TODO: implement
 	//MatrixStack matrixStack();

@@ -26,7 +26,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 
-import io.vram.frex.api.mesh.QuadEmitter;
+import io.vram.frex.api.buffer.QuadEmitter;
 
 @SuppressWarnings("deprecation")
 public class FabricQuadEmitter extends FabricQuadView<QuadEmitter> implements grondag.frex.api.mesh.MutableQuadView, grondag.frex.api.mesh.QuadEmitter {

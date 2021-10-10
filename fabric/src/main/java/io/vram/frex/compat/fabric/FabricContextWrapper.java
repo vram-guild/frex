@@ -28,16 +28,16 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 
+import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.model.BakedInputContext;
-import io.vram.frex.api.model.ModelOuputContext;
 import io.vram.frex.base.renderer.context.BaseFallbackConsumer;
 
 public class FabricContextWrapper implements RenderContext {
 	private BakedInputContext input;
-	private ModelOuputContext output;
+	private QuadSink output;
 
 	private final Consumer<Mesh> meshConsumer = m -> {
-		(((FabricMesh) m).wrapped).outputTo(output.quadEmitter());
+		(((FabricMesh) m).wrapped).outputTo(output.asQuadEmitter());
 	};
 
 	private final Consumer<BakedModel> fallbackConsumer = bm -> {
@@ -58,7 +58,7 @@ public class FabricContextWrapper implements RenderContext {
 
 	@Override
 	public QuadEmitter getEmitter() {
-		return qe.wrap(output.quadEmitter());
+		return qe.wrap(output.asQuadEmitter());
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class FabricContextWrapper implements RenderContext {
 
 	private static final ThreadLocal<FabricContextWrapper> POOL = ThreadLocal.withInitial(FabricContextWrapper::new);
 
-	public static FabricContextWrapper wrap(BakedInputContext input, ModelOuputContext output) {
+	public static FabricContextWrapper wrap(BakedInputContext input, QuadSink output) {
 		final var result = POOL.get();
 		result.input = input;
 		result.output = output;

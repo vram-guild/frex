@@ -33,9 +33,9 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.WeightedBakedModel;
 import net.minecraft.world.level.block.state.BlockState;
 
+import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.model.BlockItemModel;
 import io.vram.frex.api.model.BlockModel;
-import io.vram.frex.api.model.ModelOuputContext;
 
 @Mixin(WeightedBakedModel.class)
 public class MixinMultipartBakedModel implements BlockItemModel {
@@ -43,12 +43,12 @@ public class MixinMultipartBakedModel implements BlockItemModel {
 	@Shadow protected Map<BlockState, BitSet> selectorCache;
 
 	@Override
-	public void renderAsItem(ItemInputContext input, ModelOuputContext output) {
+	public void renderAsItem(ItemInputContext input, QuadSink output) {
 		// NOOP
 	}
 
 	@Override
-	public void renderAsBlock(BlockInputContext input, ModelOuputContext output) {
+	public void renderAsBlock(BlockInputContext input, QuadSink output) {
 		final var state = input.blockState();
 
 		if (state != null) {

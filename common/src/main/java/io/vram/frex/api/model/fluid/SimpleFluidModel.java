@@ -35,9 +35,9 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import io.vram.frex.api.buffer.QuadSink;
+import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.material.RenderMaterial;
-import io.vram.frex.api.mesh.QuadEmitter;
-import io.vram.frex.api.model.ModelOuputContext;
 
 /**
  * Implementation of {@link FluidModel}  with vanilla-like geometry.
@@ -58,9 +58,9 @@ public class SimpleFluidModel implements FluidModel {
 
 	// WIP: handle degenerate quads by emitting two triangles so that face normals are correct
 	@Override
-	public void renderAsBlock(BlockInputContext input, ModelOuputContext output) {
+	public void renderAsBlock(BlockInputContext input, QuadSink output) {
 		final var appearance = this.appearance;
-		final QuadEmitter qe = output.quadEmitter();
+		final QuadEmitter qe = output.asQuadEmitter();
 		final BlockState blockState = input.blockState();
 		final FluidState fluidState = blockState.getFluidState();
 		final var world = input.blockView();

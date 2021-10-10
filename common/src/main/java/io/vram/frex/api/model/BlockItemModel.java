@@ -20,11 +20,12 @@
 
 package io.vram.frex.api.model;
 
+import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.model.InputContext.Type;
 
 public interface BlockItemModel extends BlockModel, ItemModel {
 	@Override
-	default void renderDynamic(InputContext input, ModelOuputContext output) {
+	default void renderDynamic(InputContext input, QuadSink output) {
 		if (input.type() == Type.BLOCK) {
 			renderAsBlock((BlockInputContext) input, output);
 		} else if (input.type() == Type.ITEM) {

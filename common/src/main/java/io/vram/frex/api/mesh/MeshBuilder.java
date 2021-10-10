@@ -22,6 +22,8 @@ package io.vram.frex.api.mesh;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
 
+import io.vram.frex.api.buffer.QuadEmitter;
+
 /**
  * Similar in purpose to {@link BufferBuilder} but simpler
  * and not tied to NIO or any other specific implementation,

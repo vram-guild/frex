@@ -25,13 +25,14 @@ import java.util.Random;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.item.ItemStack;
 
+import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.model.InputContext.Type;
 
 @FunctionalInterface
 public interface ItemModel {
-	void renderAsItem(ItemInputContext input, ModelOuputContext output);
+	void renderAsItem(ItemInputContext input, QuadSink output);
 
-	default void renderDynamic(InputContext input, ModelOuputContext output) {
+	default void renderDynamic(InputContext input, QuadSink output) {
 		if (input.type() == Type.ITEM) {
 			renderAsItem((ItemInputContext) input, output);
 		}

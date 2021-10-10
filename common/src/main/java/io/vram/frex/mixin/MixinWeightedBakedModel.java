@@ -31,10 +31,10 @@ import net.minecraft.client.resources.model.WeightedBakedModel;
 import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandom;
 
+import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.model.BlockItemModel;
 import io.vram.frex.api.model.BlockModel;
 import io.vram.frex.api.model.ItemModel;
-import io.vram.frex.api.model.ModelOuputContext;
 
 @Mixin(WeightedBakedModel.class)
 public class MixinWeightedBakedModel implements BlockItemModel {
@@ -46,13 +46,13 @@ public class MixinWeightedBakedModel implements BlockItemModel {
 	}
 
 	@Override
-	public void renderAsItem(ItemInputContext input, ModelOuputContext output) {
+	public void renderAsItem(ItemInputContext input, QuadSink output) {
 		final BakedModel model = getModel(input.random());
 		((ItemModel) model).renderAsItem(input, output);
 	}
 
 	@Override
-	public void renderAsBlock(BlockInputContext input, ModelOuputContext output) {
+	public void renderAsBlock(BlockInputContext input, QuadSink output) {
 		final BakedModel model = getModel(input.random());
 		((BlockModel) model).renderAsBlock(input, output);
 	}

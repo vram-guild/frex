@@ -30,6 +30,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 
+import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.model.util.PackedVector3f;
 

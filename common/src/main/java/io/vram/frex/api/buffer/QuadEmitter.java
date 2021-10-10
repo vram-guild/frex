@@ -18,7 +18,7 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.api.mesh;
+package io.vram.frex.api.buffer;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -31,8 +31,9 @@ import net.minecraft.core.Direction;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 
 import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.mesh.QuadView;
 
-public interface QuadEmitter extends QuadView {
+public interface QuadEmitter extends QuadView, QuadSink {
 	/**
 	 * Causes texture to appear with no rotation.
 	 * Pass in bakeFlags parameter to {@link #spriteBake(int, TextureAtlasSprite, int)}.
@@ -265,5 +266,8 @@ public interface QuadEmitter extends QuadView {
 
 	QuadEmitter emit();
 
-	FrexVertexConsumer asVertexConsumer();
+	@Override
+	default QuadEmitter asQuadEmitter() {
+		return this;
+	}
 }

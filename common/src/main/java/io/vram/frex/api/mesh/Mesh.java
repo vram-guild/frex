@@ -22,6 +22,8 @@ package io.vram.frex.api.mesh;
 
 import java.util.function.Consumer;
 
+import io.vram.frex.api.buffer.QuadEmitter;
+
 /**
  * A bundle of one or more {@link QuadView} instances encoded by the renderer,
  * typically via {@link Renderer#meshBuilder()}.

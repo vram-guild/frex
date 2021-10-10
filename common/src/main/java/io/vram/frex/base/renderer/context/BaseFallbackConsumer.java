@@ -27,12 +27,12 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 
+import io.vram.frex.api.buffer.QuadSink;
+import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.RenderMaterial;
-import io.vram.frex.api.mesh.QuadEmitter;
 import io.vram.frex.api.model.BakedInputContext;
-import io.vram.frex.api.model.ModelOuputContext;
 import io.vram.frex.api.model.util.FaceUtil;
 import io.vram.frex.api.renderer.Renderer;
 
@@ -69,11 +69,11 @@ public class BaseFallbackConsumer {
 		AO_SHADED_MATERIAL = finder.clear().preset(MaterialConstants.PRESET_DEFAULT).find();
 	}
 
-	public static void accept(BakedModel model, BakedInputContext input, ModelOuputContext output) {
+	public static void accept(BakedModel model, BakedInputContext input, QuadSink output) {
 		final var blockState = input.blockState();
 		final var random = input.random();
 		final boolean useAo = blockState != null && model.useAmbientOcclusion() && blockState.getLightEmission() == 0 && Minecraft.useAmbientOcclusion();
-		final var qe = output.quadEmitter();
+		final var qe = output.asQuadEmitter();
 
 		var quads = model.getQuads(blockState, Direction.DOWN, random);
 		if (!quads.isEmpty() && input.cullTest(FaceUtil.DOWN_INDEX)) acceptFaceQuads(FaceUtil.DOWN_INDEX, useAo, quads, qe);

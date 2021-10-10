@@ -20,7 +20,7 @@
 
 package io.vram.frex.api.model;
 
-import io.vram.frex.api.mesh.QuadEmitter;
+import io.vram.frex.api.buffer.QuadEmitter;
 
 @FunctionalInterface
 public interface QuadTransform {

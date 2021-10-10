@@ -13,7 +13,8 @@
 		"MixinLevelRenderer",
 		"MixinMultipartBakedModel",
 		"MixinRenderChunkRegion",
-		"MixinWeightedBakedModel"
+		"MixinWeightedBakedModel",
+		"MixinTextureAltasSpriteLoader"
 	],
 	"injectors": {
 		"defaultRequire": 1

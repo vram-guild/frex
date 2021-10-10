@@ -63,7 +63,13 @@ public class FabricContextWrapper implements RenderContext {
 
 	@Override
 	public void pushTransform(QuadTransform transform) {
-		output.pushTransform(q -> transform.transform(qe.wrap(q)));
+		output.pushTransform((ctx, in, out) -> {
+			in.copyTo(out);
+
+			if (transform.transform(qe.wrap(out))) {
+				out.emit();
+			}
+		});
 	}
 
 	@Override

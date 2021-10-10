@@ -24,5 +24,5 @@ import io.vram.frex.api.buffer.QuadSink;
 
 @FunctionalInterface
 public interface DynamicModel {
-	void render(InputContext input, QuadSink output);
+	void renderDynamic(InputContext input, QuadSink output);
 }

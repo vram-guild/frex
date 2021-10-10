@@ -26,11 +26,12 @@ import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.model.InputContext.Type;
 
 @FunctionalInterface
-public interface EntityModel<T extends Entity> {
+public interface EntityModel<T extends Entity> extends DynamicModel {
 	void renderAsEntity(EntityInputContext<T> input, QuadSink output);
 
+	@Override
 	@SuppressWarnings("unchecked")
-	default void render(InputContext input, QuadSink output) {
+	default void renderDynamic(InputContext input, QuadSink output) {
 		if (input.type() == Type.ENTITY) {
 			renderAsEntity((EntityInputContext<T>) input, output);
 		}

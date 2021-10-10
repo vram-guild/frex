@@ -29,9 +29,10 @@ import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.model.InputContext.Type;
 
 @FunctionalInterface
-public interface ItemModel {
+public interface ItemModel extends DynamicModel {
 	void renderAsItem(ItemInputContext input, QuadSink output);
 
+	@Override
 	default void renderDynamic(InputContext input, QuadSink output) {
 		if (input.type() == Type.ITEM) {
 			renderAsItem((ItemInputContext) input, output);

@@ -35,10 +35,11 @@ import io.vram.frex.api.model.util.FaceUtil;
 import io.vram.frex.api.world.BlockEntityRenderData;
 
 @FunctionalInterface
-public interface BlockModel {
+public interface BlockModel extends DynamicModel {
 	// WIP: find way to expose biome info
 	void renderAsBlock(BlockInputContext input, QuadSink output);
 
+	@Override
 	default void renderDynamic(InputContext input, QuadSink output) {
 		if (input.type() == Type.BLOCK) {
 			renderAsBlock((BlockInputContext) input, output);

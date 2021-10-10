@@ -27,10 +27,8 @@ public interface QuadSink {
 
 	FrexVertexConsumer asVertexConsumer();
 
-	// WIP: remove
 	default void pushTransform(QuadTransform transform) { }
 
-	// WIP: remove
 	default void popTransform() { }
 
 	// TODO: implement

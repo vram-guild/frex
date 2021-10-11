@@ -81,7 +81,11 @@ public interface MaterialFinder {
 	 */
 	MaterialFinder blur(boolean blur);
 
-	MaterialFinder condition(MaterialCondition condition);
+	default MaterialFinder condition(@Nullable MaterialCondition condition) {
+		return conditionIndex(condition == null ? MaterialCondition.alwaysTrue().index() : condition.index());
+	}
+
+	MaterialFinder conditionIndex(int index);
 
 	/**
 	 * Enables or disables backface culling on GPU. Generally

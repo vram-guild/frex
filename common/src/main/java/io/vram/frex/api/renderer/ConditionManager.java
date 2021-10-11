@@ -42,10 +42,12 @@ public interface ConditionManager {
 
 	MaterialCondition conditionById(ResourceLocation id);
 
+	MaterialCondition alwaysTrue();
+
 	ConditionManager UNSUPPORTED = new ConditionManager() {
 		@Override
 		public MaterialCondition createCondition(BooleanSupplier supplier, boolean affectBlocks, boolean affectItems) {
-			return null;
+			return ALWAYS_TRUE;
 		}
 
 		@Override
@@ -55,7 +57,7 @@ public interface ConditionManager {
 
 		@Override
 		public MaterialCondition conditionByIndex(int index) {
-			return null;
+			return ALWAYS_TRUE;
 		}
 
 		@Override
@@ -65,7 +67,24 @@ public interface ConditionManager {
 
 		@Override
 		public MaterialCondition conditionById(ResourceLocation id) {
-			return null;
+			return ALWAYS_TRUE;
 		}
+
+		@Override
+		public MaterialCondition alwaysTrue() {
+			return ALWAYS_TRUE;
+		}
+
+		MaterialCondition ALWAYS_TRUE = new MaterialCondition() {
+			@Override
+			public boolean compute() {
+				return true;
+			}
+
+			@Override
+			public int index() {
+				return 0;
+			}
+		};
 	};
 }

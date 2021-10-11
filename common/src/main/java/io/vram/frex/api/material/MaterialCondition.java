@@ -52,4 +52,8 @@ public interface MaterialCondition {
 	static MaterialCondition fromId(ResourceLocation id) {
 		return Renderer.get().conditions().conditionById(id);
 	}
+
+	static MaterialCondition alwaysTrue() {
+		return Renderer.get().conditions().alwaysTrue();
+	}
 }

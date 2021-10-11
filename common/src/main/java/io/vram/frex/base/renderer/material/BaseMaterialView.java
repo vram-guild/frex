@@ -26,7 +26,7 @@ import io.vram.bitkit.BitPacker64;
 import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.material.RenderMaterial;
 
-public class BaseMaterialView implements RenderMaterial {
+public abstract class BaseMaterialView implements RenderMaterial {
 	protected long bits0;
 	protected long bits1;
 
@@ -91,7 +91,7 @@ public class BaseMaterialView implements RenderMaterial {
 	}
 
 	@Override
-	public boolean enableGlint() {
+	public boolean foilOverlay() {
 		return ENABLE_GLINT.getValue(bits0);
 	}
 

@@ -33,15 +33,17 @@ import io.vram.frex.api.texture.MaterialTexture;
 import grondag.frex.Frex;
 
 public class BaseTextureManager implements MaterialTextureManager {
-	protected int nextIndex = 1;
+	protected int nextIndex = 2;
 	protected boolean shouldWarn = true;
 
 	protected final BaseMaterialTexture[] STATES = new BaseMaterialTexture[MaterialConstants.MAX_TEXTURE_STATES];
 	protected final Object2ObjectOpenHashMap<ResourceLocation, BaseMaterialTexture> MAP = new Object2ObjectOpenHashMap<>(256, Hash.VERY_FAST_LOAD_FACTOR);
 	protected final BaseMaterialTexture MISSING = new BaseMaterialTexture(0, TextureManager.INTENTIONAL_MISSING_TEXTURE);
+	protected final BaseMaterialTexture NONE = new BaseMaterialTexture(1, TextureManager.INTENTIONAL_MISSING_TEXTURE);
 
 	public BaseTextureManager() {
 		STATES[0] = MISSING;
+		STATES[1] = NONE;
 		MAP.defaultReturnValue(MISSING);
 	}
 
@@ -77,5 +79,10 @@ public class BaseTextureManager implements MaterialTextureManager {
 	@Override
 	public MaterialTexture missingTexture() {
 		return MISSING;
+	}
+
+	@Override
+	public MaterialTexture noTexture() {
+		return NONE;
 	}
 }

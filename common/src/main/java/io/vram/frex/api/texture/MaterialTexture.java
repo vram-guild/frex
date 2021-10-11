@@ -24,7 +24,11 @@ public interface MaterialTexture {
 	@Nullable SpriteIndex spriteIndex();
 
 	static MaterialTexture missing() {
-		return null;
+		return Renderer.get().textures().missingTexture();
+	}
+
+	static MaterialTexture none() {
+		return Renderer.get().textures().noTexture();
 	}
 
 	static MaterialTexture fromIndex(int index) {

@@ -26,6 +26,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 
+import io.vram.frex.api.texture.MaterialTexture;
 import io.vram.frex.impl.material.MaterialFinderPool;
 
 /**
@@ -193,7 +194,15 @@ public interface MaterialFinder {
 	 * @param id namespaced id of texture or texture atlas for base color. {@code null} to disable texturing.
 	 * @return finder instance for ease of chaining calls
 	 */
-	MaterialFinder texture(@Nullable ResourceLocation id);
+	default MaterialFinder texture(@Nullable ResourceLocation id) {
+		return textureIndex(id == null ? MaterialTexture.none().index() : MaterialTexture.fromId(id).index());
+	}
+
+	default MaterialFinder texture(MaterialTexture texture) {
+		return textureIndex(texture.index());
+	}
+
+	MaterialFinder textureIndex(int textureIndex);
 
 	/**
 	 * Enables or disables texture blending and sets blending mode.

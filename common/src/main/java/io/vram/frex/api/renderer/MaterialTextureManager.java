@@ -30,4 +30,6 @@ public interface MaterialTextureManager {
 	MaterialTexture textureByIndex(int index);
 
 	MaterialTexture missingTexture();
+
+	MaterialTexture noTexture();
 }

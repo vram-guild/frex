@@ -20,12 +20,36 @@
 
 package io.vram.frex.api.material;
 
-import org.jetbrains.annotations.ApiStatus.Experimental;
+import java.util.function.BooleanSupplier;
 
-@Experimental
+import net.minecraft.resources.ResourceLocation;
+
+import io.vram.frex.api.renderer.Renderer;
+
+@FunctionalInterface
 public interface MaterialCondition {
 	/**
 	 * Called at most once per frame.
 	 */
 	boolean compute();
+
+	default int index() {
+		return Renderer.get().conditions().indexOf(this);
+	}
+
+	static MaterialCondition create(BooleanSupplier supplier, boolean affectBlocks, boolean affectItems) {
+		return Renderer.get().conditions().createCondition(supplier, affectBlocks, affectItems);
+	}
+
+	static MaterialCondition fromIndex(int index) {
+		return Renderer.get().conditions().conditionByIndex(index);
+	}
+
+	static boolean registerCondition(ResourceLocation id, MaterialCondition condition) {
+		return Renderer.get().conditions().registerCondition(id, condition);
+	}
+
+	static MaterialCondition fromId(ResourceLocation id) {
+		return Renderer.get().conditions().conditionById(id);
+	}
 }

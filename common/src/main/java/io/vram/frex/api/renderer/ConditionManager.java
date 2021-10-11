@@ -31,7 +31,7 @@ import io.vram.frex.api.material.MaterialCondition;
  * for model lighting, buffering and rendering. Such plug-ins implement the
  * enhanced model rendering interfaces specified by the Fabric API.
  */
-public interface ConditionRegistry {
+public interface ConditionManager {
 	MaterialCondition createCondition(BooleanSupplier supplier, boolean affectBlocks, boolean affectItems);
 
 	int indexOf(MaterialCondition condition);
@@ -42,7 +42,7 @@ public interface ConditionRegistry {
 
 	MaterialCondition conditionById(ResourceLocation id);
 
-	ConditionRegistry UNSUPPORTED = new ConditionRegistry() {
+	ConditionManager UNSUPPORTED = new ConditionManager() {
 		@Override
 		public MaterialCondition createCondition(BooleanSupplier supplier, boolean affectBlocks, boolean affectItems) {
 			return null;

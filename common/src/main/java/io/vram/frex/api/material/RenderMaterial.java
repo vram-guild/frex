@@ -22,6 +22,8 @@ package io.vram.frex.api.material;
 
 import net.minecraft.resources.ResourceLocation;
 
+import io.vram.frex.api.texture.MaterialTexture;
+
 public interface RenderMaterial {
 	ResourceLocation STANDARD_MATERIAL_KEY = new ResourceLocation("frex", "standard");
 	ResourceLocation MISSING_MATERIAL_KEY = new ResourceLocation("frex", "missing");
@@ -70,9 +72,11 @@ public interface RenderMaterial {
 
 	int target();
 
-	ResourceLocation textureId();
+	int textureIndex();
 
-	String texture();
+	default MaterialTexture texture() {
+		return MaterialTexture.fromIndex(textureIndex());
+	}
 
 	int transparency();
 

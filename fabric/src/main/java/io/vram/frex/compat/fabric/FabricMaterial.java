@@ -163,12 +163,12 @@ public class FabricMaterial implements grondag.frex.api.material.RenderMaterial 
 
 	@Override
 	public ResourceLocation textureId() {
-		return wrapped.textureId();
+		return wrapped.texture().id();
 	}
 
 	@Override
 	public String texture() {
-		return wrapped.texture();
+		return wrapped.texture().id().toString();
 	}
 
 	@Override

@@ -103,8 +103,8 @@ public abstract class MeshEncodingHelper {
 
 	static {
 		assert TANGENTS_SHIFT + 4 <= 32 : "Mesh header encoding ran out of bits";
-		Preconditions.checkState(MESH_VERTEX_STRIDE == QuadView.VANILLA_VERTEX_STRIDE, "Canvas vertex stride (%s) mismatched with rendering API (%s)", MESH_VERTEX_STRIDE, QuadView.VANILLA_VERTEX_STRIDE);
-		Preconditions.checkState(MESH_QUAD_STRIDE == QuadView.VANILLA_QUAD_STRIDE, "Canvas quad stride (%s) mismatched with rendering API (%s)", MESH_QUAD_STRIDE, QuadView.VANILLA_QUAD_STRIDE);
+		Preconditions.checkState(MESH_VERTEX_STRIDE == QuadView.VANILLA_VERTEX_STRIDE, "Mesh vertex stride (%s) mismatched with vanilla stride (%s)", MESH_VERTEX_STRIDE, QuadView.VANILLA_VERTEX_STRIDE);
+		Preconditions.checkState(MESH_QUAD_STRIDE == QuadView.VANILLA_QUAD_STRIDE, "Mesh quad stride (%s) mismatched with vanilla stride (%s)", MESH_QUAD_STRIDE, QuadView.VANILLA_QUAD_STRIDE);
 	}
 
 	static {

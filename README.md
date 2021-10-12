@@ -13,8 +13,8 @@ Add the maven repo where my libraries live to your build.gradle
 ```gradle
 repositories {
     maven {
-    	name = "dblsaiko"
-    	url = "https://maven.dblsaiko.net/"
+    	name = "vram"
+    	url = "https://maven.vram.io/"
     }
 }
 ```

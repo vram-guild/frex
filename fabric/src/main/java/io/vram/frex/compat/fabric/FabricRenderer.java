@@ -78,7 +78,7 @@ public class FabricRenderer implements grondag.frex.api.Renderer {
 
 	@Override
 	public MaterialCondition conditionById(ResourceLocation id) {
-		return wrapped.conditions().conditionById(id);
+		return wrapped.conditions().conditionFromId(id);
 	}
 
 	@Override

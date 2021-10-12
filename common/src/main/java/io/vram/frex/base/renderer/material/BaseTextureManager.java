@@ -48,13 +48,13 @@ public class BaseTextureManager implements MaterialTextureManager {
 	}
 
 	@Override
-	public BaseMaterialTexture textureByIndex(int index) {
+	public BaseMaterialTexture textureFromIndex(int index) {
 		return STATES[index];
 	}
 
 	// PERF: use cow or other method to avoid synch
 	@Override
-	public synchronized BaseMaterialTexture textureById(ResourceLocation id) {
+	public synchronized BaseMaterialTexture textureFromId(ResourceLocation id) {
 		BaseMaterialTexture state = MAP.get(id);
 
 		if (state == MISSING && !id.equals(TextureManager.INTENTIONAL_MISSING_TEXTURE)) {

@@ -71,9 +71,9 @@ public interface Renderer {
 		return registerMaterial(id, material);
 	}
 
-	default ConditionManager conditions() {
-		return ConditionManager.UNSUPPORTED;
-	}
+	ConditionManager conditions();
 
 	MaterialTextureManager textures();
+
+	MaterialShaderManager shaders();
 }

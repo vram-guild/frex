@@ -20,40 +20,36 @@
 
 package io.vram.frex.api.material;
 
-import java.util.function.BooleanSupplier;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.resources.ResourceLocation;
 
 import io.vram.frex.api.renderer.Renderer;
 
-@FunctionalInterface
-public interface MaterialCondition {
-	/**
-	 * Called at most once per frame.
-	 */
-	boolean compute();
+public interface MaterialShader {
+	int index();
 
-	default int index() {
-		return Renderer.get().conditions().indexOf(this);
+	ResourceLocation vertexShaderId();
+
+	default String vertexShader() {
+		return vertexShaderId().toString();
 	}
 
-	static MaterialCondition create(BooleanSupplier supplier, boolean affectBlocks, boolean affectItems) {
-		return Renderer.get().conditions().createCondition(supplier, affectBlocks, affectItems);
+	ResourceLocation fragmentShaderId();
+
+	default String fragmentShader() {
+		return fragmentShaderId().toString();
 	}
 
-	static MaterialCondition fromIndex(int index) {
-		return Renderer.get().conditions().conditionFromIndex(index);
+	static MaterialShader getOrCreate(@Nullable ResourceLocation vertexSourceId, @Nullable ResourceLocation fragmentSourceId) {
+		return Renderer.get().shaders().getOrCreate(vertexSourceId, fragmentSourceId);
 	}
 
-	static boolean registerCondition(ResourceLocation id, MaterialCondition condition) {
-		return Renderer.get().conditions().registerCondition(id, condition);
+	static MaterialShader getOrCreate(@Nullable ResourceLocation vertexSourceId, @Nullable ResourceLocation fragmentSourceId, @Nullable ResourceLocation depthVertexSourceId, @Nullable ResourceLocation depthFragmentSourceId) {
+		return Renderer.get().shaders().getOrCreate(vertexSourceId, fragmentSourceId, depthVertexSourceId, depthFragmentSourceId);
 	}
 
-	static MaterialCondition fromId(ResourceLocation id) {
-		return Renderer.get().conditions().conditionFromId(id);
-	}
-
-	static MaterialCondition alwaysTrue() {
-		return Renderer.get().conditions().alwaysTrue();
+	static MaterialShader fromIndex(int shaderIndex) {
+		return Renderer.get().shaders().shaderFromIndex(shaderIndex);
 	}
 }

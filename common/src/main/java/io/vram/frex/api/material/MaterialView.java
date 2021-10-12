@@ -20,8 +20,6 @@
 
 package io.vram.frex.api.material;
 
-import net.minecraft.resources.ResourceLocation;
-
 import io.vram.frex.api.texture.MaterialTexture;
 
 public interface MaterialView {
@@ -57,10 +55,6 @@ public interface MaterialView {
 
 	boolean fog();
 
-	ResourceLocation fragmentShaderId();
-
-	String fragmentShader();
-
 	boolean hurtOverlay();
 
 	boolean lines();
@@ -79,9 +73,11 @@ public interface MaterialView {
 
 	boolean unmipped();
 
-	ResourceLocation vertexShaderId();
+	int shaderIndex();
 
-	String vertexShader();
+	default MaterialShader shader() {
+		return MaterialShader.fromIndex(shaderIndex());
+	}
 
 	int writeMask();
 

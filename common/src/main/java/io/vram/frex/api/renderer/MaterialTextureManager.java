@@ -25,9 +25,9 @@ import net.minecraft.resources.ResourceLocation;
 import io.vram.frex.api.texture.MaterialTexture;
 
 public interface MaterialTextureManager {
-	MaterialTexture textureById(ResourceLocation id);
+	MaterialTexture textureFromId(ResourceLocation id);
 
-	MaterialTexture textureByIndex(int index);
+	MaterialTexture textureFromIndex(int index);
 
 	MaterialTexture missingTexture();
 

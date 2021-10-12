@@ -20,8 +20,6 @@
 
 package io.vram.frex.base.renderer.material;
 
-import net.minecraft.resources.ResourceLocation;
-
 import io.vram.bitkit.BitPacker64;
 import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.material.RenderMaterial;
@@ -48,6 +46,11 @@ public abstract class BaseMaterialView implements RenderMaterial {
 	@Override
 	public int textureIndex() {
 		return TEXTURE.getValue(bits1);
+	}
+
+	@Override
+	public int shaderIndex() {
+		return SHADER.getValue(bits1);
 	}
 
 	@Override
@@ -184,32 +187,8 @@ public abstract class BaseMaterialView implements RenderMaterial {
 	static final BitPacker64<Void> PACKER_1 = new BitPacker64<> (null, null);
 
 	static final BitPacker64<Void>.IntElement TEXTURE = PACKER_1.createIntElement(MaterialConstants.MAX_TEXTURE_STATES);
-	static final BitPacker64<Void>.IntElement SHADER_ID = PACKER_1.createIntElement(MaterialConstants.MAX_SHADERS);
+	static final BitPacker64<Void>.IntElement SHADER = PACKER_1.createIntElement(MaterialConstants.MAX_SHADERS);
 	static final BitPacker64<Void>.IntElement CONDITION = PACKER_1.createIntElement(MaterialConstants.MAX_CONDITIONS);
-
-	@Override
-	public ResourceLocation fragmentShaderId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String fragmentShader() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ResourceLocation vertexShaderId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String vertexShader() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public String label() {

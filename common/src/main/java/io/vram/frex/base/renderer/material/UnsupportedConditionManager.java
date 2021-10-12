@@ -18,29 +18,55 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.api.renderer;
+package io.vram.frex.base.renderer.material;
 
 import java.util.function.BooleanSupplier;
 
 import net.minecraft.resources.ResourceLocation;
 
 import io.vram.frex.api.material.MaterialCondition;
+import io.vram.frex.api.renderer.ConditionManager;
 
-/**
- * Interface for rendering plug-ins that provide enhanced capabilities
- * for model lighting, buffering and rendering. Such plug-ins implement the
- * enhanced model rendering interfaces specified by the Fabric API.
- */
-public interface ConditionManager {
-	MaterialCondition createCondition(BooleanSupplier supplier, boolean affectBlocks, boolean affectItems);
+public class UnsupportedConditionManager implements ConditionManager {
+	@Override
+	public MaterialCondition createCondition(BooleanSupplier supplier, boolean affectBlocks, boolean affectItems) {
+		return ALWAYS_TRUE;
+	}
 
-	int indexOf(MaterialCondition condition);
+	@Override
+	public int indexOf(MaterialCondition condition) {
+		return 0;
+	}
 
-	MaterialCondition conditionFromIndex(int index);
+	@Override
+	public MaterialCondition conditionFromIndex(int index) {
+		return ALWAYS_TRUE;
+	}
 
-	boolean registerCondition(ResourceLocation id, MaterialCondition condition);
+	@Override
+	public boolean registerCondition(ResourceLocation id, MaterialCondition condition) {
+		return false;
+	}
 
-	MaterialCondition conditionFromId(ResourceLocation id);
+	@Override
+	public MaterialCondition conditionFromId(ResourceLocation id) {
+		return ALWAYS_TRUE;
+	}
 
-	MaterialCondition alwaysTrue();
+	@Override
+	public MaterialCondition alwaysTrue() {
+		return ALWAYS_TRUE;
+	}
+
+	MaterialCondition ALWAYS_TRUE = new MaterialCondition() {
+		@Override
+		public boolean compute() {
+			return true;
+		}
+
+		@Override
+		public int index() {
+			return 0;
+		}
+	};
 }

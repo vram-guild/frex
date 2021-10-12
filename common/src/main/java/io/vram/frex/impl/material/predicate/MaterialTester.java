@@ -60,8 +60,8 @@ import io.vram.frex.impl.material.MaterialDeserializer;
 
 public class MaterialTester<T> extends MaterialPredicate {
 	public static final Test<String> TEXTURE_TEST = (renderMaterial, s) -> renderMaterial.texture().equals(s);
-	public static final Test<String> VERTEX_SOURCE_TEST = (renderMaterial, s) -> renderMaterial.vertexShader().equals(s);
-	public static final Test<String> FRAGMENT_SOURCE_TEST = (renderMaterial, s) -> renderMaterial.fragmentShader().equals(s);
+	public static final Test<String> VERTEX_SOURCE_TEST = (renderMaterial, s) -> renderMaterial.shader().vertexShader().equals(s);
+	public static final Test<String> FRAGMENT_SOURCE_TEST = (renderMaterial, s) -> renderMaterial.shader().fragmentShader().equals(s);
 	public static final Test<String> LABEL_TEST = (renderMaterial, s) -> renderMaterial.label().equals(s);
 	public static final Test<Boolean> DISABLE_AO_TEST = (renderMaterial, b) -> (renderMaterial.disableAo() == b);
 	public static final Test<Boolean> DISABLE_COLOR_INDEX_TEST = (renderMaterial, b) -> (renderMaterial.disableColorIndex() == b);

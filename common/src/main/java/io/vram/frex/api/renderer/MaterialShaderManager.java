@@ -20,27 +20,16 @@
 
 package io.vram.frex.api.renderer;
 
-import java.util.function.BooleanSupplier;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.resources.ResourceLocation;
 
-import io.vram.frex.api.material.MaterialCondition;
+import io.vram.frex.api.material.MaterialShader;
 
-/**
- * Interface for rendering plug-ins that provide enhanced capabilities
- * for model lighting, buffering and rendering. Such plug-ins implement the
- * enhanced model rendering interfaces specified by the Fabric API.
- */
-public interface ConditionManager {
-	MaterialCondition createCondition(BooleanSupplier supplier, boolean affectBlocks, boolean affectItems);
+public interface MaterialShaderManager {
+	MaterialShader shaderFromIndex(int index);
 
-	int indexOf(MaterialCondition condition);
+	MaterialShader getOrCreate(@Nullable ResourceLocation vertexSourceId, @Nullable ResourceLocation fragmentSourceId);
 
-	MaterialCondition conditionFromIndex(int index);
-
-	boolean registerCondition(ResourceLocation id, MaterialCondition condition);
-
-	MaterialCondition conditionFromId(ResourceLocation id);
-
-	MaterialCondition alwaysTrue();
+	MaterialShader getOrCreate(@Nullable ResourceLocation vertexSourceId, @Nullable ResourceLocation fragmentSourceId, @Nullable ResourceLocation depthVertexSourceId, @Nullable ResourceLocation depthFragmentSourceId);
 }

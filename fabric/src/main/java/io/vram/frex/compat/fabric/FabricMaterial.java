@@ -133,12 +133,12 @@ public class FabricMaterial implements grondag.frex.api.material.RenderMaterial 
 
 	@Override
 	public ResourceLocation fragmentShaderId() {
-		return wrapped.fragmentShaderId();
+		return wrapped.shader().fragmentShaderId();
 	}
 
 	@Override
 	public String fragmentShader() {
-		return wrapped.fragmentShader();
+		return wrapped.shader().fragmentShader();
 	}
 
 	@Override
@@ -183,12 +183,12 @@ public class FabricMaterial implements grondag.frex.api.material.RenderMaterial 
 
 	@Override
 	public ResourceLocation vertexShaderId() {
-		return wrapped.vertexShaderId();
+		return wrapped.shader().vertexShaderId();
 	}
 
 	@Override
 	public String vertexShader() {
-		return wrapped.vertexShader();
+		return wrapped.shader().vertexShader();
 	}
 
 	@Override

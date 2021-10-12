@@ -32,10 +32,10 @@ public interface MaterialTexture {
 	}
 
 	static MaterialTexture fromIndex(int index) {
-		return Renderer.get().textures().textureByIndex(index);
+		return Renderer.get().textures().textureFromIndex(index);
 	}
 
 	static MaterialTexture fromId(ResourceLocation id) {
-		return Renderer.get().textures().textureById(id);
+		return Renderer.get().textures().textureFromId(id);
 	}
 }

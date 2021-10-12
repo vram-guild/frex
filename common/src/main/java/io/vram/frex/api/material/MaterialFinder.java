@@ -35,7 +35,7 @@ import io.vram.frex.impl.material.MaterialFinderPool;
  *
  * <p>Must be obtained via {@link Renderer#materialFinder()}.
  */
-public interface MaterialFinder {
+public interface MaterialFinder extends MaterialView {
 	MaterialFinder clear();
 
 	/**
@@ -164,9 +164,19 @@ public interface MaterialFinder {
 	 */
 	MaterialFinder lines(boolean lines);
 
-	MaterialFinder shader(@Nullable ResourceLocation vertexSourceId, @Nullable ResourceLocation fragmentSourceId);
+	MaterialFinder shaderIndex(int shaderIndex);
 
-	MaterialFinder shader(@Nullable ResourceLocation vertexSourceId, @Nullable ResourceLocation fragmentSourceId, @Nullable ResourceLocation depthVertexSourceId, @Nullable ResourceLocation depthFragmentSourceId);
+	default MaterialFinder shader(MaterialShader shader) {
+		return shaderIndex(shader.index());
+	}
+
+	default MaterialFinder shader(@Nullable ResourceLocation vertexSourceId, @Nullable ResourceLocation fragmentSourceId) {
+		return shaderIndex(MaterialShader.getOrCreate(vertexSourceId, fragmentSourceId).index());
+	}
+
+	default MaterialFinder shader(@Nullable ResourceLocation vertexSourceId, @Nullable ResourceLocation fragmentSourceId, @Nullable ResourceLocation depthVertexSourceId, @Nullable ResourceLocation depthFragmentSourceId) {
+		return shaderIndex(MaterialShader.getOrCreate(vertexSourceId, fragmentSourceId, depthVertexSourceId, depthFragmentSourceId).index());
+	}
 
 	/**
 	 * For transparent materials, enables sorting of quads by

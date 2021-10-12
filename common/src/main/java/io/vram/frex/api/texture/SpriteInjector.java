@@ -24,6 +24,7 @@ import java.util.function.Consumer;
 
 import net.minecraft.resources.ResourceLocation;
 
+// WIP: implement or remove
 @FunctionalInterface
 public interface SpriteInjector {
 	void inject(ResourceLocation spriteId, boolean includeColor);

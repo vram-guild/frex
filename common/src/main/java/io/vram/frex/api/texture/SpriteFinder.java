@@ -23,7 +23,7 @@ package io.vram.frex.api.texture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
-import io.vram.frex.api.mesh.QuadEditor;
+import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.mesh.QuadView;
 import io.vram.frex.impl.texture.SpriteFinderHolder;
 
@@ -65,7 +65,7 @@ public interface SpriteFinder {
 	 * Alternative to {@link #find(QuadView)} when vertex centroid is already
 	 * known or unsuitable.  Expects normalized (0-1) coordinates on the atlas texture,
 	 * which should already be the case for u,v values in vanilla baked quads and in
-	 * {@link QuadView} after calling {@link QuadEditor#spriteBake(int, TextureAtlasSprite, int)}.
+	 * {@link QuadView} after calling {@link QuadEmitter#spriteBake(int, TextureAtlasSprite, int)}.
 	 *
 	 * <p>Coordinates must be in the sprite interior for reliable results. Generally will
 	 * be easier to use {@link #find(QuadView, int)} unless you know the vertex

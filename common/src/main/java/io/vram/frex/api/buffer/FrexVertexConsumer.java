@@ -18,7 +18,7 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.api.mesh;
+package io.vram.frex.api.buffer;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
 
@@ -29,15 +29,15 @@ import com.mojang.math.Matrix4f;
 import io.vram.frex.api.material.RenderMaterial;
 
 @Experimental
-public interface FrexVertexConsumer extends VertexConsumer {
+public interface FrexVertexConsumer extends VertexConsumer, QuadSink {
+	FrexVertexConsumer defaultMaterial(RenderMaterial material);
+
 	/**
 	 * Sets state to be included with normals and material if they are included.  Call once
 	 * whenever material changes, including default state or revert
 	 * to default state of the render state.
 	 */
 	FrexVertexConsumer material(RenderMaterial material);
-
-	FrexVertexConsumer defaultMaterial(RenderMaterial material);
 
 	FrexVertexConsumer vertex(float x, float y, float z);
 
@@ -72,4 +72,9 @@ public interface FrexVertexConsumer extends VertexConsumer {
 
 	@Override
 	FrexVertexConsumer normal(float x, float y, float z);
+
+	@Override
+	default FrexVertexConsumer asVertexConsumer() {
+		return this;
+	}
 }

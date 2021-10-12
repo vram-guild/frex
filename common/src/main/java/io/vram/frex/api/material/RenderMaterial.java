@@ -30,7 +30,11 @@ public interface RenderMaterial {
 
 	boolean blur();
 
-	MaterialCondition condition();
+	int conditionIndex();
+
+	default MaterialCondition condition() {
+		return MaterialCondition.fromIndex(conditionIndex());
+	}
 
 	boolean cull();
 
@@ -106,4 +110,6 @@ public interface RenderMaterial {
 	 * @return true if material should cast shadows
 	 */
 	boolean castShadows();
+
+	boolean enableGlint();
 }

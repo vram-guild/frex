@@ -54,6 +54,8 @@ public interface MaterialConstants {
 	 */
 	int PRESET_TRANSLUCENT = 5;
 
+	int PRESET_COUNT = 6;
+
 	//Parameters to {@link #cutout(int)}.
 
 	/** Disable cutout testing. */
@@ -71,6 +73,8 @@ public interface MaterialConstants {
 	/** Use vertex color alpha as cutout threshold. */
 	int CUTOUT_ALPHA = 4;
 
+	int CUTOUT_COUNT = 5;
+
 	/**
 	 * Parameters to {@link MaterialFinder#decal(int)}.
 	 */
@@ -79,6 +83,8 @@ public interface MaterialConstants {
 	int DECAL_POLYGON_OFFSET = 1;
 
 	int DECAL_VIEW_OFFSET = 2;
+
+	int DECAL_COUNT = 3;
 
 	/**
 	 * Parameters to {@link MaterialFinder#depthTest(int)}.
@@ -90,6 +96,8 @@ public interface MaterialConstants {
 	int DEPTH_TEST_EQUAL = 2;
 
 	int DEPTH_TEST_LEQUAL = 3;
+
+	int DEPTH_TEST_COUNT = 4;
 
 	/**
 	 * Parameters to {@link #target(int)}.
@@ -107,6 +115,8 @@ public interface MaterialConstants {
 	int TARGET_CLOUDS = 5;
 
 	int TARGET_ENTITIES = 6;
+
+	int TARGET_COUNT = 7;
 
 	/**
 	 * Parameters to {@link MaterialFinder#transparency(int)}.
@@ -131,6 +141,8 @@ public interface MaterialConstants {
 	/** Used for terrain particles. */
 	int TRANSPARENCY_DEFAULT = 6;
 
+	int TRANSPARENCY_COUNT = 7;
+
 	/**
 	 * Parameters to {@link MaterialFinder#writeMask(int)}.
 	 */
@@ -139,4 +151,10 @@ public interface MaterialConstants {
 	int WRITE_MASK_DEPTH = 1;
 
 	int WRITE_MASK_COLOR_DEPTH = 2;
+
+	int WRITE_MASK_COUNT = 3;
+
+	int MAX_TEXTURE_STATES = 0x4000;
+	int MAX_SHADERS = 0x1000;
+	int MAX_CONDITIONS = 0x100;
 }

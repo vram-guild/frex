@@ -20,12 +20,67 @@
 
 package io.vram.frex.api.model;
 
+import java.util.Random;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
+import io.vram.frex.api.buffer.QuadSink;
+import io.vram.frex.api.model.InputContext.Type;
+import io.vram.frex.api.model.util.FaceUtil;
+import io.vram.frex.api.world.BlockEntityRenderData;
+
 @FunctionalInterface
-public interface BlockModel {
+public interface BlockModel extends DynamicModel {
 	// WIP: find way to expose biome info
-	void renderAsBlock(BlockAndTintGetter blockView, BlockState state, BlockPos pos, ModelRenderContext context);
+	void renderAsBlock(BlockInputContext input, QuadSink output);
+
+	@Override
+	default void renderDynamic(InputContext input, QuadSink output) {
+		if (input.type() == Type.BLOCK) {
+			renderAsBlock((BlockInputContext) input, output);
+		}
+	}
+
+	public interface BlockInputContext extends BakedInputContext {
+		@Override
+		default Type type() {
+			return Type.BLOCK;
+		}
+
+		BlockAndTintGetter blockView();
+
+		@Override
+		BlockState blockState();
+
+		@Override
+		BlockPos pos();
+
+		@Override
+		Random random();
+
+		@Override
+		boolean cullTest(int faceId);
+
+		@Override
+		default boolean cullTest(Direction face) {
+			return cullTest(FaceUtil.toFaceIndex(face));
+		}
+
+		/**
+		 * In terrain rendering this will hold the result of functions
+		 * registered via {@link BlockEntityRenderData#registerProvider(net.minecraft.world.level.block.entity.BlockEntityType, java.util.function.Function)}
+		 * for the block entity at the given position.
+		 *
+		 * <p>If outside of terrain rendering, or if no function is registered,
+		 * or if no BlockEntity is present at the given position, will return null.
+		 * @return Result of a registered block entity render data function, or null if none
+		 * registered or not applicable.
+		 */
+		@Nullable Object blockEntityRenderData(BlockPos pos);
+	}
 }

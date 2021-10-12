@@ -22,7 +22,33 @@ package io.vram.frex.api.model;
 
 import net.minecraft.world.entity.Entity;
 
+import io.vram.frex.api.buffer.QuadSink;
+import io.vram.frex.api.model.InputContext.Type;
+
 @FunctionalInterface
-public interface EntityModel {
-	<T extends Entity> void renderAsEntity(T entity, float yawDelta, float tickDelta, int packedLight, ModelRenderContext context);
+public interface EntityModel<T extends Entity> extends DynamicModel {
+	void renderAsEntity(EntityInputContext<T> input, QuadSink output);
+
+	@Override
+	@SuppressWarnings("unchecked")
+	default void renderDynamic(InputContext input, QuadSink output) {
+		if (input.type() == Type.ENTITY) {
+			renderAsEntity((EntityInputContext<T>) input, output);
+		}
+	}
+
+	public interface EntityInputContext<E extends Entity> extends InputContext {
+		@Override
+		default Type type() {
+			return Type.ENTITY;
+		}
+
+		E entity();
+
+		float yawDelta();
+
+		float tickDelta();
+
+		int packedLight();
+	}
 }

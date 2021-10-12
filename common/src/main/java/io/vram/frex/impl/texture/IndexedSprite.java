@@ -18,15 +18,13 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.api.model;
+package io.vram.frex.impl.texture;
 
-import io.vram.frex.api.mesh.QuadEditor;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
-@FunctionalInterface
-public interface QuadTransform {
-	/**
-	 * Return false to filter out quads from rendering. When more than one transform
-	 * is in effect, returning false means unapplied transforms will not receive the quad.
-	 */
-	boolean transform(QuadEditor quad);
+@Internal
+public interface IndexedSprite {
+	int frex_index();
+
+	void frex_index(int index);
 }

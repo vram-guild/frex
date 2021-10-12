@@ -20,10 +20,36 @@
 
 package io.vram.frex.api.model;
 
+import java.util.Random;
+
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.item.ItemStack;
 
+import io.vram.frex.api.buffer.QuadSink;
+import io.vram.frex.api.model.InputContext.Type;
+
 @FunctionalInterface
-public interface ItemModel {
-	void renderAsItem(ItemStack itemStack, ItemTransforms.TransformType mode, ModelRenderContext context);
+public interface ItemModel extends DynamicModel {
+	void renderAsItem(ItemInputContext input, QuadSink output);
+
+	@Override
+	default void renderDynamic(InputContext input, QuadSink output) {
+		if (input.type() == Type.ITEM) {
+			renderAsItem((ItemInputContext) input, output);
+		}
+	}
+
+	public interface ItemInputContext extends BakedInputContext {
+		@Override
+		default Type type() {
+			return Type.ITEM;
+		}
+
+		ItemStack itemStack();
+
+		ItemTransforms.TransformType mode();
+
+		@Override
+		Random random();
+	}
 }

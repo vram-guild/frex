@@ -24,7 +24,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HalfTransparentBlock;
@@ -36,9 +35,9 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import io.vram.frex.api.buffer.QuadSink;
+import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.material.RenderMaterial;
-import io.vram.frex.api.mesh.QuadEditor;
-import io.vram.frex.api.model.ModelRenderContext;
 
 /**
  * Implementation of {@link FluidModel}  with vanilla-like geometry.
@@ -59,11 +58,13 @@ public class SimpleFluidModel implements FluidModel {
 
 	// WIP: handle degenerate quads by emitting two triangles so that face normals are correct
 	@Override
-	public void renderAsBlock(BlockAndTintGetter world, BlockState state, BlockPos centerPos, ModelRenderContext context) {
+	public void renderAsBlock(BlockInputContext input, QuadSink output) {
 		final var appearance = this.appearance;
-		final QuadEditor qe = context.quadEmitter();
-		final FluidState fluidState = state.getFluidState();
-		final BlockState blockState = world.getBlockState(centerPos);
+		final QuadEmitter qe = output.asQuadEmitter();
+		final BlockState blockState = input.blockState();
+		final FluidState fluidState = blockState.getFluidState();
+		final var world = input.blockView();
+		final var centerPos = input.pos();
 		final TextureAtlasSprite[] sprites = appearance.getFluidSprites(world, centerPos, fluidState);
 		final BlockPos.MutableBlockPos searchPos = SEARCH_POS.get();
 

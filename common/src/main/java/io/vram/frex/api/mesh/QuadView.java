@@ -30,7 +30,9 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 
+import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.model.util.PackedVector3f;
 
 public interface QuadView {
 	/** Count of integers in a conventional (un-modded) block or item vertex. */
@@ -40,11 +42,11 @@ public interface QuadView {
 	int VANILLA_QUAD_STRIDE = VANILLA_VERTEX_STRIDE * 4;
 
 	/**
-	 * Extracts all quad properties except material to the given {@link QuadEditor} instance.
+	 * Copies all quad properties, including material, to the given {@link QuadEmitter} instance.
 	 * Must be used before calling {link QuadEmitter#emit()} on the target instance.
 	 * Meant for re-texturing, analysis and static transformation use cases.
 	 */
-	void copyTo(QuadEditor target);
+	void copyTo(QuadEmitter target);
 
 	/**
 	 * Retrieves the quad color index serialized with the quad.
@@ -63,12 +65,12 @@ public interface QuadView {
 	 * If non-null, quad should not be rendered in-world if the
 	 * opposite face of a neighbor block occludes it.
 	 *
-	 * @see QuadEditor#cullFace(Direction)
+	 * @see QuadEmitter#cullFace(Direction)
 	 */
 	@Nullable Direction cullFace();
 
 	/**
-	 * See {@link QuadEditor#nominalFace(Direction)}.
+	 * See {@link QuadEmitter#nominalFace(Direction)}.
 	 */
 	Direction nominalFace();
 
@@ -80,10 +82,10 @@ public interface QuadView {
 	 * <p>Not typically needed by models. Exposed to enable standard lighting
 	 * utility functions for use by renderers.
 	 */
-	Vector3f faceNormal();
+	int packedFaceNormal();
 
 	/**
-	 * Retrieves the integer tag encoded with this quad via {@link QuadEditor#tag(int)}.
+	 * Retrieves the integer tag encoded with this quad via {@link QuadEmitter#tag(int)}.
 	 * Will return zero if no tag was set.  For use by models.
 	 */
 	int tag();
@@ -120,27 +122,24 @@ public interface QuadView {
 	 */
 	boolean hasNormal(int vertexIndex);
 
+	int packedNormal(int vertexIndex);
+
 	/**
 	 * Pass a non-null target to avoid allocation - will be returned with values.
 	 * Otherwise returns a new instance. Returns null if normal not present.
 	 */
 	@Nullable
-	Vector3f copyNormal(int vertexIndex, @Nullable Vector3f target);
+	default Vector3f copyNormal(int vertexIndex, @Nullable Vector3f target) {
+		if (hasNormal(vertexIndex)) {
+			if (target == null) {
+				target = new Vector3f();
+			}
 
-	/**
-	 * Will return {@link Float#NaN} if normal not present.
-	 */
-	float normalX(int vertexIndex);
-
-	/**
-	 * Will return {@link Float#NaN} if normal not present.
-	 */
-	float normalY(int vertexIndex);
-
-	/**
-	 * Will return {@link Float#NaN} if normal not present.
-	 */
-	float normalZ(int vertexIndex);
+			return PackedVector3f.unpackTo(this.packedNormal(vertexIndex), target);
+		} else {
+			return null;
+		}
+	}
 
 	/**
 	 * Minimum block brightness. Zero if not set.
@@ -176,7 +175,7 @@ public interface QuadView {
 	 * @param spriteIndex The sprite to be used for the quad.
 	 * Behavior for {@code spriteIndex > 0} is currently undefined.
 	 *
-	 * @param sprite  {@link QuadEditor} does not serialize sprites
+	 * @param sprite  {@link QuadEmitter} does not serialize sprites
 	 * so the sprite must be provided by the caller.
 	 *
 	 * @param isItem If true, will output vertex normals. Otherwise will output
@@ -241,25 +240,12 @@ public interface QuadView {
 	 */
 	boolean hasTangent(int vertexIndex);
 
+	int packedTangent(int vertexIndex);
+
 	/**
 	 * Pass a non-null target to avoid allocation - will be returned with values.
 	 * Otherwise returns a new instance. Returns null if tangent not present.
 	 */
 	@Nullable
 	Vector3f copyTangent(int vertexIndex, @Nullable Vector3f target);
-
-	/**
-	 * Will return {@link Float#NaN} if tangent not present.
-	 */
-	float tangentX(int vertexIndex);
-
-	/**
-	 * Will return {@link Float#NaN} if tangent not present.
-	 */
-	float tangentY(int vertexIndex);
-
-	/**
-	 * Will return {@link Float#NaN} if tangent not present.
-	 */
-	float tangentZ(int vertexIndex);
 }

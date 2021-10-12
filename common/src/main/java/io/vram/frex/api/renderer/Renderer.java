@@ -20,13 +20,10 @@
 
 package io.vram.frex.api.renderer;
 
-import java.util.function.BooleanSupplier;
-
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.resources.ResourceLocation;
 
-import io.vram.frex.api.material.MaterialCondition;
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.mesh.MeshBuilder;
@@ -74,9 +71,7 @@ public interface Renderer {
 		return registerMaterial(id, material);
 	}
 
-	MaterialCondition createCondition(BooleanSupplier supplier, boolean affectBlocks, boolean affectItems);
-
-	MaterialCondition conditionById(ResourceLocation id);
-
-	boolean registerCondition(ResourceLocation id, MaterialCondition pipeline);
+	default ConditionRegistry conditions() {
+		return ConditionRegistry.UNSUPPORTED;
+	}
 }

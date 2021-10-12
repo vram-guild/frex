@@ -18,7 +18,7 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.api.mesh;
+package io.vram.frex.api.buffer;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -28,9 +28,12 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 
-import io.vram.frex.api.material.RenderMaterial;
+import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 
-public interface QuadEditor extends QuadView {
+import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.mesh.QuadView;
+
+public interface QuadEmitter extends QuadView, QuadSink {
 	/**
 	 * Causes texture to appear with no rotation.
 	 * Pass in bakeFlags parameter to {@link #spriteBake(int, TextureAtlasSprite, int)}.
@@ -77,7 +80,7 @@ public interface QuadEditor extends QuadView {
 	int BAKE_FLIP_U = 8;
 
 	/**
-	 * Same as {@link QuadEditor#BAKE_FLIP_U} but for V coordinate.
+	 * Same as {@link QuadEmitter#BAKE_FLIP_U} but for V coordinate.
 	 */
 	int BAKE_FLIP_V = 16;
 
@@ -90,44 +93,50 @@ public interface QuadEditor extends QuadView {
 	 */
 	int BAKE_NORMALIZED = 32;
 
-	QuadEditor material(RenderMaterial material);
+	QuadEmitter material(RenderMaterial material);
+
+	QuadEmitter defaultMaterial(RenderMaterial material);
 
 	@Nullable
-	QuadEditor cullFace(@Nullable Direction face);
+	QuadEmitter cullFace(@Nullable Direction face);
 
 	@Nullable
-	QuadEditor nominalFace(Direction face);
+	QuadEmitter nominalFace(Direction face);
 
-	QuadEditor colorIndex(int colorIndex);
+	QuadEmitter colorIndex(int colorIndex);
 
-	QuadEditor fromVanilla(int[] quadData, int startIndex);
+	QuadEmitter fromVanilla(int[] quadData, int startIndex);
 
-	QuadEditor fromVanilla(BakedQuad quad, RenderMaterial material, Direction cullFace);
+	default QuadEmitter fromVanilla(BakedQuad quad, RenderMaterial material, Direction cullFace) {
+		return fromVanilla(quad, material, ModelHelper.toFaceIndex(cullFace));
+	}
 
-	QuadEditor tag(int tag);
+	QuadEmitter fromVanilla(BakedQuad quad, RenderMaterial material, int cullFaceId);
 
-	QuadEditor pos(int vertexIndex, float x, float y, float z);
+	QuadEmitter tag(int tag);
 
-	default QuadEditor pos(int vertexIndex, Vector3f vec) {
+	QuadEmitter pos(int vertexIndex, float x, float y, float z);
+
+	default QuadEmitter pos(int vertexIndex, Vector3f vec) {
 		return pos(vertexIndex, vec.x(), vec.y(), vec.z());
 	}
 
-	QuadEditor normal(int vertexIndex, float x, float y, float z);
+	QuadEmitter normal(int vertexIndex, float x, float y, float z);
 
-	default QuadEditor normal(int vertexIndex, Vector3f vec) {
+	default QuadEmitter normal(int vertexIndex, Vector3f vec) {
 		return normal(vertexIndex, vec.x(), vec.y(), vec.z());
 	}
 
-	default QuadEditor tangent(int vertexIndex, Vector3f vec) {
+	default QuadEmitter tangent(int vertexIndex, Vector3f vec) {
 		tangent(vertexIndex, vec.x(), vec.y(), vec.z());
 		return this;
 	}
 
-	QuadEditor tangent(int vertexIndex, float x, float y, float z);
+	QuadEmitter tangent(int vertexIndex, float x, float y, float z);
 
-	QuadEditor lightmap(int vertexIndex, int lightmap);
+	QuadEmitter lightmap(int vertexIndex, int lightmap);
 
-	default QuadEditor lightmap(int b0, int b1, int b2, int b3) {
+	default QuadEmitter lightmap(int b0, int b1, int b2, int b3) {
 		lightmap(0, b0);
 		lightmap(1, b1);
 		lightmap(2, b2);
@@ -138,12 +147,12 @@ public interface QuadEditor extends QuadView {
 	/**
 	 * Set color for given vertex.
 	 */
-	QuadEditor vertexColor(int vertexIndex, int color);
+	QuadEmitter vertexColor(int vertexIndex, int color);
 
 	/**
 	 * Convenience: set color for all vertices at once.
 	 */
-	default QuadEditor vertexColor(int c0, int c1, int c2, int c3) {
+	default QuadEmitter vertexColor(int c0, int c1, int c2, int c3) {
 		vertexColor(0, c0);
 		vertexColor(1, c1);
 		vertexColor(2, c2);
@@ -156,9 +165,9 @@ public interface QuadEditor extends QuadView {
 	 * For sprite atlas textures, the coordinates must be
 	 * relative to the atlas texture, not relative to the sprite.
 	 */
-	QuadEditor uv(int vertexIndex, float u, float v);
+	QuadEmitter uv(int vertexIndex, float u, float v);
 
-	default QuadEditor uvUnitSquare() {
+	default QuadEmitter uvUnitSquare() {
 		uv(0, 0, 0);
 		uv(1, 0, 1);
 		uv(2, 1, 1);
@@ -179,7 +188,7 @@ public interface QuadEditor extends QuadView {
 	 * If this condition is unmet, or if the sprite is null, will operate
 	 * as if {@link #uv(int, float, float)} had been called for all four vertices.
 	 */
-	QuadEditor uvSprite(@Nullable TextureAtlasSprite sprite, float u0, float v0, float u1, float v1, float u2, float v2, float u3, float v3);
+	QuadEmitter uvSprite(@Nullable TextureAtlasSprite sprite, float u0, float v0, float u1, float v1, float u2, float v2, float u3, float v3);
 
 	/**
 	 * Assigns sprite atlas u,v coordinates to this quad for the given sprite.
@@ -187,7 +196,7 @@ public interface QuadEditor extends QuadView {
 	 * by passing additive combinations of the BAKE_ flags defined in this interface.
 	 * Behavior for {@code spriteIndex > 0} is currently undefined.
 	 */
-	QuadEditor spriteBake(TextureAtlasSprite sprite, int bakeFlags);
+	QuadEmitter spriteBake(TextureAtlasSprite sprite, int bakeFlags);
 
 	/**
 	 * Tolerance for determining if the depth parameter to {@link #square(Direction, float, float, float, float, float)}
@@ -205,7 +214,7 @@ public interface QuadEditor extends QuadView {
 	 *
 	 * <p>All coordinates should be normalized (0-1).
 	 */
-	default QuadEditor square(Direction nominalFace, float left, float bottom, float right, float top, float depth) {
+	default QuadEmitter square(Direction nominalFace, float left, float bottom, float right, float top, float depth) {
 		if (Math.abs(depth) < CULL_FACE_EPSILON) {
 			cullFace(nominalFace);
 			depth = 0; // avoid any inconsistency for face quads
@@ -255,5 +264,10 @@ public interface QuadEditor extends QuadView {
 		return this;
 	}
 
-	QuadEditor emit();
+	QuadEmitter emit();
+
+	@Override
+	default QuadEmitter asQuadEmitter() {
+		return this;
+	}
 }

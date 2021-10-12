@@ -22,6 +22,8 @@ package io.vram.frex.api.mesh;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
 
+import io.vram.frex.api.buffer.QuadEmitter;
+
 /**
  * Similar in purpose to {@link BufferBuilder} but simpler
  * and not tied to NIO or any other specific implementation,
@@ -32,11 +34,11 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
  */
 public interface MeshBuilder {
 	/**
-	 * Returns the {@link QuadEditor} used to append quad to this mesh.
+	 * Returns the {@link QuadEmitter} used to append quad to this mesh.
 	 * Calling this method a second time invalidates any prior result.
 	 * Do not retain references outside the context of building the mesh.
 	 */
-	QuadEditor getEmitter();
+	QuadEmitter getEmitter();
 
 	/**
 	 * Returns a new {@link Mesh} instance containing all

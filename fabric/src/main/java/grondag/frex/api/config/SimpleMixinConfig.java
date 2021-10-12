@@ -18,26 +18,28 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.fabric.mixin.events;
+package grondag.frex.api.config;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
-import net.fabricmc.loader.api.FabricLoader;
+public class SimpleMixinConfig implements IMixinConfigPlugin {
+	private final int packagePrefixLen;
+	protected final Logger log = LogManager.getLogger("FREX");
+	private final ObjectOpenHashSet<String> inactiveSet = new ObjectOpenHashSet<>();
 
-public class FrexWorldRenderEventsMixinPlugin implements IMixinConfigPlugin {
-	private final int packagePrefixLen = "io.vram.frex.fabric.mixin.events.".length();
-
-	@SuppressWarnings("unused")
-	private final Logger log = LogManager.getLogger("FREX");
-
-	private final boolean isFabricPresent = FabricLoader.getInstance().isModLoaded("fabric-rendering-v1");
+	public SimpleMixinConfig(String packagePrefice, Consumer<Consumer<String>> inactiveFunction) {
+		packagePrefixLen = packagePrefice.length();
+		inactiveFunction.accept(inactiveSet::add);
+	}
 
 	@Override
 	public void onLoad(String mixinPackage) {
@@ -51,15 +53,7 @@ public class FrexWorldRenderEventsMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-		final var className = mixinClassName.substring(packagePrefixLen);
-
-		if (className.equals("MixinLevelRendererEvents")) {
-			// our event handlers only get loaded when Fabric's are not
-			return !isFabricPresent;
-		} else {
-			// all the others are for fabric compat
-			return isFabricPresent;
-		}
+		return !inactiveSet.contains(mixinClassName.substring(packagePrefixLen));
 	}
 
 	@Override

@@ -3,13 +3,21 @@
 	"minVersion": "0.8",
 	"package": "io.vram.frex.mixin",
 	"compatibilityLevel": "JAVA_16",
+	"plugin": "io.vram.frex.mixin.FrexMixinPlugin",
 	"mixins": [
+		"MixinBakedModel",
 		"MixinBlockColors",
 		"MixinBlockEntityType",
 		"MixinChunkRebuildTask",
 		"MixinItemColors",
 		"MixinLevelRenderer",
-		"MixinRenderChunkRegion"
+		"MixinMultipartBakedModel",
+		"MixinRenderChunkRegion",
+		"MixinWeightedBakedModel",
+		"MixinTextureAtlasPreparation",
+		"MixinTextureAtlasSprite",
+		"MixinTextureAltasSpriteIndex",
+		"MixinTextureAltasSpriteLoader"
 	],
 	"injectors": {
 		"defaultRequire": 1

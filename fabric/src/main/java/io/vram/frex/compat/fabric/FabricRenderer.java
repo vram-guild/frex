@@ -73,16 +73,16 @@ public class FabricRenderer implements grondag.frex.api.Renderer {
 
 	@Override
 	public MaterialCondition createCondition(BooleanSupplier supplier, boolean affectBlocks, boolean affectItems) {
-		return wrapped.createCondition(supplier, affectBlocks, affectItems);
+		return wrapped.conditions().createCondition(supplier, affectBlocks, affectItems);
 	}
 
 	@Override
 	public MaterialCondition conditionById(ResourceLocation id) {
-		return wrapped.conditionById(id);
+		return wrapped.conditions().conditionById(id);
 	}
 
 	@Override
 	public boolean registerCondition(ResourceLocation id, MaterialCondition pipeline) {
-		return wrapped.registerCondition(id, pipeline);
+		return wrapped.conditions().registerCondition(id, pipeline);
 	}
 }

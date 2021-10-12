@@ -23,11 +23,11 @@ And add FREX to your dependencies
 
 ```gradle
 dependencies {
-	modCompile "grondag:frex:0.7.+"
-	include "grondag:frex:0.7.+"
+	modCompile "io.vram:frex-fabric-mc117:6.0.+"
+	include "io.vram:frex-fabric-mc117:6.0.+"
 }
 ```
 
-The ```include``` is not necessary if you are depending on another mod that also includes FREX.  Currently, [Canvas](https://github.com/grondag/canvas) and [JMX](https://github.com/grondag/json-model-extensions) both include FREX.
+The ```include``` is not necessary if you are depending on another mod that also includes FREX.  Currently, [Canvas](https://github.com/vram-guild/canvas) and [JMX](https://github.com/grondag/json-model-extensions) both include FREX.
 
 Note that version is subject to change - look at the repo to find latest.

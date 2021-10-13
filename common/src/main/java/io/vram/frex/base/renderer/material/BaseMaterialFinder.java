@@ -20,10 +20,20 @@
 
 package io.vram.frex.base.renderer.material;
 
+import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.RenderMaterial;
 
 public abstract class BaseMaterialFinder extends BaseMaterialView implements MaterialFinder {
+	protected final long defaultBits0;
+	protected final long defaultBits1;
+
+	public BaseMaterialFinder(long defaultBits0, long defaultBits1) {
+		super(defaultBits0, defaultBits1, MaterialConstants.DEFAULT_LABEL);
+		this.defaultBits0 = defaultBits0;
+		this.defaultBits1 = defaultBits1;
+	}
+
 	@Override
 	public BaseMaterialFinder blur(boolean blur) {
 		bits0 = BLUR.setValue(blur, bits0);
@@ -38,9 +48,9 @@ public abstract class BaseMaterialFinder extends BaseMaterialView implements Mat
 
 	@Override
 	public BaseMaterialFinder clear() {
-		bits0 = DEFAULT_BITS_0;
-		bits1 = DEFAULT_BITS_1;
-		label = DEFAULT_LABEL;
+		bits0 = defaultBits0;
+		bits1 = defaultBits1;
+		label = MaterialConstants.DEFAULT_LABEL;
 		return this;
 	}
 

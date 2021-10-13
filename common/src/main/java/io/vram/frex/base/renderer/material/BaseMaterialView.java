@@ -22,25 +22,14 @@ package io.vram.frex.base.renderer.material;
 
 import it.unimi.dsi.fastutil.HashCommon;
 
-import net.minecraft.client.renderer.texture.TextureAtlas;
-
 import io.vram.bitkit.BitPacker64;
-import io.vram.frex.api.material.MaterialCondition;
 import io.vram.frex.api.material.MaterialConstants;
-import io.vram.frex.api.material.MaterialShader;
 import io.vram.frex.api.material.MaterialView;
-import io.vram.frex.api.texture.MaterialTexture;
 
 public abstract class BaseMaterialView implements MaterialView {
 	protected long bits0;
 	protected long bits1;
 	protected String label;
-
-	public BaseMaterialView() {
-		bits0 = DEFAULT_BITS_0;
-		bits1 = DEFAULT_BITS_1;
-		label = DEFAULT_LABEL;
-	}
 
 	public BaseMaterialView(long bits0, long bits1, String label) {
 		this.bits0 = bits0;
@@ -209,60 +198,33 @@ public abstract class BaseMaterialView implements MaterialView {
 
 	protected static final BitPacker64<Void> PACKER_0 = new BitPacker64<> (null, null);
 
-	protected static final BitPacker64<Void>.IntElement TARGET = PACKER_0.createIntElement(MaterialConstants.TARGET_COUNT);
-	protected static final BitPacker64<Void>.IntElement TRANSPARENCY = PACKER_0.createIntElement(MaterialConstants.TRANSPARENCY_COUNT);
-	protected static final BitPacker64<Void>.IntElement DEPTH_TEST = PACKER_0.createIntElement(MaterialConstants.DEPTH_TEST_COUNT);
-	protected static final BitPacker64<Void>.IntElement WRITE_MASK = PACKER_0.createIntElement(MaterialConstants.WRITE_MASK_COUNT);
-	protected static final BitPacker64<Void>.IntElement DECAL = PACKER_0.createIntElement(MaterialConstants.DECAL_COUNT);
-	protected static final BitPacker64<Void>.IntElement PRESET = PACKER_0.createIntElement(MaterialConstants.PRESET_COUNT);
-	protected static final BitPacker64<Void>.IntElement CUTOUT = PACKER_0.createIntElement(MaterialConstants.CUTOUT_COUNT);
+	public static final BitPacker64<Void>.IntElement TARGET = PACKER_0.createIntElement(MaterialConstants.TARGET_COUNT);
+	public static final BitPacker64<Void>.IntElement TRANSPARENCY = PACKER_0.createIntElement(MaterialConstants.TRANSPARENCY_COUNT);
+	public static final BitPacker64<Void>.IntElement DEPTH_TEST = PACKER_0.createIntElement(MaterialConstants.DEPTH_TEST_COUNT);
+	public static final BitPacker64<Void>.IntElement WRITE_MASK = PACKER_0.createIntElement(MaterialConstants.WRITE_MASK_COUNT);
+	public static final BitPacker64<Void>.IntElement DECAL = PACKER_0.createIntElement(MaterialConstants.DECAL_COUNT);
+	public static final BitPacker64<Void>.IntElement PRESET = PACKER_0.createIntElement(MaterialConstants.PRESET_COUNT);
+	public static final BitPacker64<Void>.IntElement CUTOUT = PACKER_0.createIntElement(MaterialConstants.CUTOUT_COUNT);
 
-	protected static final BitPacker64<Void>.BooleanElement BLUR = PACKER_0.createBooleanElement();
-	protected static final BitPacker64<Void>.BooleanElement CULL = PACKER_0.createBooleanElement();
-	protected static final BitPacker64<Void>.BooleanElement LINES = PACKER_0.createBooleanElement();
-	protected static final BitPacker64<Void>.BooleanElement SORTED = PACKER_0.createBooleanElement();
-	protected static final BitPacker64<Void>.BooleanElement DISABLE_COLOR_INDEX = PACKER_0.createBooleanElement();
-	protected static final BitPacker64<Void>.BooleanElement DISCARDS_TEXTURE = PACKER_0.createBooleanElement();
-	protected static final BitPacker64<Void>.BooleanElement EMISSIVE = PACKER_0.createBooleanElement();
-	protected static final BitPacker64<Void>.BooleanElement DISABLE_DIFFUSE = PACKER_0.createBooleanElement();
-	protected static final BitPacker64<Void>.BooleanElement DISABLE_AO = PACKER_0.createBooleanElement();
-	protected static final BitPacker64<Void>.BooleanElement UNMIPPED = PACKER_0.createBooleanElement();
-	protected static final BitPacker64<Void>.BooleanElement HURT_OVERLAY = PACKER_0.createBooleanElement();
-	protected static final BitPacker64<Void>.BooleanElement FLASH_OVERLAY = PACKER_0.createBooleanElement();
-	protected static final BitPacker64<Void>.BooleanElement FOG = PACKER_0.createBooleanElement();
-	protected static final BitPacker64<Void>.BooleanElement DISABLE_SHADOWS = PACKER_0.createBooleanElement();
-	protected static final BitPacker64<Void>.BooleanElement ENABLE_GLINT = PACKER_0.createBooleanElement();
+	public static final BitPacker64<Void>.BooleanElement BLUR = PACKER_0.createBooleanElement();
+	public static final BitPacker64<Void>.BooleanElement CULL = PACKER_0.createBooleanElement();
+	public static final BitPacker64<Void>.BooleanElement LINES = PACKER_0.createBooleanElement();
+	public static final BitPacker64<Void>.BooleanElement SORTED = PACKER_0.createBooleanElement();
+	public static final BitPacker64<Void>.BooleanElement DISABLE_COLOR_INDEX = PACKER_0.createBooleanElement();
+	public static final BitPacker64<Void>.BooleanElement DISCARDS_TEXTURE = PACKER_0.createBooleanElement();
+	public static final BitPacker64<Void>.BooleanElement EMISSIVE = PACKER_0.createBooleanElement();
+	public static final BitPacker64<Void>.BooleanElement DISABLE_DIFFUSE = PACKER_0.createBooleanElement();
+	public static final BitPacker64<Void>.BooleanElement DISABLE_AO = PACKER_0.createBooleanElement();
+	public static final BitPacker64<Void>.BooleanElement UNMIPPED = PACKER_0.createBooleanElement();
+	public static final BitPacker64<Void>.BooleanElement HURT_OVERLAY = PACKER_0.createBooleanElement();
+	public static final BitPacker64<Void>.BooleanElement FLASH_OVERLAY = PACKER_0.createBooleanElement();
+	public static final BitPacker64<Void>.BooleanElement FOG = PACKER_0.createBooleanElement();
+	public static final BitPacker64<Void>.BooleanElement DISABLE_SHADOWS = PACKER_0.createBooleanElement();
+	public static final BitPacker64<Void>.BooleanElement ENABLE_GLINT = PACKER_0.createBooleanElement();
 
 	protected static final BitPacker64<Void> PACKER_1 = new BitPacker64<> (null, null);
 
-	protected static final BitPacker64<Void>.IntElement TEXTURE = PACKER_1.createIntElement(MaterialConstants.MAX_TEXTURE_STATES);
-	protected static final BitPacker64<Void>.IntElement SHADER = PACKER_1.createIntElement(MaterialConstants.MAX_SHADERS);
-	protected static final BitPacker64<Void>.IntElement CONDITION = PACKER_1.createIntElement(MaterialConstants.MAX_CONDITIONS);
-
-	protected static final String DEFAULT_LABEL = "<unnamed material>";
-
-	protected static final long DEFAULT_BITS_0;
-	protected static final long DEFAULT_BITS_1;
-
-	static {
-		long defaultBits0 = 0;
-
-		defaultBits0 = TARGET.setValue(MaterialConstants.TARGET_MAIN, defaultBits0);
-		defaultBits0 = TARGET.setValue(MaterialConstants.TRANSPARENCY_NONE, defaultBits0);
-		defaultBits0 = DEPTH_TEST.setValue(MaterialConstants.DEPTH_TEST_LEQUAL, defaultBits0);
-		defaultBits0 = WRITE_MASK.setValue(MaterialConstants.WRITE_MASK_COLOR_DEPTH, defaultBits0);
-		defaultBits0 = DECAL.setValue(MaterialConstants.DECAL_NONE, defaultBits0);
-		defaultBits0 = PRESET.setValue(MaterialConstants.PRESET_DEFAULT, defaultBits0);
-		defaultBits0 = CUTOUT.setValue(MaterialConstants.CUTOUT_NONE, defaultBits0);
-		defaultBits0 = CULL.setValue(true, defaultBits0);
-		defaultBits0 = FOG.setValue(true, defaultBits0);
-		DEFAULT_BITS_0 = defaultBits0;
-
-		long defaultBits1 = 0;
-		defaultBits1 = CONDITION.setValue(MaterialCondition.alwaysTrue().index(), defaultBits1);
-		defaultBits1 = TEXTURE.setValue(MaterialTexture.fromId(TextureAtlas.LOCATION_BLOCKS).index(), defaultBits1);
-		defaultBits1 = SHADER.setValue(MaterialShader.defaultShader().index(), defaultBits1);
-
-		DEFAULT_BITS_1 = defaultBits1;
-	}
+	public static final BitPacker64<Void>.IntElement TEXTURE = PACKER_1.createIntElement(MaterialConstants.MAX_TEXTURE_STATES);
+	public static final BitPacker64<Void>.IntElement SHADER = PACKER_1.createIntElement(MaterialConstants.MAX_SHADERS);
+	public static final BitPacker64<Void>.IntElement CONDITION = PACKER_1.createIntElement(MaterialConstants.MAX_CONDITIONS);
 }

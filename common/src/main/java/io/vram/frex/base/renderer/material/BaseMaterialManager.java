@@ -27,21 +27,25 @@ import java.util.function.Function;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
 
 import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.renderer.ConditionManager;
 import io.vram.frex.api.renderer.MaterialManager;
+import io.vram.frex.api.renderer.MaterialShaderManager;
+import io.vram.frex.api.renderer.MaterialTextureManager;
 
 public abstract class BaseMaterialManager<M extends BaseMaterialView & RenderMaterial> implements MaterialManager {
 	protected final AtomicInteger nextIndex = new AtomicInteger(2);
 	protected final Object[] values = new Object[MaterialConstants.MAX_MATERIAL_COUNT];
 	protected final ConcurrentHashMap<BaseMaterialView, M> map = new ConcurrentHashMap<>(4096, 0.25f);
 	protected final Object2ObjectOpenHashMap<ResourceLocation, M> registryMap = new Object2ObjectOpenHashMap<>();
-
-	protected final M MISSING_MATERIAL = createMaterial((BaseMaterialView) new Finder().label(RenderMaterial.MISSING_MATERIAL_KEY.toString()), 0);
-	@SuppressWarnings("unchecked")
-	protected final M STANDARD_MATERIAL = (M) materialFinder().preset(MaterialConstants.PRESET_DEFAULT).label(RenderMaterial.STANDARD_MATERIAL_KEY.toString()).find();
+	protected final long defaultBits0;
+	protected final long defaultBits1;
+	protected final M MISSING_MATERIAL;
+	protected final M STANDARD_MATERIAL;
 
 	protected final Function<BaseMaterialView, M> mappingFunction = k -> {
 		final M result = createMaterial(k, nextIndex.getAndIncrement());
@@ -50,14 +54,24 @@ public abstract class BaseMaterialManager<M extends BaseMaterialView & RenderMat
 	};
 
 	protected class Finder extends BaseMaterialFinder {
+		public Finder(long defaultBits0, long defaultBits1) {
+			super(defaultBits0, defaultBits1);
+		}
+
 		@Override
 		public RenderMaterial find() {
 			return map.computeIfAbsent(this, mappingFunction);
 		}
 	}
 
-	public BaseMaterialManager() {
+	@SuppressWarnings("unchecked")
+	public BaseMaterialManager(ConditionManager conditions, MaterialTextureManager textures, MaterialShaderManager shaders) {
+		defaultBits0 = computeDefaultBits0(conditions, textures, shaders);
+		defaultBits1 = computeDefaultBits1(conditions, textures, shaders);
+		MISSING_MATERIAL = createMaterial((BaseMaterialView) materialFinder().label(RenderMaterial.MISSING_MATERIAL_KEY.toString()), 0);
 		values[0] = MISSING_MATERIAL;
+		STANDARD_MATERIAL = (M) materialFinder().preset(MaterialConstants.PRESET_DEFAULT).label(RenderMaterial.STANDARD_MATERIAL_KEY.toString()).find();
+
 		registerMaterial(RenderMaterial.MISSING_MATERIAL_KEY, MISSING_MATERIAL);
 		registerMaterial(RenderMaterial.STANDARD_MATERIAL_KEY, STANDARD_MATERIAL);
 	}
@@ -66,7 +80,7 @@ public abstract class BaseMaterialManager<M extends BaseMaterialView & RenderMat
 
 	@Override
 	public Finder materialFinder() {
-		return new Finder();
+		return new Finder(defaultBits0, defaultBits1);
 	}
 
 	@Override
@@ -107,5 +121,29 @@ public abstract class BaseMaterialManager<M extends BaseMaterialView & RenderMat
 	@Override
 	public M missingMaterial() {
 		return MISSING_MATERIAL;
+	}
+
+	protected long computeDefaultBits0(ConditionManager conditions, MaterialTextureManager textures, MaterialShaderManager shaders) {
+		long defaultBits0 = 0;
+
+		defaultBits0 = BaseMaterialView.TARGET.setValue(MaterialConstants.TARGET_MAIN, defaultBits0);
+		defaultBits0 = BaseMaterialView.TRANSPARENCY.setValue(MaterialConstants.TRANSPARENCY_NONE, defaultBits0);
+		defaultBits0 = BaseMaterialView.DEPTH_TEST.setValue(MaterialConstants.DEPTH_TEST_LEQUAL, defaultBits0);
+		defaultBits0 = BaseMaterialView.WRITE_MASK.setValue(MaterialConstants.WRITE_MASK_COLOR_DEPTH, defaultBits0);
+		defaultBits0 = BaseMaterialView.DECAL.setValue(MaterialConstants.DECAL_NONE, defaultBits0);
+		defaultBits0 = BaseMaterialView.PRESET.setValue(MaterialConstants.PRESET_DEFAULT, defaultBits0);
+		defaultBits0 = BaseMaterialView.CUTOUT.setValue(MaterialConstants.CUTOUT_NONE, defaultBits0);
+		defaultBits0 = BaseMaterialView.CULL.setValue(true, defaultBits0);
+		defaultBits0 = BaseMaterialView.FOG.setValue(true, defaultBits0);
+		return defaultBits0;
+	}
+
+	protected long computeDefaultBits1(ConditionManager conditions, MaterialTextureManager textures, MaterialShaderManager shaders) {
+		long defaultBits1 = 0;
+		defaultBits1 = BaseMaterialView.CONDITION.setValue(conditions.alwaysTrue().index(), defaultBits1);
+		defaultBits1 = BaseMaterialView.TEXTURE.setValue(textures.textureFromId(TextureAtlas.LOCATION_BLOCKS).index(), defaultBits1);
+		defaultBits1 = BaseMaterialView.SHADER.setValue(shaders.defaultShader().index(), defaultBits1);
+
+		return defaultBits1;
 	}
 }

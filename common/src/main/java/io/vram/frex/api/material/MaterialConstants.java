@@ -158,4 +158,6 @@ public interface MaterialConstants {
 	int MAX_SHADERS = 0x1000;
 	int MAX_CONDITIONS = 0x100;
 	int MAX_MATERIAL_COUNT = 0x8000;
+
+	String DEFAULT_LABEL = "<unnamed material>";
 }

@@ -48,6 +48,15 @@ public interface RenderMaterial extends MaterialView {
 		return Renderer.get().materials().registerOrUpdateMaterial(id, this);
 	}
 
+	default RenderMaterial withOverlay(int u, int v) {
+		final boolean hurtOverlay = v == 3;
+		final boolean flashOverlay = (v == 10 && u > 7);
+
+		return (hurtOverlay || flashOverlay)
+			? MaterialFinder.threadLocal().copyFrom(this).hurtOverlay(hurtOverlay).flashOverlay(flashOverlay).find()
+			: this;
+	}
+
 	static @Nullable RenderMaterial fromId(ResourceLocation id) {
 		return Renderer.get().materials().materialFromId(id);
 	}

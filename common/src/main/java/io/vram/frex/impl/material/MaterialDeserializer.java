@@ -62,14 +62,12 @@ import net.minecraft.util.GsonHelper;
 import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.RenderMaterial;
-import io.vram.frex.api.renderer.Renderer;
 
 @Internal
 public class MaterialDeserializer {
 	private MaterialDeserializer() { }
 
-	private static final Renderer RENDERER = Renderer.get();
-	private static final MaterialFinder FINDER = RENDERER.materialFinder();
+	private static final MaterialFinder FINDER = MaterialFinder.newInstance();
 
 	public static RenderMaterial deserialize(JsonObject json) {
 		final MaterialFinder finder = FINDER.clear();

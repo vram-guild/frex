@@ -37,16 +37,16 @@ public interface MaterialCondition {
 		return Renderer.get().conditions().indexOf(this);
 	}
 
+	default boolean registerWithId(ResourceLocation id) {
+		return Renderer.get().conditions().registerCondition(id, this);
+	}
+
 	static MaterialCondition create(BooleanSupplier supplier, boolean affectBlocks, boolean affectItems) {
 		return Renderer.get().conditions().createCondition(supplier, affectBlocks, affectItems);
 	}
 
 	static MaterialCondition fromIndex(int index) {
 		return Renderer.get().conditions().conditionFromIndex(index);
-	}
-
-	static boolean registerCondition(ResourceLocation id, MaterialCondition condition) {
-		return Renderer.get().conditions().registerCondition(id, condition);
 	}
 
 	static MaterialCondition fromId(ResourceLocation id) {

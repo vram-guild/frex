@@ -52,4 +52,8 @@ public interface MaterialShader {
 	static MaterialShader fromIndex(int shaderIndex) {
 		return Renderer.get().shaders().shaderFromIndex(shaderIndex);
 	}
+
+	static MaterialShader defaultShader() {
+		return Renderer.get().shaders().defaultShader();
+	}
 }

@@ -26,6 +26,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 
+import io.vram.frex.api.renderer.Renderer;
 import io.vram.frex.api.texture.MaterialTexture;
 import io.vram.frex.impl.material.MaterialFinderPool;
 
@@ -271,4 +272,8 @@ public interface MaterialFinder extends MaterialView {
 	}
 
 	MaterialFinder label(String name);
+
+	static MaterialFinder newInstance() {
+		return Renderer.get().materials().materialFinder();
+	}
 }

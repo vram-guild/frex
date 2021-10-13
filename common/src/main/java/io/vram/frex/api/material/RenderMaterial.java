@@ -20,11 +20,47 @@
 
 package io.vram.frex.api.material;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.resources.ResourceLocation;
+
+import io.vram.frex.api.renderer.Renderer;
 
 public interface RenderMaterial extends MaterialView {
 	ResourceLocation STANDARD_MATERIAL_KEY = new ResourceLocation("frex", "standard");
 	ResourceLocation MISSING_MATERIAL_KEY = new ResourceLocation("frex", "missing");
 
 	int index();
+
+	default boolean isDefault() {
+		return this == defaultMaterial();
+	}
+
+	default boolean isMissing() {
+		return this == missingMaterial();
+	}
+
+	default boolean registerWithId(ResourceLocation id) {
+		return Renderer.get().materials().registerMaterial(id, this);
+	}
+
+	default boolean registerOrUpdateWithId(ResourceLocation id) {
+		return Renderer.get().materials().registerOrUpdateMaterial(id, this);
+	}
+
+	static @Nullable RenderMaterial fromId(ResourceLocation id) {
+		return Renderer.get().materials().materialFromId(id);
+	}
+
+	static RenderMaterial fromIndex(int index) {
+		return Renderer.get().materials().materialFromIndex(index);
+	}
+
+	static RenderMaterial defaultMaterial() {
+		return Renderer.get().materials().defaultMaterial();
+	}
+
+	static RenderMaterial missingMaterial() {
+		return Renderer.get().materials().missingMaterial();
+	}
 }

@@ -40,7 +40,6 @@ import net.minecraft.util.GsonHelper;
 
 import io.vram.frex.api.config.FrexFeature;
 import io.vram.frex.api.material.RenderMaterial;
-import io.vram.frex.api.renderer.Renderer;
 import io.vram.frex.impl.FrexLog;
 
 @Internal
@@ -69,7 +68,7 @@ public final class MaterialLoaderImpl {
 		RenderMaterial result = loadMaterialCached(id);
 
 		if (result == null) {
-			result = Renderer.get().materialById(id);
+			result = RenderMaterial.fromId(id);
 		}
 
 		return result == null ? defaultValue : result;
@@ -78,22 +77,21 @@ public final class MaterialLoaderImpl {
 	public static RenderMaterial loadMaterial(ResourceLocation id) {
 		final RenderMaterial result = loadMaterialCached(id);
 		// Check for materials registered via code
-		return result == null ? Renderer.get().materialById(id) : result;
+		return result == null ? RenderMaterial.fromId(id) : result;
 	}
 
 	private static synchronized RenderMaterial loadMaterialCached(ResourceLocation idIn) {
-		final Renderer r = Renderer.get();
-
 		RenderMaterial result = LOAD_CACHE.get(idIn);
 
 		if (result == null) {
 			result = loadMaterialInner(idIn);
+
 			LOAD_CACHE.put(idIn, result);
 
 			if (FrexFeature.isAvailable(FrexFeature.UPDATE_MATERIAL_REGISTRATION)) {
-				r.registerOrUpdateMaterial(idIn, result);
+				result.registerOrUpdateWithId(idIn);
 			} else {
-				r.registerMaterial(idIn, result);
+				result.registerWithId(idIn);
 			}
 		}
 
@@ -103,7 +101,7 @@ public final class MaterialLoaderImpl {
 	private static RenderMaterial loadMaterialInner(ResourceLocation idIn) {
 		// Don't try to load the standard material
 		if (STANDARD_MATERIAL_IDS.contains(idIn)) {
-			return null;
+			return RenderMaterial.defaultMaterial();
 		}
 
 		final ResourceLocation id = new ResourceLocation(idIn.getNamespace(), "materials/" + idIn.getPath() + ".json");

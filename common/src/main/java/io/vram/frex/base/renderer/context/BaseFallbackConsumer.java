@@ -27,14 +27,13 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 
-import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.buffer.QuadEmitter;
+import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.model.BakedInputContext;
 import io.vram.frex.api.model.util.FaceUtil;
-import io.vram.frex.api.renderer.Renderer;
 
 /**
  * Consumer for vanilla baked models. Generally intended to give visual results matching a vanilla render,
@@ -62,7 +61,7 @@ public class BaseFallbackConsumer {
 	protected static final RenderMaterial AO_SHADED_MATERIAL;
 
 	static {
-		final MaterialFinder finder = Renderer.get().materialFinder();
+		final MaterialFinder finder = MaterialFinder.threadLocal();
 		FLAT_MATERIAL = finder.clear().preset(MaterialConstants.PRESET_DEFAULT).disableDiffuse(true).disableAo(true).find();
 		SHADED_MATERIAL = finder.clear().preset(MaterialConstants.PRESET_DEFAULT).disableAo(true).find();
 		AO_FLAT_MATERIAL = finder.clear().preset(MaterialConstants.PRESET_DEFAULT).disableDiffuse(true).find();

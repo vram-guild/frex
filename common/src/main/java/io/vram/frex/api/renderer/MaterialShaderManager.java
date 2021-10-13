@@ -32,4 +32,6 @@ public interface MaterialShaderManager {
 	MaterialShader getOrCreate(@Nullable ResourceLocation vertexSourceId, @Nullable ResourceLocation fragmentSourceId);
 
 	MaterialShader getOrCreate(@Nullable ResourceLocation vertexSourceId, @Nullable ResourceLocation fragmentSourceId, @Nullable ResourceLocation depthVertexSourceId, @Nullable ResourceLocation depthFragmentSourceId);
+
+	MaterialShader defaultShader();
 }

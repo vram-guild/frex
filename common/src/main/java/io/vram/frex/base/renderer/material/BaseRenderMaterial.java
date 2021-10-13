@@ -18,24 +18,22 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.api.renderer;
+package io.vram.frex.base.renderer.material;
 
-import java.util.function.BooleanSupplier;
+import io.vram.frex.api.material.RenderMaterial;
 
-import net.minecraft.resources.ResourceLocation;
+public class BaseRenderMaterial extends BaseMaterialView implements RenderMaterial {
+	protected final int index;
 
-import io.vram.frex.api.material.MaterialCondition;
+	public BaseRenderMaterial(int index, long bits0, long bits1, String label) {
+		this.index = index;
+		this.bits0 = bits0;
+		this.bits1 = bits1;
+		this.label = label;
+	}
 
-public interface ConditionManager {
-	MaterialCondition createCondition(BooleanSupplier supplier, boolean affectBlocks, boolean affectItems);
-
-	int indexOf(MaterialCondition condition);
-
-	MaterialCondition conditionFromIndex(int index);
-
-	boolean registerCondition(ResourceLocation id, MaterialCondition condition);
-
-	MaterialCondition conditionFromId(ResourceLocation id);
-
-	MaterialCondition alwaysTrue();
+	@Override
+	public int index() {
+		return index;
+	}
 }

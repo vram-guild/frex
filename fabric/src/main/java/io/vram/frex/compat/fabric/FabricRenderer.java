@@ -53,17 +53,21 @@ public class FabricRenderer implements grondag.frex.api.Renderer {
 
 	@Override
 	public MaterialFinder materialFinder() {
-		return FabricMaterialFinder.of(wrapped.materialFinder());
+		return FabricMaterialFinder.of(wrapped.materials().materialFinder());
 	}
 
 	@Override
 	public @Nullable RenderMaterial materialById(ResourceLocation id) {
-		return FabricMaterial.of(wrapped.materialById(id));
+		if (id != null && id.equals(RenderMaterial.MATERIAL_STANDARD)) {
+			return FabricMaterial.of(wrapped.materials().defaultMaterial());
+		} else {
+			return FabricMaterial.of(wrapped.materials().materialFromId(id));
+		}
 	}
 
 	@Override
 	public boolean registerMaterial(ResourceLocation id, net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial material) {
-		return wrapped.registerMaterial(id, ((FabricMaterial) material).wrapped);
+		return wrapped.materials().registerMaterial(id, ((FabricMaterial) material).wrapped);
 	}
 
 	@Override

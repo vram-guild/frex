@@ -32,7 +32,6 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.RenderMaterial;
-import io.vram.frex.api.renderer.Renderer;
 import io.vram.frex.api.rendertype.RenderTypeExclusion;
 import io.vram.frex.api.rendertype.VanillaShaderInfo;
 
@@ -88,7 +87,7 @@ public final class RenderTypeUtilImpl {
 
 	public static RenderMaterial toMaterial(RenderType renderType, boolean foilOverlay) {
 		if (RenderTypeExclusion.isExcluded(renderType)) {
-			return Renderer.get().materialById(RenderMaterial.MISSING_MATERIAL_KEY);
+			return RenderMaterial.fromId(RenderMaterial.MISSING_MATERIAL_KEY);
 		}
 
 		final MaterialFinder finder = MaterialFinder.threadLocal();

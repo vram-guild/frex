@@ -32,9 +32,35 @@ import io.vram.frex.api.material.MaterialView;
 import io.vram.frex.api.texture.MaterialTexture;
 
 public abstract class BaseMaterialView implements MaterialView {
-	protected long bits0 = DEFAULT_BITS_0;
-	protected long bits1 = DEFAULT_BITS_1;
-	protected String label = DEFAULT_LABEL;
+	protected long bits0;
+	protected long bits1;
+	protected String label;
+
+	public BaseMaterialView() {
+		bits0 = DEFAULT_BITS_0;
+		bits1 = DEFAULT_BITS_1;
+		label = DEFAULT_LABEL;
+	}
+
+	public BaseMaterialView(long bits0, long bits1, String label) {
+		this.bits0 = bits0;
+		this.bits1 = bits1;
+		this.label = label;
+	}
+
+	public BaseMaterialView(BaseMaterialView template) {
+		bits0 = template.bits0;
+		bits1 = template.bits1;
+		label = template.label;
+	}
+
+	public long bits0() {
+		return bits0;
+	}
+
+	public long bits1() {
+		return bits1;
+	}
 
 	@Override
 	public int hashCode() {

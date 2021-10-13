@@ -26,10 +26,13 @@ public class BaseRenderMaterial extends BaseMaterialView implements RenderMateri
 	protected final int index;
 
 	public BaseRenderMaterial(int index, long bits0, long bits1, String label) {
+		super(bits0, bits1, label);
 		this.index = index;
-		this.bits0 = bits0;
-		this.bits1 = bits1;
-		this.label = label;
+	}
+
+	public BaseRenderMaterial(int index, BaseMaterialView template) {
+		super(template);
+		this.index = index;
 	}
 
 	@Override

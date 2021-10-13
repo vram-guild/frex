@@ -53,6 +53,7 @@ public abstract class BaseMaterialFinder extends BaseMaterialView implements Mat
 	public BaseMaterialFinder copyFrom(BaseMaterialView template) {
 		bits0 = template.bits0;
 		bits1 = template.bits1;
+		label = template.label;
 		return this;
 	}
 

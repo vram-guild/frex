@@ -52,4 +52,6 @@ public interface ItemModel extends DynamicModel {
 		@Override
 		Random random();
 	}
+
+	// WIP: add get
 }

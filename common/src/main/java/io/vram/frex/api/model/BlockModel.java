@@ -83,4 +83,6 @@ public interface BlockModel extends DynamicModel {
 		 */
 		@Nullable Object blockEntityRenderData(BlockPos pos);
 	}
+
+	// WIP: add get
 }

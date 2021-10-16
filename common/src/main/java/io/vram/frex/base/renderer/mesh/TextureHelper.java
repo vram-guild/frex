@@ -57,7 +57,7 @@ public class TextureHelper {
 	 * Bakes textures in the provided vertex data, handling UV locking,
 	 * rotation, interpolation, etc. Textures must not be already baked.
 	 */
-	public static void bakeSprite(BaseQuadEmitter<?> quad, TextureAtlasSprite sprite, int bakeFlags) {
+	public static void bakeSprite(BaseQuadEmitter quad, TextureAtlasSprite sprite, int bakeFlags) {
 		quad.setSpriteNormalized();
 		quad.spriteId(((IndexedSprite) sprite).frex_index());
 
@@ -88,7 +88,7 @@ public class TextureHelper {
 		}
 	}
 
-	private static void applyModifier(BaseQuadEmitter<?> quad, VertexModifier modifier) {
+	private static void applyModifier(BaseQuadEmitter quad, VertexModifier modifier) {
 		for (int i = 0; i < 4; i++) {
 			modifier.apply(quad, i);
 		}
@@ -96,6 +96,6 @@ public class TextureHelper {
 
 	@FunctionalInterface
 	private interface VertexModifier {
-		void apply(BaseQuadEmitter<?> quad, int vertexIndex);
+		void apply(BaseQuadEmitter quad, int vertexIndex);
 	}
 }

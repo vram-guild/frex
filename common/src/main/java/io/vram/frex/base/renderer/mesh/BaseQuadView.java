@@ -61,7 +61,7 @@ import io.vram.frex.api.model.util.PackedVector3f;
  * Base class for all quads / quad makers. Handles the ugly bits
  * of maintaining and encoding the quad state.
  */
-public abstract class BaseQuadView<M extends RenderMaterial> implements QuadView {
+public class BaseQuadView implements QuadView {
 	protected int nominalFaceId = FaceUtil.UNASSIGNED_INDEX;
 	protected boolean isGeometryInvalid = true;
 	protected boolean isTangentInvalid = true;
@@ -99,7 +99,7 @@ public abstract class BaseQuadView<M extends RenderMaterial> implements QuadView
 		// force tangent compute
 		this.packedFaceTanget();
 
-		final BaseQuadEmitter<?> quad = (BaseQuadEmitter<?>) target;
+		final BaseQuadEmitter quad = (BaseQuadEmitter) target;
 
 		// copy everything except the material
 		System.arraycopy(data, baseIndex, quad.data, quad.baseIndex, MeshEncodingHelper.TOTAL_MESH_QUAD_STRIDE);
@@ -202,10 +202,9 @@ public abstract class BaseQuadView<M extends RenderMaterial> implements QuadView
 	}
 
 	// PERF: cache this
-	@SuppressWarnings("unchecked")
 	@Override
-	public final M material() {
-		return (M) RenderMaterial.fromIndex(data[baseIndex + HEADER_MATERIAL]);
+	public final RenderMaterial material() {
+		return RenderMaterial.fromIndex(data[baseIndex + HEADER_MATERIAL]);
 	}
 
 	@Override

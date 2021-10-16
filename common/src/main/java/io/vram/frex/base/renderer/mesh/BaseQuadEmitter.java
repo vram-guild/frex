@@ -61,7 +61,7 @@ import io.vram.frex.impl.texture.IndexedSprite;
  * Almost-concrete implementation of a mutable quad. The only missing part is {@link #emit()},
  * because that depends on where/how it is used. (Mesh encoding vs. render-time transformation).
  */
-public abstract class BaseQuadEmitter<M extends RenderMaterial> extends BaseQuadView<M> implements QuadEmitter, FrexVertexConsumer {
+public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitter, FrexVertexConsumer {
 	// PERF: pack into one array for LOR?
 	public final float[] u = new float[4];
 	public final float[] v = new float[4];
@@ -79,7 +79,7 @@ public abstract class BaseQuadEmitter<M extends RenderMaterial> extends BaseQuad
 	}
 
 	@Override
-	public BaseQuadEmitter<M> defaultMaterial(RenderMaterial defaultMaterial) {
+	public BaseQuadEmitter defaultMaterial(RenderMaterial defaultMaterial) {
 		this.defaultMaterial = defaultMaterial;
 		return this;
 	}
@@ -105,7 +105,7 @@ public abstract class BaseQuadEmitter<M extends RenderMaterial> extends BaseQuad
 	}
 
 	@Override
-	public final BaseQuadEmitter<M> material(RenderMaterial material) {
+	public final BaseQuadEmitter material(RenderMaterial material) {
 		if (material == null) {
 			material = defaultMaterial;
 		}
@@ -114,7 +114,7 @@ public abstract class BaseQuadEmitter<M extends RenderMaterial> extends BaseQuad
 		return this;
 	}
 
-	public final BaseQuadEmitter<M> cullFace(int faceId) {
+	public final BaseQuadEmitter cullFace(int faceId) {
 		data[baseIndex + HEADER_BITS] = MeshEncodingHelper.cullFace(data[baseIndex + HEADER_BITS], faceId);
 		nominalFaceId = faceId;
 		return this;
@@ -122,29 +122,29 @@ public abstract class BaseQuadEmitter<M extends RenderMaterial> extends BaseQuad
 
 	@Override
 	@Deprecated
-	public final BaseQuadEmitter<M> cullFace(Direction face) {
+	public final BaseQuadEmitter cullFace(Direction face) {
 		return cullFace(FaceUtil.toFaceIndex(face));
 	}
 
-	public final BaseQuadEmitter<M> nominalFace(int faceId) {
+	public final BaseQuadEmitter nominalFace(int faceId) {
 		nominalFaceId = faceId;
 		return this;
 	}
 
 	@Override
 	@Deprecated
-	public final BaseQuadEmitter<M> nominalFace(Direction face) {
+	public final BaseQuadEmitter nominalFace(Direction face) {
 		return nominalFace(FaceUtil.toFaceIndex(face));
 	}
 
 	@Override
-	public final BaseQuadEmitter<M> colorIndex(int colorIndex) {
+	public final BaseQuadEmitter colorIndex(int colorIndex) {
 		data[baseIndex + HEADER_COLOR_INDEX] = colorIndex;
 		return this;
 	}
 
 	@Override
-	public final BaseQuadEmitter<M> tag(int tag) {
+	public final BaseQuadEmitter tag(int tag) {
 		data[baseIndex + HEADER_TAG] = tag;
 		return this;
 	}
@@ -172,12 +172,12 @@ public abstract class BaseQuadEmitter<M extends RenderMaterial> extends BaseQuad
 	}
 
 	@Override
-	public final BaseQuadEmitter<M> fromVanilla(BakedQuad quad, RenderMaterial material, Direction cullFace) {
+	public final BaseQuadEmitter fromVanilla(BakedQuad quad, RenderMaterial material, Direction cullFace) {
 		return fromVanilla(quad, material, FaceUtil.toFaceIndex(cullFace));
 	}
 
 	@Override
-	public final BaseQuadEmitter<M> fromVanilla(BakedQuad quad, RenderMaterial material, int cullFaceId) {
+	public final BaseQuadEmitter fromVanilla(BakedQuad quad, RenderMaterial material, int cullFaceId) {
 		System.arraycopy(quad.getVertices(), 0, data, baseIndex + HEADER_STRIDE, MESH_QUAD_STRIDE);
 		material(material);
 		convertVanillaUvPrecision();
@@ -193,7 +193,7 @@ public abstract class BaseQuadEmitter<M extends RenderMaterial> extends BaseQuad
 	}
 
 	@Override
-	public BaseQuadEmitter<M> pos(int vertexIndex, float x, float y, float z) {
+	public BaseQuadEmitter pos(int vertexIndex, float x, float y, float z) {
 		final int index = baseIndex + (vertexIndex << MESH_VERTEX_STRIDE_SHIFT) + VERTEX_X0;
 		data[index] = Float.floatToRawIntBits(x);
 		data[index + 1] = Float.floatToRawIntBits(y);
@@ -207,7 +207,7 @@ public abstract class BaseQuadEmitter<M extends RenderMaterial> extends BaseQuad
 	}
 
 	@Override
-	public BaseQuadEmitter<M> normal(int vertexIndex, float x, float y, float z) {
+	public BaseQuadEmitter normal(int vertexIndex, float x, float y, float z) {
 		normalFlags(normalFlags() | (1 << vertexIndex));
 		data[baseIndex + (vertexIndex << MESH_VERTEX_STRIDE_SHIFT) + VERTEX_NORMAL0] = PackedVector3f.pack(x, y, z);
 		return this;
@@ -218,20 +218,20 @@ public abstract class BaseQuadEmitter<M extends RenderMaterial> extends BaseQuad
 	}
 
 	@Override
-	public BaseQuadEmitter<M> tangent(int vertexIndex, float x, float y, float z) {
+	public BaseQuadEmitter tangent(int vertexIndex, float x, float y, float z) {
 		tangentFlags(tangentFlags() | (1 << vertexIndex));
 		data[baseIndex + vertexIndex + HEADER_FIRST_VERTEX_TANGENT] = PackedVector3f.pack(x, y, z);
 		return this;
 	}
 
 	@Override
-	public BaseQuadEmitter<M> lightmap(int vertexIndex, int lightmap) {
+	public BaseQuadEmitter lightmap(int vertexIndex, int lightmap) {
 		data[baseIndex + (vertexIndex << MESH_VERTEX_STRIDE_SHIFT) + VERTEX_LIGHTMAP0] = lightmap;
 		return this;
 	}
 
 	@Override
-	public BaseQuadEmitter<M> vertexColor(int vertexIndex, int color) {
+	public BaseQuadEmitter vertexColor(int vertexIndex, int color) {
 		data[baseIndex + (vertexIndex << MESH_VERTEX_STRIDE_SHIFT) + VERTEX_COLOR0] = color;
 		return this;
 	}
@@ -240,7 +240,7 @@ public abstract class BaseQuadEmitter<M extends RenderMaterial> extends BaseQuad
 		isSpriteInterpolated = false;
 	}
 
-	public BaseQuadEmitter<M> spriteFloat(int vertexIndex, float u, float v) {
+	public BaseQuadEmitter spriteFloat(int vertexIndex, float u, float v) {
 		final int i = baseIndex + (vertexIndex << MESH_VERTEX_STRIDE_SHIFT) + VERTEX_U0;
 		data[i] = (int) (u * UV_PRECISE_UNIT_VALUE + 0.5f);
 		data[i + 1] = (int) (v * UV_PRECISE_UNIT_VALUE + 0.5f);
@@ -251,7 +251,7 @@ public abstract class BaseQuadEmitter<M extends RenderMaterial> extends BaseQuad
 	/**
 	 * Must call {@link #spriteId(int, int)} separately.
 	 */
-	public BaseQuadEmitter<M> spritePrecise(int vertexIndex, int u, int v) {
+	public BaseQuadEmitter spritePrecise(int vertexIndex, int u, int v) {
 		final int i = baseIndex + (vertexIndex << MESH_VERTEX_STRIDE_SHIFT) + VERTEX_U0;
 		data[i] = u;
 		data[i + 1] = v;
@@ -309,7 +309,7 @@ public abstract class BaseQuadEmitter<M extends RenderMaterial> extends BaseQuad
 	}
 
 	@Override
-	public BaseQuadEmitter<M> uvSprite(@Nullable TextureAtlasSprite sprite, float u0, float v0, float u1, float v1, float u2, float v2, float u3, float v3) {
+	public BaseQuadEmitter uvSprite(@Nullable TextureAtlasSprite sprite, float u0, float v0, float u1, float v1, float u2, float v2, float u3, float v3) {
 		isSpriteInterpolated = false;
 		spriteFloat(0, u0, v0);
 		spriteFloat(1, u1, v1);
@@ -325,7 +325,7 @@ public abstract class BaseQuadEmitter<M extends RenderMaterial> extends BaseQuad
 	}
 
 	@Override
-	public BaseQuadEmitter<M> uv(int vertexIndex, float u, float v) {
+	public BaseQuadEmitter uv(int vertexIndex, float u, float v) {
 		// This legacy method accepts interpolated coordinates
 		// and so any usage forces us to de-normalize if we are not already.
 		// Otherwise any subsequent reads or transformations could be inconsistent.
@@ -350,12 +350,12 @@ public abstract class BaseQuadEmitter<M extends RenderMaterial> extends BaseQuad
 	}
 
 	@Override
-	public BaseQuadEmitter<M> spriteBake(TextureAtlasSprite sprite, int bakeFlags) {
+	public BaseQuadEmitter spriteBake(TextureAtlasSprite sprite, int bakeFlags) {
 		TextureHelper.bakeSprite(this, sprite, bakeFlags);
 		return this;
 	}
 
-	public BaseQuadEmitter<M> spriteId(int spriteId) {
+	public BaseQuadEmitter spriteId(int spriteId) {
 		data[baseIndex + HEADER_SPRITE] = spriteId;
 		return this;
 	}

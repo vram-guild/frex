@@ -11,6 +11,8 @@
 		"MixinChunkRebuildTask",
 		"MixinItemColors",
 		"MixinLevelRenderer",
+		"MixinMatrix3f",
+		"MixinMatrix4f",
 		"MixinMultipartBakedModel",
 		"MixinRenderChunkRegion",
 		"MixinWeightedBakedModel",

@@ -267,7 +267,7 @@ public interface QuadEmitter extends QuadView, QuadSink {
 	QuadEmitter emit();
 
 	@Override
-	default QuadEmitter asQuadEmitter() {
+	default QuadEmitter asEmitter() {
 		return this;
 	}
 }

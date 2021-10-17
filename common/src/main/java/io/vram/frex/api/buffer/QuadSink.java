@@ -21,13 +21,15 @@
 package io.vram.frex.api.buffer;
 
 public interface QuadSink {
-	QuadEmitter asQuadEmitter();
+	QuadEmitter asEmitter();
 
-	FrexVertexConsumer asVertexConsumer();
+	FrexVertexConsumer asConsumer();
 
 	default void pushTransform(QuadTransform transform) { }
 
 	default void popTransform() { }
+
+	//QuadSink withTransform(QuadTransform transform);
 
 	// TODO: implement
 	//MatrixStack matrixStack();

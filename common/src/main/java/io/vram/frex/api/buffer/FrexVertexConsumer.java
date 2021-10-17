@@ -74,7 +74,7 @@ public interface FrexVertexConsumer extends VertexConsumer, QuadSink {
 	FrexVertexConsumer normal(float x, float y, float z);
 
 	@Override
-	default FrexVertexConsumer asVertexConsumer() {
+	default FrexVertexConsumer asConsumer() {
 		return this;
 	}
 }

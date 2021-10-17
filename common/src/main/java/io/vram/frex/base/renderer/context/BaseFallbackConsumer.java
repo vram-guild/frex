@@ -72,7 +72,7 @@ public class BaseFallbackConsumer {
 		final var blockState = input.blockState();
 		final var random = input.random();
 		final boolean useAo = blockState != null && model.useAmbientOcclusion() && blockState.getLightEmission() == 0 && Minecraft.useAmbientOcclusion();
-		final var qe = output.asQuadEmitter();
+		final var qe = output.asEmitter();
 
 		var quads = model.getQuads(blockState, Direction.DOWN, random);
 		if (!quads.isEmpty() && input.cullTest(FaceUtil.DOWN_INDEX)) acceptFaceQuads(FaceUtil.DOWN_INDEX, useAo, quads, qe);

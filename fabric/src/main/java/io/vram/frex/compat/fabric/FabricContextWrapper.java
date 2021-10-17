@@ -37,7 +37,7 @@ public class FabricContextWrapper implements RenderContext {
 	private QuadSink output;
 
 	private final Consumer<Mesh> meshConsumer = m -> {
-		(((FabricMesh) m).wrapped).outputTo(output.asQuadEmitter());
+		(((FabricMesh) m).wrapped).outputTo(output.asEmitter());
 	};
 
 	private final Consumer<BakedModel> fallbackConsumer = bm -> {
@@ -58,7 +58,7 @@ public class FabricContextWrapper implements RenderContext {
 
 	@Override
 	public QuadEmitter getEmitter() {
-		return qe.wrap(output.asQuadEmitter());
+		return qe.wrap(output.asEmitter());
 	}
 
 	@Override

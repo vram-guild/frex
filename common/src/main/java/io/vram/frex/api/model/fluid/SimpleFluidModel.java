@@ -60,7 +60,7 @@ public class SimpleFluidModel implements FluidModel {
 	@Override
 	public void renderAsBlock(BlockInputContext input, QuadSink output) {
 		final var appearance = this.appearance;
-		final QuadEmitter qe = output.asQuadEmitter();
+		final QuadEmitter qe = output.asEmitter();
 		final BlockState blockState = input.blockState();
 		final FluidState fluidState = blockState.getFluidState();
 		final var world = input.blockView();

@@ -22,6 +22,8 @@ package io.vram.frex.compat.fabric;
 
 import java.util.function.Consumer;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 import net.minecraft.client.resources.model.BakedModel;
 
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
@@ -35,13 +37,14 @@ import io.vram.frex.base.renderer.context.BaseFallbackConsumer;
 public class FabricContextWrapper implements RenderContext {
 	private BakedInputContext input;
 	private QuadSink output;
+	private final ObjectArrayList<QuadSink> outputStack = new ObjectArrayList<>();
 
 	private final Consumer<Mesh> meshConsumer = m -> {
 		(((FabricMesh) m).wrapped).outputTo(output.asEmitter());
 	};
 
 	private final Consumer<BakedModel> fallbackConsumer = bm -> {
-		BaseFallbackConsumer.accept(bm, input, output);
+		BaseFallbackConsumer.accept(bm, input, output.asEmitter());
 	};
 
 	private final FabricQuadEmitter qe = FabricQuadEmitter.of(null);
@@ -63,7 +66,9 @@ public class FabricContextWrapper implements RenderContext {
 
 	@Override
 	public void pushTransform(QuadTransform transform) {
-		output.pushTransform((ctx, in, out) -> {
+		outputStack.push(output);
+
+		output = output.withTransform(input, (ctx, in, out) -> {
 			in.copyTo(out);
 
 			if (transform.transform(qe.wrap(out))) {
@@ -74,7 +79,8 @@ public class FabricContextWrapper implements RenderContext {
 
 	@Override
 	public void popTransform() {
-		output.popTransform();
+		output.asEmitter().close();
+		output = outputStack.pop();
 	}
 
 	private static final ThreadLocal<FabricContextWrapper> POOL = ThreadLocal.withInitial(FabricContextWrapper::new);

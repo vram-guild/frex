@@ -18,23 +18,26 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.api.buffer;
+package io.vram.frex.base.renderer.mesh;
 
+import io.vram.frex.api.buffer.PooledQuadEmitter;
+import io.vram.frex.api.buffer.QuadTransform;
 import io.vram.frex.api.model.InputContext;
 
-public interface QuadSink {
-	QuadEmitter asEmitter();
+public abstract class RootQuadEmitter extends BaseQuadEmitter {
+	protected final TransformStack transformStack;
 
-	FrexVertexConsumer asConsumer();
+	public RootQuadEmitter() {
+		transformStack = createTransformStack();
+	}
 
-	PooledQuadEmitter withTransform(InputContext context, QuadTransform transform);
+	/** Override to use custom stack. */
+	protected TransformStack createTransformStack() {
+		return new TransformStack();
+	}
 
-	//default void pushTransform(QuadTransform transform) { }
-
-	//default void popTransform() { }
-
-	//QuadSink withTransform(QuadTransform transform);
-
-	// TODO: implement
-	//MatrixStack matrixStack();
+	@Override
+	public PooledQuadEmitter withTransform(InputContext context, QuadTransform transform) {
+		return transformStack.createTransform(context, transform, this);
+	}
 }

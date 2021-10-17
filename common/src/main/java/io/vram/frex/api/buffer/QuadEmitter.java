@@ -266,6 +266,11 @@ public interface QuadEmitter extends QuadView, QuadSink {
 
 	QuadEmitter emit();
 
+	/** Has no effect for non-pooled emitters. */
+	default void close() {
+		// NOOP
+	}
+
 	@Override
 	default QuadEmitter asEmitter() {
 		return this;

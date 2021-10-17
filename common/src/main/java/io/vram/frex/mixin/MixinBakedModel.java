@@ -32,11 +32,11 @@ import io.vram.frex.base.renderer.context.BaseFallbackConsumer;
 public class MixinBakedModel implements BlockItemModel {
 	@Override
 	public void renderAsItem(ItemInputContext input, QuadSink output) {
-		BaseFallbackConsumer.accept((BakedModel) this, input, output);
+		BaseFallbackConsumer.accept((BakedModel) this, input, output.asEmitter());
 	}
 
 	@Override
 	public void renderAsBlock(BlockInputContext input, QuadSink output) {
-		BaseFallbackConsumer.accept((BakedModel) this, input, output);
+		BaseFallbackConsumer.accept((BakedModel) this, input, output.asEmitter());
 	}
 }

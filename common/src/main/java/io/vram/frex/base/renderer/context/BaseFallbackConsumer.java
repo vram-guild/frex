@@ -28,7 +28,6 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 
 import io.vram.frex.api.buffer.QuadEmitter;
-import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.RenderMaterial;
@@ -68,31 +67,30 @@ public class BaseFallbackConsumer {
 		AO_SHADED_MATERIAL = finder.clear().preset(MaterialConstants.PRESET_DEFAULT).find();
 	}
 
-	public static void accept(BakedModel model, BakedInputContext input, QuadSink output) {
+	public static void accept(BakedModel model, BakedInputContext input, QuadEmitter output) {
 		final var blockState = input.blockState();
 		final var random = input.random();
 		final boolean useAo = blockState != null && model.useAmbientOcclusion() && blockState.getLightEmission() == 0 && Minecraft.useAmbientOcclusion();
-		final var qe = output.asEmitter();
 
 		var quads = model.getQuads(blockState, Direction.DOWN, random);
-		if (!quads.isEmpty() && input.cullTest(FaceUtil.DOWN_INDEX)) acceptFaceQuads(FaceUtil.DOWN_INDEX, useAo, quads, qe);
+		if (!quads.isEmpty() && input.cullTest(FaceUtil.DOWN_INDEX)) acceptFaceQuads(FaceUtil.DOWN_INDEX, useAo, quads, output);
 
 		quads = model.getQuads(blockState, Direction.UP, random);
-		if (!quads.isEmpty() && input.cullTest(FaceUtil.UP_INDEX)) acceptFaceQuads(FaceUtil.UP_INDEX, useAo, quads, qe);
+		if (!quads.isEmpty() && input.cullTest(FaceUtil.UP_INDEX)) acceptFaceQuads(FaceUtil.UP_INDEX, useAo, quads, output);
 
 		quads = model.getQuads(blockState, Direction.NORTH, random);
-		if (!quads.isEmpty() && input.cullTest(FaceUtil.NORTH_INDEX)) acceptFaceQuads(FaceUtil.NORTH_INDEX, useAo, quads, qe);
+		if (!quads.isEmpty() && input.cullTest(FaceUtil.NORTH_INDEX)) acceptFaceQuads(FaceUtil.NORTH_INDEX, useAo, quads, output);
 
 		quads = model.getQuads(blockState, Direction.SOUTH, random);
-		if (!quads.isEmpty() && input.cullTest(FaceUtil.SOUTH_INDEX)) acceptFaceQuads(FaceUtil.SOUTH_INDEX, useAo, quads, qe);
+		if (!quads.isEmpty() && input.cullTest(FaceUtil.SOUTH_INDEX)) acceptFaceQuads(FaceUtil.SOUTH_INDEX, useAo, quads, output);
 
 		quads = model.getQuads(blockState, Direction.WEST, random);
-		if (!quads.isEmpty() && input.cullTest(FaceUtil.WEST_INDEX)) acceptFaceQuads(FaceUtil.WEST_INDEX, useAo, quads, qe);
+		if (!quads.isEmpty() && input.cullTest(FaceUtil.WEST_INDEX)) acceptFaceQuads(FaceUtil.WEST_INDEX, useAo, quads, output);
 
 		quads = model.getQuads(blockState, Direction.EAST, random);
-		if (!quads.isEmpty() && input.cullTest(FaceUtil.EAST_INDEX)) acceptFaceQuads(FaceUtil.EAST_INDEX, useAo, quads, qe);
+		if (!quads.isEmpty() && input.cullTest(FaceUtil.EAST_INDEX)) acceptFaceQuads(FaceUtil.EAST_INDEX, useAo, quads, output);
 
-		acceptInsideQuads(useAo, model.getQuads(blockState, null, random), qe);
+		acceptInsideQuads(useAo, model.getQuads(blockState, null, random), output);
 	}
 
 	protected static void acceptFaceQuads(int faceIndex, boolean useAo, List<BakedQuad> quads, QuadEmitter qe) {

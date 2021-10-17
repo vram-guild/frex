@@ -18,23 +18,21 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.api.buffer;
+package io.vram.frex.base.renderer.mesh;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
+import io.vram.frex.api.buffer.QuadTransform;
 import io.vram.frex.api.model.InputContext;
 
-public interface QuadSink {
-	QuadEmitter asEmitter();
+public class TransformStack {
+	protected final ObjectArrayList<TransformingQuadEmitter> POOL = new ObjectArrayList<>();
 
-	FrexVertexConsumer asConsumer();
+	public TransformingQuadEmitter createTransform(InputContext context, QuadTransform transform, BaseQuadEmitter output) {
+		return (POOL.isEmpty() ? new TransformingQuadEmitter(this) : POOL.pop()).prepare(context, transform, output);
+	}
 
-	PooledQuadEmitter withTransform(InputContext context, QuadTransform transform);
-
-	//default void pushTransform(QuadTransform transform) { }
-
-	//default void popTransform() { }
-
-	//QuadSink withTransform(QuadTransform transform);
-
-	// TODO: implement
-	//MatrixStack matrixStack();
+	public void reclaim(TransformingQuadEmitter transformingQuadEmitter) {
+		POOL.add(transformingQuadEmitter);
+	}
 }

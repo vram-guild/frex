@@ -69,7 +69,7 @@ public class BaseMeshBuilder implements MeshBuilder {
 	 * at render time so we want to capture all geometry now and
 	 * apply non-location-dependent lighting.
 	 */
-	protected class Maker extends BaseQuadEmitter {
+	protected class Maker extends RootQuadEmitter {
 		@Override
 		public Maker emit() {
 			complete();

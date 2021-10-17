@@ -20,21 +20,7 @@
 
 package io.vram.frex.api.buffer;
 
-import io.vram.frex.api.model.InputContext;
-
-public interface QuadSink {
-	QuadEmitter asEmitter();
-
-	FrexVertexConsumer asConsumer();
-
-	PooledQuadEmitter withTransform(InputContext context, QuadTransform transform);
-
-	//default void pushTransform(QuadTransform transform) { }
-
-	//default void popTransform() { }
-
-	//QuadSink withTransform(QuadTransform transform);
-
-	// TODO: implement
-	//MatrixStack matrixStack();
+public interface PooledQuadEmitter extends QuadEmitter, AutoCloseable {
+	@Override
+	void close();
 }

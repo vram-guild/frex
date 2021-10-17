@@ -48,7 +48,7 @@ import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 
-import io.vram.frex.api.buffer.FrexVertexConsumer;
+import io.vram.frex.api.buffer.VertexEmitter;
 import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.math.FastMatri4f;
@@ -61,7 +61,7 @@ import io.vram.frex.impl.texture.IndexedSprite;
  * Almost-concrete implementation of a mutable quad. The only missing part is {@link #emit()},
  * because that depends on where/how it is used. (Mesh encoding vs. render-time transformation).
  */
-public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitter, FrexVertexConsumer {
+public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitter, VertexEmitter {
 	// PERF: pack into one array for LOR?
 	public final float[] u = new float[4];
 	public final float[] v = new float[4];
@@ -403,31 +403,31 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 	}
 
 	@Override
-	public FrexVertexConsumer vertex(float x, float y, float z) {
+	public VertexEmitter vertex(float x, float y, float z) {
 		pos(vertexIndex, x, y, z);
 		return this;
 	}
 
 	@Override
-	public FrexVertexConsumer color(int color) {
+	public VertexEmitter color(int color) {
 		vertexColor(vertexIndex, color);
 		return this;
 	}
 
 	@Override
-	public FrexVertexConsumer uv(float u, float v) {
+	public VertexEmitter uv(float u, float v) {
 		uv(vertexIndex, u, v);
 		return this;
 	}
 
 	@Override
-	public FrexVertexConsumer overlayCoords(int u, int v) {
+	public VertexEmitter overlayCoords(int u, int v) {
 		setOverlay(u, v);
 		return this;
 	}
 
 	@Override
-	public FrexVertexConsumer overlayCoords(int uv) {
+	public VertexEmitter overlayCoords(int uv) {
 		setOverlay(uv);
 		return this;
 	}
@@ -446,30 +446,30 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 	}
 
 	@Override
-	public FrexVertexConsumer uv2(int block, int sky) {
+	public VertexEmitter uv2(int block, int sky) {
 		this.lightmap(vertexIndex, (block & 0xFF) | ((sky & 0xFF) << 8));
 		return this;
 	}
 
 	@Override
-	public FrexVertexConsumer uv2(int lightmap) {
+	public VertexEmitter uv2(int lightmap) {
 		this.lightmap(vertexIndex, lightmap);
 		return this;
 	}
 
 	@Override
-	public FrexVertexConsumer normal(float x, float y, float z) {
+	public VertexEmitter normal(float x, float y, float z) {
 		this.normal(vertexIndex, x, y, z);
 		return this;
 	}
 
 	@Override
-	public FrexVertexConsumer color(int red, int green, int blue, int alpha) {
+	public VertexEmitter color(int red, int green, int blue, int alpha) {
 		return color(MeshEncodingHelper.packColor(red, green, blue, alpha));
 	}
 
 	@Override
-	public FrexVertexConsumer vertex(Matrix4f matrix, float x, float y, float z) {
+	public VertexEmitter vertex(Matrix4f matrix, float x, float y, float z) {
 		final FastMatri4f mat = (FastMatri4f) (Object) matrix;
 
 		final float tx = mat.f_m00() * x + mat.f_m10() * y + mat.f_m20() * z + mat.f_m30();
@@ -480,7 +480,7 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 	}
 
 	@Override
-	public FrexVertexConsumer normal(Matrix3f matrix, float x, float y, float z) {
+	public VertexEmitter normal(Matrix3f matrix, float x, float y, float z) {
 		final FastMatrix3f mat = (FastMatrix3f) (Object) matrix;
 
 		final float tx = mat.f_m00() * x + mat.f_m10() * y + mat.f_m20() * z;

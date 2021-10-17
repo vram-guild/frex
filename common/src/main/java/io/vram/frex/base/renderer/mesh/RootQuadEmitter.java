@@ -21,6 +21,7 @@
 package io.vram.frex.base.renderer.mesh;
 
 import io.vram.frex.api.buffer.PooledQuadEmitter;
+import io.vram.frex.api.buffer.PooledVertexEmitter;
 import io.vram.frex.api.buffer.QuadTransform;
 import io.vram.frex.api.model.InputContext;
 
@@ -37,7 +38,12 @@ public abstract class RootQuadEmitter extends BaseQuadEmitter {
 	}
 
 	@Override
-	public PooledQuadEmitter withTransform(InputContext context, QuadTransform transform) {
+	public PooledQuadEmitter withTransformQuad(InputContext context, QuadTransform transform) {
+		return transformStack.createTransform(context, transform, this);
+	}
+
+	@Override
+	public PooledVertexEmitter withTransformVertex(InputContext context, QuadTransform transform) {
 		return transformStack.createTransform(context, transform, this);
 	}
 }

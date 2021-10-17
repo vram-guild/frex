@@ -40,11 +40,11 @@ public class FabricContextWrapper implements RenderContext {
 	private final ObjectArrayList<QuadSink> outputStack = new ObjectArrayList<>();
 
 	private final Consumer<Mesh> meshConsumer = m -> {
-		(((FabricMesh) m).wrapped).outputTo(output.asEmitter());
+		(((FabricMesh) m).wrapped).outputTo(output.asQuadEmitter());
 	};
 
 	private final Consumer<BakedModel> fallbackConsumer = bm -> {
-		BaseFallbackConsumer.accept(bm, input, output.asEmitter());
+		BaseFallbackConsumer.accept(bm, input, output.asQuadEmitter());
 	};
 
 	private final FabricQuadEmitter qe = FabricQuadEmitter.of(null);
@@ -61,14 +61,14 @@ public class FabricContextWrapper implements RenderContext {
 
 	@Override
 	public QuadEmitter getEmitter() {
-		return qe.wrap(output.asEmitter());
+		return qe.wrap(output.asQuadEmitter());
 	}
 
 	@Override
 	public void pushTransform(QuadTransform transform) {
 		outputStack.push(output);
 
-		output = output.withTransform(input, (ctx, in, out) -> {
+		output = output.withTransformQuad(input, (ctx, in, out) -> {
 			in.copyTo(out);
 
 			if (transform.transform(qe.wrap(out))) {
@@ -79,7 +79,7 @@ public class FabricContextWrapper implements RenderContext {
 
 	@Override
 	public void popTransform() {
-		output.asEmitter().close();
+		output.asQuadEmitter().close();
 		output = outputStack.pop();
 	}
 

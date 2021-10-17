@@ -57,8 +57,4 @@ public abstract class BaseInputContext implements InputContext {
 	}
 
 	public abstract int flatBrightness(BaseQuadEmitter quad);
-
-	public int indexedColor(int colorIndex) {
-		return -1;
-	}
 }

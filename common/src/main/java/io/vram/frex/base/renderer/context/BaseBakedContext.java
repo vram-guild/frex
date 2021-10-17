@@ -18,30 +18,17 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.api.model;
+package io.vram.frex.base.renderer.context;
 
-import org.jetbrains.annotations.Nullable;
+import io.vram.frex.api.model.BakedInputContext;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.state.BlockState;
-
-import io.vram.frex.api.model.util.FaceUtil;
-
-public interface BakedInputContext extends InputContext {
-	default @Nullable BlockState blockState() {
-		return null;
+public abstract class BaseBakedContext extends BaseInputContext implements BakedInputContext {
+	public BaseBakedContext(Type type) {
+		super(type);
 	}
 
-	default @Nullable BlockPos pos() {
-		return null;
+	@Override
+	public int indexedColor(int colorIndex) {
+		return -1;
 	}
-
-	boolean cullTest(int faceId);
-
-	default boolean cullTest(Direction face) {
-		return cullTest(FaceUtil.toFaceIndex(face));
-	}
-
-	int indexedColor(int colorIndex);
 }

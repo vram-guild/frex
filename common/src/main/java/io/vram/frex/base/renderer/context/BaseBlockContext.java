@@ -37,7 +37,7 @@ import io.vram.frex.api.model.util.GeometryUtil;
 import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 import io.vram.frex.base.renderer.mesh.MeshEncodingHelper;
 
-public class BaseBlockContext<T extends BlockAndTintGetter> extends BaseInputContext implements BlockInputContext {
+public class BaseBlockContext<T extends BlockAndTintGetter> extends BaseBakedContext implements BlockInputContext {
 	protected final BlockColors blockColorMap = Minecraft.getInstance().getBlockColors();
 	protected final BlockPos.MutableBlockPos internalSearchPos = new BlockPos.MutableBlockPos();
 
@@ -134,6 +134,7 @@ public class BaseBlockContext<T extends BlockAndTintGetter> extends BaseInputCon
 		return null;
 	}
 
+	@Override
 	public int indexedColor(int colorIndex) {
 		if (colorIndex == -1) {
 			return -1;

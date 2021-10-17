@@ -27,7 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import io.vram.frex.api.model.ItemModel.ItemInputContext;
 import io.vram.frex.api.world.ItemColorRegistry;
 
-public abstract class BaseItemContext extends BaseInputContext implements ItemInputContext {
+public abstract class BaseItemContext extends BaseBakedContext implements ItemInputContext {
 	protected final ItemColors colorMap = ItemColorRegistry.get();
 	protected ItemStack itemStack;
 	protected TransformType renderMode;
@@ -63,6 +63,7 @@ public abstract class BaseItemContext extends BaseInputContext implements ItemIn
 		return ITEM_RANDOM_SEED;
 	}
 
+	@Override
 	public int indexedColor(int colorIndex) {
 		return colorIndex == -1 ? -1 : (colorMap.getColor(itemStack, colorIndex) | 0xFF000000);
 	}

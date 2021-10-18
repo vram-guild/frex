@@ -48,8 +48,8 @@ import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 
-import io.vram.frex.api.buffer.VertexEmitter;
 import io.vram.frex.api.buffer.QuadEmitter;
+import io.vram.frex.api.buffer.VertexEmitter;
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.math.FastMatri4f;
 import io.vram.frex.api.math.FastMatrix3f;
@@ -433,7 +433,12 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 	}
 
 	protected void setOverlay(int uv) {
-		setOverlay(uv & '\uffff', uv >> 16 & '\uffff');
+		final var mat = material();
+		final var oMat = mat.withOverlay(uv);
+
+		if (oMat != mat) {
+			material(oMat);
+		}
 	}
 
 	protected void setOverlay (int u, int v) {

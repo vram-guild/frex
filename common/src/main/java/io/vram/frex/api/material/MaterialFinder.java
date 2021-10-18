@@ -144,6 +144,24 @@ public interface MaterialFinder extends MaterialView {
 	MaterialFinder foilOverlay(boolean foilOverlay);
 
 	/**
+	 * Converts from vanilla coordinates.
+	 * Currently we don't support the full range of flash overlay
+	 * and instead treat everything above 7 as flash enabled.
+	 * This results in some loss of fidelity to vanilla but
+	 * simplifies material encoding and render implementations
+	 * for what is a very crude visual effect to start with.
+	 */
+	default MaterialFinder overlay(int u, int v) {
+		final boolean hurtOverlay = v == 3;
+		final boolean flashOverlay = (v == 10 && u > 7);
+		return hurtOverlay(hurtOverlay).flashOverlay(flashOverlay);
+	}
+
+	default MaterialFinder overlay(int uv) {
+		return overlay(uv & '\uffff', uv >> 16 & '\uffff');
+	}
+
+	/**
 	 * Enable or disables atmospheric fog for this material.
 	 */
 	MaterialFinder fog(boolean enable);

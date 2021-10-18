@@ -49,12 +49,11 @@ public interface RenderMaterial extends MaterialView {
 	}
 
 	default RenderMaterial withOverlay(int u, int v) {
-		final boolean hurtOverlay = v == 3;
-		final boolean flashOverlay = (v == 10 && u > 7);
+		return MaterialFinder.threadLocal().copyFrom(this).overlay(u, v).find();
+	}
 
-		return (hurtOverlay || flashOverlay)
-			? MaterialFinder.threadLocal().copyFrom(this).hurtOverlay(hurtOverlay).flashOverlay(flashOverlay).find()
-			: this;
+	default RenderMaterial withOverlay(int uv) {
+		return MaterialFinder.threadLocal().copyFrom(this).overlay(uv).find();
 	}
 
 	static @Nullable RenderMaterial fromId(ResourceLocation id) {

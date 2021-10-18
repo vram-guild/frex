@@ -27,6 +27,8 @@ public interface InputContext {
 
 	Type type();
 
+	int overlay();
+
 	enum Type {
 		BLOCK,
 		ITEM,

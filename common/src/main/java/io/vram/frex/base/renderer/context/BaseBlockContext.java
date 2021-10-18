@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -67,12 +68,24 @@ public class BaseBlockContext<T extends BlockAndTintGetter> extends BaseBakedCon
 	 * @param blockPos
 	 * @param modelAO
 	 * @param seed       pass -1 for default behavior
+	 * @param overlay
 	 */
-	public void prepareForBlock(BlockState blockState, BlockPos blockPos, long seed) {
-		super.reset();
+	public void prepareForBlock(BlockState blockState, BlockPos blockPos, long seed, int overlay) {
+		super.reset(overlay);
 		this.blockState = blockState;
 		this.blockPos = blockPos;
 		this.seed = seed;
+		lastColorIndex = -1;
+		fullCubeCache = 0;
+		cullCompletionFlags = 0;
+		cullResultFlags = 0;
+	}
+
+	public void prepareForBlock(BlockState blockState, BlockPos blockPos) {
+		super.reset(OverlayTexture.NO_OVERLAY);
+		this.blockState = blockState;
+		this.blockPos = blockPos;
+		this.seed = -1L;
 		lastColorIndex = -1;
 		fullCubeCache = 0;
 		cullCompletionFlags = 0;

@@ -36,7 +36,8 @@ public abstract class BaseItemContext extends BaseBakedContext implements ItemIn
 		super(Type.ITEM);
 	}
 
-	public void prepareForItem(ItemStack itemStack, TransformType renderMode) {
+	public void prepareForItem(ItemStack itemStack, TransformType renderMode, int overlay) {
+		super.reset(overlay);
 		this.itemStack = itemStack;
 		this.renderMode = renderMode;
 	}

@@ -29,13 +29,15 @@ public abstract class BaseInputContext implements InputContext {
 	protected final Type type;
 	protected final Random random = new Random();
 	protected boolean needsRandomReseed = true;
+	protected int overlay;
 
 	public BaseInputContext(Type type) {
 		this.type = type;
 	}
 
-	public void reset() {
+	public void reset(int overlay) {
 		needsRandomReseed = true;
+		this.overlay = overlay;
 	}
 
 	protected abstract long randomSeed();
@@ -54,6 +56,11 @@ public abstract class BaseInputContext implements InputContext {
 	@Override
 	public Type type() {
 		return type;
+	}
+
+	@Override
+	public int overlay() {
+		return overlay;
 	}
 
 	public abstract int flatBrightness(BaseQuadEmitter quad);

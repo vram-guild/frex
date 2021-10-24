@@ -39,6 +39,8 @@ public abstract class FaceUtil {
 	/** Result from {@link #toFaceIndex(Direction)} for null values. */
 	public static final int UNASSIGNED_INDEX = 6;
 
+	public static final int FACE_INDEX_COUNT = 7;
+
 	public static final int NORTH_FLAG = 1 << NORTH_INDEX;
 	public static final int SOUTH_FLAG = 1 << SOUTH_INDEX;
 	public static final int EAST_FLAG = 1 << EAST_INDEX;
@@ -50,7 +52,7 @@ public abstract class FaceUtil {
 	public static final int ALL_REAL_FACE_FLAGS = NORTH_FLAG | SOUTH_FLAG | EAST_FLAG | WEST_FLAG | UP_FLAG | DOWN_FLAG;
 
 	/** @see #faceFromIndex(int) */
-	private static final Direction[] FACES = Arrays.copyOf(Direction.values(), 7);
+	private static final Direction[] FACES = Arrays.copyOf(Direction.values(), FACE_INDEX_COUNT);
 
 	private static final OffsetFunc[] FACE_OFFSETS = new OffsetFunc[6];
 	private static final int[] FACE_INDEX_OPPOSITES = new int[6];

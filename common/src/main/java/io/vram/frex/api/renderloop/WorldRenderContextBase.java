@@ -128,7 +128,6 @@ public class WorldRenderContextBase implements BlockOutlineContext, WorldRenderC
 	}
 
 	// FAPI support
-	@Override
 	public PoseStack matrixStack() {
 		return poseStack;
 	}

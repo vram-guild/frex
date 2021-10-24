@@ -33,6 +33,7 @@ import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.model.InputContext.Type;
 import io.vram.frex.api.model.util.FaceUtil;
 import io.vram.frex.api.world.BlockEntityRenderData;
+import io.vram.frex.impl.model.ModelLookups;
 
 @FunctionalInterface
 public interface BlockModel extends DynamicModel {
@@ -84,5 +85,7 @@ public interface BlockModel extends DynamicModel {
 		@Nullable Object blockEntityRenderData(BlockPos pos);
 	}
 
-	// WIP: add get
+	static BlockModel get (BlockState blockState) {
+		return (BlockModel) ModelLookups.BLOCK_MODEL_SHAPER.getBlockModel(blockState);
+	}
 }

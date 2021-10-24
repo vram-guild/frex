@@ -23,10 +23,12 @@ package io.vram.frex.api.model;
 import java.util.Random;
 
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.model.InputContext.Type;
+import io.vram.frex.impl.model.ModelLookups;
 
 @FunctionalInterface
 public interface ItemModel extends DynamicModel {
@@ -53,5 +55,11 @@ public interface ItemModel extends DynamicModel {
 		Random random();
 	}
 
-	// WIP: add get
+	static ItemModel get(Item item) {
+		return (ItemModel) ModelLookups.ITEM_MODEL_SHAPER.getItemModel(item);
+	}
+
+	static ItemModel get(ItemStack itemStack) {
+		return (ItemModel) ModelLookups.ITEM_MODEL_SHAPER.getItemModel(itemStack);
+	}
 }

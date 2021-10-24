@@ -32,6 +32,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
+import io.vram.frex.api.math.MatrixStack;
 import io.vram.frex.api.model.BlockModel.BlockInputContext;
 import io.vram.frex.api.model.util.FaceUtil;
 import io.vram.frex.api.model.util.GeometryUtil;
@@ -58,9 +59,10 @@ public class BaseBlockContext<T extends BlockAndTintGetter> extends BaseBakedCon
 		super(Type.BLOCK);
 	}
 
-	public void prepareForWorld(T blockView, boolean enableCulling) {
+	public void prepareForWorld(T blockView, boolean enableCulling, MatrixStack matrixStack) {
 		this.blockView = blockView;
 		this.enableCulling = enableCulling;
+		setMatrixStack(matrixStack);
 	}
 
 	/**
@@ -71,7 +73,7 @@ public class BaseBlockContext<T extends BlockAndTintGetter> extends BaseBakedCon
 	 * @param overlay
 	 */
 	public void prepareForBlock(BlockState blockState, BlockPos blockPos, long seed, int overlay) {
-		super.reset(overlay);
+		super.prepare(overlay);
 		this.blockState = blockState;
 		this.blockPos = blockPos;
 		this.seed = seed;
@@ -82,7 +84,7 @@ public class BaseBlockContext<T extends BlockAndTintGetter> extends BaseBakedCon
 	}
 
 	public void prepareForBlock(BlockState blockState, BlockPos blockPos) {
-		super.reset(OverlayTexture.NO_OVERLAY);
+		super.prepare(OverlayTexture.NO_OVERLAY);
 		this.blockState = blockState;
 		this.blockPos = blockPos;
 		this.seed = -1L;

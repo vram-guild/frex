@@ -18,29 +18,36 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.api.model;
+package io.vram.frex.base.renderer.context;
 
-import java.util.Random;
+import com.mojang.blaze3d.vertex.PoseStack;
+
+import net.minecraft.client.renderer.texture.OverlayTexture;
 
 import io.vram.frex.api.math.MatrixStack;
+import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 
-public interface InputContext {
-	Random random();
-
-	Type type();
-
-	int overlay();
-
-	MatrixStack matrixStack();
-
-	enum Type {
-		BLOCK,
-		ITEM,
-		ENTITY,
-		ABSENT
+public class AbsentInputContext extends BaseInputContext {
+	public AbsentInputContext() {
+		super(Type.ABSENT);
+		this.setMatrixStack(MatrixStack.cast(new PoseStack()));
+		this.prepare(OverlayTexture.NO_OVERLAY);
 	}
 
-	default boolean isAbsent() {
-		return type() == Type.ABSENT;
+	@Override
+	protected long randomSeed() {
+		return 42;
 	}
+
+	@Override
+	public int flatBrightness(BaseQuadEmitter quad) {
+		return 0;
+	}
+
+	@Override
+	public boolean isAbsent() {
+		return true;
+	}
+
+	public static final AbsentInputContext INSTANCE = new AbsentInputContext();
 }

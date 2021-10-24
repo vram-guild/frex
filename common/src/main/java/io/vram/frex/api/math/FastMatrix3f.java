@@ -101,4 +101,6 @@ public interface FastMatrix3f {
 	static FastMatrix3f cast(Matrix3f matrix) {
 		return (FastMatrix3f) (Object) matrix;
 	}
+
+	void f_setIdentity();
 }

@@ -22,6 +22,7 @@ package io.vram.frex.base.renderer.context;
 
 import java.util.Random;
 
+import io.vram.frex.api.math.MatrixStack;
 import io.vram.frex.api.model.InputContext;
 import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 
@@ -30,14 +31,24 @@ public abstract class BaseInputContext implements InputContext {
 	protected final Random random = new Random();
 	protected boolean needsRandomReseed = true;
 	protected int overlay;
+	protected MatrixStack matrixStack;
 
 	public BaseInputContext(Type type) {
 		this.type = type;
 	}
 
-	public void reset(int overlay) {
+	public void prepare(int overlay) {
 		needsRandomReseed = true;
 		this.overlay = overlay;
+	}
+
+	public void prepare(int overlay, MatrixStack matrixStack) {
+		prepare(overlay);
+		setMatrixStack(matrixStack);
+	}
+
+	public void setMatrixStack(MatrixStack matrixStack) {
+		this.matrixStack = matrixStack;
 	}
 
 	protected abstract long randomSeed();
@@ -63,5 +74,15 @@ public abstract class BaseInputContext implements InputContext {
 		return overlay;
 	}
 
+	@Override
+	public MatrixStack matrixStack() {
+		return matrixStack;
+	}
+
 	public abstract int flatBrightness(BaseQuadEmitter quad);
+
+	@Override
+	public boolean isAbsent() {
+		return false;
+	}
 }

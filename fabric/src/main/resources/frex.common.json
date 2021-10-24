@@ -14,6 +14,7 @@
 		"MixinMatrix3f",
 		"MixinMatrix4f",
 		"MixinMultipartBakedModel",
+		"MixinPoseStack",
 		"MixinRenderChunkRegion",
 		"MixinWeightedBakedModel",
 		"MixinTextureAtlasPreparation",

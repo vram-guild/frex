@@ -29,10 +29,10 @@ import org.spongepowered.asm.mixin.Unique;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 
-import io.vram.frex.api.math.FastMatri4f;
+import io.vram.frex.api.math.FastMatrix4f;
 
 @Mixin(Matrix4f.class)
-public abstract class MixinMatrix4f implements FastMatri4f {
+public abstract class MixinMatrix4f implements FastMatrix4f {
 	// NB: mojang uses row-major notation in variable names
 	// and we use colum-major notation in methods to be consistent with OpenGL and JOML
 	@Shadow protected float m00;
@@ -271,13 +271,13 @@ public abstract class MixinMatrix4f implements FastMatri4f {
 
 	@Override
 	@Unique
-	public void f_identity() {
+	public void f_setIdentity() {
 		setIdentity();
 	}
 
 	@Override
 	@Unique
-	public void f_set(FastMatri4f val) {
+	public void f_set(FastMatrix4f val) {
 		m00 = val.f_m00();
 		m01 = val.f_m10();
 		m02 = val.f_m20();

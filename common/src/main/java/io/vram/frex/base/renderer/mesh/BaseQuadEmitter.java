@@ -51,7 +51,7 @@ import net.minecraft.core.Direction;
 import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.buffer.VertexEmitter;
 import io.vram.frex.api.material.RenderMaterial;
-import io.vram.frex.api.math.FastMatri4f;
+import io.vram.frex.api.math.FastMatrix4f;
 import io.vram.frex.api.math.FastMatrix3f;
 import io.vram.frex.api.model.util.FaceUtil;
 import io.vram.frex.api.model.util.PackedVector3f;
@@ -475,7 +475,7 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 
 	@Override
 	public VertexEmitter vertex(Matrix4f matrix, float x, float y, float z) {
-		final FastMatri4f mat = (FastMatri4f) (Object) matrix;
+		final FastMatrix4f mat = (FastMatrix4f) (Object) matrix;
 
 		final float tx = mat.f_m00() * x + mat.f_m10() * y + mat.f_m20() * z + mat.f_m30();
 		final float ty = mat.f_m01() * x + mat.f_m11() * y + mat.f_m21() * z + mat.f_m31();

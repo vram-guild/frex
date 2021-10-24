@@ -51,7 +51,7 @@ import net.minecraft.core.Direction;
 
 import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.material.RenderMaterial;
-import io.vram.frex.api.math.FastMatri4f;
+import io.vram.frex.api.math.FastMatrix4f;
 import io.vram.frex.api.mesh.QuadView;
 import io.vram.frex.api.model.util.FaceUtil;
 import io.vram.frex.api.model.util.GeometryUtil;
@@ -444,7 +444,7 @@ public class BaseQuadView implements QuadView {
 		return data[baseIndex + HEADER_SPRITE];
 	}
 
-	public void transformAndAppendVertex(final int vertexIndex, final FastMatri4f matrix, final VertexConsumer buff) {
+	public void transformAndAppendVertex(final int vertexIndex, final FastMatrix4f matrix, final VertexConsumer buff) {
 		final int[] data = this.data;
 		final int index = baseIndex + (vertexIndex << MESH_VERTEX_STRIDE_SHIFT) + VERTEX_X0;
 		final float x = Float.intBitsToFloat(data[index]);

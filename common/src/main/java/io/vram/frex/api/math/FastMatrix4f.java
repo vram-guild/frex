@@ -28,7 +28,7 @@ import com.mojang.math.Vector3f;
 /**
  * Element names are in column-major order, consistent with OpenGl and JOML conventions.
  */
-public interface FastMatri4f {
+public interface FastMatrix4f {
 	float f_m00();
 
 	float f_m10();
@@ -93,19 +93,17 @@ public interface FastMatri4f {
 
 	void f_m33(float val);
 
-	void f_identity();
-
-	default void f_mul(FastMatri4f val) {
+	default void f_mul(FastMatrix4f val) {
 		((Matrix4f) (Object) this).multiply((Matrix4f) (Object) val);
 	}
 
-	void f_set(FastMatri4f val);
+	void f_set(FastMatrix4f val);
 
 	default void f_set(Matrix4f val) {
-		f_set((FastMatri4f) (Object) val);
+		f_set((FastMatrix4f) (Object) val);
 	}
 
-	default boolean f_equals(FastMatri4f val) {
+	default boolean f_equals(FastMatrix4f val) {
 		return f_m00() == val.f_m00()
 			&& f_m10() == val.f_m10()
 			&& f_m20() == val.f_m20()
@@ -128,7 +126,7 @@ public interface FastMatri4f {
 	}
 
 	default boolean f_equals(Matrix4f val) {
-		return f_equals((FastMatri4f) (Object) val);
+		return f_equals((FastMatrix4f) (Object) val);
 	}
 
 	void f_transform(Vector3f vec);
@@ -154,7 +152,7 @@ public interface FastMatri4f {
 	 * @param far distance of far plane from camera (POSITIVE!)
 	 */
 	default void f_setOrtho(float left, float right, float bottom, float top, float near, float far) {
-		f_identity();
+		f_setIdentity();
 		f_m00(2.0f / (right - left));
 		f_m30(-(right + left) / (right - left));
 
@@ -217,7 +215,9 @@ public interface FastMatri4f {
 		f_m33(1.0f);
 	}
 
-	static FastMatri4f cast(Matrix4f matrix) {
-		return (FastMatri4f) (Object) matrix;
+	void f_setIdentity();
+
+	static FastMatrix4f cast(Matrix4f matrix) {
+		return (FastMatrix4f) (Object) matrix;
 	}
 }

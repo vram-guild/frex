@@ -18,29 +18,35 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.api.model;
+package io.vram.frex.impl.math;
 
-import java.util.Random;
+import java.lang.reflect.Constructor;
 
-import io.vram.frex.api.math.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Matrix3f;
+import com.mojang.math.Matrix4f;
 
-public interface InputContext {
-	Random random();
+public class MatrixStackEntryHelper {
+	private static final Constructor<PoseStack.Pose> CONSTRUCTOR;
 
-	Type type();
+	static {
+		Constructor<PoseStack.Pose> c;
 
-	int overlay();
+		try {
+			c = PoseStack.Pose.class.getDeclaredConstructor(Matrix4f.class, Matrix3f.class);
+		} catch (final Exception e) {
+			throw new RuntimeException(e);
+		}
 
-	MatrixStack matrixStack();
-
-	enum Type {
-		BLOCK,
-		ITEM,
-		ENTITY,
-		ABSENT
+		c.setAccessible(true);
+		CONSTRUCTOR = c;
 	}
 
-	default boolean isAbsent() {
-		return type() == Type.ABSENT;
+	public static PoseStack.Pose create(Matrix4f matrix4f, Matrix3f matrix3f) {
+		try {
+			return CONSTRUCTOR.newInstance(matrix4f, matrix3f);
+		} catch (final Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

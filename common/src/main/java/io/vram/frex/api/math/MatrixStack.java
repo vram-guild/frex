@@ -18,29 +18,29 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.api.model;
+package io.vram.frex.api.math;
 
-import java.util.Random;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import io.vram.frex.api.math.MatrixStack;
+public interface MatrixStack {
+	void push();
 
-public interface InputContext {
-	Random random();
+	void pop();
 
-	Type type();
+	FastMatrix4f modelMatrix();
 
-	int overlay();
+	FastMatrix3f normalMatrix();
 
-	MatrixStack matrixStack();
-
-	enum Type {
-		BLOCK,
-		ITEM,
-		ENTITY,
-		ABSENT
+	default void translate(float x, float y, float z) {
+		modelMatrix().f_translate(x, y, z);
 	}
 
-	default boolean isAbsent() {
-		return type() == Type.ABSENT;
+	default void setIdentity() {
+		modelMatrix().f_setIdentity();
+		normalMatrix().f_setIdentity();
+	}
+
+	static MatrixStack cast(PoseStack poseStack) {
+		return (MatrixStack) poseStack;
 	}
 }

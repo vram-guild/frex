@@ -32,7 +32,7 @@ import io.vram.frex.api.math.FastMatrix3f;
 import io.vram.frex.api.model.util.PackedVector3f;
 
 @Mixin(Matrix3f.class)
-public class MixinMatrix3f implements FastMatrix3f {
+public abstract class MixinMatrix3f implements FastMatrix3f {
 	// NB: mojang uses row-major notation in variable names
 	// and we use colum-major notation in methods to be consistent with OpenGL and JOML
 	@Shadow protected float m00;
@@ -44,6 +44,7 @@ public class MixinMatrix3f implements FastMatrix3f {
 	@Shadow protected float m20;
 	@Shadow protected float m21;
 	@Shadow protected float m22;
+	@Shadow public abstract void setIdentity();
 
 	@Unique
 	@Override
@@ -173,5 +174,10 @@ public class MixinMatrix3f implements FastMatrix3f {
 	@Override
 	public void f_m22(float val) {
 		m22 = val;
+	}
+
+	@Override
+	public void f_setIdentity() {
+		setIdentity();
 	}
 }

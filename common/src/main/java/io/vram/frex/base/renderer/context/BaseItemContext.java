@@ -49,14 +49,12 @@ public abstract class BaseItemContext extends BaseBakedContext implements ItemIn
 
 	@Override
 	public ItemStack itemStack() {
-		// TODO Auto-generated method stub
-		return null;
+		return itemStack;
 	}
 
 	@Override
 	public TransformType mode() {
-		// TODO Auto-generated method stub
-		return null;
+		return renderMode;
 	}
 
 	@Override

@@ -31,6 +31,9 @@ import io.vram.frex.api.renderer.Renderer;
 public interface MaterialTexture {
 	ResourceLocation id();
 
+	/** Used for faster material predicate testing. */
+	String idAsString();
+
 	int index();
 
 	AbstractTexture texture();

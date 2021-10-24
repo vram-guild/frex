@@ -34,6 +34,7 @@ import io.vram.frex.base.renderer.util.ResourceCache;
 public class BaseMaterialTexture implements MaterialTexture {
 	protected final int index;
 	protected final ResourceLocation id;
+	protected final String idAsString;
 	protected final ResourceCache<Info> info = new ResourceCache<>(this::retrieveInfo);
 
 	protected record Info(AbstractTexture texture, boolean isAtlas, SpriteFinder spriteFinder, SpriteIndex spriteIndex) { }
@@ -41,6 +42,7 @@ public class BaseMaterialTexture implements MaterialTexture {
 	protected BaseMaterialTexture(int index, ResourceLocation id) {
 		this.index = index;
 		this.id = id;
+		idAsString = id.toString();
 	}
 
 	protected Info retrieveInfo() {
@@ -57,6 +59,11 @@ public class BaseMaterialTexture implements MaterialTexture {
 	@Override
 	public ResourceLocation id() {
 		return id;
+	}
+
+	@Override
+	public String idAsString() {
+		return idAsString;
 	}
 
 	@Override

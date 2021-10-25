@@ -30,7 +30,9 @@ import it.unimi.dsi.fastutil.ints.Int2IntFunction;
  * without the default renderer.
  */
 public abstract class ColorUtil {
-	private static final Int2IntFunction colorSwapper = ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN ? color -> ((color & 0xFF00FF00) | ((color & 0x00FF0000) >> 16) | ((color & 0xFF) << 16)) : color -> color;
+	private static final Int2IntFunction colorSwapper = ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN
+			? color -> color == -1 ? -1 : ((color & 0xFF00FF00) | ((color & 0x00FF0000) >> 16) | ((color & 0xFF) << 16))
+			: color -> color;
 
 	private ColorUtil() { }
 

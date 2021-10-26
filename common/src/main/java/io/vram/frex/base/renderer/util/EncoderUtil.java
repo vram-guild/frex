@@ -98,7 +98,7 @@ public abstract class EncoderUtil {
 		}
 	}
 
-	public static void applyItemLighting(BaseQuadEmitter quad, int lightmap) {
+	public static void applyFlatLighting(BaseQuadEmitter quad, int lightmap) {
 		quad.lightmap(0, ColorUtil.maxBrightness(quad.lightmap(0), lightmap));
 		quad.lightmap(1, ColorUtil.maxBrightness(quad.lightmap(1), lightmap));
 		quad.lightmap(2, ColorUtil.maxBrightness(quad.lightmap(2), lightmap));

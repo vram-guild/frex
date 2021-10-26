@@ -31,9 +31,6 @@ public interface QuadSink {
 
 	PooledVertexEmitter withTransformVertex(InputContext context, QuadTransform transform);
 
-	// TODO: implement
-	//MatrixStack matrixStack();
-
 	/** Has no effect for non-pooled emitters. */
 	default void close() {
 		// NOOP

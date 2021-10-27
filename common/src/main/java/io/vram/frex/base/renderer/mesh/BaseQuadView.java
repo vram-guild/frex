@@ -207,6 +207,7 @@ public class BaseQuadView implements QuadView {
 		return RenderMaterial.fromIndex(data[baseIndex + HEADER_MATERIAL]);
 	}
 
+	// FIX: seeing zero values for un-tinted quads - should always be -1 for un-tinted.
 	@Override
 	public final int colorIndex() {
 		return data[baseIndex + HEADER_COLOR_INDEX];

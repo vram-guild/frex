@@ -25,6 +25,7 @@ import java.util.function.Predicate;
 import org.jetbrains.annotations.ApiStatus.NonExtendable;
 
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderType.CompositeRenderType;
 
 import io.vram.frex.impl.material.RenderTypeExclusionImpl;
 
@@ -39,6 +40,6 @@ public interface RenderTypeExclusion {
 	}
 
 	static boolean isExcluded(RenderType renderType) {
-		return RenderTypeExclusionImpl.isExcluded(renderType);
+		return !(renderType instanceof CompositeRenderType) || RenderTypeExclusionImpl.isExcluded(renderType);
 	}
 }

@@ -23,6 +23,7 @@ package io.vram.frex.api.model;
 import java.util.Random;
 
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -80,11 +81,19 @@ public interface ItemModel extends DynamicModel {
 		int lightmap();
 	}
 
-	static ItemModel get(Item item) {
-		return (ItemModel) ModelLookups.ITEM_MODEL_SHAPER.getItemModel(item);
+	/**
+	 * Result can be safely cast to ItemModel.  Return type is BakedModel
+	 * because it may still be needed for model-level attributes.
+	 */
+	static BakedModel get(Item item) {
+		return ModelLookups.ITEM_MODEL_SHAPER.getItemModel(item);
 	}
 
-	static ItemModel get(ItemStack itemStack) {
-		return (ItemModel) ModelLookups.ITEM_MODEL_SHAPER.getItemModel(itemStack);
+	/**
+	 * Result can be safely cast to ItemModel.  Return type is BakedModel
+	 * because it may still be needed for model-level attributes.
+	 */
+	static BakedModel get(ItemStack itemStack) {
+		return ModelLookups.ITEM_MODEL_SHAPER.getItemModel(itemStack);
 	}
 }

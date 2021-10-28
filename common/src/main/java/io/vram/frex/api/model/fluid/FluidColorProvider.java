@@ -24,7 +24,9 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.BlockPos;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.material.FluidState;
 
 /**
@@ -43,6 +45,8 @@ public interface FluidColorProvider {
 		return (v, p, s) -> color;
 	}
 
+	int DEFAULT_WATER_COLOR = BuiltinRegistries.BIOME.get(Biomes.OCEAN).getWaterColor();
+
 	FluidColorProvider WHITE_COLOR = (v, p, s) -> -1;
-	FluidColorProvider WATER_COLOR = (v, p, s) -> BiomeColors.getAverageWaterColor(v, p);
+	FluidColorProvider WATER_COLOR = (v, p, s) -> v == null || p == null ? DEFAULT_WATER_COLOR : BiomeColors.getAverageWaterColor(v, p);
 }

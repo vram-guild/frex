@@ -24,6 +24,7 @@ import java.util.Random;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -88,7 +89,11 @@ public interface BlockModel extends DynamicModel {
 		@Nullable Object blockEntityRenderData(BlockPos pos);
 	}
 
-	static BlockModel get (BlockState blockState) {
-		return (BlockModel) ModelLookups.BLOCK_MODEL_SHAPER.getBlockModel(blockState);
+	/**
+	 * Result can be safely cast to BlockModel.  Return type is BakedModel
+	 * because it may still be needed for model-level attributes.
+	 */
+	static BakedModel get(BlockState blockState) {
+		return ModelLookups.BLOCK_MODEL_SHAPER.getBlockModel(blockState);
 	}
 }

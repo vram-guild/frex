@@ -53,6 +53,31 @@ public interface ItemModel extends DynamicModel {
 
 		@Override
 		Random random();
+
+		boolean isGui();
+
+		/**
+		 * True for generated models when in GUI and diffuse shading shouldn't be used.
+		 * True only when isGui is true;
+		 */
+		boolean isFrontLit();
+
+		/**
+		 * When false, assume item models are generated and should be rendered with cutout enabled if blend mode is translucent.
+		 */
+		boolean isBlockItem();
+
+		/**
+		 * True when drawing to GUI or first person perspective.
+		 */
+		boolean drawTranslucencyToMainTarget();
+
+		/**
+		 * True only when rendering in first person and item is held in left hand.
+		 */
+		boolean isLeftHand();
+
+		int lightmap();
 	}
 
 	static ItemModel get(Item item) {

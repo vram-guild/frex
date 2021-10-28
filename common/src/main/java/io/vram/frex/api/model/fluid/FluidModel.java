@@ -53,7 +53,7 @@ public interface FluidModel extends BlockModel {
 		FluidModelImpl.registerFactory(factory, forFluid);
 	}
 
-	// WIP: the factor provided by the renderer should probably be implemented by FREX - unclear why renderer would do it
+	// WIP: the factory provided by the renderer should probably be implemented by FREX - unclear why renderer would do it
 
 	/**
 	 * To be called 1X by renderer implementation. Provides the logic

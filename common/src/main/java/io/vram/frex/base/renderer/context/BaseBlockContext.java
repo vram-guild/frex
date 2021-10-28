@@ -24,8 +24,10 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -36,6 +38,7 @@ import io.vram.frex.api.math.MatrixStack;
 import io.vram.frex.api.model.BlockModel.BlockInputContext;
 import io.vram.frex.api.model.util.FaceUtil;
 import io.vram.frex.api.model.util.GeometryUtil;
+import io.vram.frex.api.rendertype.RenderTypeUtil;
 import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 import io.vram.frex.base.renderer.mesh.MeshEncodingHelper;
 
@@ -54,6 +57,7 @@ public class BaseBlockContext<T extends BlockAndTintGetter> extends BaseBakedCon
 	protected boolean enableCulling = true;
 	protected int cullCompletionFlags;
 	protected int cullResultFlags;
+	protected boolean isFluidModel = false;
 
 	public BaseBlockContext() {
 		super(Type.BLOCK);
@@ -72,22 +76,33 @@ public class BaseBlockContext<T extends BlockAndTintGetter> extends BaseBakedCon
 	 * @param seed       pass -1 for default behavior
 	 * @param overlay
 	 */
-	public void prepareForBlock(BlockState blockState, BlockPos blockPos, long seed, int overlay) {
+	public void prepareForBlock(BakedModel bakedModel, BlockState blockState, BlockPos blockPos, long seed, int overlay) {
 		super.prepare(overlay);
-		this.blockState = blockState;
-		this.blockPos = blockPos;
 		this.seed = seed;
-		lastColorIndex = -1;
-		fullCubeCache = 0;
-		cullCompletionFlags = 0;
-		cullResultFlags = 0;
+		prepareCommon(bakedModel, blockState, blockPos);
+		isFluidModel = false;
 	}
 
-	public void prepareForBlock(BlockState blockState, BlockPos blockPos) {
+	public void prepareForBlock(BakedModel bakedModel, BlockState blockState, BlockPos blockPos) {
 		super.prepare(OverlayTexture.NO_OVERLAY);
+		this.seed = -1L;
+		prepareCommon(bakedModel, blockState, blockPos);
+		isFluidModel = false;
+	}
+
+	public void prepareForFluid(BlockState blockState, BlockPos blockPos) {
+		super.prepare(OverlayTexture.NO_OVERLAY);
+		this.seed = -1L;
+		prepareCommon(null, blockState, blockPos);
+		isFluidModel = true;
+	}
+
+	protected void prepareCommon(BakedModel bakedModel, BlockState blockState, BlockPos blockPos) {
+		this.bakedModel = bakedModel;
 		this.blockState = blockState;
 		this.blockPos = blockPos;
 		this.seed = -1L;
+		defaultRenderType = null;
 		lastColorIndex = -1;
 		fullCubeCache = 0;
 		cullCompletionFlags = 0;
@@ -197,5 +212,21 @@ public class BaseBlockContext<T extends BlockAndTintGetter> extends BaseBakedCon
 
 	protected int fastBrightness(BlockPos pos) {
 		return LevelRenderer.getLightColor(blockView, blockState, pos);
+	}
+
+	@Override
+	public boolean isFluidModel() {
+		return isFluidModel;
+	}
+
+	@Override
+	protected void computeDefaultRenderType() {
+		if (defaultRenderType == null) {
+			final var renderType = isFluidModel
+					? ItemBlockRenderTypes.getRenderLayer(blockState.getFluidState())
+					: ItemBlockRenderTypes.getChunkRenderType(blockState);
+			defaultRenderType = renderType;
+			defaultPreset = RenderTypeUtil.inferPreset(renderType);
+		}
 	}
 }

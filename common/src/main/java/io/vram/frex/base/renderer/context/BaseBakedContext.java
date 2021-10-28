@@ -20,9 +20,16 @@
 
 package io.vram.frex.base.renderer.context;
 
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.resources.model.BakedModel;
+
 import io.vram.frex.api.model.BakedInputContext;
 
 public abstract class BaseBakedContext extends BaseInputContext implements BakedInputContext {
+	protected BakedModel bakedModel;
+	protected RenderType defaultRenderType;
+	protected int defaultPreset;
+
 	public BaseBakedContext(Type type) {
 		super(type);
 	}
@@ -30,5 +37,24 @@ public abstract class BaseBakedContext extends BaseInputContext implements Baked
 	@Override
 	public int indexedColor(int colorIndex) {
 		return -1;
+	}
+
+	@Override
+	public BakedModel bakedModel() {
+		return bakedModel;
+	}
+
+	protected abstract void computeDefaultRenderType();
+
+	@Override
+	public RenderType defaultRenderType() {
+		computeDefaultRenderType();
+		return defaultRenderType;
+	}
+
+	@Override
+	public int defaultPreset() {
+		computeDefaultRenderType();
+		return defaultPreset;
 	}
 }

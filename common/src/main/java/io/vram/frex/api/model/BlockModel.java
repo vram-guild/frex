@@ -55,6 +55,8 @@ public interface BlockModel extends DynamicModel {
 
 		BlockAndTintGetter blockView();
 
+		boolean isFluidModel();
+
 		@Override
 		BlockState blockState();
 
@@ -79,6 +81,7 @@ public interface BlockModel extends DynamicModel {
 		 *
 		 * <p>If outside of terrain rendering, or if no function is registered,
 		 * or if no BlockEntity is present at the given position, will return null.
+		 *
 		 * @return Result of a registered block entity render data function, or null if none
 		 * registered or not applicable.
 		 */

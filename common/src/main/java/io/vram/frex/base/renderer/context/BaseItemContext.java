@@ -21,26 +21,47 @@
 package io.vram.frex.base.renderer.context;
 
 import net.minecraft.client.color.item.ItemColors;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 
 import io.vram.frex.api.math.MatrixStack;
 import io.vram.frex.api.model.ItemModel.ItemInputContext;
+import io.vram.frex.api.rendertype.RenderTypeUtil;
 import io.vram.frex.api.world.ItemColorRegistry;
+import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 
-public abstract class BaseItemContext extends BaseBakedContext implements ItemInputContext {
+public class BaseItemContext extends BaseBakedContext implements ItemInputContext {
 	protected final ItemColors colorMap = ItemColorRegistry.get();
 	protected ItemStack itemStack;
 	protected TransformType renderMode;
+	protected boolean isBlockItem;
+	protected boolean drawTranslucencyToMainTarget;
+	protected int lightmap;
+	protected boolean isLeftHand;
 
 	public BaseItemContext() {
 		super(Type.ITEM);
 	}
 
-	public void prepareForItem(ItemStack itemStack, TransformType renderMode, int overlay, MatrixStack matrixStack) {
+	public void prepareForItem(BakedModel bakedModel, ItemStack itemStack, TransformType renderMode, int lightmap, int overlay, boolean isLeftHand, MatrixStack matrixStack) {
 		super.prepare(overlay, matrixStack);
+		this.bakedModel = bakedModel;
 		this.itemStack = itemStack;
 		this.renderMode = renderMode;
+		this.lightmap = lightmap;
+		this.isLeftHand = isLeftHand;
+		defaultRenderType = null;
+		isBlockItem = itemStack.getItem() instanceof BlockItem;
+		drawTranslucencyToMainTarget = isGui() || renderMode.firstPerson() || !isBlockItem();
+	}
+
+	@Override
+	public int lightmap() {
+		return lightmap;
 	}
 
 	@Override
@@ -59,6 +80,31 @@ public abstract class BaseItemContext extends BaseBakedContext implements ItemIn
 	}
 
 	@Override
+	public boolean isGui() {
+		return renderMode == ItemTransforms.TransformType.GUI;
+	}
+
+	@Override
+	public boolean isFrontLit() {
+		return isGui() && bakedModel != null && !bakedModel.usesBlockLight();
+	}
+
+	@Override
+	public boolean isLeftHand() {
+		return isLeftHand;
+	}
+
+	@Override
+	public boolean isBlockItem() {
+		return isBlockItem;
+	}
+
+	@Override
+	public boolean drawTranslucencyToMainTarget() {
+		return drawTranslucencyToMainTarget;
+	}
+
+	@Override
 	protected long randomSeed() {
 		return ITEM_RANDOM_SEED;
 	}
@@ -72,4 +118,18 @@ public abstract class BaseItemContext extends BaseBakedContext implements ItemIn
 	 * Value vanilla uses for item rendering.  The only sensible choice, of course.
 	 */
 	public static final long ITEM_RANDOM_SEED = 42L;
+
+	@Override
+	public int flatBrightness(BaseQuadEmitter quad) {
+		return lightmap;
+	}
+
+	@Override
+	protected void computeDefaultRenderType() {
+		if (defaultRenderType == null) {
+			final var renderType = ItemBlockRenderTypes.getRenderType(itemStack, drawTranslucencyToMainTarget());
+			defaultRenderType = renderType;
+			defaultPreset = RenderTypeUtil.inferPreset(renderType);
+		}
+	}
 }

@@ -18,7 +18,7 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.base.renderer.context;
+package io.vram.frex.base.renderer.context.input;
 
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -34,7 +34,7 @@ import io.vram.frex.api.rendertype.RenderTypeUtil;
 import io.vram.frex.api.world.ItemColorRegistry;
 import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 
-public class BaseItemContext extends BaseBakedContext implements ItemInputContext {
+public class BaseItemInputContext extends BaseBakedInputContext implements ItemInputContext {
 	protected final ItemColors colorMap = ItemColorRegistry.get();
 	protected ItemStack itemStack;
 	protected TransformType renderMode;
@@ -43,7 +43,7 @@ public class BaseItemContext extends BaseBakedContext implements ItemInputContex
 	protected int lightmap;
 	protected boolean isLeftHand;
 
-	public BaseItemContext() {
+	public BaseItemInputContext() {
 		super(Type.ITEM);
 	}
 

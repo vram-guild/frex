@@ -18,7 +18,7 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.base.renderer.context;
+package io.vram.frex.base.renderer.context.input;
 
 import java.util.Random;
 

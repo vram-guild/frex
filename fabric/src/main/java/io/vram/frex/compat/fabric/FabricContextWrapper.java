@@ -32,7 +32,7 @@ import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 
 import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.model.BakedInputContext;
-import io.vram.frex.base.renderer.context.BaseFallbackConsumer;
+import io.vram.frex.base.renderer.util.BakedModelTranscoder;
 
 public class FabricContextWrapper implements RenderContext {
 	private BakedInputContext input;
@@ -44,7 +44,7 @@ public class FabricContextWrapper implements RenderContext {
 	};
 
 	private final Consumer<BakedModel> fallbackConsumer = bm -> {
-		BaseFallbackConsumer.accept(bm, input, output.asQuadEmitter());
+		BakedModelTranscoder.accept(bm, input, output.asQuadEmitter());
 	};
 
 	private final FabricQuadEmitter qe = FabricQuadEmitter.of(null);

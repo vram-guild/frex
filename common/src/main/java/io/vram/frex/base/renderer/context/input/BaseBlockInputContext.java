@@ -18,7 +18,7 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.base.renderer.context;
+package io.vram.frex.base.renderer.context.input;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -42,7 +42,7 @@ import io.vram.frex.api.rendertype.RenderTypeUtil;
 import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 import io.vram.frex.base.renderer.mesh.MeshEncodingHelper;
 
-public class BaseBlockContext<T extends BlockAndTintGetter> extends BaseBakedContext implements BlockInputContext {
+public class BaseBlockInputContext<T extends BlockAndTintGetter> extends BaseBakedInputContext implements BlockInputContext {
 	protected final BlockColors blockColorMap = Minecraft.getInstance().getBlockColors();
 	protected final BlockPos.MutableBlockPos internalSearchPos = new BlockPos.MutableBlockPos();
 
@@ -59,7 +59,7 @@ public class BaseBlockContext<T extends BlockAndTintGetter> extends BaseBakedCon
 	protected int cullResultFlags;
 	protected boolean isFluidModel = false;
 
-	public BaseBlockContext() {
+	public BaseBlockInputContext() {
 		super(Type.BLOCK);
 	}
 

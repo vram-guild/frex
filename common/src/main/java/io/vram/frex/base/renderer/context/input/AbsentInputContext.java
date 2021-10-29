@@ -18,43 +18,36 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.base.renderer.context;
+package io.vram.frex.base.renderer.context.input;
 
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.resources.model.BakedModel;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import io.vram.frex.api.model.BakedInputContext;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 
-public abstract class BaseBakedContext extends BaseInputContext implements BakedInputContext {
-	protected BakedModel bakedModel;
-	protected RenderType defaultRenderType;
-	protected int defaultPreset;
+import io.vram.frex.api.math.MatrixStack;
+import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 
-	public BaseBakedContext(Type type) {
-		super(type);
+public class AbsentInputContext extends BaseInputContext {
+	public AbsentInputContext() {
+		super(Type.ABSENT);
+		this.setMatrixStack(MatrixStack.cast(new PoseStack()));
+		this.prepare(OverlayTexture.NO_OVERLAY);
 	}
 
 	@Override
-	public int indexedColor(int colorIndex) {
-		return -1;
+	protected long randomSeed() {
+		return 42;
 	}
 
 	@Override
-	public BakedModel bakedModel() {
-		return bakedModel;
-	}
-
-	protected abstract void computeDefaultRenderType();
-
-	@Override
-	public RenderType defaultRenderType() {
-		computeDefaultRenderType();
-		return defaultRenderType;
+	public int flatBrightness(BaseQuadEmitter quad) {
+		return 0;
 	}
 
 	@Override
-	public int defaultPreset() {
-		computeDefaultRenderType();
-		return defaultPreset;
+	public boolean isAbsent() {
+		return true;
 	}
+
+	public static final AbsentInputContext INSTANCE = new AbsentInputContext();
 }

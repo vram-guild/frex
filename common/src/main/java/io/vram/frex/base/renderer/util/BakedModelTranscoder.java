@@ -18,7 +18,7 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.base.renderer.context;
+package io.vram.frex.base.renderer.util;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ import io.vram.frex.api.model.BakedInputContext;
 import io.vram.frex.api.model.util.FaceUtil;
 
 /**
- * Consumer for vanilla baked models. Generally intended to give visual results matching a vanilla render,
+ * Utilities for vanilla baked models. Generally intended to give visual results matching a vanilla render,
  * however there could be subtle (and desirable) lighting variations so is good to be able to render
  * everything consistently.
  *
@@ -53,7 +53,7 @@ import io.vram.frex.api.model.util.FaceUtil;
  * vertex data is sent to the byte buffer.  Generally POJO array access will be faster than
  * manipulating the data via NIO.
  */
-public class BaseFallbackConsumer {
+public class BakedModelTranscoder {
 	protected static final RenderMaterial FLAT_MATERIAL;
 	protected static final RenderMaterial SHADED_MATERIAL;
 	protected static final RenderMaterial AO_FLAT_MATERIAL;

@@ -40,6 +40,10 @@ public interface MatrixStack {
 		normalMatrix().f_setIdentity();
 	}
 
+	default PoseStack asPoseStack() {
+		return (PoseStack) this;
+	}
+
 	static MatrixStack cast(PoseStack poseStack) {
 		return (MatrixStack) poseStack;
 	}

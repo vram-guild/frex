@@ -93,7 +93,7 @@ out vec4 frx_var3;
 
 /**
  * Interpolated camera distance. Used for fog.
- * Set by renderer after material shader runs. Do not modify.
+ * Set by pipeline shader after material shader runs. Do not modify.
  *
  * Not available in depth pass.
  */

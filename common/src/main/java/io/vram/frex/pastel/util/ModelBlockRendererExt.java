@@ -18,38 +18,15 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.impl;
+package io.vram.frex.pastel.util;
 
-import java.util.ServiceLoader;
+import java.util.BitSet;
 
-import io.vram.frex.api.renderer.Renderer;
-import io.vram.frex.api.renderer.RendererProvider;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 
-public class RendererHolder {
-	private static Renderer renderer = null;
-
-	public static RendererProvider bestProvider() {
-		final var loader = ServiceLoader.load(RendererProvider.class);
-
-		RendererProvider best = null;
-
-		for (final var rp : loader) {
-			if (best == null || rp.priority() < best.priority()) {
-				best = rp;
-			}
-		}
-
-		return best;
-	}
-
-	public static Renderer get() {
-		var result = renderer;
-
-		if (result == null) {
-			result = bestProvider().getRenderer();
-			renderer = result;
-		}
-
-		return result;
-	}
+public interface ModelBlockRendererExt {
+	void frx_calculateShape(BlockAndTintGetter blockView, BlockState blockState, BlockPos pos, int[] vertexData, Direction face, float[] aoData, BitSet controlBits);
 }

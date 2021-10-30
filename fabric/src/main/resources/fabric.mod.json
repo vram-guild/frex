@@ -18,6 +18,7 @@
   "mixins": [
     "frex.common.json",
     "frex.fabric.json",
+    "frex.pastel.json",
     "frex.fabricevents.json"
   ],
   "entrypoints": {

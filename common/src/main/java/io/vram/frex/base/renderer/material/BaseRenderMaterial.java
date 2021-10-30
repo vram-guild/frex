@@ -20,7 +20,9 @@
 
 package io.vram.frex.base.renderer.material;
 
-public abstract class BaseRenderMaterial extends BaseMaterialView {
+import io.vram.frex.api.material.RenderMaterial;
+
+public abstract class BaseRenderMaterial extends BaseMaterialView implements RenderMaterial {
 	protected final boolean blur;
 	protected final boolean castShadows;
 	protected final int conditionIndex;
@@ -49,11 +51,7 @@ public abstract class BaseRenderMaterial extends BaseMaterialView {
 	protected final int writeMask;
 
 	public BaseRenderMaterial(int index, BaseMaterialView template) {
-		this(index, template.bits0, template.bits1, template.label);
-	}
-
-	public BaseRenderMaterial(int index, long bits0, long bits1, String label) {
-		super(bits0, bits1, label);
+		super(template.bits0, template.bits1, template.label);
 		this.index = index;
 		blur = super.blur();
 		castShadows = super.castShadows();
@@ -162,6 +160,7 @@ public abstract class BaseRenderMaterial extends BaseMaterialView {
 		return hurtOverlay;
 	}
 
+	@Override
 	public int index() {
 		return index;
 	}

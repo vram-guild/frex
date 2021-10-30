@@ -27,6 +27,9 @@ import net.minecraft.resources.ResourceLocation;
 import io.vram.frex.api.renderer.Renderer;
 
 public interface MaterialShader {
+	ResourceLocation DEFAULT_VERTEX_SOURCE = new ResourceLocation("frex:shaders/material/default.vert");
+	ResourceLocation DEFAULT_FRAGMENT_SOURCE = new ResourceLocation("frex:shaders/material/default.frag");
+
 	int index();
 
 	ResourceLocation vertexShaderId();

@@ -37,7 +37,7 @@ import io.vram.frex.api.renderer.MaterialManager;
 import io.vram.frex.api.renderer.MaterialShaderManager;
 import io.vram.frex.api.renderer.MaterialTextureManager;
 
-public abstract class BaseMaterialManager<M extends BaseMaterialView & RenderMaterial> implements MaterialManager {
+public class BaseMaterialManager<M extends BaseMaterialView & RenderMaterial> implements MaterialManager {
 	protected final AtomicInteger nextIndex = new AtomicInteger(2);
 	protected final Object[] values = new Object[MaterialConstants.MAX_MATERIAL_COUNT];
 	protected final ConcurrentHashMap<BaseMaterialView, M> map = new ConcurrentHashMap<>(4096, 0.25f);
@@ -46,12 +46,12 @@ public abstract class BaseMaterialManager<M extends BaseMaterialView & RenderMat
 	protected final long defaultBits1;
 	protected final M MISSING_MATERIAL;
 	protected final M STANDARD_MATERIAL;
+	protected final MaterialFactory<M> factory;
+	public final ConditionManager conditions;
+	public final MaterialTextureManager textures;
+	public final MaterialShaderManager shaders;
 
-	protected final Function<BaseMaterialView, M> mappingFunction = k -> {
-		final M result = createMaterial(k, nextIndex.getAndIncrement());
-		values[result.index()] = result;
-		return result;
-	};
+	protected final Function<BaseMaterialView, M> mappingFunction = this::createFromKey;
 
 	protected class Finder extends BaseMaterialFinder {
 		public Finder(long defaultBits0, long defaultBits1) {
@@ -65,18 +65,25 @@ public abstract class BaseMaterialManager<M extends BaseMaterialView & RenderMat
 	}
 
 	@SuppressWarnings("unchecked")
-	public BaseMaterialManager(ConditionManager conditions, MaterialTextureManager textures, MaterialShaderManager shaders) {
-		defaultBits0 = computeDefaultBits0(conditions, textures, shaders);
-		defaultBits1 = computeDefaultBits1(conditions, textures, shaders);
-		MISSING_MATERIAL = createMaterial((BaseMaterialView) materialFinder().label(RenderMaterial.MISSING_MATERIAL_KEY.toString()), 0);
+	public BaseMaterialManager(ConditionManager conditions, MaterialTextureManager textures, MaterialShaderManager shaders, MaterialFactory<M> factory) {
+		this.conditions = conditions;
+		this.textures = textures;
+		this.shaders = shaders;
+		this.factory = factory;
+		defaultBits0 = computeDefaultBits0();
+		defaultBits1 = computeDefaultBits1();
+		MISSING_MATERIAL = factory.createMaterial(0, (BaseMaterialView) materialFinder().label(RenderMaterial.MISSING_MATERIAL_KEY.toString()));
 		values[0] = MISSING_MATERIAL;
 		STANDARD_MATERIAL = (M) materialFinder().preset(MaterialConstants.PRESET_DEFAULT).label(RenderMaterial.STANDARD_MATERIAL_KEY.toString()).find();
-
 		registerMaterial(RenderMaterial.MISSING_MATERIAL_KEY, MISSING_MATERIAL);
 		registerMaterial(RenderMaterial.STANDARD_MATERIAL_KEY, STANDARD_MATERIAL);
 	}
 
-	protected abstract M createMaterial(BaseMaterialView finder, int index);
+	protected M createFromKey(BaseMaterialView key) {
+		final M result = factory.createMaterial(nextIndex.getAndIncrement(), key);
+		values[result.index()] = result;
+		return result;
+	}
 
 	@Override
 	public Finder materialFinder() {
@@ -123,7 +130,7 @@ public abstract class BaseMaterialManager<M extends BaseMaterialView & RenderMat
 		return MISSING_MATERIAL;
 	}
 
-	protected long computeDefaultBits0(ConditionManager conditions, MaterialTextureManager textures, MaterialShaderManager shaders) {
+	protected long computeDefaultBits0() {
 		long defaultBits0 = 0;
 
 		defaultBits0 = BaseMaterialView.TARGET.setValue(MaterialConstants.TARGET_MAIN, defaultBits0);
@@ -138,12 +145,16 @@ public abstract class BaseMaterialManager<M extends BaseMaterialView & RenderMat
 		return defaultBits0;
 	}
 
-	protected long computeDefaultBits1(ConditionManager conditions, MaterialTextureManager textures, MaterialShaderManager shaders) {
+	protected long computeDefaultBits1() {
 		long defaultBits1 = 0;
 		defaultBits1 = BaseMaterialView.CONDITION.setValue(conditions.alwaysTrue().index(), defaultBits1);
 		defaultBits1 = BaseMaterialView.TEXTURE.setValue(textures.textureFromId(TextureAtlas.LOCATION_BLOCKS).index(), defaultBits1);
 		defaultBits1 = BaseMaterialView.SHADER.setValue(shaders.defaultShader().index(), defaultBits1);
 
 		return defaultBits1;
+	}
+
+	public interface MaterialFactory<T extends BaseMaterialView & RenderMaterial> {
+		T createMaterial(int index, BaseMaterialView finder);
 	}
 }

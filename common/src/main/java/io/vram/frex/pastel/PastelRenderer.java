@@ -23,9 +23,7 @@ package io.vram.frex.pastel;
 import io.vram.frex.base.renderer.BaseRenderer;
 
 public class PastelRenderer extends BaseRenderer<PastelRenderMaterial> {
-	private PastelRenderer() {
+	public PastelRenderer() {
 		super(PastelRenderMaterial::new);
 	}
-
-	public static final PastelRenderer INSTANCE = new PastelRenderer();
 }

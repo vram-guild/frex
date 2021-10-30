@@ -18,26 +18,19 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.fabric.mixin;
-
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-
-import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
+package io.vram.frex.pastel;
 
 import io.vram.frex.api.renderer.Renderer;
-import io.vram.frex.compat.fabric.FrexCompatibilityWrapper;
+import io.vram.frex.api.renderer.RendererProvider;
 
-import grondag.frex.Frex;
+public class PastelProvider implements RendererProvider {
+	@Override
+	public Renderer getRenderer() {
+		return new PastelRenderer();
+	}
 
-@Mixin(Frex.class)
-public abstract class MixinFrex {
-	/**
-	 * @author grondag
-	 * @reason Fabric API compatibility
-	 */
-	@Overwrite(remap = false)
-	private static void setupRenderer() {
-		RendererAccess.INSTANCE.registerRenderer(FrexCompatibilityWrapper.of(Renderer.get()));
+	@Override
+	public int priority() {
+		return 1000;
 	}
 }

@@ -72,7 +72,7 @@ public class BaseMaterialManager<M extends BaseMaterialView & RenderMaterial> im
 		this.factory = factory;
 		defaultBits0 = computeDefaultBits0();
 		defaultBits1 = computeDefaultBits1();
-		MISSING_MATERIAL = factory.createMaterial(0, (BaseMaterialView) materialFinder().label(RenderMaterial.MISSING_MATERIAL_KEY.toString()));
+		MISSING_MATERIAL = factory.createMaterial(this, 0, (BaseMaterialView) materialFinder().label(RenderMaterial.MISSING_MATERIAL_KEY.toString()));
 		values[0] = MISSING_MATERIAL;
 		STANDARD_MATERIAL = (M) materialFinder().preset(MaterialConstants.PRESET_DEFAULT).label(RenderMaterial.STANDARD_MATERIAL_KEY.toString()).find();
 		registerMaterial(RenderMaterial.MISSING_MATERIAL_KEY, MISSING_MATERIAL);
@@ -80,7 +80,7 @@ public class BaseMaterialManager<M extends BaseMaterialView & RenderMaterial> im
 	}
 
 	protected M createFromKey(BaseMaterialView key) {
-		final M result = factory.createMaterial(nextIndex.getAndIncrement(), key);
+		final M result = factory.createMaterial(this, nextIndex.getAndIncrement(), key);
 		values[result.index()] = result;
 		return result;
 	}
@@ -155,6 +155,6 @@ public class BaseMaterialManager<M extends BaseMaterialView & RenderMaterial> im
 	}
 
 	public interface MaterialFactory<T extends BaseMaterialView & RenderMaterial> {
-		T createMaterial(int index, BaseMaterialView finder);
+		T createMaterial(BaseMaterialManager<T> manager, int index, BaseMaterialView finder);
 	}
 }

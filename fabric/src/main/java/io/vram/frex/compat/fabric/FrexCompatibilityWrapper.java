@@ -35,14 +35,14 @@ import grondag.frex.api.material.MaterialFinder;
 import grondag.frex.api.material.RenderMaterial;
 
 @SuppressWarnings("deprecation")
-public class FabricRenderer implements grondag.frex.api.Renderer {
-	public static FabricRenderer of(Renderer wrapped) {
-		return new FabricRenderer(wrapped);
+public class FrexCompatibilityWrapper implements grondag.frex.api.Renderer {
+	public static FrexCompatibilityWrapper of(Renderer wrapped) {
+		return new FrexCompatibilityWrapper(wrapped);
 	}
 
 	final Renderer wrapped;
 
-	protected FabricRenderer(Renderer wrapped) {
+	protected FrexCompatibilityWrapper(Renderer wrapped) {
 		this.wrapped = wrapped;
 	}
 

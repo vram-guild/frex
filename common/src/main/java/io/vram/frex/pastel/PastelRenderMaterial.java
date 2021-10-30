@@ -20,11 +20,12 @@
 
 package io.vram.frex.pastel;
 
+import io.vram.frex.base.renderer.material.BaseMaterialManager;
 import io.vram.frex.base.renderer.material.BaseMaterialView;
 import io.vram.frex.base.renderer.material.BaseRenderMaterial;
 
 public class PastelRenderMaterial extends BaseRenderMaterial {
-	public PastelRenderMaterial(int index, BaseMaterialView template) {
-		super(index, template);
+	public PastelRenderMaterial(BaseMaterialManager<PastelRenderMaterial> manager, int index, BaseMaterialView template) {
+		super(manager, index, template);
 	}
 }

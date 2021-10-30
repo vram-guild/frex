@@ -49,9 +49,11 @@ public abstract class BaseRenderMaterial extends BaseMaterialView implements Ren
 	protected final int transparency;
 	protected final boolean unmipped;
 	protected final int writeMask;
+	protected final BaseMaterialManager<? extends BaseRenderMaterial> manager;
 
-	public BaseRenderMaterial(int index, BaseMaterialView template) {
+	public BaseRenderMaterial(BaseMaterialManager<? extends BaseRenderMaterial> manager, int index, BaseMaterialView template) {
 		super(template.bits0, template.bits1, template.label);
+		this.manager = manager;
 		this.index = index;
 		blur = super.blur();
 		castShadows = super.castShadows();

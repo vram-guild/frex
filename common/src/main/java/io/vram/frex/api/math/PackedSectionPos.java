@@ -20,6 +20,8 @@
 
 package io.vram.frex.api.math;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 
 /**
@@ -39,11 +41,43 @@ public interface PackedSectionPos {
 		return (x + 2) | ((y + 2) << 5) | ((z + 2) << 10);
 	}
 
+	static int unpackSectionX(int packedSectionPos) {
+		return (packedSectionPos & 31) - 2;
+	}
+
+	static int unpackSectionY(int packedSectionPos) {
+		return ((packedSectionPos >> 5) & 31) - 2;
+	}
+
+	static int unpackSectionZ(int packedSectionPos) {
+		return ((packedSectionPos >> 10) & 31) - 2;
+	}
+
+	static String unpackToString(int packedSectionPos) {
+		return String.format("(%d, %d, %d)", unpackSectionX(packedSectionPos), unpackSectionY(packedSectionPos), unpackSectionZ(packedSectionPos));
+	}
+
 	static int pack(Vec3i vec) {
 		return pack(vec.getX(), vec.getY(), vec.getZ());
 	}
 
+	/**
+	 * Masks the input coordinates so that they are relative to
+	 * section origin, assuming sections are aligned to 16-block
+	 * boundaries.
+	 *
+	 * @param pos Position within a chunk section.
+	 * @return packed sector coordinates relative to implied section origin.
+	 */
+	static int packWithSectionMask(BlockPos pos) {
+		return pack(pos.getX() & 0xF, pos.getY() & 0xF, pos.getZ() & 0xF);
+	}
+
 	static int add(int packedPosA, int packedPosB) {
 		return packedPosA + packedPosB - PACKED_SECTION_ADDEND;
+	}
+
+	static int offset(int packedSectionPos, Direction face) {
+		return add(packedSectionPos, pack(face.getNormal()));
 	}
 }

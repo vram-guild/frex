@@ -28,6 +28,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import io.vram.frex.api.world.RenderRegionBakeListener;
 import io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext;
 
+// WIP: need to test this mess - make sure works with Pastel
 public class RenderRegionBakeListenerImpl {
 	@FunctionalInterface
 	private interface BakeHandler {

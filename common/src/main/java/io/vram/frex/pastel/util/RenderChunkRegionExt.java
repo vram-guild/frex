@@ -18,14 +18,27 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.pastel;
+package io.vram.frex.pastel.util;
 
-import io.vram.frex.base.renderer.BaseRenderer;
+import org.jetbrains.annotations.Nullable;
 
-public class PastelRenderer extends BaseRenderer<PastelRenderMaterial> {
-	public static boolean semiFlatLighting = true;
+import net.minecraft.core.BlockPos;
 
-	public PastelRenderer() {
-		super(PastelRenderMaterial::new);
-	}
+import io.vram.frex.pastel.PastelTerrainRenderContext;
+
+public interface RenderChunkRegionExt {
+	int frx_cachedAoLevel(int cacheIndex);
+
+	int frx_cachedBrightness(int cacheIndex);
+
+	int frx_cachedBrightness(BlockPos pos);
+
+	boolean frx_isClosed(int cacheIndex);
+
+	@Nullable
+	Object frx_getBlockEntityRenderData(BlockPos pos);
+
+	PastelTerrainRenderContext frx_getContext();
+
+	void frx_setContext(PastelTerrainRenderContext context, BlockPos origin);
 }

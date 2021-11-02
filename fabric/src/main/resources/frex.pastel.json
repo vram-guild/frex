@@ -6,7 +6,8 @@
 	"plugin": "io.vram.frex.pastel.mixin.PastelMixinPlugin",
 	"mixins": [
 		"MixinItemRenderer",
-		"MixinModelBlockRenderer"
+		"MixinModelBlockRenderer",
+		"MixinRenderChunkRegion"
 	],
 	"injectors": {
 		"defaultRequire": 1

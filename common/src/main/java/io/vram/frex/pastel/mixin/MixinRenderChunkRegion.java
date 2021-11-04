@@ -228,11 +228,11 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 		final var pos = frx_sectionPosToSearchPos(packedSectionPos);
 		final var blockView = (RenderChunkRegion) (Object) this;
 		final var blockState = blockView.getBlockState(pos);
-		final boolean result = !blockState.isViewBlocking(blockView, pos) || blockState.getLightBlock(blockView, pos) == 0;
+		final boolean result = blockState.isSolidRender(blockView, pos);
 		closedCheckBits.set(packedSectionPos);
 
 		if (result) {
-			closedCheckBits.set(packedSectionPos);
+			closedResultBits.set(packedSectionPos);
 		}
 
 		return result;

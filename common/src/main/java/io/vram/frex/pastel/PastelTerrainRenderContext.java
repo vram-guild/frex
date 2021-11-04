@@ -30,14 +30,18 @@ import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ChunkBufferBuilderPack;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.api.math.MatrixStack;
 import io.vram.frex.api.math.PackedSectionPos;
 import io.vram.frex.api.model.BlockModel;
+import io.vram.frex.api.model.util.ColorUtil;
 import io.vram.frex.base.renderer.ao.AoCalculator;
 import io.vram.frex.base.renderer.context.input.BaseBlockInputContext;
 import io.vram.frex.base.renderer.context.render.BlockRenderContext;
@@ -46,6 +50,7 @@ import io.vram.frex.pastel.util.RenderChunkRegionExt;
 
 public class PastelTerrainRenderContext extends BlockRenderContext<RenderChunkRegion> {
 	protected RenderChunkRegionExt regionExt;
+	protected ChunkBufferBuilderPack buffers;
 
 	private final AoCalculator aoCalc = new AoCalculator() {
 		@Override
@@ -84,10 +89,11 @@ public class PastelTerrainRenderContext extends BlockRenderContext<RenderChunkRe
 		};
 	}
 
-	public PastelTerrainRenderContext prepareForRegion(RenderChunkRegion region, PoseStack poseStack, BlockPos origin) {
+	public PastelTerrainRenderContext prepareForRegion(RenderChunkRegion region, PoseStack poseStack, BlockPos origin, ChunkBufferBuilderPack buffers) {
 		inputContext.prepareForWorld(region, true, (MatrixStack) poseStack);
 		regionExt = (RenderChunkRegionExt) region;
 		regionExt.frx_setContext(this, origin);
+		this.buffers = buffers;
 		return this;
 	}
 
@@ -97,13 +103,13 @@ public class PastelTerrainRenderContext extends BlockRenderContext<RenderChunkRe
 		renderInner(model);
 	}
 
-	public void renderBlock(BlockState blockState, BlockPos blockPos, boolean defaultAo, final BakedModel model) {
+	public void renderBlock(BlockState blockState, BlockPos blockPos, final BakedModel model) {
+		defaultConsumer = buffers.builder(ItemBlockRenderTypes.getChunkRenderType(blockState));
 		aoCalc.prepare(PackedSectionPos.packWithSectionMask(blockPos));
-		prepareForBlock(model, blockState, blockPos, defaultAo);
+		prepareForBlock(model, blockState, blockPos);
 		renderInner((BlockModel) model);
 	}
 
-	// PERF: don't pass in matrixStack each time, just change model matrix directly
 	private void renderInner(final BlockModel model) {
 		try {
 			model.renderAsBlock(this.inputContext, emitter());
@@ -117,16 +123,79 @@ public class PastelTerrainRenderContext extends BlockRenderContext<RenderChunkRe
 
 	@Override
 	protected void shadeQuad() {
-		// needs to happen before offsets are applied
+		// tint before we apply shading
+		colorizeQuad(emitter, this.inputContext);
+
 		if (!emitter.material().disableAo() && Minecraft.useAmbientOcclusion()) {
 			aoCalc.compute(emitter);
+			final var blockView = inputContext.blockView();
+
+			if (emitter.material().disableDiffuse()) {
+				// if diffuse is disabled, some dimensions can still have an ambient shading value.
+				final float shade = blockView.getShade(Direction.UP, false);
+
+				if (shade == 1.0f) {
+					emitter.vertexColor(0, ColorUtil.multiplyRGB(emitter.vertexColor(0), emitter.ao[0]));
+					emitter.vertexColor(1, ColorUtil.multiplyRGB(emitter.vertexColor(1), emitter.ao[1]));
+					emitter.vertexColor(2, ColorUtil.multiplyRGB(emitter.vertexColor(2), emitter.ao[2]));
+					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), emitter.ao[3]));
+				} else {
+					emitter.vertexColor(0, ColorUtil.multiplyRGB(emitter.vertexColor(0), shade * emitter.ao[0]));
+					emitter.vertexColor(1, ColorUtil.multiplyRGB(emitter.vertexColor(1), shade * emitter.ao[1]));
+					emitter.vertexColor(2, ColorUtil.multiplyRGB(emitter.vertexColor(2), shade * emitter.ao[2]));
+					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), shade * emitter.ao[3]));
+				}
+			} else {
+				if (emitter.hasVertexNormals()) {
+					// different shade value per vertex
+					emitter.vertexColor(0, ColorUtil.multiplyRGB(emitter.vertexColor(0), EncoderUtil.normalShade(emitter.packedNormal(0), blockView, true) * emitter.ao[0]));
+					emitter.vertexColor(1, ColorUtil.multiplyRGB(emitter.vertexColor(1), EncoderUtil.normalShade(emitter.packedNormal(1), blockView, true) * emitter.ao[1]));
+					emitter.vertexColor(2, ColorUtil.multiplyRGB(emitter.vertexColor(2), EncoderUtil.normalShade(emitter.packedNormal(2), blockView, true) * emitter.ao[2]));
+					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), EncoderUtil.normalShade(emitter.packedNormal(3), blockView, true) * emitter.ao[3]));
+				} else {
+					// same shade value for all vertices
+					final float shade = blockView.getShade(emitter.lightFace(), true);
+
+					emitter.vertexColor(0, ColorUtil.multiplyRGB(emitter.vertexColor(0), shade * emitter.ao[0]));
+					emitter.vertexColor(1, ColorUtil.multiplyRGB(emitter.vertexColor(1), shade * emitter.ao[1]));
+					emitter.vertexColor(2, ColorUtil.multiplyRGB(emitter.vertexColor(2), shade * emitter.ao[2]));
+					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), shade * emitter.ao[3]));
+				}
+			}
 		} else if (PastelRenderer.semiFlatLighting) {
 			aoCalc.computeFlat(emitter);
+			final var blockView = inputContext.blockView();
+
+			if (emitter.material().disableDiffuse()) {
+				// if diffuse is disabled, some dimensions can still have an ambient shading value.
+				final float shade = blockView.getShade(Direction.UP, false);
+
+				if (shade != 1.0f) {
+					emitter.vertexColor(0, ColorUtil.multiplyRGB(emitter.vertexColor(0), shade));
+					emitter.vertexColor(1, ColorUtil.multiplyRGB(emitter.vertexColor(1), shade));
+					emitter.vertexColor(2, ColorUtil.multiplyRGB(emitter.vertexColor(2), shade));
+					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), shade));
+				}
+			} else {
+				if (emitter.hasVertexNormals()) {
+					// different shade value per vertex
+					emitter.vertexColor(0, ColorUtil.multiplyRGB(emitter.vertexColor(0), EncoderUtil.normalShade(emitter.packedNormal(0), blockView, true)));
+					emitter.vertexColor(1, ColorUtil.multiplyRGB(emitter.vertexColor(1), EncoderUtil.normalShade(emitter.packedNormal(1), blockView, true)));
+					emitter.vertexColor(2, ColorUtil.multiplyRGB(emitter.vertexColor(2), EncoderUtil.normalShade(emitter.packedNormal(2), blockView, true)));
+					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), EncoderUtil.normalShade(emitter.packedNormal(3), blockView, true)));
+				} else {
+					// same shade value for all vertices
+					final float shade = blockView.getShade(emitter.lightFace(), true);
+
+					emitter.vertexColor(0, ColorUtil.multiplyRGB(emitter.vertexColor(0), shade));
+					emitter.vertexColor(1, ColorUtil.multiplyRGB(emitter.vertexColor(1), shade));
+					emitter.vertexColor(2, ColorUtil.multiplyRGB(emitter.vertexColor(2), shade));
+					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), shade));
+				}
+			}
 		} else {
 			EncoderUtil.applyFlatLighting(emitter, inputContext.flatBrightness(emitter));
 		}
-
-		colorizeQuad(emitter, this.inputContext);
 	}
 
 	@Override

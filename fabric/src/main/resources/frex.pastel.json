@@ -5,6 +5,7 @@
 	"compatibilityLevel": "JAVA_16",
 	"plugin": "io.vram.frex.pastel.mixin.PastelMixinPlugin",
 	"mixins": [
+		"MixinChunkRebuildTask",
 		"MixinItemRenderer",
 		"MixinModelBlockRenderer",
 		"MixinRenderChunkRegion"

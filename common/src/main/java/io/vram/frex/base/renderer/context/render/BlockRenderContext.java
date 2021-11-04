@@ -57,14 +57,14 @@ public abstract class BlockRenderContext<T extends BlockAndTintGetter> extends B
 	 * @param modelAO
 	 * @param seed       pass -1 for default behavior
 	 */
-	public void prepareForBlock(BakedModel model, BlockState blockState, BlockPos blockPos, boolean modelAO, long seed, int overlay) {
+	public void prepareForBlock(BakedModel model, BlockState blockState, BlockPos blockPos, long seed, int overlay) {
 		inputContext.prepareForBlock(model, blockState, blockPos, seed, overlay);
-		prepareForBlock(blockState, modelAO);
+		prepareForBlock(blockState, model.useAmbientOcclusion());
 	}
 
-	public void prepareForBlock(BakedModel model, BlockState blockState, BlockPos blockPos, boolean modelAO) {
+	public void prepareForBlock(BakedModel model, BlockState blockState, BlockPos blockPos) {
 		inputContext.prepareForBlock(model, blockState, blockPos);
-		prepareForBlock(blockState, modelAO);
+		prepareForBlock(blockState, model.useAmbientOcclusion());
 	}
 
 	public void prepareForFluid(BlockState blockState, BlockPos blockPos, boolean modelAO) {

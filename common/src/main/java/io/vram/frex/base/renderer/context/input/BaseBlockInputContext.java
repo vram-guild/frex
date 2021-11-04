@@ -69,6 +69,12 @@ public class BaseBlockInputContext<T extends BlockAndTintGetter> extends BaseBak
 		setMatrixStack(matrixStack);
 	}
 
+	public void release() {
+		blockView = null;
+		matrixStack = null;
+		bakedModel = null;
+	}
+
 	/**
 	 * @param blockState
 	 * @param blockPos

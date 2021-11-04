@@ -39,7 +39,7 @@ public abstract class SimpleBlockRenderContext extends BlockRenderContext<BlockA
 	public void render(ModelBlockRenderer vanillaRenderer, BlockAndTintGetter blockView, BakedModel model, BlockState state, BlockPos pos, PoseStack poseStack, VertexConsumer buffer, boolean checkSides, long seed, int overlay) {
 		defaultConsumer = buffer;
 		inputContext.prepareForWorld(blockView, checkSides, MatrixStack.cast(poseStack));
-		prepareForBlock(model, state, pos, model.useAmbientOcclusion(), seed, overlay);
+		prepareForBlock(model, state, pos, seed, overlay);
 		((BlockModel) model).renderAsBlock(inputContext, emitter());
 	}
 

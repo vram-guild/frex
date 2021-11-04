@@ -22,6 +22,9 @@ package io.vram.frex.base.renderer.util;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
+
 import io.vram.frex.api.math.FastMatrix3f;
 import io.vram.frex.api.math.FastMatrix4f;
 import io.vram.frex.api.model.BakedInputContext;
@@ -79,9 +82,66 @@ public abstract class EncoderUtil {
 	}
 
 	/**
+	 * Finds mean of per-face shading factors weighted by normal components.
+	 * Not how light actually works but the vanilla diffuse shading model is a hack to start with
+	 * and this gives reasonable results for non-cubic surfaces in a vanilla-style renderer.
+	 */
+	public static float normalShade(int packedNormal, BlockAndTintGetter blockView, boolean hasShade) {
+		final float normalX = PackedVector3f.packedX(packedNormal);
+		final float normalY = PackedVector3f.packedY(packedNormal);
+		final float normalZ = PackedVector3f.packedZ(packedNormal);
+
+		float sum = 0;
+		float div = 0;
+
+		if (normalX > 0) {
+			sum += normalX * blockView.getShade(Direction.EAST, hasShade);
+			div += normalX;
+		} else if (normalX < 0) {
+			sum += -normalX * blockView.getShade(Direction.WEST, hasShade);
+			div -= normalX;
+		}
+
+		if (normalY > 0) {
+			sum += normalY * blockView.getShade(Direction.UP, hasShade);
+			div += normalY;
+		} else if (normalY < 0) {
+			sum += -normalY * blockView.getShade(Direction.DOWN, hasShade);
+			div -= normalY;
+		}
+
+		if (normalZ > 0) {
+			sum += normalZ * blockView.getShade(Direction.SOUTH, hasShade);
+			div += normalZ;
+		} else if (normalZ < 0) {
+			sum += -normalZ * blockView.getShade(Direction.NORTH, hasShade);
+			div -= normalZ;
+		}
+
+		return sum / div;
+	}
+
+	/**
 	 * handles block color and red-blue swizzle, common to all renders.
 	 */
 	public static void colorizeQuad(BaseQuadEmitter quad, BakedInputContext context) {
+		final int colorIndex = quad.colorIndex();
+
+		if (colorIndex == -1 || quad.material().disableColorIndex()) {
+			quad.vertexColor(0, ColorUtil.swapRedBlueIfNeeded(quad.vertexColor(0)));
+			quad.vertexColor(1, ColorUtil.swapRedBlueIfNeeded(quad.vertexColor(1)));
+			quad.vertexColor(2, ColorUtil.swapRedBlueIfNeeded(quad.vertexColor(2)));
+			quad.vertexColor(3, ColorUtil.swapRedBlueIfNeeded(quad.vertexColor(3)));
+		} else {
+			final int indexedColor = context.indexedColor(colorIndex);
+			quad.vertexColor(0, ColorUtil.swapRedBlueIfNeeded(ColorUtil.multiplyColor(indexedColor, quad.vertexColor(0))));
+			quad.vertexColor(1, ColorUtil.swapRedBlueIfNeeded(ColorUtil.multiplyColor(indexedColor, quad.vertexColor(1))));
+			quad.vertexColor(2, ColorUtil.swapRedBlueIfNeeded(ColorUtil.multiplyColor(indexedColor, quad.vertexColor(2))));
+			quad.vertexColor(3, ColorUtil.swapRedBlueIfNeeded(ColorUtil.multiplyColor(indexedColor, quad.vertexColor(3))));
+		}
+	}
+
+	public static void colorizeQuadDiffuse(BaseQuadEmitter quad, BakedInputContext context) {
 		final int colorIndex = quad.colorIndex();
 
 		if (colorIndex == -1 || quad.material().disableColorIndex()) {

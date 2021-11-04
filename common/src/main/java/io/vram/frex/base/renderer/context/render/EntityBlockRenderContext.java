@@ -89,7 +89,7 @@ public abstract class EntityBlockRenderContext extends BlockRenderContext<BlockA
 		defaultConsumer = consumers.getBuffer(ItemBlockRenderTypes.getRenderType(state, false));
 		this.light = light;
 		inputContext.prepareForWorld(level, false, MatrixStack.cast(poseStack));
-		prepareForBlock(model, state, pos, model.useAmbientOcclusion(), 42L, overlay);
+		prepareForBlock(model, state, pos, 42L, overlay);
 		prepareEncoding(consumers);
 		((BlockModel) model).renderAsBlock(inputContext, emitter());
 		defaultConsumer = null;

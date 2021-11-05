@@ -64,7 +64,7 @@ public abstract class MixinChunkRebuildTask {
 		if (renderChunkRegion != null) {
 			final PastelTerrainRenderContext context = PastelTerrainRenderContext.POOL.get();
 			((RenderChunkRegionExt) renderChunkRegion).frx_setContext(context, this$1.getOrigin());
-			context.prepareForRegion(renderChunkRegion, poseStack, blockPos, arg4);
+			context.prepareForRegion(renderChunkRegion, arg3, poseStack, blockPos, arg4);
 		}
 	}
 

@@ -42,6 +42,7 @@ public abstract class BlockRenderContext<T extends BlockAndTintGetter> extends B
 	 */
 	public final BlockPos.MutableBlockPos searchPos = new BlockPos.MutableBlockPos();
 
+	// WIP: remove - obtain lazily
 	@Nullable protected VertexConsumer defaultConsumer;
 
 	protected boolean defaultAo;

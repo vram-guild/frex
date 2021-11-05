@@ -6,6 +6,7 @@
 	"plugin": "io.vram.frex.pastel.mixin.PastelMixinPlugin",
 	"mixins": [
 		"MixinChunkRebuildTask",
+		"MixinCompiledChunk",
 		"MixinItemRenderer",
 		"MixinModelBlockRenderer",
 		"MixinRenderChunkRegion"

@@ -22,9 +22,13 @@ package io.vram.frex.pastel;
 
 import static io.vram.frex.base.renderer.util.EncoderUtil.colorizeQuad;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.Nullable;
 
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexFormat;
 
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
@@ -32,12 +36,15 @@ import net.minecraft.ReportedException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ChunkBufferBuilderPack;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.chunk.ChunkRenderDispatcher.CompiledChunk;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 
+import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.math.MatrixStack;
 import io.vram.frex.api.math.PackedSectionPos;
 import io.vram.frex.api.model.BlockModel;
@@ -46,11 +53,14 @@ import io.vram.frex.base.renderer.ao.AoCalculator;
 import io.vram.frex.base.renderer.context.input.BaseBlockInputContext;
 import io.vram.frex.base.renderer.context.render.BlockRenderContext;
 import io.vram.frex.base.renderer.util.EncoderUtil;
+import io.vram.frex.pastel.util.CompiledChunkExt;
 import io.vram.frex.pastel.util.RenderChunkRegionExt;
 
 public class PastelTerrainRenderContext extends BlockRenderContext<RenderChunkRegion> {
 	protected RenderChunkRegionExt regionExt;
 	protected ChunkBufferBuilderPack buffers;
+	protected CompiledChunkExt compiledChunkExt;
+	protected final Object2ObjectOpenHashMap<RenderType, BufferBuilder> usedBuffers = new Object2ObjectOpenHashMap<>();
 
 	private final AoCalculator aoCalc = new AoCalculator() {
 		@Override
@@ -89,9 +99,11 @@ public class PastelTerrainRenderContext extends BlockRenderContext<RenderChunkRe
 		};
 	}
 
-	public PastelTerrainRenderContext prepareForRegion(RenderChunkRegion region, PoseStack poseStack, BlockPos origin, ChunkBufferBuilderPack buffers) {
+	public PastelTerrainRenderContext prepareForRegion(RenderChunkRegion region, CompiledChunk compiledChunk, PoseStack poseStack, BlockPos origin, ChunkBufferBuilderPack buffers) {
 		inputContext.prepareForWorld(region, true, (MatrixStack) poseStack);
 		regionExt = (RenderChunkRegionExt) region;
+		compiledChunkExt = (CompiledChunkExt) compiledChunk;
+		usedBuffers.clear();
 		regionExt.frx_setContext(this, origin);
 		this.buffers = buffers;
 		return this;
@@ -104,7 +116,6 @@ public class PastelTerrainRenderContext extends BlockRenderContext<RenderChunkRe
 	}
 
 	public void renderBlock(BlockState blockState, BlockPos blockPos, final BakedModel model) {
-		defaultConsumer = buffers.builder(ItemBlockRenderTypes.getChunkRenderType(blockState));
 		aoCalc.prepare(PackedSectionPos.packWithSectionMask(blockPos));
 		prepareForBlock(model, blockState, blockPos);
 		renderInner((BlockModel) model);
@@ -198,10 +209,50 @@ public class PastelTerrainRenderContext extends BlockRenderContext<RenderChunkRe
 		}
 	}
 
+	/** Lazily retrieves output buffer for given layer, initializing as needed. */
+	public BufferBuilder getInitializedBuffer(RenderType renderLayer) {
+		BufferBuilder result = usedBuffers.get(renderLayer);
+
+		if (result == null) {
+			final BufferBuilder builder = buffers.builder(renderLayer);
+			result = builder;
+			compiledChunkExt.frx_markPopulated(renderLayer);
+			usedBuffers.put(renderLayer, result);
+
+			if (compiledChunkExt.frx_markInitialized(renderLayer)) {
+				result.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+			}
+		}
+
+		return result;
+	}
+
 	@Override
 	protected void encodeQuad() {
-		// WIP: handle non-default render layers - will need to capture immediate
-		EncoderUtil.encodeQuad(emitter, inputContext, defaultConsumer);
+		RenderType renderType;
+
+		switch (emitter.material().preset()) {
+			case MaterialConstants.PRESET_CUTOUT:
+				renderType = RenderType.cutout();
+				break;
+
+			case MaterialConstants.PRESET_CUTOUT_MIPPED:
+				renderType = RenderType.cutoutMipped();
+				break;
+
+			case MaterialConstants.PRESET_SOLID:
+				renderType = RenderType.solid();
+				break;
+
+			case MaterialConstants.PRESET_TRANSLUCENT:
+				renderType = RenderType.translucent();
+				break;
+
+			default:
+				renderType = ItemBlockRenderTypes.getChunkRenderType(inputContext.blockState());
+		}
+
+		EncoderUtil.encodeQuad(emitter, inputContext, getInitializedBuffer(renderType));
 	}
 
 	public static final ThreadLocal<PastelTerrainRenderContext> POOL = ThreadLocal.withInitial(PastelTerrainRenderContext::new);

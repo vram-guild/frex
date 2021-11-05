@@ -20,7 +20,10 @@
 
 package io.vram.frex.base.renderer.context.render;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -54,6 +57,7 @@ public abstract class EntityBlockRenderContext extends BlockRenderContext<BlockA
 	protected final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 	protected Level level;
 	protected float tickDelta;
+	@Nullable protected VertexConsumer defaultConsumer;
 
 	@Override
 	protected BaseBlockInputContext<BlockAndTintGetter> createInputContext() {

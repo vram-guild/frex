@@ -20,10 +20,6 @@
 
 package io.vram.frex.base.renderer.context.render;
 
-import org.jetbrains.annotations.Nullable;
-
-import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
@@ -41,9 +37,6 @@ public abstract class BlockRenderContext<T extends BlockAndTintGetter> extends B
 	 * For use by chunk builder - avoids another threadlocal.
 	 */
 	public final BlockPos.MutableBlockPos searchPos = new BlockPos.MutableBlockPos();
-
-	// WIP: remove - obtain lazily
-	@Nullable protected VertexConsumer defaultConsumer;
 
 	protected boolean defaultAo;
 

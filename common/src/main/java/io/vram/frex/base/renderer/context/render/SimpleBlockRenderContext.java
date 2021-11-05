@@ -20,6 +20,8 @@
 
 package io.vram.frex.base.renderer.context.render;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
@@ -36,6 +38,8 @@ import io.vram.frex.api.model.BlockModel;
  * Context for non-terrain block rendering.
  */
 public abstract class SimpleBlockRenderContext extends BlockRenderContext<BlockAndTintGetter> {
+	@Nullable protected VertexConsumer defaultConsumer;
+
 	public void render(ModelBlockRenderer vanillaRenderer, BlockAndTintGetter blockView, BakedModel model, BlockState state, BlockPos pos, PoseStack poseStack, VertexConsumer buffer, boolean checkSides, long seed, int overlay) {
 		defaultConsumer = buffer;
 		inputContext.prepareForWorld(blockView, checkSides, MatrixStack.cast(poseStack));

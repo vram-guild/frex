@@ -67,6 +67,10 @@ public class FrexCompatibilityWrapper implements grondag.frex.api.Renderer {
 
 	@Override
 	public boolean registerMaterial(ResourceLocation id, net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial material) {
+		if (material == null) {
+			material = FabricMaterial.of(wrapped.materials().defaultMaterial());
+		}
+
 		return wrapped.materials().registerMaterial(id, ((FabricMaterial) material).wrapped);
 	}
 

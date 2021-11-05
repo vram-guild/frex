@@ -143,6 +143,10 @@ public class FabricMaterialFinder implements grondag.frex.api.material.MaterialF
 
 	@Override
 	public grondag.frex.api.material.MaterialFinder copyFrom(RenderMaterial material) {
+		if (material == null) {
+			material = FabricMaterial.of(io.vram.frex.api.material.RenderMaterial.defaultMaterial());
+		}
+
 		wrapped.copyFrom(((FabricMaterial) material).wrapped);
 		return this;
 	}

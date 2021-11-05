@@ -27,6 +27,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 
 import io.vram.frex.api.buffer.QuadEmitter;
+import io.vram.frex.api.material.RenderMaterial;
 
 @SuppressWarnings("deprecation")
 public class FabricQuadEmitter extends FabricQuadView<QuadEmitter> implements grondag.frex.api.mesh.MutableQuadView, grondag.frex.api.mesh.QuadEmitter {
@@ -46,6 +47,10 @@ public class FabricQuadEmitter extends FabricQuadView<QuadEmitter> implements gr
 
 	@Override
 	public grondag.frex.api.mesh.QuadEmitter material(net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial material) {
+		if (material == null) {
+			material = FabricMaterial.of(io.vram.frex.api.material.RenderMaterial.defaultMaterial());
+		}
+
 		wrapped.material(((FabricMaterial) material).wrapped);
 		return this;
 	}
@@ -76,6 +81,10 @@ public class FabricQuadEmitter extends FabricQuadView<QuadEmitter> implements gr
 
 	@Override
 	public grondag.frex.api.mesh.QuadEmitter fromVanilla(BakedQuad quad, net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial material, Direction cullFace) {
+		if (material == null) {
+			material = FabricMaterial.of(RenderMaterial.defaultMaterial());
+		}
+
 		wrapped.fromVanilla(quad, ((FabricMaterial) material).wrapped, cullFace);
 		return this;
 	}

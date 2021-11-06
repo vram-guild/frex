@@ -32,7 +32,7 @@ import net.minecraft.core.Direction;
 
 import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.material.RenderMaterial;
-import io.vram.frex.api.model.util.PackedVector3f;
+import io.vram.frex.api.math.PackedVector3f;
 
 public interface QuadView {
 	/** Count of integers in a conventional (un-modded) block or item vertex. */

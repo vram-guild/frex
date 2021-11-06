@@ -52,10 +52,10 @@ import net.minecraft.core.Direction;
 import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.math.FastMatrix4f;
+import io.vram.frex.api.math.PackedVector3f;
 import io.vram.frex.api.mesh.QuadView;
 import io.vram.frex.api.model.util.FaceUtil;
 import io.vram.frex.api.model.util.GeometryUtil;
-import io.vram.frex.api.model.util.PackedVector3f;
 
 /**
  * Base class for all quads / quad makers. Handles the ugly bits
@@ -71,11 +71,10 @@ public class BaseQuadView implements QuadView {
 	 */
 	protected boolean isSpriteInterpolated = false;
 
-	// WIP: make protected again?
 	/**
 	 * Size and where it comes from will vary in subtypes. But in all cases quad is fully encoded to array.
 	 */
-	public int[] data;
+	protected int[] data;
 
 	/**
 	 * Beginning of the quad. Also the header index.
@@ -207,7 +206,6 @@ public class BaseQuadView implements QuadView {
 		return RenderMaterial.fromIndex(data[baseIndex + HEADER_MATERIAL]);
 	}
 
-	// FIX: seeing zero values for un-tinted quads - should always be -1 for un-tinted.
 	@Override
 	public final int colorIndex() {
 		return data[baseIndex + HEADER_COLOR_INDEX];
@@ -350,8 +348,7 @@ public class BaseQuadView implements QuadView {
 
 	@Override
 	public int packedTangent(int vertexIndex) {
-		// WIP should probably not return zero here
-		return hasTangent(vertexIndex) ? data[baseIndex + vertexIndex + HEADER_FIRST_VERTEX_TANGENT] : 0;
+		return hasTangent(vertexIndex) ? data[baseIndex + vertexIndex + HEADER_FIRST_VERTEX_TANGENT] : PackedVector3f.POSITIVE_Y;
 	}
 
 	@Override

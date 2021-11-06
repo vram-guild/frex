@@ -29,7 +29,7 @@ import org.spongepowered.asm.mixin.Unique;
 import com.mojang.math.Matrix3f;
 
 import io.vram.frex.api.math.FastMatrix3f;
-import io.vram.frex.api.model.util.PackedVector3f;
+import io.vram.frex.api.math.PackedVector3f;
 
 @Mixin(Matrix3f.class)
 public abstract class MixinMatrix3f implements FastMatrix3f {

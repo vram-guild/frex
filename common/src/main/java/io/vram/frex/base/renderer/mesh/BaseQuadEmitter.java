@@ -51,10 +51,10 @@ import net.minecraft.core.Direction;
 import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.buffer.VertexEmitter;
 import io.vram.frex.api.material.RenderMaterial;
-import io.vram.frex.api.math.FastMatrix4f;
 import io.vram.frex.api.math.FastMatrix3f;
+import io.vram.frex.api.math.FastMatrix4f;
+import io.vram.frex.api.math.PackedVector3f;
 import io.vram.frex.api.model.util.FaceUtil;
-import io.vram.frex.api.model.util.PackedVector3f;
 import io.vram.frex.impl.texture.IndexedSprite;
 
 /**

@@ -30,9 +30,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
 import io.vram.frex.api.math.PackedSectionPos;
+import io.vram.frex.api.math.PackedVector3f;
 import io.vram.frex.api.model.util.ColorUtil;
 import io.vram.frex.api.model.util.FaceUtil;
-import io.vram.frex.api.model.util.PackedVector3f;
 import io.vram.frex.base.renderer.ao.AoFace.WeightFunction;
 import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 import io.vram.frex.base.renderer.mesh.BaseQuadView;

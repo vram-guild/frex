@@ -36,7 +36,6 @@ public class PastelBlockRenderContext extends SimpleBlockRenderContext {
 
 	private static ThreadLocal<PastelBlockRenderContext> POOL = POOL_FACTORY.get();
 
-	// WIP: call this
 	public static void reload() {
 		POOL = POOL_FACTORY.get();
 	}

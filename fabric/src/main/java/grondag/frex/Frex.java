@@ -41,12 +41,8 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 
-import io.vram.frex.base.renderer.util.ResourceCache;
+import io.vram.frex.impl.FrexLoadManager;
 import io.vram.frex.impl.config.FlawlessFramesImpl;
-import io.vram.frex.impl.light.ItemLightLoader;
-import io.vram.frex.impl.material.MaterialMapLoader;
-import io.vram.frex.impl.model.FluidModelImpl;
-import io.vram.frex.impl.model.SimpleFluidSpriteProvider;
 
 public class Frex implements ClientModInitializer {
 	public static Logger LOG = LogManager.getLogger("FREX");
@@ -80,6 +76,8 @@ public class Frex implements ClientModInitializer {
 	public void onInitializeClient() {
 		setupRenderer();
 
+		FrexLoadManager.firstTimeLoad();
+
 		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(modelTextureListener);
 
 		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(lightListener);
@@ -110,9 +108,7 @@ public class Frex implements ClientModInitializer {
 
 		@Override
 		public void onResourceManagerReload(ResourceManager resourceManager) {
-			MaterialMapLoader.INSTANCE.reload(resourceManager);
-			SimpleFluidSpriteProvider.reload();
-			FluidModelImpl.reload();
+			FrexLoadManager.reloadTextureDependencies(resourceManager);
 		}
 	};
 
@@ -132,8 +128,7 @@ public class Frex implements ClientModInitializer {
 
 		@Override
 		public void onResourceManagerReload(ResourceManager resourceManager) {
-			ItemLightLoader.INSTANCE.reload(resourceManager);
-			ResourceCache.invalidateAll();
+			FrexLoadManager.reloadGeneralDependencies(resourceManager);
 		}
 	};
 }

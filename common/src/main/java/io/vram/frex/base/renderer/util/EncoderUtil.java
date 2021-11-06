@@ -27,10 +27,10 @@ import net.minecraft.world.level.BlockAndTintGetter;
 
 import io.vram.frex.api.math.FastMatrix3f;
 import io.vram.frex.api.math.FastMatrix4f;
+import io.vram.frex.api.math.PackedVector3f;
 import io.vram.frex.api.model.BakedInputContext;
 import io.vram.frex.api.model.InputContext;
 import io.vram.frex.api.model.util.ColorUtil;
-import io.vram.frex.api.model.util.PackedVector3f;
 import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 import io.vram.frex.base.renderer.mesh.MeshEncodingHelper;
 

@@ -18,7 +18,7 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.api.model.util;
+package io.vram.frex.api.math;
 
 import com.mojang.math.Vector3f;
 
@@ -26,6 +26,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 
 import io.vram.frex.api.mesh.QuadView;
+import io.vram.frex.api.model.util.GeometryUtil;
 
 /**
  * Static routines of general utility for renderer implementations.
@@ -124,4 +125,11 @@ public abstract class PackedVector3f {
 
 		return pack(normX, normY, normZ);
 	}
+
+	public static final int POSITIVE_X = pack(1, 0, 0);
+	public static final int NEGATIVE_X = pack(-1, 0, 0);
+	public static final int POSITIVE_Y = pack(0, 1, 0);
+	public static final int NEGATIVE_Y = pack(0, -1, 0);
+	public static final int POSITIVE_Z = pack(0, 0, 1);
+	public static final int NEGATIVE_Z = pack(0, 0, -1);
 }

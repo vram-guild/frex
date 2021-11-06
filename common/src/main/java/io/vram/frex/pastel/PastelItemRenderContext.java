@@ -45,7 +45,6 @@ public class PastelItemRenderContext extends ItemRenderContext {
 
 	private static ThreadLocal<PastelItemRenderContext> POOL = POOL_FACTORY.get();
 
-	// WIP: call this
 	public static void reload() {
 		POOL = POOL_FACTORY.get();
 	}

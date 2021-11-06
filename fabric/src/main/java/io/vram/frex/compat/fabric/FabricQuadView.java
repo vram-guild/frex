@@ -29,8 +29,8 @@ import net.minecraft.core.Direction;
 
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 
+import io.vram.frex.api.math.PackedVector3f;
 import io.vram.frex.api.mesh.QuadView;
-import io.vram.frex.api.model.util.PackedVector3f;
 
 @SuppressWarnings("deprecation")
 public class FabricQuadView<T extends QuadView> implements grondag.frex.api.mesh.QuadView {

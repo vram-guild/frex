@@ -44,7 +44,6 @@ public class PastelEntityBlockRenderContext extends EntityBlockRenderContext {
 
 	private static ThreadLocal<PastelEntityBlockRenderContext> POOL = POOL_FACTORY.get();
 
-	// WIP: call this
 	public static void reload() {
 		POOL = POOL_FACTORY.get();
 	}

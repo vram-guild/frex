@@ -69,6 +69,10 @@ public class BaseBlockInputContext<T extends BlockAndTintGetter> extends BaseBak
 		setMatrixStack(matrixStack);
 	}
 
+	public void setWorld(T blockView) {
+		this.blockView = blockView;
+	}
+
 	public void release() {
 		blockView = null;
 		matrixStack = null;

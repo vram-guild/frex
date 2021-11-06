@@ -41,6 +41,7 @@ import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.api.material.MaterialConstants;
@@ -55,7 +56,7 @@ import io.vram.frex.base.renderer.util.EncoderUtil;
 import io.vram.frex.pastel.util.CompiledChunkExt;
 import io.vram.frex.pastel.util.RenderChunkRegionExt;
 
-public class PastelTerrainRenderContext extends BlockRenderContext<RenderChunkRegion> {
+public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintGetter> {
 	protected RenderChunkRegionExt regionExt;
 	protected ChunkBufferBuilderPack buffers;
 	protected CompiledChunkExt compiledChunkExt;
@@ -84,7 +85,7 @@ public class PastelTerrainRenderContext extends BlockRenderContext<RenderChunkRe
 	};
 
 	@Override
-	protected BaseBlockInputContext<RenderChunkRegion> createInputContext() {
+	protected BaseBlockInputContext<BlockAndTintGetter> createInputContext() {
 		return new BaseBlockInputContext<>() {
 			@Override
 			protected int fastBrightness(BlockPos pos) {
@@ -106,6 +107,10 @@ public class PastelTerrainRenderContext extends BlockRenderContext<RenderChunkRe
 		regionExt.frx_setContext(this, origin);
 		this.buffers = buffers;
 		return this;
+	}
+
+	public void overrideBlockView(BlockAndTintGetter blockView) {
+		inputContext.setWorld(blockView);
 	}
 
 	public void renderFluid(BlockState blockState, BlockPos blockPos, boolean defaultAo, final BlockModel model) {

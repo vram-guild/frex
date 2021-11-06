@@ -23,20 +23,23 @@ package io.vram.frex.api.world;
 import java.util.List;
 import java.util.function.Predicate;
 
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.impl.world.RenderRegionBakeListenerImpl;
 
 @FunctionalInterface
 public interface RenderRegionBakeListener {
-	void bake(RenderRegionContext context, BlockStateRenderer blockStateRenderer);
+	void bake(RenderRegionContext<BlockAndTintGetter> context, BlockStateRenderer blockStateRenderer);
 
-	static void register(Predicate<? super RenderRegionContext> predicate, RenderRegionBakeListener listener) {
+	default BlockAndTintGetter blockViewOverride(BlockAndTintGetter baseView) {
+		return baseView;
+	}
+
+	static void register(Predicate<? super RenderRegionContext<Level>> predicate, RenderRegionBakeListener listener) {
 		RenderRegionBakeListenerImpl.register(predicate, listener);
 	}
 
@@ -45,17 +48,16 @@ public interface RenderRegionBakeListener {
 	 * instance and if populated, invoking all listeners in the list at the appropriate time. Renderer must
 	 * also clear the list instance if needed before calling.
 	 */
-	static void prepareInvocations(RenderRegionContext context, List<RenderRegionBakeListener> listeners) {
+	static void prepareInvocations(RenderRegionContext<Level> context, List<RenderRegionBakeListener> listeners) {
 		RenderRegionBakeListenerImpl.prepareInvocations(context, listeners);
 	}
 
 	// FEAT: create way to add a block view transform for virtual rendering - at a minimum, allow for connected textures and glass face culling
-	public interface RenderRegionContext {
+	public interface RenderRegionContext<T extends BlockAndTintGetter> {
 		/**
-		 * Not available until chunk baking.  Predicate tests must
-		 * be done based on block position only.
+		 * Is Level during predicate test, and BlockAndTintGetter during render.
 		 */
-		@Nullable BlockAndTintGetter blockView();
+		T blockView();
 
 		/**
 		 * Min position (inclusive) of the area being built.

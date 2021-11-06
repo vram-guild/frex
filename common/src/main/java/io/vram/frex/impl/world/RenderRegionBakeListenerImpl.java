@@ -25,26 +25,28 @@ import java.util.function.Predicate;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
+import net.minecraft.world.level.Level;
+
 import io.vram.frex.api.world.RenderRegionBakeListener;
 import io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext;
 
 public class RenderRegionBakeListenerImpl {
 	@FunctionalInterface
 	private interface BakeHandler {
-		void handle(RenderRegionContext context, List<RenderRegionBakeListener> list);
+		void handle(RenderRegionContext<Level> context, List<RenderRegionBakeListener> list);
 	}
 
 	private static class BakeHandlerImpl implements BakeHandler {
-		private final Predicate<? super RenderRegionContext> predicate;
+		private final Predicate<? super RenderRegionContext<Level>> predicate;
 		private final RenderRegionBakeListener listener;
 
-		private BakeHandlerImpl(Predicate<? super RenderRegionContext> predicate, RenderRegionBakeListener listener) {
+		private BakeHandlerImpl(Predicate<? super RenderRegionContext<Level>> predicate, RenderRegionBakeListener listener) {
 			this.predicate = predicate;
 			this.listener = listener;
 		}
 
 		@Override
-		public void handle(RenderRegionContext context, List<RenderRegionBakeListener> list) {
+		public void handle(RenderRegionContext<Level> context, List<RenderRegionBakeListener> list) {
 			if (predicate.test(context)) {
 				list.add(listener);
 			}
@@ -54,7 +56,7 @@ public class RenderRegionBakeListenerImpl {
 	private static final ObjectArrayList<BakeHandler> LISTENERS = new ObjectArrayList<>();
 	private static BakeHandler active = (context, list) -> { };
 
-	public static void register(Predicate<? super RenderRegionContext> predicate, RenderRegionBakeListener handler) {
+	public static void register(Predicate<? super RenderRegionContext<Level>> predicate, RenderRegionBakeListener handler) {
 		LISTENERS.add(new BakeHandlerImpl(predicate, handler));
 
 		if (LISTENERS.size() == 1) {
@@ -70,7 +72,7 @@ public class RenderRegionBakeListenerImpl {
 		}
 	}
 
-	public static void prepareInvocations(RenderRegionContext context, List<RenderRegionBakeListener> list) {
+	public static void prepareInvocations(RenderRegionContext<Level> context, List<RenderRegionBakeListener> list) {
 		active.handle(context, list);
 	}
 }

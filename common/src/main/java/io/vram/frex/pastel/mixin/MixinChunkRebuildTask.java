@@ -60,7 +60,7 @@ import io.vram.frex.pastel.util.RenderChunkRegionExt;
 
 // PERF: find a way to disable redundant Fabric MixinChunkRendeRegion mixin for fabric RenderAttachedBlockview
 @Mixin(targets = "net.minecraft.client.renderer.chunk.ChunkRenderDispatcher$RenderChunk$RebuildTask")
-public abstract class MixinChunkRebuildTask implements RenderRegionContext {
+public abstract class MixinChunkRebuildTask implements RenderRegionContext<BlockAndTintGetter> {
 	//e -> field_20839 -> this$1
 	@Shadow protected RenderChunk this$1;
 
@@ -96,11 +96,16 @@ public abstract class MixinChunkRebuildTask implements RenderRegionContext {
 				final int limit = listeners.length;
 
 				for (int n = 0; n < limit; ++n) {
-					listeners[n].bake(this, blockStateRenderer);
+					final var listener = listeners[n];
+					context.overrideBlockView(listener.blockViewOverride(renderChunkRegion));
+					listener.bake(this, blockStateRenderer);
 				}
 
+				context.overrideBlockView(renderChunkRegion);
 				contextRegion = null;
 			}
+
+			context.prepareForRegion(renderChunkRegion, arg3, poseStack, blockPos, arg4);
 		}
 	}
 

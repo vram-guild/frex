@@ -25,12 +25,12 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.Level;
 
 import io.vram.frex.api.world.RenderRegionBakeListener;
 import io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext;
 
-public class ChunkRenderConditionContext implements RenderRegionContext {
+public class ChunkRenderConditionContext implements RenderRegionContext<Level> {
 	public final ObjectArrayList<RenderRegionBakeListener> listeners = new ObjectArrayList<>();
 	private final BlockPos.MutableBlockPos origin = new BlockPos.MutableBlockPos();
 	private final BlockPos.MutableBlockPos searchPos = new BlockPos.MutableBlockPos();
@@ -56,7 +56,7 @@ public class ChunkRenderConditionContext implements RenderRegionContext {
 	}
 
 	@Override
-	public BlockAndTintGetter blockView() {
+	public Level blockView() {
 		return null;
 	}
 

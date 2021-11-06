@@ -23,6 +23,9 @@ package grondag.frex.api.event;
 import java.util.List;
 import java.util.function.Predicate;
 
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.Level;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -32,7 +35,7 @@ import io.vram.frex.impl.world.RenderRegionBakeListenerImpl;
 @Deprecated
 @FunctionalInterface
 public interface RenderRegionBakeListener extends io.vram.frex.api.world.RenderRegionBakeListener {
-	static void register(Predicate<? super io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext> predicate, io.vram.frex.api.world.RenderRegionBakeListener listener) {
+	static void register(Predicate<? super io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext<Level>> predicate, io.vram.frex.api.world.RenderRegionBakeListener listener) {
 		RenderRegionBakeListenerImpl.register(predicate, listener);
 	}
 
@@ -41,12 +44,12 @@ public interface RenderRegionBakeListener extends io.vram.frex.api.world.RenderR
 	 * instance and if populated, invoking all listeners in the list at the appropriate time. Renderer must
 	 * also clear the list instance if needed before calling.
 	 */
-	static void prepareInvocations(io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext context, List<io.vram.frex.api.world.RenderRegionBakeListener> listeners) {
+	static void prepareInvocations(io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext<Level> context, List<io.vram.frex.api.world.RenderRegionBakeListener> listeners) {
 		RenderRegionBakeListenerImpl.prepareInvocations(context, listeners);
 	}
 
 	@Environment(EnvType.CLIENT)
-	public interface RenderRegionContext extends io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext { }
+	public interface RenderRegionContext extends io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext<BlockAndTintGetter> { }
 
 	@Environment(EnvType.CLIENT)
 	@FunctionalInterface

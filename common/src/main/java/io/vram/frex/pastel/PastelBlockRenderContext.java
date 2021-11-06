@@ -26,7 +26,7 @@ import io.vram.frex.base.renderer.context.render.SimpleBlockRenderContext;
 import io.vram.frex.base.renderer.util.EncoderUtil;
 
 /**
- * Context for non-terrain block rendering.
+ * Default context for non-terrain block rendering when multi-buffer not available.
  */
 public class PastelBlockRenderContext extends SimpleBlockRenderContext {
 	private static final Supplier<ThreadLocal<PastelBlockRenderContext>> POOL_FACTORY = () -> ThreadLocal.withInitial(() -> {
@@ -51,7 +51,6 @@ public class PastelBlockRenderContext extends SimpleBlockRenderContext {
 
 	@Override
 	protected void encodeQuad() {
-		// WIP: handle non-default render layers - will need to capture immediate
 		EncoderUtil.encodeQuad(emitter, inputContext, defaultConsumer);
 	}
 }

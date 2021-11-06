@@ -27,6 +27,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -81,7 +82,8 @@ public class PastelItemRenderContext extends ItemRenderContext {
 			if (inputContext.drawTranslucencyToMainTarget() || !Minecraft.useShaderTransparency()) {
 				consumer = ItemRenderer.getCompassFoilBufferDirect(vertexConsumers, Sheets.cutoutBlockSheet(), matrixStack.asPoseStack().last());
 			} else {
-				consumer = ItemRenderer.getCompassFoilBuffer(vertexConsumers, Sheets.cutoutBlockSheet(), matrixStack.asPoseStack().last());
+				final RenderType renderType = mat.cutout() == MaterialConstants.CUTOUT_NONE ? Sheets.solidBlockSheet() : Sheets.cutoutBlockSheet();
+				consumer = ItemRenderer.getCompassFoilBuffer(vertexConsumers, renderType, matrixStack.asPoseStack().last());
 			}
 
 			matrixStack.pop();
@@ -92,7 +94,8 @@ public class PastelItemRenderContext extends ItemRenderContext {
 				consumer = ItemRenderer.getFoilBuffer(vertexConsumers, Sheets.translucentItemSheet(), true, mat.foilOverlay());
 			}
 		} else {
-			consumer = ItemRenderer.getFoilBufferDirect(vertexConsumers, Sheets.cutoutBlockSheet(), true, mat.foilOverlay());
+			final RenderType renderType = mat.cutout() == MaterialConstants.CUTOUT_NONE ? Sheets.solidBlockSheet() : Sheets.cutoutBlockSheet();
+			consumer = ItemRenderer.getFoilBufferDirect(vertexConsumers, renderType, true, mat.foilOverlay());
 		}
 
 		EncoderUtil.encodeQuad(emitter, inputContext, consumer);

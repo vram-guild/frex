@@ -108,6 +108,7 @@ public class PastelTerrainRenderContext extends BlockRenderContext<RenderChunkRe
 		return this;
 	}
 
+	// WIP: call this for fluids
 	public void renderFluid(BlockState blockState, BlockPos blockPos, boolean defaultAo, final BlockModel model) {
 		aoCalc.prepare(PackedSectionPos.packWithSectionMask(blockPos));
 		prepareForFluid(blockState, blockPos, defaultAo);
@@ -209,7 +210,7 @@ public class PastelTerrainRenderContext extends BlockRenderContext<RenderChunkRe
 	}
 
 	/** Lazily retrieves output buffer for given layer, initializing as needed. */
-	public BufferBuilder getInitializedBuffer(RenderType renderLayer) {
+	protected BufferBuilder getInitializedBuffer(RenderType renderLayer) {
 		BufferBuilder result = usedBuffers.get(renderLayer);
 
 		if (result == null) {

@@ -80,8 +80,8 @@ public abstract class MixinChunkRebuildTask {
 			}
 
 			((RenderChunkRegionExt) blockView).frx_getContext().renderBlock(blockState, blockPos, renderManager.getBlockModel(blockState));
-			// WIP: not correct - need to handle in context or return real value
-			return true;
+			// we handle all initialization/tracking in render context
+			return false;
 		} else {
 			return false;
 		}

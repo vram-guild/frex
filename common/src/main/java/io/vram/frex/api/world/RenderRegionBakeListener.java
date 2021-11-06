@@ -26,6 +26,7 @@ import java.util.function.Predicate;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -48,6 +49,7 @@ public interface RenderRegionBakeListener {
 		RenderRegionBakeListenerImpl.prepareInvocations(context, listeners);
 	}
 
+	// FEAT: create way to add a block view transform for virtual rendering - at a minimum, allow for connected textures and glass face culling
 	public interface RenderRegionContext {
 		/**
 		 * Not available until chunk baking.  Predicate tests must
@@ -61,6 +63,9 @@ public interface RenderRegionBakeListener {
 		 * extending beyond this.
 		 */
 		BlockPos origin();
+
+		/** Non-allocating utility for block position operations. Do not retain. */
+		MutableBlockPos originOffset(int x, int y, int z);
 
 		/**
 		 * Size of the area being built, on x-axis,, including the origin.

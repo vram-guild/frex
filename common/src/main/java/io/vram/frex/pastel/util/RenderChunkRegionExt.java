@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 
+import io.vram.frex.api.world.RenderRegionBakeListener;
 import io.vram.frex.pastel.PastelTerrainRenderContext;
 
 public interface RenderChunkRegionExt {
@@ -41,4 +42,7 @@ public interface RenderChunkRegionExt {
 	PastelTerrainRenderContext frx_getContext();
 
 	void frx_setContext(PastelTerrainRenderContext context, BlockPos origin);
+
+	@Nullable
+	RenderRegionBakeListener[] frx_getRenderRegionListeners();
 }

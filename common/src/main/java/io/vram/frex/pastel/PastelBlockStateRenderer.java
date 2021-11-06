@@ -18,38 +18,35 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.impl.event;
+package io.vram.frex.pastel;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.fabricmc.fabric.impl.client.indigo.renderer.accessor.AccessChunkRendererRegion;
+import io.vram.frex.api.model.BlockModel;
+import io.vram.frex.api.world.RenderRegionBakeListener.BlockStateRenderer;
+import io.vram.frex.pastel.util.RenderChunkRegionExt;
 
-import grondag.frex.api.event.RenderRegionBakeListener.BlockStateRenderer;
-
-public class BlockStateRendererImpl implements BlockStateRenderer {
-	private BlockRenderDispatcher blockRenderManager;
+public class PastelBlockStateRenderer implements BlockStateRenderer {
 	private PoseStack matrixStack;
 	private RenderChunkRegion chunkRendererRegion;
 
-	public void prepare(BlockRenderDispatcher blockRenderManager, PoseStack matrixStack, RenderChunkRegion chunkRendererRegion) {
-		this.blockRenderManager = blockRenderManager;
+	public void prepare(PoseStack matrixStack, RenderChunkRegion chunkRendererRegion) {
 		this.matrixStack = matrixStack;
 		this.chunkRendererRegion = chunkRendererRegion;
 	}
 
 	@Override
 	public void bake(BlockPos pos, BlockState state) {
-		final BakedModel model = blockRenderManager.getBlockModel(state);
+		final BakedModel model = BlockModel.get(state);
 
 		matrixStack.pushPose();
 		matrixStack.translate(pos.getX() & 15, pos.getY() & 15, pos.getZ() & 15);
-		((AccessChunkRendererRegion) chunkRendererRegion).fabric_getRenderer().tesselateBlock(state, pos, model, matrixStack);
+		((RenderChunkRegionExt) chunkRendererRegion).frx_getContext().renderBlock(state, pos, model);
 		matrixStack.popPose();
 	}
 }

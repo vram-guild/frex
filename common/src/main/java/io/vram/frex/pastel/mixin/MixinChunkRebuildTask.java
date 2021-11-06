@@ -25,6 +25,7 @@ import java.util.Set;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -41,6 +42,7 @@ import net.minecraft.client.renderer.chunk.ChunkRenderDispatcher.RenderChunk;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.client.renderer.chunk.VisGraph;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -50,17 +52,32 @@ import net.minecraft.world.phys.Vec3;
 
 import io.vram.frex.api.math.MatrixStack;
 import io.vram.frex.api.model.fluid.FluidModel;
+import io.vram.frex.api.world.RenderRegionBakeListener;
+import io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext;
+import io.vram.frex.pastel.PastelBlockStateRenderer;
 import io.vram.frex.pastel.PastelTerrainRenderContext;
 import io.vram.frex.pastel.util.RenderChunkRegionExt;
 
 // PERF: find a way to disable redundant Fabric MixinChunkRendeRegion mixin for fabric RenderAttachedBlockview
 @Mixin(targets = "net.minecraft.client.renderer.chunk.ChunkRenderDispatcher$RenderChunk$RebuildTask")
-public abstract class MixinChunkRebuildTask {
+public abstract class MixinChunkRebuildTask implements RenderRegionContext {
 	//e -> field_20839 -> this$1
 	@Shadow protected RenderChunk this$1;
 
 	/** Holds block state for use in fluid render. */
 	private BlockState currentBlockState;
+
+	// Below are for RenderRegionBakeListener support
+
+	@Unique
+	private final PastelBlockStateRenderer blockStateRenderer = new PastelBlockStateRenderer();
+
+	// could shadow this but is set to null by the time we need it
+	@Unique
+	private RenderChunkRegion contextRegion;
+
+	@Unique
+	private final BlockPos.MutableBlockPos searchPos = new BlockPos.MutableBlockPos();
 
 	@Inject(method = "Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask;compile(FFFLnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$CompiledChunk;Lnet/minecraft/client/renderer/ChunkBufferBuilderPack;)Ljava/util/Set;",
 				require = 1, locals = LocalCapture.CAPTURE_FAILEXCEPTION,
@@ -70,6 +87,20 @@ public abstract class MixinChunkRebuildTask {
 			final PastelTerrainRenderContext context = PastelTerrainRenderContext.POOL.get();
 			((RenderChunkRegionExt) renderChunkRegion).frx_setContext(context, this$1.getOrigin());
 			context.prepareForRegion(renderChunkRegion, arg3, poseStack, blockPos, arg4);
+
+			final RenderRegionBakeListener[] listeners = ((RenderChunkRegionExt) renderChunkRegion).frx_getRenderRegionListeners();
+
+			if (listeners != null) {
+				contextRegion = renderChunkRegion;
+				blockStateRenderer.prepare(poseStack, renderChunkRegion);
+				final int limit = listeners.length;
+
+				for (int n = 0; n < limit; ++n) {
+					listeners[n].bake(this, blockStateRenderer);
+				}
+
+				contextRegion = null;
+			}
 		}
 	}
 
@@ -114,5 +145,21 @@ public abstract class MixinChunkRebuildTask {
 	@Inject(at = @At("RETURN"), method = "Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask;compile(FFFLnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$CompiledChunk;Lnet/minecraft/client/renderer/ChunkBufferBuilderPack;)Ljava/util/Set;")
 	private void hookRebuildChunkReturn(CallbackInfoReturnable<Set<BlockEntity>> ci) {
 		PastelTerrainRenderContext.POOL.get().inputContext.release();
+	}
+
+	@Override
+	public BlockAndTintGetter blockView() {
+		return contextRegion;
+	}
+
+	@Override
+	public BlockPos origin() {
+		return this$1.getOrigin();
+	}
+
+	@Override
+	public MutableBlockPos originOffset(int x, int y, int z) {
+		final var origin = origin();
+		return searchPos.set(origin.getX() + x, origin.getY() + y, origin.getZ() + z);
 	}
 }

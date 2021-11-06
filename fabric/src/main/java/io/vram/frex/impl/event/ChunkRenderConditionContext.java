@@ -24,6 +24,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 
 import io.vram.frex.api.world.RenderRegionBakeListener;
@@ -32,11 +33,18 @@ import io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext;
 public class ChunkRenderConditionContext implements RenderRegionContext {
 	public final ObjectArrayList<RenderRegionBakeListener> listeners = new ObjectArrayList<>();
 	private final BlockPos.MutableBlockPos origin = new BlockPos.MutableBlockPos();
+	private final BlockPos.MutableBlockPos searchPos = new BlockPos.MutableBlockPos();
 
 	public ChunkRenderConditionContext prepare(int x, int y, int z) {
 		listeners.clear();
 		origin.set(x, y, z);
 		return this;
+	}
+
+	@Override
+	public MutableBlockPos originOffset(int x, int y, int z) {
+		final var origin = this.origin;
+		return searchPos.set(origin.getX() + x, origin.getY() + y, origin.getZ() + z);
 	}
 
 	public @Nullable RenderRegionBakeListener[] getListeners() {
@@ -55,9 +63,5 @@ public class ChunkRenderConditionContext implements RenderRegionContext {
 	@Override
 	public BlockPos origin() {
 		return origin;
-	}
-
-	public interface RenderRegionListenerProvider {
-		@Nullable RenderRegionBakeListener[] frex_getRenderRegionListeners();
 	}
 }

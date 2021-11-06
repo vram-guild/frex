@@ -46,7 +46,6 @@ public interface WorldRenderContext {
 	 */
 	LevelRenderer worldRenderer();
 
-	// WIP; replace with MatrixStack?
 	PoseStack poseStack();
 
 	float tickDelta();

@@ -37,6 +37,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
@@ -49,6 +50,8 @@ import net.minecraft.world.level.chunk.LevelChunk;
 
 import io.vram.frex.api.math.PackedSectionPos;
 import io.vram.frex.api.world.BlockEntityRenderData;
+import io.vram.frex.api.world.RenderRegionBakeListener;
+import io.vram.frex.impl.event.ChunkRenderConditionContext;
 import io.vram.frex.pastel.PastelTerrainRenderContext;
 import io.vram.frex.pastel.util.RenderChunkRegionExt;
 
@@ -72,6 +75,12 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 
 	private static final AtomicInteger FRX_ERROR_COUNTER = new AtomicInteger();
 	private static final Logger FRX_LOGGER = LogManager.getLogger();
+
+	// For RenderRegionBakeListener
+	@Unique
+	private @Nullable RenderRegionBakeListener[] listeners;
+
+	private static final ThreadLocal<ChunkRenderConditionContext> TRANSFER_POOL = ThreadLocal.withInitial(ChunkRenderConditionContext::new);
 
 	@Inject(method = "<init>", at = @At("RETURN"))
 	public void onNew(Level level, int cxOff, int czOff, LevelChunk[][] levelChunks, BlockPos posFrom, BlockPos posTo, CallbackInfo ci) {
@@ -236,5 +245,28 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 		}
 
 		return result;
+	}
+
+	@Inject(method = "isAllEmpty", at = @At("RETURN"), cancellable = true)
+	private static void isChunkEmpty(BlockPos startPos, BlockPos endPos, int i, int j, LevelChunk[][] levelChunks, CallbackInfoReturnable<Boolean> cir) {
+		// even if region not empty we still test here and capture listeners here
+		final ChunkRenderConditionContext context = TRANSFER_POOL.get().prepare(startPos.getX() + 1, startPos.getY() + 1, startPos.getZ() + 1);
+		RenderRegionBakeListener.prepareInvocations(context, context.listeners);
+
+		if (cir.getReturnValueZ() && !context.listeners.isEmpty()) {
+			// if empty but has listeners, force it to build
+			cir.setReturnValue(false);
+		}
+	}
+
+	@Inject(method = "<init>*", at = @At("RETURN"))
+	private void onInit(Level world, int chunkX, int chunkZ, LevelChunk[][] chunks, BlockPos startPos, BlockPos endPos, CallbackInfo ci) {
+		// capture our predicate search results while still on the same thread - will happen right after the hook above
+		listeners = TRANSFER_POOL.get().getListeners();
+	}
+
+	@Override
+	public @Nullable RenderRegionBakeListener[] frx_getRenderRegionListeners() {
+		return listeners;
 	}
 }

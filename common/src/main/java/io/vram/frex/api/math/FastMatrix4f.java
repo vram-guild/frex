@@ -135,6 +135,8 @@ public interface FastMatrix4f {
 
 	void f_scale(float x, float y, float z);
 
+	void f_scale(float scale);
+
 	void f_writeToBuffer(int baseIndex, FloatBuffer floatBuffer);
 
 	/**

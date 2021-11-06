@@ -318,6 +318,23 @@ public abstract class MixinMatrix4f implements FastMatrix4f {
 
 	@Override
 	@Unique
+	public void f_scale(float scale) {
+		m00 *= scale;
+		m01 *= scale;
+		m02 *= scale;
+		m10 *= scale;
+		m11 *= scale;
+		m12 *= scale;
+		m20 *= scale;
+		m21 *= scale;
+		m22 *= scale;
+		m30 *= scale;
+		m31 *= scale;
+		m32 *= scale;
+	}
+
+	@Override
+	@Unique
 	public void f_transform(Vector3f vec) {
 		final float x = vec.x();
 		final float y = vec.y();

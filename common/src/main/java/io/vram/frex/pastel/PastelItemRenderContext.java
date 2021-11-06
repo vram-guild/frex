@@ -24,9 +24,15 @@ import java.util.function.Supplier;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.world.item.Items;
 
+import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.base.renderer.context.render.ItemRenderContext;
 import io.vram.frex.base.renderer.util.EncoderUtil;
 
@@ -47,8 +53,6 @@ public class PastelItemRenderContext extends ItemRenderContext {
 		return POOL.get();
 	}
 
-	protected VertexConsumer defaultConsumer;
-
 	protected MultiBufferSource vertexConsumers;
 
 	public PastelItemRenderContext() {
@@ -57,13 +61,45 @@ public class PastelItemRenderContext extends ItemRenderContext {
 
 	@Override
 	protected void encodeQuad() {
-		// WIP: handle non-default render layers - will need to capture immediate
-		EncoderUtil.encodeQuad(emitter, inputContext, defaultConsumer);
+		final var mat = emitter.material();
+		final VertexConsumer consumer;
+
+		// NB: by the time we get here material should be fully specified - no default preset
+		assert mat.preset() != MaterialConstants.PRESET_DEFAULT;
+
+		if (mat.foilOverlay() && inputContext.itemStack().is(Items.COMPASS)) {
+			// C'mon Mojang...
+			final var matrixStack = inputContext.matrixStack();
+			matrixStack.push();
+
+			if (inputContext.mode() == ItemTransforms.TransformType.GUI) {
+				matrixStack.modelMatrix().f_scale(0.5f);
+			} else if (inputContext.mode().firstPerson()) {
+				matrixStack.modelMatrix().f_scale(0.75F);
+			}
+
+			if (inputContext.drawTranslucencyToMainTarget() || !Minecraft.useShaderTransparency()) {
+				consumer = ItemRenderer.getCompassFoilBufferDirect(vertexConsumers, Sheets.cutoutBlockSheet(), matrixStack.asPoseStack().last());
+			} else {
+				consumer = ItemRenderer.getCompassFoilBuffer(vertexConsumers, Sheets.cutoutBlockSheet(), matrixStack.asPoseStack().last());
+			}
+
+			matrixStack.pop();
+		} else if (mat.transparency() != MaterialConstants.TRANSPARENCY_NONE) {
+			if (inputContext.drawTranslucencyToMainTarget() || !Minecraft.useShaderTransparency()) {
+				consumer = ItemRenderer.getFoilBufferDirect(vertexConsumers, Sheets.translucentCullBlockSheet(), true, mat.foilOverlay());
+			} else {
+				consumer = ItemRenderer.getFoilBuffer(vertexConsumers, Sheets.translucentItemSheet(), true, mat.foilOverlay());
+			}
+		} else {
+			consumer = ItemRenderer.getFoilBufferDirect(vertexConsumers, Sheets.cutoutBlockSheet(), true, mat.foilOverlay());
+		}
+
+		EncoderUtil.encodeQuad(emitter, inputContext, consumer);
 	}
 
 	@Override
 	protected void prepareEncoding(MultiBufferSource vertexConsumers) {
-		defaultConsumer = vertexConsumers.getBuffer(inputContext.defaultRenderType());
 		this.vertexConsumers = vertexConsumers;
 	}
 

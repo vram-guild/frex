@@ -35,7 +35,6 @@ import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ChunkBufferBuilderPack;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.chunk.ChunkRenderDispatcher.CompiledChunk;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
@@ -230,26 +229,17 @@ public class PastelTerrainRenderContext extends BlockRenderContext<RenderChunkRe
 	@Override
 	protected void encodeQuad() {
 		RenderType renderType;
+		final var mat = emitter.material();
 
-		switch (emitter.material().preset()) {
-			case MaterialConstants.PRESET_CUTOUT:
-				renderType = RenderType.cutout();
-				break;
+		// NB: by the time we get here material should be fully specified - no default preset
+		assert mat.preset() != MaterialConstants.PRESET_DEFAULT;
 
-			case MaterialConstants.PRESET_CUTOUT_MIPPED:
-				renderType = RenderType.cutoutMipped();
-				break;
-
-			case MaterialConstants.PRESET_SOLID:
-				renderType = RenderType.solid();
-				break;
-
-			case MaterialConstants.PRESET_TRANSLUCENT:
-				renderType = RenderType.translucent();
-				break;
-
-			default:
-				renderType = ItemBlockRenderTypes.getChunkRenderType(inputContext.blockState());
+		if (mat.transparency() != MaterialConstants.TRANSPARENCY_NONE) {
+			renderType = RenderType.translucent();
+		} else if (mat.cutout() == MaterialConstants.CUTOUT_NONE) {
+			renderType = RenderType.solid();
+		} else {
+			renderType = mat.unmipped() ? RenderType.cutout() : RenderType.cutoutMipped();
 		}
 
 		EncoderUtil.encodeQuad(emitter, inputContext, getInitializedBuffer(renderType));

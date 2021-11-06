@@ -21,7 +21,6 @@
 package io.vram.frex.impl.model;
 
 import java.util.IdentityHashMap;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -30,25 +29,28 @@ import org.jetbrains.annotations.ApiStatus.Internal;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 
+import io.vram.frex.api.material.MaterialConstants;
+import io.vram.frex.api.material.MaterialFinder;
+import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.model.fluid.FluidAppearance;
 import io.vram.frex.api.model.fluid.FluidModel;
+import io.vram.frex.api.model.fluid.SimpleFluidModel;
 import io.vram.frex.impl.FrexLog;
 
 @Internal
 public class FluidModelImpl {
 	private static final Object2ObjectOpenHashMap<ResourceLocation, Function<Fluid, FluidModel>> FACTORIES = new Object2ObjectOpenHashMap<>();
 	private static final IdentityHashMap<Fluid, FluidModel> SUPPLIERS = new IdentityHashMap<>();
-	private static BiFunction<Fluid, Function<Fluid, FluidModel>, FluidModel> handler;
 
 	public static void reload() {
 		SUPPLIERS.clear();
 
-		if (handler != null) {
-			Registry.FLUID.forEach(fluid -> {
-				final Function<Fluid, FluidModel> factory = FACTORIES.get(Registry.FLUID.getKey(fluid));
-				SUPPLIERS.put(fluid, handler.apply(fluid, factory));
-			});
-		}
+		Registry.FLUID.forEach(fluid -> {
+			final Function<Fluid, FluidModel> factory = FACTORIES.get(Registry.FLUID.getKey(fluid));
+			SUPPLIERS.put(fluid, factory == null ? defaultModel(fluid) : factory.apply(fluid));
+		});
 	}
 
 	public static FluidModel get(Fluid forFluid) {
@@ -61,8 +63,20 @@ public class FluidModelImpl {
 		}
 	}
 
-	public static void setReloadHandler(BiFunction<Fluid, Function<Fluid, FluidModel>, FluidModel> handlerIn) {
-		assert handler == null;
-		handler = handlerIn;
+	private static final RenderMaterial WATER_MATERIAL = MaterialFinder.threadLocal()
+			.preset(MaterialConstants.PRESET_TRANSLUCENT).disableAo(true).disableColorIndex(true).find();
+
+	private static final RenderMaterial LAVA_MATERIAL = MaterialFinder.threadLocal()
+			.preset(MaterialConstants.PRESET_SOLID).disableAo(true).disableColorIndex(true).emissive(true).find();
+
+	private static FluidModel defaultModel(Fluid fluid) {
+		if (fluid == Fluids.FLOWING_LAVA || fluid == Fluids.LAVA) {
+			return new SimpleFluidModel(LAVA_MATERIAL, false, FluidAppearance.LAVA_APPEARANCE);
+		} else if (fluid == Fluids.FLOWING_WATER || fluid == Fluids.WATER) {
+			return new SimpleFluidModel(WATER_MATERIAL, false, FluidAppearance.WATER_APPEARANCE);
+		} else {
+			final var app = FluidAppearance.get(fluid);
+			return app == null ? new SimpleFluidModel(WATER_MATERIAL, false, FluidAppearance.WATER_APPEARANCE) : new SimpleFluidModel(WATER_MATERIAL, false, app);
+		}
 	}
 }

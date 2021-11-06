@@ -20,7 +20,6 @@
 
 package io.vram.frex.api.model.fluid;
 
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import net.minecraft.resources.ResourceLocation;
@@ -51,17 +50,5 @@ public interface FluidModel extends BlockModel {
 	 */
 	static void registerFactory(Function<Fluid, FluidModel> factory, ResourceLocation forFluid) {
 		FluidModelImpl.registerFactory(factory, forFluid);
-	}
-
-	// WIP: the factory provided by the renderer should probably be implemented by FREX - unclear why renderer would do it
-
-	/**
-	 * To be called 1X by renderer implementation. Provides the logic
-	 * that will implement fluid : supplier factory.
-	 *
-	 * <p>Handler gets the fluid and the associated factory if available.
-	 */
-	static void setReloadHandler(BiFunction<Fluid, Function<Fluid, FluidModel>, FluidModel> handler) {
-		FluidModelImpl.setReloadHandler(handler);
 	}
 }

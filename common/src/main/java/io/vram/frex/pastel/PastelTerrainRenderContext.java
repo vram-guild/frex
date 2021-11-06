@@ -108,11 +108,15 @@ public class PastelTerrainRenderContext extends BlockRenderContext<RenderChunkRe
 		return this;
 	}
 
-	// WIP: call this for fluids
 	public void renderFluid(BlockState blockState, BlockPos blockPos, boolean defaultAo, final BlockModel model) {
 		aoCalc.prepare(PackedSectionPos.packWithSectionMask(blockPos));
+		// for whatever reason, Mojang doesn't do section position transformation before invoking fluid render so we do it here
+		final var matrixStack = inputContext.matrixStack();
+		matrixStack.push();
+		matrixStack.translate(blockPos.getX() & 15, blockPos.getY() & 15, blockPos.getZ() & 15);
 		prepareForFluid(blockState, blockPos, defaultAo);
 		renderInner(model);
+		matrixStack.pop();
 	}
 
 	public void renderBlock(BlockState blockState, BlockPos blockPos, final BakedModel model) {

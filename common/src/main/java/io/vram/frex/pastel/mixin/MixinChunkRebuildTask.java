@@ -45,9 +45,11 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 
 import io.vram.frex.api.math.MatrixStack;
+import io.vram.frex.api.model.fluid.FluidModel;
 import io.vram.frex.pastel.PastelTerrainRenderContext;
 import io.vram.frex.pastel.util.RenderChunkRegionExt;
 
@@ -56,6 +58,9 @@ import io.vram.frex.pastel.util.RenderChunkRegionExt;
 public abstract class MixinChunkRebuildTask {
 	//e -> field_20839 -> this$1
 	@Shadow protected RenderChunk this$1;
+
+	/** Holds block state for use in fluid render. */
+	private BlockState currentBlockState;
 
 	@Inject(method = "Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask;compile(FFFLnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$CompiledChunk;Lnet/minecraft/client/renderer/ChunkBufferBuilderPack;)Ljava/util/Set;",
 				require = 1, locals = LocalCapture.CAPTURE_FAILEXCEPTION,
@@ -66,6 +71,16 @@ public abstract class MixinChunkRebuildTask {
 			((RenderChunkRegionExt) renderChunkRegion).frx_setContext(context, this$1.getOrigin());
 			context.prepareForRegion(renderChunkRegion, arg3, poseStack, blockPos, arg4);
 		}
+	}
+
+	/** Capture block state for use in fluid render. */
+	@Redirect(method = "Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask;compile(FFFLnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$CompiledChunk;Lnet/minecraft/client/renderer/ChunkBufferBuilderPack;)Ljava/util/Set;",
+			require = 1, at = @At(value = "INVOKE",
+			target = "Lnet/minecraft/client/renderer/chunk/RenderChunkRegion;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"))
+	private BlockState onGetBlockState(RenderChunkRegion blockView, BlockPos pos) {
+		final var result = blockView.getBlockState(pos);
+		currentBlockState = result;
+		return result;
 	}
 
 	@Redirect(method = "Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask;compile(FFFLnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$CompiledChunk;Lnet/minecraft/client/renderer/ChunkBufferBuilderPack;)Ljava/util/Set;",
@@ -80,11 +95,20 @@ public abstract class MixinChunkRebuildTask {
 			}
 
 			((RenderChunkRegionExt) blockView).frx_getContext().renderBlock(blockState, blockPos, renderManager.getBlockModel(blockState));
-			// we handle all initialization/tracking in render context
+			// we handle all buffer initialization/tracking in render context
 			return false;
 		} else {
 			return false;
 		}
+	}
+
+	@Redirect(method = "Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask;compile(FFFLnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$CompiledChunk;Lnet/minecraft/client/renderer/ChunkBufferBuilderPack;)Ljava/util/Set;",
+			require = 1, at = @At(value = "INVOKE",
+			target = "Lnet/minecraft/client/renderer/block/BlockRenderDispatcher;renderLiquid(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/BlockAndTintGetter;Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/world/level/material/FluidState;)Z"))
+	private boolean fluidRenderHook(BlockRenderDispatcher renderManager, BlockPos blockPos, BlockAndTintGetter blockView, VertexConsumer vertexConsumer, FluidState fluidState) {
+		((RenderChunkRegionExt) blockView).frx_getContext().renderFluid(currentBlockState, blockPos, false, FluidModel.get(fluidState.getType()));
+		// we handle all initialization/tracking in render context
+		return false;
 	}
 
 	@Inject(at = @At("RETURN"), method = "Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask;compile(FFFLnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$CompiledChunk;Lnet/minecraft/client/renderer/ChunkBufferBuilderPack;)Ljava/util/Set;")

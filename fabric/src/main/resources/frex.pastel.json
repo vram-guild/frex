@@ -8,6 +8,7 @@
 		"MixinBlockRenderDispatcher",
 		"MixinChunkRebuildTask",
 		"MixinCompiledChunk",
+		"MixinEntityRenderDispatcher",
 		"MixinItemFrameRenderer",
 		"MixinItemRenderer",
 		"MixinModelBlockRenderer",

@@ -137,45 +137,18 @@ public class MaterialDeserializer {
 		}
 
 		if (obj.has("cutout")) {
-			final String cutout = obj.get("cutout").getAsString().toLowerCase(Locale.ROOT);
-
-			if (cutout.equals("cutout_half")) {
-				finder.decal(CUTOUT_HALF);
-			} else if (cutout.equals("cutout_tenth")) {
-				finder.decal(CUTOUT_TENTH);
-			} else if (cutout.equals("cutout_zero")) {
-				finder.decal(CUTOUT_ZERO);
-			} else if (cutout.equals("cutout_alpha")) {
-				finder.cutout(CUTOUT_ALPHA);
-			} else {
-				finder.cutout(CUTOUT_NONE);
-			}
+			final int cutout = readCutout(GsonHelper.getAsString(obj, "cutout"));
+			finder.cutout(cutout == -1 ? CUTOUT_NONE : cutout);
 		}
 
 		if (obj.has("decal")) {
-			final String decal = obj.get("decal").getAsString().toLowerCase(Locale.ROOT);
-
-			if (decal.equals("polygon_offset")) {
-				finder.decal(DECAL_POLYGON_OFFSET);
-			} else if (decal.equals("view_offset")) {
-				finder.decal(DECAL_VIEW_OFFSET);
-			} else if (decal.equals("none")) {
-				finder.decal(DECAL_NONE);
-			}
+			final int decal = readDecal(GsonHelper.getAsString(obj, "decal"));
+			finder.decal(decal == -1 ? DECAL_NONE : decal);
 		}
 
 		if (obj.has("depthTest")) {
-			final String depthTest = obj.get("depthTest").getAsString().toLowerCase(Locale.ROOT);
-
-			if (depthTest.equals("always")) {
-				finder.depthTest(DEPTH_TEST_ALWAYS);
-			} else if (depthTest.equals("equal")) {
-				finder.depthTest(DEPTH_TEST_EQUAL);
-			} else if (depthTest.equals("lequal")) {
-				finder.depthTest(DEPTH_TEST_LEQUAL);
-			} else if (depthTest.equals("disable")) {
-				finder.depthTest(DEPTH_TEST_DISABLE);
-			}
+			final int depthTest = readDepthTest(GsonHelper.getAsString(obj, "depthTest"));
+			finder.depthTest(depthTest == -1 ? DEPTH_TEST_DISABLE : depthTest);
 		}
 
 		if (obj.has("discardsTexture")) {
@@ -203,23 +176,8 @@ public class MaterialDeserializer {
 		}
 
 		if (obj.has("target")) {
-			final String target = obj.get("target").getAsString().toLowerCase(Locale.ROOT);
-
-			if (target.equals("main")) {
-				finder.target(TARGET_MAIN);
-			} else if (target.equals("outline")) {
-				finder.target(TARGET_OUTLINE);
-			} else if (target.equals("translucent")) {
-				finder.target(TARGET_TRANSLUCENT);
-			} else if (target.equals("particles")) {
-				finder.target(TARGET_PARTICLES);
-			} else if (target.equals("weather")) {
-				finder.target(TARGET_WEATHER);
-			} else if (target.equals("clouds")) {
-				finder.target(TARGET_CLOUDS);
-			} else if (target.equals("entities")) {
-				finder.target(TARGET_ENTITIES);
-			}
+			final int target = readTarget(GsonHelper.getAsString(obj, "target"));
+			finder.target(target == -1 ? TARGET_MAIN : target);
 		}
 
 		if (obj.has("texture")) {
@@ -227,23 +185,8 @@ public class MaterialDeserializer {
 		}
 
 		if (obj.has("transparency")) {
-			final String transparency = obj.get("transparency").getAsString().toLowerCase(Locale.ROOT);
-
-			if (transparency.equals("none")) {
-				finder.transparency(TRANSPARENCY_NONE);
-			} else if (transparency.equals("additive")) {
-				finder.transparency(TRANSPARENCY_ADDITIVE);
-			} else if (transparency.equals("lightning")) {
-				finder.transparency(TRANSPARENCY_LIGHTNING);
-			} else if (transparency.equals("glint")) {
-				finder.transparency(TRANSPARENCY_GLINT);
-			} else if (transparency.equals("crumbling")) {
-				finder.transparency(TRANSPARENCY_CRUMBLING);
-			} else if (transparency.equals("translucent")) {
-				finder.transparency(TRANSPARENCY_TRANSLUCENT);
-			} else if (transparency.equals("default")) {
-				finder.transparency(TRANSPARENCY_DEFAULT);
-			}
+			final int transparency = readTransparency(GsonHelper.getAsString(obj, "transparency"));
+			finder.transparency(transparency == -1 ? TRANSPARENCY_NONE : transparency);
 		}
 
 		if (obj.has("unmipped")) {
@@ -251,15 +194,8 @@ public class MaterialDeserializer {
 		}
 
 		if (obj.has("writeMask")) {
-			final String writeMask = obj.get("writeMask").getAsString().toLowerCase(Locale.ROOT);
-
-			if (writeMask.equals("color")) {
-				finder.writeMask(WRITE_MASK_COLOR);
-			} else if (writeMask.equals("depth")) {
-				finder.writeMask(WRITE_MASK_DEPTH);
-			} else if (writeMask.equals("color_depth")) {
-				finder.writeMask(WRITE_MASK_COLOR_DEPTH);
-			}
+			final int writeMask = readWriteMask(GsonHelper.getAsString(obj, "writeMask"));
+			finder.writeMask(writeMask == -1 ? WRITE_MASK_COLOR_DEPTH : writeMask);
 		}
 
 		if (obj.has("castShadows")) {
@@ -283,6 +219,118 @@ public class MaterialDeserializer {
 				return MaterialConstants.PRESET_DEFAULT;
 			default:
 				return MaterialConstants.PRESET_NONE;
+		}
+	}
+
+	public static int readCutout(String cutout) {
+		cutout = cutout.toLowerCase(Locale.ROOT);
+
+		switch (cutout) {
+			case "cutout_half":
+				return CUTOUT_HALF;
+			case "cutout_tenth":
+				return CUTOUT_TENTH;
+			case "cutout_zero":
+				return CUTOUT_ZERO;
+			case "cutout_alpha":
+				return CUTOUT_ALPHA;
+			case "cutout_none":
+				return CUTOUT_NONE;
+			default:
+				return -1;
+		}
+	}
+
+	public static int readDecal(String decal) {
+		decal = decal.toLowerCase(Locale.ROOT);
+
+		switch (decal) {
+			case "polygon_offset":
+				return DECAL_POLYGON_OFFSET;
+			case "view_offset":
+				return DECAL_VIEW_OFFSET;
+			case "none":
+				return DECAL_NONE;
+			default:
+				return -1;
+		}
+	}
+
+	public static int readDepthTest(String depthTest) {
+		depthTest = depthTest.toLowerCase(Locale.ROOT);
+
+		switch (depthTest) {
+			case "always":
+				return DEPTH_TEST_ALWAYS;
+			case "equal":
+				return DEPTH_TEST_EQUAL;
+			case "lequal":
+				return DEPTH_TEST_LEQUAL;
+			case "disable":
+				return DEPTH_TEST_DISABLE;
+			default:
+				return -1;
+		}
+	}
+
+	public static int readTarget(String target) {
+		target = target.toLowerCase(Locale.ROOT);
+
+		switch (target) {
+			case "main":
+				return TARGET_MAIN;
+			case "outline":
+				return TARGET_OUTLINE;
+			case "translucent":
+				return TARGET_TRANSLUCENT;
+			case "particles":
+				return TARGET_PARTICLES;
+			case "weather":
+				return TARGET_WEATHER;
+			case "clouds":
+				return TARGET_CLOUDS;
+			case "entities":
+				return TARGET_ENTITIES;
+			default:
+				return -1;
+		}
+	}
+
+	public static int readTransparency(String transparency) {
+		transparency = transparency.toLowerCase(Locale.ROOT);
+
+		switch (transparency) {
+			case "none":
+				return TRANSPARENCY_NONE;
+			case "additive":
+				return TRANSPARENCY_ADDITIVE;
+			case "lightning":
+				return TRANSPARENCY_LIGHTNING;
+			case "glint":
+				return TRANSPARENCY_GLINT;
+			case "crumbling":
+				return TRANSPARENCY_CRUMBLING;
+			case "translucent":
+				return TRANSPARENCY_TRANSLUCENT;
+			case "default":
+				return TRANSPARENCY_DEFAULT;
+			default:
+				return -1;
+		}
+	}
+
+	public static int readWriteMask(String writeMask) {
+		writeMask = writeMask.toLowerCase(Locale.ROOT);
+
+		switch (writeMask) {
+			case "color":
+				return WRITE_MASK_COLOR;
+			case "depth":
+				return WRITE_MASK_DEPTH;
+			case "color_depth":
+				return WRITE_MASK_COLOR_DEPTH;
+			default:
+				return -1;
 		}
 	}
 }

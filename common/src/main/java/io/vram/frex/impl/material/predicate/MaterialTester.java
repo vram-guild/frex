@@ -20,37 +20,6 @@
 
 package io.vram.frex.impl.material.predicate;
 
-import static io.vram.frex.api.material.MaterialConstants.CUTOUT_ALPHA;
-import static io.vram.frex.api.material.MaterialConstants.CUTOUT_HALF;
-import static io.vram.frex.api.material.MaterialConstants.CUTOUT_NONE;
-import static io.vram.frex.api.material.MaterialConstants.CUTOUT_TENTH;
-import static io.vram.frex.api.material.MaterialConstants.CUTOUT_ZERO;
-import static io.vram.frex.api.material.MaterialConstants.DECAL_NONE;
-import static io.vram.frex.api.material.MaterialConstants.DECAL_POLYGON_OFFSET;
-import static io.vram.frex.api.material.MaterialConstants.DECAL_VIEW_OFFSET;
-import static io.vram.frex.api.material.MaterialConstants.DEPTH_TEST_ALWAYS;
-import static io.vram.frex.api.material.MaterialConstants.DEPTH_TEST_DISABLE;
-import static io.vram.frex.api.material.MaterialConstants.DEPTH_TEST_EQUAL;
-import static io.vram.frex.api.material.MaterialConstants.DEPTH_TEST_LEQUAL;
-import static io.vram.frex.api.material.MaterialConstants.TARGET_CLOUDS;
-import static io.vram.frex.api.material.MaterialConstants.TARGET_ENTITIES;
-import static io.vram.frex.api.material.MaterialConstants.TARGET_MAIN;
-import static io.vram.frex.api.material.MaterialConstants.TARGET_OUTLINE;
-import static io.vram.frex.api.material.MaterialConstants.TARGET_PARTICLES;
-import static io.vram.frex.api.material.MaterialConstants.TARGET_TRANSLUCENT;
-import static io.vram.frex.api.material.MaterialConstants.TARGET_WEATHER;
-import static io.vram.frex.api.material.MaterialConstants.TRANSPARENCY_ADDITIVE;
-import static io.vram.frex.api.material.MaterialConstants.TRANSPARENCY_CRUMBLING;
-import static io.vram.frex.api.material.MaterialConstants.TRANSPARENCY_DEFAULT;
-import static io.vram.frex.api.material.MaterialConstants.TRANSPARENCY_GLINT;
-import static io.vram.frex.api.material.MaterialConstants.TRANSPARENCY_LIGHTNING;
-import static io.vram.frex.api.material.MaterialConstants.TRANSPARENCY_NONE;
-import static io.vram.frex.api.material.MaterialConstants.TRANSPARENCY_TRANSLUCENT;
-import static io.vram.frex.api.material.MaterialConstants.WRITE_MASK_COLOR;
-import static io.vram.frex.api.material.MaterialConstants.WRITE_MASK_COLOR_DEPTH;
-import static io.vram.frex.api.material.MaterialConstants.WRITE_MASK_DEPTH;
-
-import java.util.Locale;
 import java.util.function.BiPredicate;
 
 import com.google.gson.JsonElement;
@@ -108,7 +77,7 @@ public class MaterialTester<T> extends MaterialPredicate {
 		}
 	}
 
-	public static MaterialTester<Integer> createBlendMode(JsonElement je) {
+	public static MaterialTester<Integer> createPreset(JsonElement je) {
 		try {
 			return new MaterialTester<>(MaterialDeserializer.readPreset(je.getAsString()), PRESET_TEST);
 		} catch (final Exception e) {
@@ -116,153 +85,55 @@ public class MaterialTester<T> extends MaterialPredicate {
 		}
 	}
 
-	// TODO: create public string to int mapper in MaterialDeserializer similar to BlendMode
 	public static MaterialTester<Integer> createCutout(JsonElement je) {
 		try {
-			final String cutout = je.getAsString().toLowerCase(Locale.ROOT);
-			int val;
-
-			if (cutout.equals("cutout_half")) {
-				val = CUTOUT_HALF;
-			} else if (cutout.equals("cutout_tenth")) {
-				val = CUTOUT_TENTH;
-			} else if (cutout.equals("cutout_zero")) {
-				val = CUTOUT_ZERO;
-			} else if (cutout.equals("cutout_alpha")) {
-				val = CUTOUT_ALPHA;
-			} else {
-				val = CUTOUT_NONE;
-			}
-
-			return new MaterialTester<>(val, CUTOUT_TEST);
+			final int cutout = MaterialDeserializer.readCutout(je.getAsString());
+			return cutout == -1 ? null : new MaterialTester<>(cutout, CUTOUT_TEST);
 		} catch (final Exception e) {
 			return null;
 		}
 	}
 
-	// TODO: create public string to int mapper in MaterialDeserializer similar to BlendMode
 	public static MaterialTester<Integer> createDecal(JsonElement je) {
 		try {
-			final String decal = je.getAsString().toLowerCase(Locale.ROOT);
-			int val;
-
-			if (decal.equals("polygon_offset")) {
-				val = DECAL_POLYGON_OFFSET;
-			} else if (decal.equals("view_offset")) {
-				val = DECAL_VIEW_OFFSET;
-			} else if (decal.equals("none")) {
-				val = DECAL_NONE;
-			} else {
-				return null;
-			}
-
-			return new MaterialTester<>(val, DECAL_TEST);
+			final int decal = MaterialDeserializer.readDecal(je.getAsString());
+			return decal == -1 ? null : new MaterialTester<>(decal, DECAL_TEST);
 		} catch (final Exception e) {
 			return null;
 		}
 	}
 
-	// TODO: create public string to int mapper in MaterialDeserializer similar to BlendMode
 	public static MaterialTester<Integer> createDepthTest(JsonElement je) {
 		try {
-			final String depthTest = je.getAsString().toLowerCase(Locale.ROOT);
-			int val;
-
-			if (depthTest.equals("always")) {
-				val = DEPTH_TEST_ALWAYS;
-			} else if (depthTest.equals("equal")) {
-				val = DEPTH_TEST_EQUAL;
-			} else if (depthTest.equals("lequal")) {
-				val = DEPTH_TEST_LEQUAL;
-			} else if (depthTest.equals("disable")) {
-				val = DEPTH_TEST_DISABLE;
-			} else {
-				return null;
-			}
-
-			return new MaterialTester<>(val, DEPTH_TEST_TEST);
+			final int depthTest = MaterialDeserializer.readDepthTest(je.getAsString());
+			return depthTest == -1 ? null : new MaterialTester<>(depthTest, DEPTH_TEST_TEST);
 		} catch (final Exception e) {
 			return null;
 		}
 	}
 
-	// TODO: create public string to int mapper in MaterialDeserializer similar to BlendMode
 	public static MaterialTester<Integer> createTarget(JsonElement je) {
 		try {
-			final String target = je.getAsString().toLowerCase(Locale.ROOT);
-			int val;
-
-			if (target.equals("main")) {
-				val = TARGET_MAIN;
-			} else if (target.equals("outline")) {
-				val = TARGET_OUTLINE;
-			} else if (target.equals("translucent")) {
-				val = TARGET_TRANSLUCENT;
-			} else if (target.equals("particles")) {
-				val = TARGET_PARTICLES;
-			} else if (target.equals("weather")) {
-				val = TARGET_WEATHER;
-			} else if (target.equals("clouds")) {
-				val = TARGET_CLOUDS;
-			} else if (target.equals("entities")) {
-				val = TARGET_ENTITIES;
-			} else {
-				return null;
-			}
-
-			return new MaterialTester<>(val, TARGET_TEST);
+			final int target = MaterialDeserializer.readTarget(je.getAsString());
+			return target == -1 ? null : new MaterialTester<>(target, TARGET_TEST);
 		} catch (final Exception e) {
 			return null;
 		}
 	}
 
-	// TODO: create public string to int mapper in MaterialDeserializer similar to BlendMode
 	public static MaterialTester<Integer> createTransparency(JsonElement je) {
 		try {
-			final String transparency = je.getAsString().toLowerCase(Locale.ROOT);
-			int val;
-
-			if (transparency.equals("none")) {
-				val = TRANSPARENCY_NONE;
-			} else if (transparency.equals("additive")) {
-				val = TRANSPARENCY_ADDITIVE;
-			} else if (transparency.equals("lightning")) {
-				val = TRANSPARENCY_LIGHTNING;
-			} else if (transparency.equals("glint")) {
-				val = TRANSPARENCY_GLINT;
-			} else if (transparency.equals("crumbling")) {
-				val = TRANSPARENCY_CRUMBLING;
-			} else if (transparency.equals("translucent")) {
-				val = TRANSPARENCY_TRANSLUCENT;
-			} else if (transparency.equals("default")) {
-				val = TRANSPARENCY_DEFAULT;
-			} else {
-				return null;
-			}
-
-			return new MaterialTester<>(val, TRANSPARENCY_TEST);
+			final int transparency = MaterialDeserializer.readTransparency(je.getAsString());
+			return transparency == -1 ? null : new MaterialTester<>(transparency, TRANSPARENCY_TEST);
 		} catch (final Exception e) {
 			return null;
 		}
 	}
 
-	// TODO: create public string to int mapper in MaterialDeserializer similar to BlendMode
 	public static MaterialTester<Integer> createWriteMask(JsonElement je) {
 		try {
-			final String writeMask = je.getAsString().toLowerCase(Locale.ROOT);
-			int val;
-
-			if (writeMask.equals("color")) {
-				val = WRITE_MASK_COLOR;
-			} else if (writeMask.equals("depth")) {
-				val = WRITE_MASK_DEPTH;
-			} else if (writeMask.equals("color_depth")) {
-				val = WRITE_MASK_COLOR_DEPTH;
-			} else {
-				return null;
-			}
-
-			return new MaterialTester<>(val, WRITE_MASK_TEST);
+			final int writeMask = MaterialDeserializer.readWriteMask(je.getAsString());
+			return writeMask == -1 ? null : new MaterialTester<>(writeMask, WRITE_MASK_TEST);
 		} catch (final Exception e) {
 			return null;
 		}

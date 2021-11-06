@@ -20,38 +20,6 @@
 
 package io.vram.frex.impl.material;
 
-import static io.vram.frex.api.material.MaterialConstants.CUTOUT_ALPHA;
-import static io.vram.frex.api.material.MaterialConstants.CUTOUT_HALF;
-import static io.vram.frex.api.material.MaterialConstants.CUTOUT_NONE;
-import static io.vram.frex.api.material.MaterialConstants.CUTOUT_TENTH;
-import static io.vram.frex.api.material.MaterialConstants.CUTOUT_ZERO;
-import static io.vram.frex.api.material.MaterialConstants.DECAL_NONE;
-import static io.vram.frex.api.material.MaterialConstants.DECAL_POLYGON_OFFSET;
-import static io.vram.frex.api.material.MaterialConstants.DECAL_VIEW_OFFSET;
-import static io.vram.frex.api.material.MaterialConstants.DEPTH_TEST_ALWAYS;
-import static io.vram.frex.api.material.MaterialConstants.DEPTH_TEST_DISABLE;
-import static io.vram.frex.api.material.MaterialConstants.DEPTH_TEST_EQUAL;
-import static io.vram.frex.api.material.MaterialConstants.DEPTH_TEST_LEQUAL;
-import static io.vram.frex.api.material.MaterialConstants.TARGET_CLOUDS;
-import static io.vram.frex.api.material.MaterialConstants.TARGET_ENTITIES;
-import static io.vram.frex.api.material.MaterialConstants.TARGET_MAIN;
-import static io.vram.frex.api.material.MaterialConstants.TARGET_OUTLINE;
-import static io.vram.frex.api.material.MaterialConstants.TARGET_PARTICLES;
-import static io.vram.frex.api.material.MaterialConstants.TARGET_TRANSLUCENT;
-import static io.vram.frex.api.material.MaterialConstants.TARGET_WEATHER;
-import static io.vram.frex.api.material.MaterialConstants.TRANSPARENCY_ADDITIVE;
-import static io.vram.frex.api.material.MaterialConstants.TRANSPARENCY_CRUMBLING;
-import static io.vram.frex.api.material.MaterialConstants.TRANSPARENCY_DEFAULT;
-import static io.vram.frex.api.material.MaterialConstants.TRANSPARENCY_GLINT;
-import static io.vram.frex.api.material.MaterialConstants.TRANSPARENCY_LIGHTNING;
-import static io.vram.frex.api.material.MaterialConstants.TRANSPARENCY_NONE;
-import static io.vram.frex.api.material.MaterialConstants.TRANSPARENCY_TRANSLUCENT;
-import static io.vram.frex.api.material.MaterialConstants.WRITE_MASK_COLOR;
-import static io.vram.frex.api.material.MaterialConstants.WRITE_MASK_COLOR_DEPTH;
-import static io.vram.frex.api.material.MaterialConstants.WRITE_MASK_DEPTH;
-
-import java.util.Locale;
-
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.ApiStatus.Internal;
@@ -152,44 +120,26 @@ public class MaterialTransformDeserializer {
 		}
 
 		if (json.has("cutout")) {
-			final String cutout = json.get("cutout").getAsString().toLowerCase(Locale.ROOT);
+			final int cutout = MaterialDeserializer.readCutout(json.get("cutout").getAsString());
 
-			if (cutout.equals("cutout_half")) {
-				transforms.add(finder -> finder.decal(CUTOUT_HALF));
-			} else if (cutout.equals("cutout_tenth")) {
-				transforms.add(finder -> finder.decal(CUTOUT_TENTH));
-			} else if (cutout.equals("cutout_zero")) {
-				transforms.add(finder -> finder.decal(CUTOUT_ZERO));
-			} else if (cutout.equals("cutout_alpha")) {
-				transforms.add(finder -> finder.cutout(CUTOUT_ALPHA));
-			} else {
-				transforms.add(finder -> finder.cutout(CUTOUT_NONE));
+			if (cutout != -1) {
+				transforms.add(finder -> finder.cutout(cutout));
 			}
 		}
 
 		if (json.has("decal")) {
-			final String decal = json.get("decal").getAsString().toLowerCase(Locale.ROOT);
+			final int decal = MaterialDeserializer.readDecal(json.get("decal").getAsString());
 
-			if (decal.equals("polygon_offset")) {
-				transforms.add(finder -> finder.decal(DECAL_POLYGON_OFFSET));
-			} else if (decal.equals("view_offset")) {
-				transforms.add(finder -> finder.decal(DECAL_VIEW_OFFSET));
-			} else if (decal.equals("none")) {
-				transforms.add(finder -> finder.decal(DECAL_NONE));
+			if (decal != -1) {
+				transforms.add(finder -> finder.decal(decal));
 			}
 		}
 
 		if (json.has("depthTest")) {
-			final String depthTest = json.get("depthTest").getAsString().toLowerCase(Locale.ROOT);
+			final int depthTest = MaterialDeserializer.readDepthTest(json.get("depthTest").getAsString());
 
-			if (depthTest.equals("always")) {
-				transforms.add(finder -> finder.depthTest(DEPTH_TEST_ALWAYS));
-			} else if (depthTest.equals("equal")) {
-				transforms.add(finder -> finder.depthTest(DEPTH_TEST_EQUAL));
-			} else if (depthTest.equals("lequal")) {
-				transforms.add(finder -> finder.depthTest(DEPTH_TEST_LEQUAL));
-			} else if (depthTest.equals("disable")) {
-				transforms.add(finder -> finder.depthTest(DEPTH_TEST_DISABLE));
+			if (depthTest != -1) {
+				transforms.add(finder -> finder.depthTest(depthTest));
 			}
 		}
 
@@ -224,22 +174,10 @@ public class MaterialTransformDeserializer {
 		}
 
 		if (json.has("target")) {
-			final String target = json.get("target").getAsString().toLowerCase(Locale.ROOT);
+			final int target = MaterialDeserializer.readTarget(json.get("target").getAsString());
 
-			if (target.equals("main")) {
-				transforms.add(finder -> finder.target(TARGET_MAIN));
-			} else if (target.equals("outline")) {
-				transforms.add(finder -> finder.target(TARGET_OUTLINE));
-			} else if (target.equals("translucent")) {
-				transforms.add(finder -> finder.target(TARGET_TRANSLUCENT));
-			} else if (target.equals("particles")) {
-				transforms.add(finder -> finder.target(TARGET_PARTICLES));
-			} else if (target.equals("weather")) {
-				transforms.add(finder -> finder.target(TARGET_WEATHER));
-			} else if (target.equals("clouds")) {
-				transforms.add(finder -> finder.target(TARGET_CLOUDS));
-			} else if (target.equals("entities")) {
-				transforms.add(finder -> finder.target(TARGET_ENTITIES));
+			if (target != -1) {
+				transforms.add(finder -> finder.target(target));
 			}
 		}
 
@@ -249,22 +187,10 @@ public class MaterialTransformDeserializer {
 		}
 
 		if (json.has("transparency")) {
-			final String transparency = json.get("transparency").getAsString().toLowerCase(Locale.ROOT);
+			final int transparency = MaterialDeserializer.readTransparency(json.get("transparency").getAsString());
 
-			if (transparency.equals("none")) {
-				transforms.add(finder -> finder.transparency(TRANSPARENCY_NONE));
-			} else if (transparency.equals("additive")) {
-				transforms.add(finder -> finder.transparency(TRANSPARENCY_ADDITIVE));
-			} else if (transparency.equals("lightning")) {
-				transforms.add(finder -> finder.transparency(TRANSPARENCY_LIGHTNING));
-			} else if (transparency.equals("glint")) {
-				transforms.add(finder -> finder.transparency(TRANSPARENCY_GLINT));
-			} else if (transparency.equals("crumbling")) {
-				transforms.add(finder -> finder.transparency(TRANSPARENCY_CRUMBLING));
-			} else if (transparency.equals("translucent")) {
-				transforms.add(finder -> finder.transparency(TRANSPARENCY_TRANSLUCENT));
-			} else if (transparency.equals("default")) {
-				transforms.add(finder -> finder.transparency(TRANSPARENCY_DEFAULT));
+			if (transparency != -1) {
+				transforms.add(finder -> finder.transparency(transparency));
 			}
 		}
 
@@ -274,14 +200,10 @@ public class MaterialTransformDeserializer {
 		}
 
 		if (json.has("writeMask")) {
-			final String writeMask = json.get("writeMask").getAsString().toLowerCase(Locale.ROOT);
+			final int writeMask = MaterialDeserializer.readWriteMask(json.get("writeMask").getAsString());
 
-			if (writeMask.equals("color")) {
-				transforms.add(finder -> finder.writeMask(WRITE_MASK_COLOR));
-			} else if (writeMask.equals("depth")) {
-				transforms.add(finder -> finder.writeMask(WRITE_MASK_DEPTH));
-			} else if (writeMask.equals("color_depth")) {
-				transforms.add(finder -> finder.writeMask(WRITE_MASK_COLOR_DEPTH));
+			if (writeMask != -1) {
+				transforms.add(finder -> finder.writeMask(writeMask));
 			}
 		}
 

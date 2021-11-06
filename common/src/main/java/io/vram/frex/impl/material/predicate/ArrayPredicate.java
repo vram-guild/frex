@@ -61,7 +61,7 @@ public class ArrayPredicate extends MaterialPredicate {
 		addOrNull(sparsePredicates, compactPredicates, json, "disableColorIndex", e -> MaterialTester.createBoolean(e, MaterialTester.DISABLE_COLOR_INDEX_TEST));
 		addOrNull(sparsePredicates, compactPredicates, json, "disableDiffuse", e -> MaterialTester.createBoolean(e, MaterialTester.DISABLE_DIFFUSE_TEST));
 		addOrNull(sparsePredicates, compactPredicates, json, "emissive", e -> MaterialTester.createBoolean(e, MaterialTester.EMISSIVE_TEST));
-		addOrNull(sparsePredicates, compactPredicates, json, "blendMode", MaterialTester::createBlendMode);
+		addOrNull(sparsePredicates, compactPredicates, json, "blendMode", MaterialTester::createPreset);
 		addOrNull(sparsePredicates, compactPredicates, json, "blur", e -> MaterialTester.createBoolean(e, MaterialTester.BLUR_TEST));
 		addOrNull(sparsePredicates, compactPredicates, json, "cull", e -> MaterialTester.createBoolean(e, MaterialTester.CULL_TEST));
 		addOrNull(sparsePredicates, compactPredicates, json, "cutout", MaterialTester::createCutout);

@@ -23,6 +23,7 @@ package io.vram.frex.pastel.util;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.biome.Biome;
 
 import io.vram.frex.api.world.RenderRegionBakeListener;
 import io.vram.frex.pastel.PastelTerrainRenderContext;
@@ -45,4 +46,6 @@ public interface RenderChunkRegionExt {
 
 	@Nullable
 	RenderRegionBakeListener[] frx_getRenderRegionListeners();
+
+	Biome frx_getBiome(BlockPos pos);
 }

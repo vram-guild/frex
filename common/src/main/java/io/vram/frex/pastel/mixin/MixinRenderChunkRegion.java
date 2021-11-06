@@ -44,6 +44,7 @@ import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -63,6 +64,8 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 
 	@Shadow
 	protected abstract int index(int x, int y, int z);
+
+	@Shadow protected Level level;
 
 	private PastelTerrainRenderContext context;
 	private int originX, originY, originZ;
@@ -268,5 +271,10 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 	@Override
 	public @Nullable RenderRegionBakeListener[] frx_getRenderRegionListeners() {
 		return listeners;
+	}
+
+	@Override
+	public Biome frx_getBiome(BlockPos pos) {
+		return level.getBiome(pos);
 	}
 }

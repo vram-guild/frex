@@ -42,6 +42,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.api.material.MaterialConstants;
@@ -95,6 +96,16 @@ public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintG
 			@Override
 			public @Nullable Object blockEntityRenderData(BlockPos pos) {
 				return regionExt.frx_getBlockEntityRenderData(pos);
+			}
+
+			@Override
+			public Biome getBiome(BlockPos pos) {
+				return regionExt.frx_getBiome(pos);
+			}
+
+			@Override
+			public boolean hasBiomeAccess() {
+				return true;
 			}
 		};
 	}

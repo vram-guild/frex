@@ -27,7 +27,11 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.api.buffer.QuadSink;
@@ -38,7 +42,6 @@ import io.vram.frex.impl.model.ModelLookups;
 
 @FunctionalInterface
 public interface BlockModel extends DynamicModel {
-	// WIP: find way to expose biome info
 	void renderAsBlock(BlockInputContext input, QuadSink output);
 
 	@Override
@@ -55,6 +58,30 @@ public interface BlockModel extends DynamicModel {
 		}
 
 		BlockAndTintGetter blockView();
+
+		/**
+		 * Use to retrieve Biome at a given block position.
+		 *
+		 * <p>Conceptually, this function belongs as part of {@link #blockView()}, but it is not
+		 * part of the {{@link BlockAndTintGetter} type and in some block render contexts nothing more
+		 * is available.  A custom block view type would add excessive complexity to implementations,
+		 * and so biome access is exposed here.
+		 *
+		 * <p>This may be a cached value, depending on implementation. If biome information is
+		 * unavailable in the current context, will always return the plains biome.
+		 *
+		 * @return Biome at given position, or plains biome if biome information is unavailable.
+		 */
+		default Biome getBiome(BlockPos pos) {
+			return RegistryAccess.builtin().registryOrThrow(Registry.BIOME_REGISTRY).getOrThrow(Biomes.PLAINS);
+		}
+
+		/**
+		 * True when {@link #getBiome(BlockPos)} returns meaningful results.
+		 */
+		default boolean hasBiomeAccess() {
+			return false;
+		}
 
 		boolean isFluidModel();
 

@@ -62,14 +62,6 @@ public class AoFace {
 		(q, i) -> clampFunc.clamp(q.y(i)),
 		(q, i) -> clampFunc.clamp(q.z(i)),
 		(q, i) -> 1 - clampFunc.clamp(q.x(i)),
-		(q, i, w) -> {
-			final float u = clampFunc.clamp(q.z(i));
-			final float v = 1 - clampFunc.clamp(q.x(i));
-			w[0] = v * u;
-			w[1] = v * (1 - u);
-			w[2] = (1 - v) * (1 - u);
-			w[3] = (1 - v) * u;
-		},
 		(q, i) -> {
 			final int u = AoMath.clamp(q.z(i));
 			final int v = UNIT_VALUE - AoMath.clamp(q.x(i));
@@ -84,14 +76,6 @@ public class AoFace {
 		(q, i) -> 1 - clampFunc.clamp(q.y(i)),
 		(q, i) -> clampFunc.clamp(q.z(i)),
 		(q, i) -> clampFunc.clamp(q.x(i)),
-		(q, i, w) -> {
-			final float u = clampFunc.clamp(q.z(i));
-			final float v = clampFunc.clamp(q.x(i));
-			w[0] = v * u;
-			w[1] = v * (1 - u);
-			w[2] = (1 - v) * (1 - u);
-			w[3] = (1 - v) * u;
-		},
 		(q, i) -> {
 			final int u = AoMath.clamp(q.z(i));
 			final int v = AoMath.clamp(q.x(i));
@@ -106,14 +90,6 @@ public class AoFace {
 		(q, i) -> clampFunc.clamp(q.z(i)),
 		(q, i) -> 1 - clampFunc.clamp(q.x(i)),
 		(q, i) -> clampFunc.clamp(q.y(i)),
-		(q, i, w) -> {
-			final float u = 1 - clampFunc.clamp(q.x(i));
-			final float v = clampFunc.clamp(q.y(i));
-			w[0] = v * u;
-			w[1] = v * (1 - u);
-			w[2] = (1 - v) * (1 - u);
-			w[3] = (1 - v) * u;
-		},
 		(q, i) -> {
 			final int u = UNIT_VALUE - AoMath.clamp(q.x(i));
 			final int v = AoMath.clamp(q.y(i));
@@ -128,14 +104,6 @@ public class AoFace {
 		(q, i) -> 1 - clampFunc.clamp(q.z(i)),
 		(q, i) -> clampFunc.clamp(q.y(i)),
 		(q, i) -> 1 - clampFunc.clamp(q.x(i)),
-		(q, i, w) -> {
-			final float u = clampFunc.clamp(q.y(i));
-			final float v = 1 - clampFunc.clamp(q.x(i));
-			w[0] = u * v;
-			w[1] = (1 - u) * v;
-			w[2] = (1 - u) * (1 - v);
-			w[3] = u * (1 - v);
-		},
 		(q, i) -> {
 			final int u = AoMath.clamp(q.y(i));
 			final int v = UNIT_VALUE - AoMath.clamp(q.x(i));
@@ -150,14 +118,6 @@ public class AoFace {
 		(q, i) -> clampFunc.clamp(q.x(i)),
 		(q, i) -> clampFunc.clamp(q.z(i)),
 		(q, i) -> clampFunc.clamp(q.y(i)),
-		(q, i, w) -> {
-			final float u = clampFunc.clamp(q.z(i));
-			final float v = clampFunc.clamp(q.y(i));
-			w[0] = v * u;
-			w[1] = v * (1 - u);
-			w[2] = (1 - v) * (1 - u);
-			w[3] = (1 - v) * u;
-		},
 		(q, i) -> {
 			final int u = AoMath.clamp(q.z(i));
 			final int v = AoMath.clamp(q.y(i));
@@ -172,14 +132,6 @@ public class AoFace {
 		(q, i) -> 1 - clampFunc.clamp(q.x(i)),
 		(q, i) -> clampFunc.clamp(q.z(i)),
 		(q, i) -> 1 - clampFunc.clamp(q.y(i)),
-		(q, i, w) -> {
-			final float u = clampFunc.clamp(q.z(i));
-			final float v = 1 - clampFunc.clamp(q.y(i));
-			w[0] = v * u;
-			w[1] = v * (1 - u);
-			w[2] = (1 - v) * (1 - u);
-			w[3] = (1 - v) * u;
-		},
 		(q, i) -> {
 			final int u = AoMath.clamp(q.z(i));
 			final int v = UNIT_VALUE - AoMath.clamp(q.y(i));
@@ -194,7 +146,6 @@ public class AoFace {
 
 	public final int[] neighbors;
 	public final WeightFunction weightFunc;
-	public final FastWeightFunction fastWeightFunc;
 	public final Vertex2Float depthFunc;
 	public final Vertex2Float uFunc;
 	public final Vertex2Float vFunc;
@@ -208,7 +159,7 @@ public class AoFace {
 	public final int topLeftOffset;
 	public final int topRightOffset;
 
-	AoFace(Direction bottom, Direction top, Direction left, Direction right, Vertex2Float depthFunc, Vertex2Float uFunc, Vertex2Float vFunc, WeightFunction weightFunc, FastWeightFunction fastWeightFunc) {
+	AoFace(Direction bottom, Direction top, Direction left, Direction right, Vertex2Float depthFunc, Vertex2Float uFunc, Vertex2Float vFunc, WeightFunction weightFunc) {
 		neighbors = new int[4];
 		neighbors[0] = bottom.ordinal();
 		neighbors[1] = top.ordinal();
@@ -232,7 +183,6 @@ public class AoFace {
 
 		this.depthFunc = depthFunc;
 		this.weightFunc = weightFunc;
-		this.fastWeightFunc = fastWeightFunc;
 		this.vFunc = vFunc;
 		this.uFunc = uFunc;
 	}
@@ -258,26 +208,13 @@ public class AoFace {
 	 * each face is a unit cube. Uses coordinates from axes orthogonal to face as
 	 * distance from the edge of the cube, flipping as needed. Multiplying distance
 	 * coordinate pairs together gives sub-area that are the corner weights. Weights
-	 * sum to 1 because it is a unit cube. Values are stored in the provided array.
-	 */
-	@FunctionalInterface
-	public interface WeightFunction {
-		void apply(BaseQuadView q, int vertexIndex, float[] out);
-	}
-
-	/**
-	 * Implementations handle bilinear interpolation of a point on a light face by
-	 * computing weights for each corner of the light face. Relies on the fact that
-	 * each face is a unit cube. Uses coordinates from axes orthogonal to face as
-	 * distance from the edge of the cube, flipping as needed. Multiplying distance
-	 * coordinate pairs together gives sub-area that are the corner weights. Weights
 	 * sum to 1 because it is a unit cube.
 	 *
 	 * <p>Values are returned as fixed precision, 16-bit values within a single long.
 	 * Encoding of each value is simple: 0xFFFF represents 1.0 and 0x0000 is 0.0.
 	 */
 	@FunctionalInterface
-	public interface FastWeightFunction {
+	public interface WeightFunction {
 		int apply(BaseQuadView q, int vertexIndex);
 	}
 

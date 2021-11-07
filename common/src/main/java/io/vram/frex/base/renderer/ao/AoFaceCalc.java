@@ -128,12 +128,15 @@ public class AoFaceCalc {
 		skyTopRight = (l >>> 16) & 0xFFFF;
 	}
 
-	public int weightedBlockLight(float[] w) {
-		return (int) (blockBottomRight * w[0] + blockBottomLeft * w[1] + blockTopLeft * w[2] + blockTopRight * w[3]) & 0xFF;
-	}
-
-	public int weightedBlockLight(int w) {
-		return ((blockBottomRight * (w & 0xFF) + blockBottomLeft * ((w >> 8) & 0xFF) + blockTopLeft * ((w >> 16) & 0xFF) + blockTopRight * ((w >> 24) & 0xFF)) + AoMath.UNIT_VALUE) >> AoMath.UNIT_SHIFT & 0xFF;
+	public int weightedBlockLight(int packedWeights) {
+		return (
+					(
+						blockBottomRight * (packedWeights & 0xFF)
+						+ blockBottomLeft * ((packedWeights >> 8) & 0xFF)
+						+ blockTopLeft * ((packedWeights >> 16) & 0xFF)
+						+ blockTopRight * ((packedWeights >> 24) & 0xFF)
+					) + AoMath.UNIT_VALUE
+				) >> AoMath.UNIT_SHIFT & 0xFF;
 	}
 
 	public int maxBlockLight(int oldMax) {
@@ -142,13 +145,15 @@ public class AoFaceCalc {
 		return Math.max(oldMax, i > j ? i : j);
 	}
 
-	public int weigtedSkyLight(float[] w) {
-		return (int) (skyBottomRight * w[0] + skyBottomLeft * w[1] + skyTopLeft * w[2] + skyTopRight * w[3]) & 0xFF;
-	}
-
-	// WIP: should probably use unit value
-	public int weightedSkyLight(int w) {
-		return ((skyBottomRight * (w & 0xFF) + skyBottomLeft * ((w >> 8) & 0xFF) + skyTopLeft * ((w >> 16) & 0xFF) + skyTopRight * ((w >> 24) & 0xFF)) + AoMath.UNIT_VALUE) >> AoMath.UNIT_SHIFT & 0xFF;
+	public int weightedSkyLight(int packedWeights) {
+		return (
+					(
+						skyBottomRight * (packedWeights & 0xFF)
+						+ skyBottomLeft * ((packedWeights >> 8) & 0xFF)
+						+ skyTopLeft * ((packedWeights >> 16) & 0xFF)
+						+ skyTopRight * ((packedWeights >> 24) & 0xFF)
+					) + AoMath.UNIT_VALUE
+				) >> AoMath.UNIT_SHIFT & 0xFF;
 	}
 
 	public int maxSkyLight(int oldMax) {
@@ -157,26 +162,23 @@ public class AoFaceCalc {
 		return Math.max(oldMax, i > j ? i : j);
 	}
 
-	public int weightedCombinedLight(float[] w) {
-		return weigtedSkyLight(w) << 16 | weightedBlockLight(w);
+	public int weightedCombinedLight(int packedWeights) {
+		return (weightedSkyLight(packedWeights) << 16) | weightedBlockLight(packedWeights);
 	}
 
-	public float weigtedAo(float[] w) {
-		return (aoBottomRight * w[0] + aoBottomLeft * w[1] + aoTopLeft * w[2] + aoTopRight * w[3]);
-	}
-
-	public int weigtedAo(int w) {
-		return ((aoBottomRight * (w & 0xFF) + aoBottomLeft * ((w >> 8) & 0xFF) + aoTopLeft * ((w >> 16) & 0xFF) + aoTopRight * ((w >> 24) & 0xFF)) + AoMath.UNIT_VALUE) >> AoMath.UNIT_SHIFT & 0xFF;
-	}
-
-	public float maxAo(float oldMax) {
-		final int x = aoBottomRight > aoBottomLeft ? aoBottomRight : aoBottomLeft;
-		final int y = aoTopLeft > aoTopRight ? aoTopLeft : aoTopRight;
-		final int z = x > y ? x : y;
-		return oldMax > z ? oldMax : z;
+	public int weigtedAo(int packedWeights) {
+		return (
+					(
+						aoBottomRight * (packedWeights & 0xFF)
+						+ aoBottomLeft * ((packedWeights >> 8) & 0xFF)
+						+ aoTopLeft * ((packedWeights >> 16) & 0xFF)
+						+ aoTopRight * ((packedWeights >> 24) & 0xFF)
+					) + AoMath.UNIT_VALUE
+				) >> AoMath.UNIT_SHIFT & 0xFF;
 	}
 
 	// PERF: use integer weights
+	@Deprecated
 	public void weightedMean(AoFaceCalc in0, float w0, AoFaceCalc in1, float w1) {
 		aoBottomRight = Math.round(in0.aoBottomRight * w0 + in1.aoBottomRight * w1);
 		aoBottomLeft = Math.round(in0.aoBottomLeft * w0 + in1.aoBottomLeft * w1);

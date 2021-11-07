@@ -20,7 +20,6 @@
 
 package io.vram.frex.base.renderer.ao;
 
-import static io.vram.frex.api.math.FrexMathUtil.clampNormalized;
 import static io.vram.frex.api.model.util.GeometryUtil.AXIS_ALIGNED_FLAG;
 import static io.vram.frex.api.model.util.GeometryUtil.CUBIC_FLAG;
 import static io.vram.frex.api.model.util.GeometryUtil.LIGHT_FACE_FLAG;
@@ -33,7 +32,6 @@ import io.vram.frex.api.math.PackedSectionPos;
 import io.vram.frex.api.math.PackedVector3f;
 import io.vram.frex.api.model.util.ColorUtil;
 import io.vram.frex.api.model.util.FaceUtil;
-import io.vram.frex.base.renderer.ao.AoFace.WeightFunction;
 import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 import io.vram.frex.base.renderer.mesh.BaseQuadView;
 
@@ -75,10 +73,6 @@ public abstract class AoCalculator {
 	 */
 	protected final AoFaceData[] faceData = new AoFaceData[12];
 
-	/**
-	 * Holds per-corner weights - used locally to avoid new allocation.
-	 */
-	protected final float[] w = new float[4];
 	protected long blendCacheCompletionLowFlags;
 	protected long blendCacheCompletionHighFlags;
 	protected int targetSectionPos;
@@ -201,14 +195,13 @@ public abstract class AoCalculator {
 		final int lightFace = quad.lightFaceId();
 		final AoFaceCalc faceData = gatherFace(lightFace, isOnLightFace).calc;
 		final AoFace face = AoFace.get(lightFace);
-		final WeightFunction wFunc = face.weightFunc;
-		final float[] w = this.w;
+		final var weightFunc = face.weightFunc;
 		final float[] ao = quad.ao;
 
 		for (int i = 0; i < 4; i++) {
-			wFunc.apply(quad, i, w);
-			quad.lightmap(i, ColorUtil.maxBrightness(quad.lightmap(i), faceData.weightedCombinedLight(w)));
-			ao[i] = clampNormalized(faceData.weigtedAo(w) * DIVIDE_BY_255);
+			final var packedWeights = weightFunc.apply(quad, i);
+			quad.lightmap(i, ColorUtil.maxBrightness(quad.lightmap(i), faceData.weightedCombinedLight(packedWeights)));
+			ao[i] = faceData.weigtedAo(packedWeights) * DIVIDE_BY_255;
 		}
 	}
 
@@ -216,12 +209,10 @@ public abstract class AoCalculator {
 		final int lightFace = quad.lightFaceId();
 		final AoFaceCalc faceData = gatherFace(lightFace, isOnLightFace).calc;
 		final AoFace face = AoFace.get(lightFace);
-		final WeightFunction wFunc = face.weightFunc;
-		final float[] w = this.w;
+		final var weightFunc = face.weightFunc;
 
 		for (int i = 0; i < 4; i++) {
-			wFunc.apply(quad, i, w);
-			quad.lightmap(i, ColorUtil.maxBrightness(quad.lightmap(i), faceData.weightedCombinedLight(w)));
+			quad.lightmap(i, ColorUtil.maxBrightness(quad.lightmap(i), faceData.weightedCombinedLight(weightFunc.apply(quad, i))));
 		}
 	}
 
@@ -254,14 +245,13 @@ public abstract class AoCalculator {
 		final int lightFace = quad.lightFaceId();
 		final AoFaceCalc faceData = blendedInsetData(quad, 0, lightFace);
 		final AoFace face = AoFace.get(lightFace);
-		final WeightFunction wFunc = face.weightFunc;
-		final float[] w = this.w;
+		final var weightFunc = face.weightFunc;
 		final float[] ao = quad.ao;
 
 		for (int i = 0; i < 4; i++) {
-			wFunc.apply(quad, i, w);
-			quad.lightmap(i, ColorUtil.maxBrightness(quad.lightmap(i), faceData.weightedCombinedLight(w)));
-			ao[i] = clampNormalized(faceData.weigtedAo(w) * DIVIDE_BY_255);
+			final var packedWeights = weightFunc.apply(quad, i);
+			quad.lightmap(i, ColorUtil.maxBrightness(quad.lightmap(i), faceData.weightedCombinedLight(packedWeights)));
+			ao[i] = faceData.weigtedAo(packedWeights) * DIVIDE_BY_255;
 		}
 	}
 
@@ -269,12 +259,10 @@ public abstract class AoCalculator {
 		final int lightFace = quad.lightFaceId();
 		final AoFaceCalc faceData = blendedInsetData(quad, 0, lightFace);
 		final AoFace face = AoFace.get(lightFace);
-		final WeightFunction wFunc = face.weightFunc;
-		final float[] w = this.w;
+		final var weightFunc = face.weightFunc;
 
 		for (int i = 0; i < 4; i++) {
-			wFunc.apply(quad, i, w);
-			quad.lightmap(i, ColorUtil.maxBrightness(quad.lightmap(i), faceData.weightedCombinedLight(w)));
+			quad.lightmap(i, ColorUtil.maxBrightness(quad.lightmap(i), faceData.weightedCombinedLight(weightFunc.apply(quad, i))));
 		}
 	}
 
@@ -304,7 +292,7 @@ public abstract class AoCalculator {
 				final int face = rawNormalX > 0 ? EAST : WEST;
 				// PERF: really need to cache these
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
-				final int weights = AoFace.get(face).fastWeightFunc.apply(quad, i);
+				final int weights = AoFace.get(face).weightFunc.apply(quad, i);
 				final int normalSq = AoMath.mul(scaledNormalX, scaledNormalX);
 				final int ao = fd.weigtedAo(weights);
 				final int sky = fd.weightedSkyLight(weights);
@@ -321,7 +309,7 @@ public abstract class AoCalculator {
 			if (rawNormalY != 0) {
 				final int face = rawNormalY > 0 ? UP : DOWN;
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
-				final int weights = AoFace.get(face).fastWeightFunc.apply(quad, i);
+				final int weights = AoFace.get(face).weightFunc.apply(quad, i);
 				final int normalSq = AoMath.mul(scaledNormalY, scaledNormalY);
 				final int ao = fd.weigtedAo(weights);
 				final int sky = fd.weightedSkyLight(weights);
@@ -338,7 +326,7 @@ public abstract class AoCalculator {
 			if (rawNormalZ != 0) {
 				final int face = rawNormalZ > 0 ? SOUTH : NORTH;
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
-				final int weights = AoFace.get(face).fastWeightFunc.apply(quad, i);
+				final int weights = AoFace.get(face).weightFunc.apply(quad, i);
 				final int normalSq = AoMath.mul(scaledNormalZ, scaledNormalZ);
 				final int ao = fd.weigtedAo(weights);
 				final int sky = fd.weightedSkyLight(weights);
@@ -391,7 +379,7 @@ public abstract class AoCalculator {
 				final int face = rawNormalX > 0 ? EAST : WEST;
 				// PERF: really need to cache these
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
-				final int weights = AoFace.get(face).fastWeightFunc.apply(quad, i);
+				final int weights = AoFace.get(face).weightFunc.apply(quad, i);
 				final int normalSq = AoMath.mul(scaledNormalX, scaledNormalX);
 				final int sky = fd.weightedSkyLight(weights);
 				final int block = fd.weightedBlockLight(weights);
@@ -405,7 +393,7 @@ public abstract class AoCalculator {
 			if (rawNormalY != 0) {
 				final int face = rawNormalY > 0 ? UP : DOWN;
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
-				final int weights = AoFace.get(face).fastWeightFunc.apply(quad, i);
+				final int weights = AoFace.get(face).weightFunc.apply(quad, i);
 				final int normalSq = AoMath.mul(scaledNormalY, scaledNormalY);
 				final int sky = fd.weightedSkyLight(weights);
 				final int block = fd.weightedBlockLight(weights);
@@ -419,7 +407,7 @@ public abstract class AoCalculator {
 			if (rawNormalZ != 0) {
 				final int face = rawNormalZ > 0 ? SOUTH : NORTH;
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
-				final int weights = AoFace.get(face).fastWeightFunc.apply(quad, i);
+				final int weights = AoFace.get(face).weightFunc.apply(quad, i);
 				final int normalSq = AoMath.mul(scaledNormalZ, scaledNormalZ);
 				final int sky = fd.weightedSkyLight(weights);
 				final int block = fd.weightedBlockLight(weights);

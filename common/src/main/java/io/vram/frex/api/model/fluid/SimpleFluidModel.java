@@ -35,8 +35,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.buffer.QuadEmitter;
+import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.material.RenderMaterial;
 
 /**
@@ -53,8 +53,7 @@ public class SimpleFluidModel implements FluidModel {
 		this.appearance = appearance;
 	}
 
-	// PERF: caching - would still need to colorize at buffer time
-	// or at least pass in normalized UVs so don't have to deinterpolate in renderer
+	// PERF: pass in normalized UVs so don't have to deinterpolate in renderer
 
 	// WIP: handle degenerate quads by emitting two triangles so that face normals are correct
 	@Override
@@ -121,7 +120,6 @@ public class SimpleFluidModel implements FluidModel {
 			float eastNwHeight = nwHeight(world, searchPos.setWithOffset(centerPos, Direction.EAST), fluid);
 			final float downBasedOffset = isDownVisible ? 0.001F : 0.0F;
 
-			// PERF: move additional up-visible check outside block and don't enter if results in NOOP
 			if (isUpVisible && !isSideBlocked(world, searchPos.setWithOffset(centerPos, Direction.UP), Direction.UP, Math.min(Math.min(centerNwHeight, southNwHeight), Math.min(southEastNwHeight, eastNwHeight)))) {
 				centerNwHeight -= 0.001F;
 				southNwHeight -= 0.001F;
@@ -134,31 +132,31 @@ public class SimpleFluidModel implements FluidModel {
 
 				if (velocity.x == 0.0D && velocity.z == 0.0D) {
 					topSprite = stillSprite;
-					u0 = topSprite.getU(0.0D);
-					v0 = topSprite.getV(0.0D);
-					u1 = u0;
-					v1 = topSprite.getV(16.0D);
-					u2 = topSprite.getU(16.0D);
-					v2 = v1;
-					u3 = u2;
-					v3 = v0;
+					u0 = 0f;
+					v0 = 0f;
+					u1 = 0f;
+					v1 = 1f;
+					u2 = 1f;
+					v2 = 1f;
+					u3 = 1f;
+					v3 = 0f;
 				} else {
 					topSprite = sprites[1];
 					final float angle = (float) Mth.atan2(velocity.z, velocity.x) - 1.5707964F;
 					final float dx = Mth.sin(angle) * 0.25F;
 					final float dy = Mth.cos(angle) * 0.25F;
-					u0 = topSprite.getU(8.0F + (-dy - dx) * 16.0F);
-					v0 = topSprite.getV(8.0F + (-dy + dx) * 16.0F);
-					u1 = topSprite.getU(8.0F + (-dy + dx) * 16.0F);
-					v1 = topSprite.getV(8.0F + (dy + dx) * 16.0F);
-					u2 = topSprite.getU(8.0F + (dy + dx) * 16.0F);
-					v2 = topSprite.getV(8.0F + (dy - dx) * 16.0F);
-					u3 = topSprite.getU(8.0F + (dy - dx) * 16.0F);
-					v3 = topSprite.getV(8.0F + (-dy - dx) * 16.0F);
+					u0 = 0.5F + -dy - dx;
+					v0 = 0.5F + -dy + dx;
+					u1 = 0.5F + -dy + dx;
+					v1 = 0.5F + dy + dx;
+					u2 = 0.5F + dy + dx;
+					v2 = 0.5F + dy - dx;
+					u3 = 0.5F + dy - dx;
+					v3 = 0.5F + -dy - dx;
 				}
 
-				final float uCentroid = (u0 + u1 + u2 + u3) / 4.0F;
-				final float vCentroid = (v0 + v1 + v2 + v3) / 4.0F;
+				final float uCentroid = (u0 + u1 + u2 + u3) * 0.25F;
+				final float vCentroid = (v0 + v1 + v2 + v3) * 0.25F;
 
 				final float dx = stillSprite.getWidth() / (stillSprite.getU1() - stillSprite.getU0());
 				final float dy = stillSprite.getHeight() / (stillSprite.getV1() - stillSprite.getV0());
@@ -173,18 +171,22 @@ public class SimpleFluidModel implements FluidModel {
 				v2 = Mth.lerp(centerScale, v2, vCentroid);
 				v3 = Mth.lerp(centerScale, v3, vCentroid);
 
-				qe.pos(0, 0, centerNwHeight, 0).uv(0, u0, v0).vertexColor(0, nwColor)
-				.pos(1, 0, southNwHeight, 1).uv(1, u1, v1).vertexColor(1, swColor)
-				.pos(2, 1, southEastNwHeight, 1).uv(2, u2, v2).vertexColor(2, seColor)
-				.pos(3, 1, eastNwHeight, 0).uv(3, u3, v3).vertexColor(3, neColor)
+				qe.pos(0, 0, centerNwHeight, 0)
+				.pos(1, 0, southNwHeight, 1)
+				.pos(2, 1, southEastNwHeight, 1)
+				.pos(3, 1, eastNwHeight, 0)
+				.uvSprite(topSprite, u0, v0, u1, v1, u2, v2, u3, v3)
+				.vertexColor(nwColor, swColor, seColor, neColor)
 				.material(material).emit();
 
 				// backface
 				if (fluidState.shouldRenderBackwardUpFace(world, searchPos.setWithOffset(centerPos, Direction.UP))) {
-					qe.pos(0, 0, centerNwHeight, 0).uv(0, u0, v0).vertexColor(0, nwColor)
-					.pos(1, 1, eastNwHeight, 0).uv(1, u3, v3).vertexColor(1, neColor)
-					.pos(2, 1, southEastNwHeight, 1).uv(2, u2, v2).vertexColor(2, seColor)
-					.pos(3, 0, southNwHeight, 1).uv(3, u1, v1).vertexColor(3, swColor)
+					qe.pos(0, 0, centerNwHeight, 0)
+					.pos(1, 1, eastNwHeight, 0)
+					.pos(2, 1, southEastNwHeight, 1)
+					.pos(3, 0, southNwHeight, 1)
+					.uvSprite(topSprite, u0, v0, u3, v3, u2, v2, u1, v1)
+					.vertexColor(nwColor, neColor, seColor, swColor)
 					.material(material).emit();
 				}
 			}
@@ -284,8 +286,6 @@ public class SimpleFluidModel implements FluidModel {
 					.pos(1, x1, y1, z1).uv(1, u1, v1).vertexColor(1, c1)
 					.pos(2, x1, downBasedOffset, z1).uv(2, u1, vCenter).vertexColor(2, c1)
 					.pos(3, x0, downBasedOffset, z0).uv(3, u0, vCenter).vertexColor(3, c0)
-					// WIP: why do this here if set vertex colors earlier?
-					.vertexColor(centerColor, centerColor, centerColor, centerColor)
 					.material(material).emit();
 
 					if (!overlay) {
@@ -293,8 +293,6 @@ public class SimpleFluidModel implements FluidModel {
 						.pos(1, x1, downBasedOffset, z1).uv(1, u1, vCenter).vertexColor(1, c1)
 						.pos(2, x1, y1, z1).uv(2, u1, v1).vertexColor(2, c1)
 						.pos(3, x0, y0, z0).uv(3, u0, v0).vertexColor(3, c0)
-						// WIP: why do this here if set vertex colors earlier?
-						.vertexColor(centerColor, centerColor, centerColor, centerColor)
 						.material(material).emit();
 					}
 				}

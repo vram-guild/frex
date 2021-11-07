@@ -52,7 +52,6 @@ public interface RenderRegionBakeListener {
 		RenderRegionBakeListenerImpl.prepareInvocations(context, listeners);
 	}
 
-	// FEAT: create way to add a block view transform for virtual rendering - at a minimum, allow for connected textures and glass face culling
 	public interface RenderRegionContext<T extends BlockAndTintGetter> {
 		/**
 		 * Is Level during predicate test, and BlockAndTintGetter during render.

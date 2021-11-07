@@ -250,14 +250,16 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 		return result;
 	}
 
+	@Inject(method = "createIfNotEmpty", at = @At("HEAD"))
+	private static void onCreateIfNotEmpty(Level level, BlockPos startPos, BlockPos endPos, int i, CallbackInfoReturnable<RenderChunkRegion> cir) {
+		final ChunkRenderConditionContext context = TRANSFER_POOL.get().prepare(level, startPos.getX() + 1, startPos.getY() + 1, startPos.getZ() + 1);
+		RenderRegionBakeListener.prepareInvocations(context, context.listeners);
+	}
+
 	@Inject(method = "isAllEmpty", at = @At("RETURN"), cancellable = true)
 	private static void isChunkEmpty(BlockPos startPos, BlockPos endPos, int i, int j, LevelChunk[][] levelChunks, CallbackInfoReturnable<Boolean> cir) {
-		// even if region not empty we still test here and capture listeners here
-		final ChunkRenderConditionContext context = TRANSFER_POOL.get().prepare(startPos.getX() + 1, startPos.getY() + 1, startPos.getZ() + 1);
-		RenderRegionBakeListener.prepareInvocations(context, context.listeners);
-
-		if (cir.getReturnValueZ() && !context.listeners.isEmpty()) {
-			// if empty but has listeners, force it to build
+		// if empty but has listeners, force it to build
+		if (cir.getReturnValueZ() && !TRANSFER_POOL.get().listeners.isEmpty()) {
 			cir.setReturnValue(false);
 		}
 	}

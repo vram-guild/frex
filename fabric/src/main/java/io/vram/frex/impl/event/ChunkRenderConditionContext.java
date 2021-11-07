@@ -32,12 +32,14 @@ import io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext;
 
 public class ChunkRenderConditionContext implements RenderRegionContext<Level> {
 	public final ObjectArrayList<RenderRegionBakeListener> listeners = new ObjectArrayList<>();
-	private final BlockPos.MutableBlockPos origin = new BlockPos.MutableBlockPos();
-	private final BlockPos.MutableBlockPos searchPos = new BlockPos.MutableBlockPos();
+	protected final BlockPos.MutableBlockPos origin = new BlockPos.MutableBlockPos();
+	protected final BlockPos.MutableBlockPos searchPos = new BlockPos.MutableBlockPos();
+	protected Level level;
 
-	public ChunkRenderConditionContext prepare(int x, int y, int z) {
+	public ChunkRenderConditionContext prepare(Level level, int x, int y, int z) {
 		listeners.clear();
 		origin.set(x, y, z);
+		this.level = level;
 		return this;
 	}
 
@@ -57,7 +59,7 @@ public class ChunkRenderConditionContext implements RenderRegionContext<Level> {
 
 	@Override
 	public Level blockView() {
-		return null;
+		return level;
 	}
 
 	@Override

@@ -104,8 +104,6 @@ public abstract class MixinChunkRebuildTask implements RenderRegionContext<Block
 				context.overrideBlockView(renderChunkRegion);
 				contextRegion = null;
 			}
-
-			context.prepareForRegion(renderChunkRegion, arg3, poseStack, blockPos, arg4);
 		}
 	}
 

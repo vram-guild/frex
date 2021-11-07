@@ -132,6 +132,10 @@ public class AoFaceCalc {
 		return (int) (blockBottomRight * w[0] + blockBottomLeft * w[1] + blockTopLeft * w[2] + blockTopRight * w[3]) & 0xFF;
 	}
 
+	public int weightedBlockLight(int w) {
+		return ((blockBottomRight * (w & 0xFF) + blockBottomLeft * ((w >> 8) & 0xFF) + blockTopLeft * ((w >> 16) & 0xFF) + blockTopRight * ((w >> 24) & 0xFF)) + AoMath.HALF_VALUE) >> AoMath.UNIT_SHIFT & 0xFF;
+	}
+
 	public int maxBlockLight(int oldMax) {
 		final int i = blockBottomRight > blockBottomLeft ? blockBottomRight : blockBottomLeft;
 		final int j = blockTopLeft > blockTopRight ? blockTopLeft : blockTopRight;
@@ -140,6 +144,10 @@ public class AoFaceCalc {
 
 	public int weigtedSkyLight(float[] w) {
 		return (int) (skyBottomRight * w[0] + skyBottomLeft * w[1] + skyTopLeft * w[2] + skyTopRight * w[3]) & 0xFF;
+	}
+
+	public int weightedSkyLight(int w) {
+		return ((skyBottomRight * (w & 0xFF) + skyBottomLeft * ((w >> 8) & 0xFF) + skyTopLeft * ((w >> 16) & 0xFF) + skyTopRight * ((w >> 24) & 0xFF)) + AoMath.HALF_VALUE) >> AoMath.UNIT_SHIFT & 0xFF;
 	}
 
 	public int maxSkyLight(int oldMax) {

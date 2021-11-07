@@ -20,6 +20,7 @@
 
 package io.vram.frex.base.renderer.ao;
 
+import static io.vram.frex.base.renderer.ao.AoMath.UNIT_VALUE;
 import static net.minecraft.core.Direction.DOWN;
 import static net.minecraft.core.Direction.EAST;
 import static net.minecraft.core.Direction.NORTH;
@@ -68,6 +69,15 @@ public class AoFace {
 			w[1] = v * (1 - u);
 			w[2] = (1 - v) * (1 - u);
 			w[3] = (1 - v) * u;
+		},
+		(q, i) -> {
+			final int u = AoMath.clamp(q.z(i));
+			final int v = UNIT_VALUE - AoMath.clamp(q.x(i));
+			final int w0 = AoMath.mul(v, u);
+			final int w1 = AoMath.mul(v, UNIT_VALUE - u);
+			final int w2 = AoMath.mul(UNIT_VALUE - v, UNIT_VALUE - u);
+			final int w3 = AoMath.mul(UNIT_VALUE - v, u);
+			return w0 | (w1 << 8) | (w2 << 16) | (w3 << 24);
 		});
 
 	public static final AoFace AOF_UP = new AoFace(EAST, WEST, NORTH, SOUTH,
@@ -81,6 +91,15 @@ public class AoFace {
 			w[1] = v * (1 - u);
 			w[2] = (1 - v) * (1 - u);
 			w[3] = (1 - v) * u;
+		},
+		(q, i) -> {
+			final int u = AoMath.clamp(q.z(i));
+			final int v = AoMath.clamp(q.x(i));
+			final int w0 = AoMath.mul(v, u);
+			final int w1 = AoMath.mul(v, UNIT_VALUE - u);
+			final int w2 = AoMath.mul(UNIT_VALUE - v, UNIT_VALUE - u);
+			final int w3 = AoMath.mul(UNIT_VALUE - v, u);
+			return w0 | (w1 << 8) | (w2 << 16) | (w3 << 24);
 		});
 
 	public static final AoFace AOF_NORTH = new AoFace(UP, DOWN, EAST, WEST,
@@ -94,7 +113,17 @@ public class AoFace {
 			w[1] = v * (1 - u);
 			w[2] = (1 - v) * (1 - u);
 			w[3] = (1 - v) * u;
+		},
+		(q, i) -> {
+			final int u = UNIT_VALUE - AoMath.clamp(q.x(i));
+			final int v = AoMath.clamp(q.y(i));
+			final int w0 = AoMath.mul(v, u);
+			final int w1 = AoMath.mul(v, UNIT_VALUE - u);
+			final int w2 = AoMath.mul(UNIT_VALUE - v, UNIT_VALUE - u);
+			final int w3 = AoMath.mul(UNIT_VALUE - v, u);
+			return w0 | (w1 << 8) | (w2 << 16) | (w3 << 24);
 		});
+
 	public static final AoFace AOF_SOUTH = new AoFace(WEST, EAST, DOWN, UP,
 		(q, i) -> 1 - clampFunc.clamp(q.z(i)),
 		(q, i) -> clampFunc.clamp(q.y(i)),
@@ -106,6 +135,15 @@ public class AoFace {
 			w[1] = (1 - u) * v;
 			w[2] = (1 - u) * (1 - v);
 			w[3] = u * (1 - v);
+		},
+		(q, i) -> {
+			final int u = AoMath.clamp(q.y(i));
+			final int v = UNIT_VALUE - AoMath.clamp(q.x(i));
+			final int w0 = AoMath.mul(u, v);
+			final int w1 = AoMath.mul(UNIT_VALUE - u, v);
+			final int w2 = AoMath.mul(UNIT_VALUE - u, UNIT_VALUE - v);
+			final int w3 = AoMath.mul(u, UNIT_VALUE - v);
+			return w0 | (w1 << 8) | (w2 << 16) | (w3 << 24);
 		});
 
 	public static final AoFace AOF_WEST = new AoFace(UP, DOWN, NORTH, SOUTH,
@@ -119,6 +157,15 @@ public class AoFace {
 			w[1] = v * (1 - u);
 			w[2] = (1 - v) * (1 - u);
 			w[3] = (1 - v) * u;
+		},
+		(q, i) -> {
+			final int u = AoMath.clamp(q.z(i));
+			final int v = AoMath.clamp(q.y(i));
+			final int w0 = AoMath.mul(v, u);
+			final int w1 = AoMath.mul(v, UNIT_VALUE - u);
+			final int w2 = AoMath.mul(UNIT_VALUE - v, UNIT_VALUE - u);
+			final int w3 = AoMath.mul(UNIT_VALUE - v, u);
+			return w0 | (w1 << 8) | (w2 << 16) | (w3 << 24);
 		});
 
 	public static final AoFace AOF_EAST = new AoFace(DOWN, UP, NORTH, SOUTH,
@@ -132,12 +179,22 @@ public class AoFace {
 			w[1] = v * (1 - u);
 			w[2] = (1 - v) * (1 - u);
 			w[3] = (1 - v) * u;
+		},
+		(q, i) -> {
+			final int u = AoMath.clamp(q.z(i));
+			final int v = UNIT_VALUE - AoMath.clamp(q.y(i));
+			final int w0 = AoMath.mul(v, u);
+			final int w1 = AoMath.mul(v, UNIT_VALUE - u);
+			final int w2 = AoMath.mul(UNIT_VALUE - v, UNIT_VALUE - u);
+			final int w3 = AoMath.mul(UNIT_VALUE - v, u);
+			return w0 | (w1 << 8) | (w2 << 16) | (w3 << 24);
 		});
 
 	protected static final AoFace[] values = createValues();
 
 	public final int[] neighbors;
 	public final WeightFunction weightFunc;
+	public final FastWeightFunction fastWeightFunc;
 	public final Vertex2Float depthFunc;
 	public final Vertex2Float uFunc;
 	public final Vertex2Float vFunc;
@@ -151,7 +208,7 @@ public class AoFace {
 	public final int topLeftOffset;
 	public final int topRightOffset;
 
-	AoFace(Direction bottom, Direction top, Direction left, Direction right, Vertex2Float depthFunc, Vertex2Float uFunc, Vertex2Float vFunc, WeightFunction weightFunc) {
+	AoFace(Direction bottom, Direction top, Direction left, Direction right, Vertex2Float depthFunc, Vertex2Float uFunc, Vertex2Float vFunc, WeightFunction weightFunc, FastWeightFunction fastWeightFunc) {
 		neighbors = new int[4];
 		neighbors[0] = bottom.ordinal();
 		neighbors[1] = top.ordinal();
@@ -175,6 +232,7 @@ public class AoFace {
 
 		this.depthFunc = depthFunc;
 		this.weightFunc = weightFunc;
+		this.fastWeightFunc = fastWeightFunc;
 		this.vFunc = vFunc;
 		this.uFunc = uFunc;
 	}
@@ -205,6 +263,22 @@ public class AoFace {
 	@FunctionalInterface
 	public interface WeightFunction {
 		void apply(BaseQuadView q, int vertexIndex, float[] out);
+	}
+
+	/**
+	 * Implementations handle bilinear interpolation of a point on a light face by
+	 * computing weights for each corner of the light face. Relies on the fact that
+	 * each face is a unit cube. Uses coordinates from axes orthogonal to face as
+	 * distance from the edge of the cube, flipping as needed. Multiplying distance
+	 * coordinate pairs together gives sub-area that are the corner weights. Weights
+	 * sum to 1 because it is a unit cube.
+	 *
+	 * <p>Values are returned as fixed precision, 16-bit values within a single long.
+	 * Encoding of each value is simple: 0xFFFF represents 1.0 and 0x0000 is 0.0.
+	 */
+	@FunctionalInterface
+	public interface FastWeightFunction {
+		int apply(BaseQuadView q, int vertexIndex);
 	}
 
 	@FunctionalInterface

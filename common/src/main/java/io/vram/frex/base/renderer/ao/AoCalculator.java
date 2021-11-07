@@ -289,10 +289,13 @@ public abstract class AoCalculator {
 				// PERF: really need to cache these
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
 				AoFace.get(face).weightFunc.apply(quad, i, w);
+				final int fw = AoFace.get(face).fastWeightFunc.apply(quad, i);
+
 				final float n = nx * nx;
 				final float a = fd.weigtedAo(w);
-				final int s = fd.weigtedSkyLight(w);
-				final int b = fd.weightedBlockLight(w);
+				final int s = fd.weightedSkyLight(fw);
+				final int b = fd.weightedBlockLight(fw);
+
 				ao += n * a;
 				sky += n * s;
 				block += n * b;
@@ -305,10 +308,13 @@ public abstract class AoCalculator {
 				final int face = ny > 0 ? UP : DOWN;
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
 				AoFace.get(face).weightFunc.apply(quad, i, w);
+				final int fw = AoFace.get(face).fastWeightFunc.apply(quad, i);
+
 				final float n = ny * ny;
 				final float a = fd.weigtedAo(w);
-				final int s = fd.weigtedSkyLight(w);
-				final int b = fd.weightedBlockLight(w);
+				final int s = fd.weightedSkyLight(fw);
+				final int b = fd.weightedBlockLight(fw);
+
 				ao += n * a;
 				sky += n * s;
 				block += n * b;
@@ -321,10 +327,13 @@ public abstract class AoCalculator {
 				final int face = nz > 0 ? SOUTH : NORTH;
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
 				AoFace.get(face).weightFunc.apply(quad, i, w);
+				final int fw = AoFace.get(face).fastWeightFunc.apply(quad, i);
+
 				final float n = nz * nz;
 				final float a = fd.weigtedAo(w);
-				final int s = fd.weigtedSkyLight(w);
-				final int b = fd.weightedBlockLight(w);
+				final int s = fd.weightedSkyLight(fw);
+				final int b = fd.weightedBlockLight(fw);
+
 				ao += n * a;
 				sky += n * s;
 				block += n * b;
@@ -364,10 +373,12 @@ public abstract class AoCalculator {
 				// PERF: really need to cache these
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
 				AoFace.get(face).weightFunc.apply(quad, i, w);
+				final int fw = AoFace.get(face).fastWeightFunc.apply(quad, i);
+
 				final float n = nx * nx;
-				final float a = fd.weigtedAo(w);
-				final int s = fd.weigtedSkyLight(w);
-				final int b = fd.weightedBlockLight(w);
+				final int s = fd.weightedSkyLight(fw);
+				final int b = fd.weightedBlockLight(fw);
+
 				sky += n * s;
 				block += n * b;
 				maxSky = s;
@@ -378,10 +389,12 @@ public abstract class AoCalculator {
 				final int face = ny > 0 ? UP : DOWN;
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
 				AoFace.get(face).weightFunc.apply(quad, i, w);
+				final int fw = AoFace.get(face).fastWeightFunc.apply(quad, i);
+
 				final float n = ny * ny;
-				final float a = fd.weigtedAo(w);
-				final int s = fd.weigtedSkyLight(w);
-				final int b = fd.weightedBlockLight(w);
+				final int s = fd.weightedSkyLight(fw);
+				final int b = fd.weightedBlockLight(fw);
+
 				sky += n * s;
 				block += n * b;
 				maxSky = Math.max(s, maxSky);
@@ -392,10 +405,12 @@ public abstract class AoCalculator {
 				final int face = nz > 0 ? SOUTH : NORTH;
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
 				AoFace.get(face).weightFunc.apply(quad, i, w);
+				final int fw = AoFace.get(face).fastWeightFunc.apply(quad, i);
+
 				final float n = nz * nz;
-				final float a = fd.weigtedAo(w);
-				final int s = fd.weigtedSkyLight(w);
-				final int b = fd.weightedBlockLight(w);
+				final int s = fd.weightedSkyLight(fw);
+				final int b = fd.weightedBlockLight(fw);
+
 				sky += n * s;
 				block += n * b;
 				maxSky = Math.max(s, maxSky);

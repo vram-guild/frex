@@ -280,8 +280,8 @@ public abstract class AoCalculator {
 
 	private void irregularFace(BaseQuadEmitter quad) {
 		int normal = 0;
-		float nx = 0, ny = 0, nz = 0;
-		final float[] w = this.w;
+		int rawNormalX = 0, rawNormalY = 0, rawNormalZ = 0;
+		int scaledNormalX = 0, scaledNormalY = 0, scaledNormalZ = 0;
 		final float[] aoResult = quad.ao;
 
 		for (int i = 0; i < 4; i++) {
@@ -289,76 +289,81 @@ public abstract class AoCalculator {
 
 			if (vNormal != normal) {
 				normal = vNormal;
-				nx = PackedVector3f.packedX(normal);
-				ny = PackedVector3f.packedY(normal);
-				nz = PackedVector3f.packedZ(normal);
+				rawNormalX = PackedVector3f.packedByteX(normal);
+				rawNormalY = PackedVector3f.packedByteY(normal);
+				rawNormalZ = PackedVector3f.packedByteZ(normal);
+				scaledNormalX = scaleNormal255(rawNormalX);
+				scaledNormalY = scaleNormal255(rawNormalY);
+				scaledNormalZ = scaleNormal255(rawNormalZ);
 			}
 
-			float ao = 0, sky = 0, block = 0;
-			int maxSky = 0, maxBlock = 0;
-			float maxAo = 0;
+			int aoSum = 0, aoMax = 0;
+			int skySum = 0, blockSum = 0, skyMax = 0, blockMax = 0;
 
-			if (!Mth.equal(0f, nx)) {
-				final int face = nx > 0 ? EAST : WEST;
+			if (rawNormalX != 0) {
+				final int face = rawNormalX > 0 ? EAST : WEST;
 				// PERF: really need to cache these
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
-				AoFace.get(face).weightFunc.apply(quad, i, w);
-				final int fw = AoFace.get(face).fastWeightFunc.apply(quad, i);
+				final int weights = AoFace.get(face).fastWeightFunc.apply(quad, i);
+				final int normalSq = AoMath.mul(scaledNormalX, scaledNormalX);
+				final int ao = fd.weigtedAo(weights);
+				final int sky = fd.weightedSkyLight(weights);
+				final int block = fd.weightedBlockLight(weights);
 
-				final float n = nx * nx;
-				final float a = fd.weigtedAo(w);
-				final int s = fd.weightedSkyLight(fw);
-				final int b = fd.weightedBlockLight(fw);
-
-				ao += n * a;
-				sky += n * s;
-				block += n * b;
-				maxAo = a;
-				maxSky = s;
-				maxBlock = b;
+				aoSum += normalSq * ao;
+				skySum += normalSq * sky;
+				blockSum += normalSq * block;
+				aoMax = ao;
+				skyMax = sky;
+				blockMax = block;
 			}
 
-			if (!Mth.equal(0f, ny)) {
-				final int face = ny > 0 ? UP : DOWN;
+			if (rawNormalY != 0) {
+				final int face = rawNormalY > 0 ? UP : DOWN;
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
-				AoFace.get(face).weightFunc.apply(quad, i, w);
-				final int fw = AoFace.get(face).fastWeightFunc.apply(quad, i);
+				final int weights = AoFace.get(face).fastWeightFunc.apply(quad, i);
+				final int normalSq = AoMath.mul(scaledNormalY, scaledNormalY);
+				final int ao = fd.weigtedAo(weights);
+				final int sky = fd.weightedSkyLight(weights);
+				final int b = fd.weightedBlockLight(weights);
 
-				final float n = ny * ny;
-				final float a = fd.weigtedAo(w);
-				final int s = fd.weightedSkyLight(fw);
-				final int b = fd.weightedBlockLight(fw);
-
-				ao += n * a;
-				sky += n * s;
-				block += n * b;
-				maxAo = Math.max(a, maxAo);
-				maxSky = Math.max(s, maxSky);
-				maxBlock = Math.max(b, maxBlock);
+				aoSum += normalSq * ao;
+				skySum += normalSq * sky;
+				blockSum += normalSq * b;
+				aoMax = Math.max(ao, aoMax);
+				skyMax = Math.max(sky, skyMax);
+				blockMax = Math.max(b, blockMax);
 			}
 
-			if (!Mth.equal(0f, nz)) {
-				final int face = nz > 0 ? SOUTH : NORTH;
+			if (rawNormalZ != 0) {
+				final int face = rawNormalZ > 0 ? SOUTH : NORTH;
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
-				AoFace.get(face).weightFunc.apply(quad, i, w);
-				final int fw = AoFace.get(face).fastWeightFunc.apply(quad, i);
+				final int weights = AoFace.get(face).fastWeightFunc.apply(quad, i);
+				final int normalSq = AoMath.mul(scaledNormalZ, scaledNormalZ);
+				final int ao = fd.weigtedAo(weights);
+				final int sky = fd.weightedSkyLight(weights);
+				final int block = fd.weightedBlockLight(weights);
 
-				final float n = nz * nz;
-				final float a = fd.weigtedAo(w);
-				final int s = fd.weightedSkyLight(fw);
-				final int b = fd.weightedBlockLight(fw);
-
-				ao += n * a;
-				sky += n * s;
-				block += n * b;
-				maxAo = Math.max(a, maxAo);
-				maxSky = Math.max(s, maxSky);
-				maxBlock = Math.max(b, maxBlock);
+				aoSum += normalSq * ao;
+				skySum += normalSq * sky;
+				blockSum += normalSq * block;
+				aoMax = Math.max(ao, aoMax);
+				skyMax = Math.max(sky, skyMax);
+				blockMax = Math.max(block, blockMax);
 			}
 
-			aoResult[i] = clampNormalized((ao + maxAo) * (0.5f * DIVIDE_BY_255));
-			quad.lightmap(i, ColorUtil.maxBrightness(quad.lightmap(i), (((int) ((sky + maxSky) * 0.5f) & 0xFF) << 16)
-					| ((int) ((block + maxBlock) * 0.5f) & 0xFF)));
+			aoSum = (aoSum + AoMath.HALF_VALUE) >> AoMath.UNIT_SHIFT;
+			aoSum = (aoSum + aoMax) >> 1;
+			assert (aoSum & 0xFF) == aoSum;
+			aoResult[i] = aoSum * DIVIDE_BY_255;
+
+			skySum = (skySum + AoMath.HALF_VALUE) >> AoMath.UNIT_SHIFT;
+			skySum = (skySum + skyMax) >> 1;
+
+			blockSum = (blockSum + AoMath.HALF_VALUE) >> AoMath.UNIT_SHIFT;
+			blockSum = (blockSum + blockMax) >> 1;
+
+			quad.lightmap(i, ColorUtil.maxBrightness(quad.lightmap(i), (skySum << 16) | blockSum));
 		}
 	}
 
@@ -380,59 +385,58 @@ public abstract class AoCalculator {
 				scaledNormalZ = scaleNormal255(rawNormalZ);
 			}
 
-			int sky = 0, block = 0;
-			int maxSky = 0, maxBlock = 0;
+			int skySum = 0, blockSum = 0, skyMax = 0, blockMax = 0;
 
 			if (rawNormalX != 0) {
 				final int face = rawNormalX > 0 ? EAST : WEST;
 				// PERF: really need to cache these
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
-				final int w = AoFace.get(face).fastWeightFunc.apply(quad, i);
-				final int n = AoMath.mul(scaledNormalX, scaledNormalX);
-				final int s = fd.weightedSkyLight(w);
-				final int b = fd.weightedBlockLight(w);
+				final int weights = AoFace.get(face).fastWeightFunc.apply(quad, i);
+				final int normalSq = AoMath.mul(scaledNormalX, scaledNormalX);
+				final int sky = fd.weightedSkyLight(weights);
+				final int block = fd.weightedBlockLight(weights);
 
-				sky += n * s;
-				block += n * b;
-				maxSky = s;
-				maxBlock = b;
+				skySum += normalSq * sky;
+				blockSum += normalSq * block;
+				skyMax = sky;
+				blockMax = block;
 			}
 
 			if (rawNormalY != 0) {
 				final int face = rawNormalY > 0 ? UP : DOWN;
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
-				final int w = AoFace.get(face).fastWeightFunc.apply(quad, i);
-				final int n = AoMath.mul(scaledNormalY, scaledNormalY);
-				final int s = fd.weightedSkyLight(w);
-				final int b = fd.weightedBlockLight(w);
+				final int weights = AoFace.get(face).fastWeightFunc.apply(quad, i);
+				final int normalSq = AoMath.mul(scaledNormalY, scaledNormalY);
+				final int sky = fd.weightedSkyLight(weights);
+				final int block = fd.weightedBlockLight(weights);
 
-				sky += n * s;
-				block += n * b;
-				maxSky = Math.max(s, maxSky);
-				maxBlock = Math.max(b, maxBlock);
+				skySum += normalSq * sky;
+				blockSum += normalSq * block;
+				skyMax = Math.max(sky, skyMax);
+				blockMax = Math.max(block, blockMax);
 			}
 
 			if (rawNormalZ != 0) {
 				final int face = rawNormalZ > 0 ? SOUTH : NORTH;
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
-				final int w = AoFace.get(face).fastWeightFunc.apply(quad, i);
-				final int n = AoMath.mul(scaledNormalZ, scaledNormalZ);
-				final int s = fd.weightedSkyLight(w);
-				final int b = fd.weightedBlockLight(w);
+				final int weights = AoFace.get(face).fastWeightFunc.apply(quad, i);
+				final int normalSq = AoMath.mul(scaledNormalZ, scaledNormalZ);
+				final int sky = fd.weightedSkyLight(weights);
+				final int block = fd.weightedBlockLight(weights);
 
-				sky += n * s;
-				block += n * b;
-				maxSky = Math.max(s, maxSky);
-				maxBlock = Math.max(b, maxBlock);
+				skySum += normalSq * sky;
+				blockSum += normalSq * block;
+				skyMax = Math.max(sky, skyMax);
+				blockMax = Math.max(block, blockMax);
 			}
 
-			sky = (sky + AoMath.HALF_VALUE) >> AoMath.UNIT_SHIFT;
-			sky = (sky + maxSky) >> 1;
+			skySum = (skySum + AoMath.HALF_VALUE) >> AoMath.UNIT_SHIFT;
+			skySum = (skySum + skyMax) >> 1;
 
-			block = (block + AoMath.HALF_VALUE) >> AoMath.UNIT_SHIFT;
-			block = (block + maxBlock) >> 1;
+			blockSum = (blockSum + AoMath.HALF_VALUE) >> AoMath.UNIT_SHIFT;
+			blockSum = (blockSum + blockMax) >> 1;
 
-			quad.lightmap(i, ColorUtil.maxBrightness(quad.lightmap(i), (sky << 16) | block));
+			quad.lightmap(i, ColorUtil.maxBrightness(quad.lightmap(i), (skySum << 16) | blockSum));
 		}
 	}
 

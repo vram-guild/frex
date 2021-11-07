@@ -36,7 +36,7 @@ public class AoMath {
 	}
 
 	public static int mul(int x, int y) {
-		return (x * y + HALF_VALUE) >> UNIT_SHIFT;
+		return (x * y + UNIT_VALUE) >> UNIT_SHIFT;
 	}
 
 	// WIP: remove

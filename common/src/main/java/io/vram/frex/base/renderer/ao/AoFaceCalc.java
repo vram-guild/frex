@@ -133,7 +133,7 @@ public class AoFaceCalc {
 	}
 
 	public int weightedBlockLight(int w) {
-		return ((blockBottomRight * (w & 0xFF) + blockBottomLeft * ((w >> 8) & 0xFF) + blockTopLeft * ((w >> 16) & 0xFF) + blockTopRight * ((w >> 24) & 0xFF)) + AoMath.HALF_VALUE) >> AoMath.UNIT_SHIFT & 0xFF;
+		return ((blockBottomRight * (w & 0xFF) + blockBottomLeft * ((w >> 8) & 0xFF) + blockTopLeft * ((w >> 16) & 0xFF) + blockTopRight * ((w >> 24) & 0xFF)) + AoMath.UNIT_VALUE) >> AoMath.UNIT_SHIFT & 0xFF;
 	}
 
 	public int maxBlockLight(int oldMax) {
@@ -146,8 +146,9 @@ public class AoFaceCalc {
 		return (int) (skyBottomRight * w[0] + skyBottomLeft * w[1] + skyTopLeft * w[2] + skyTopRight * w[3]) & 0xFF;
 	}
 
+	// WIP: should probably use unit value
 	public int weightedSkyLight(int w) {
-		return ((skyBottomRight * (w & 0xFF) + skyBottomLeft * ((w >> 8) & 0xFF) + skyTopLeft * ((w >> 16) & 0xFF) + skyTopRight * ((w >> 24) & 0xFF)) + AoMath.HALF_VALUE) >> AoMath.UNIT_SHIFT & 0xFF;
+		return ((skyBottomRight * (w & 0xFF) + skyBottomLeft * ((w >> 8) & 0xFF) + skyTopLeft * ((w >> 16) & 0xFF) + skyTopRight * ((w >> 24) & 0xFF)) + AoMath.UNIT_VALUE) >> AoMath.UNIT_SHIFT & 0xFF;
 	}
 
 	public int maxSkyLight(int oldMax) {
@@ -161,8 +162,11 @@ public class AoFaceCalc {
 	}
 
 	public float weigtedAo(float[] w) {
-		// PERF: pass ints directly to vertex encoder
 		return (aoBottomRight * w[0] + aoBottomLeft * w[1] + aoTopLeft * w[2] + aoTopRight * w[3]);
+	}
+
+	public int weigtedAo(int w) {
+		return ((aoBottomRight * (w & 0xFF) + aoBottomLeft * ((w >> 8) & 0xFF) + aoTopLeft * ((w >> 16) & 0xFF) + aoTopRight * ((w >> 24) & 0xFF)) + AoMath.UNIT_VALUE) >> AoMath.UNIT_SHIFT & 0xFF;
 	}
 
 	public float maxAo(float oldMax) {

@@ -42,38 +42,52 @@ import io.vram.frex.base.renderer.mesh.BaseQuadView;
  * purpose.
  */
 public abstract class AoCalculator {
-	public static final float DIVIDE_BY_255 = 1f / 255f;
+	protected static final float DIVIDE_BY_255 = 1f / 255f;
 
 	//PERF: could be better - or wait for a diff Ao model
-	static final int BLEND_CACHE_DIVISION = 16;
-	static final int BLEND_CACHE_DEPTH = BLEND_CACHE_DIVISION - 1;
-	static final int BLEND_CACHE_ARRAY_SIZE = BLEND_CACHE_DEPTH * 6;
-	static final int BLEND_INDEX_NO_DEPTH = -1;
-	static final int BLEND_INDEX_FULL_DEPTH = BLEND_CACHE_DIVISION - 1;
-	private static final int UP = Direction.UP.ordinal();
-	private static final int DOWN = Direction.DOWN.ordinal();
-	private static final int EAST = Direction.EAST.ordinal();
-	private static final int WEST = Direction.WEST.ordinal();
-	private static final int NORTH = Direction.NORTH.ordinal();
-	private static final int SOUTH = Direction.SOUTH.ordinal();
-	private final AoFaceCalc[] blendCache = new AoFaceCalc[BLEND_CACHE_ARRAY_SIZE];
+	protected static final int BLEND_CACHE_DIVISION = 16;
+	protected static final int BLEND_CACHE_DEPTH = BLEND_CACHE_DIVISION - 1;
+	protected static final int BLEND_CACHE_ARRAY_SIZE = BLEND_CACHE_DEPTH * 6;
+	protected static final int BLEND_INDEX_NO_DEPTH = -1;
+	protected static final int BLEND_INDEX_FULL_DEPTH = BLEND_CACHE_DIVISION - 1;
+	protected static final int UP = Direction.UP.ordinal();
+	protected static final int DOWN = Direction.DOWN.ordinal();
+	protected static final int EAST = Direction.EAST.ordinal();
+	protected static final int WEST = Direction.WEST.ordinal();
+	protected static final int NORTH = Direction.NORTH.ordinal();
+	protected static final int SOUTH = Direction.SOUTH.ordinal();
+
+	protected static final int RECIPROCAL_DIVIDE_127_MAGIC = 33026;
+	protected static final int RECIPROCAL_DIVIDE_127_SHIFT = 22;
+
+	/**
+	 * Fast re-scale of normal values from signed 127 to unsigned 0-255.
+	 * See https://www.agner.org/optimize/optimizing_assembly.pdf Sec 16.8 "Division"
+	 */
+	protected static int scaleNormal255(int base127) {
+		return ((Math.abs(base127) * 255 + 1) * RECIPROCAL_DIVIDE_127_MAGIC) >> RECIPROCAL_DIVIDE_127_SHIFT;
+	}
+
+	protected final AoFaceCalc[] blendCache = new AoFaceCalc[BLEND_CACHE_ARRAY_SIZE];
+
 	/**
 	 * Caches results of {@link #gatherFace(Direction, boolean)} for the current block.
 	 */
-	private final AoFaceData[] faceData = new AoFaceData[12];
+	protected final AoFaceData[] faceData = new AoFaceData[12];
+
 	/**
 	 * Holds per-corner weights - used locally to avoid new allocation.
 	 */
-	private final float[] w = new float[4];
-	private long blendCacheCompletionLowFlags;
-	private long blendCacheCompletionHighFlags;
+	protected final float[] w = new float[4];
+	protected long blendCacheCompletionLowFlags;
+	protected long blendCacheCompletionHighFlags;
 	protected int targetSectionPos;
 	protected int targetCacheIndex;
 
 	/**
 	 * Indicates which elements of {@link #faceData} have been computed for the current block.
 	 */
-	private int completionFlags = 0;
+	protected int completionFlags = 0;
 
 	public AoCalculator() {
 		for (int i = 0; i < 12; i++) {
@@ -350,34 +364,33 @@ public abstract class AoCalculator {
 
 	private void irregularFaceFlat(BaseQuadEmitter quad) {
 		int normal = 0;
-		float nx = 0, ny = 0, nz = 0;
-		final float[] w = this.w;
+		int rawNormalX = 0, rawNormalY = 0, rawNormalZ = 0;
+		int scaledNormalX = 0, scaledNormalY = 0, scaledNormalZ = 0;
 
 		for (int i = 0; i < 4; i++) {
 			final int vNormal = quad.packedNormal(i);
 
 			if (vNormal != normal) {
 				normal = vNormal;
-				nx = PackedVector3f.packedX(normal);
-				ny = PackedVector3f.packedY(normal);
-				nz = PackedVector3f.packedZ(normal);
+				rawNormalX = PackedVector3f.packedByteX(normal);
+				rawNormalY = PackedVector3f.packedByteY(normal);
+				rawNormalZ = PackedVector3f.packedByteZ(normal);
+				scaledNormalX = scaleNormal255(rawNormalX);
+				scaledNormalY = scaleNormal255(rawNormalY);
+				scaledNormalZ = scaleNormal255(rawNormalZ);
 			}
 
-			// PERF: use fixed precision
-
-			float sky = 0, block = 0;
+			int sky = 0, block = 0;
 			int maxSky = 0, maxBlock = 0;
 
-			if (!Mth.equal(0f, nx)) {
-				final int face = nx > 0 ? EAST : WEST;
+			if (rawNormalX != 0) {
+				final int face = rawNormalX > 0 ? EAST : WEST;
 				// PERF: really need to cache these
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
-				AoFace.get(face).weightFunc.apply(quad, i, w);
-				final int fw = AoFace.get(face).fastWeightFunc.apply(quad, i);
-
-				final float n = nx * nx;
-				final int s = fd.weightedSkyLight(fw);
-				final int b = fd.weightedBlockLight(fw);
+				final int w = AoFace.get(face).fastWeightFunc.apply(quad, i);
+				final int n = AoMath.mul(scaledNormalX, scaledNormalX);
+				final int s = fd.weightedSkyLight(w);
+				final int b = fd.weightedBlockLight(w);
 
 				sky += n * s;
 				block += n * b;
@@ -385,15 +398,13 @@ public abstract class AoCalculator {
 				maxBlock = b;
 			}
 
-			if (!Mth.equal(0f, ny)) {
-				final int face = ny > 0 ? UP : DOWN;
+			if (rawNormalY != 0) {
+				final int face = rawNormalY > 0 ? UP : DOWN;
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
-				AoFace.get(face).weightFunc.apply(quad, i, w);
-				final int fw = AoFace.get(face).fastWeightFunc.apply(quad, i);
-
-				final float n = ny * ny;
-				final int s = fd.weightedSkyLight(fw);
-				final int b = fd.weightedBlockLight(fw);
+				final int w = AoFace.get(face).fastWeightFunc.apply(quad, i);
+				final int n = AoMath.mul(scaledNormalY, scaledNormalY);
+				final int s = fd.weightedSkyLight(w);
+				final int b = fd.weightedBlockLight(w);
 
 				sky += n * s;
 				block += n * b;
@@ -401,15 +412,13 @@ public abstract class AoCalculator {
 				maxBlock = Math.max(b, maxBlock);
 			}
 
-			if (!Mth.equal(0f, nz)) {
-				final int face = nz > 0 ? SOUTH : NORTH;
+			if (rawNormalZ != 0) {
+				final int face = rawNormalZ > 0 ? SOUTH : NORTH;
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
-				AoFace.get(face).weightFunc.apply(quad, i, w);
-				final int fw = AoFace.get(face).fastWeightFunc.apply(quad, i);
-
-				final float n = nz * nz;
-				final int s = fd.weightedSkyLight(fw);
-				final int b = fd.weightedBlockLight(fw);
+				final int w = AoFace.get(face).fastWeightFunc.apply(quad, i);
+				final int n = AoMath.mul(scaledNormalZ, scaledNormalZ);
+				final int s = fd.weightedSkyLight(w);
+				final int b = fd.weightedBlockLight(w);
 
 				sky += n * s;
 				block += n * b;
@@ -417,8 +426,13 @@ public abstract class AoCalculator {
 				maxBlock = Math.max(b, maxBlock);
 			}
 
-			quad.lightmap(i, ColorUtil.maxBrightness(quad.lightmap(i), (((int) ((sky + maxSky) * 0.5f) & 0xFF) << 16)
-					| ((int) ((block + maxBlock) * 0.5f) & 0xFF)));
+			sky = (sky + AoMath.HALF_VALUE) >> AoMath.UNIT_SHIFT;
+			sky = (sky + maxSky) >> 1;
+
+			block = (block + AoMath.HALF_VALUE) >> AoMath.UNIT_SHIFT;
+			block = (block + maxBlock) >> 1;
+
+			quad.lightmap(i, ColorUtil.maxBrightness(quad.lightmap(i), (sky << 16) | block));
 		}
 	}
 

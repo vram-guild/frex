@@ -65,6 +65,21 @@ public abstract class PackedVector3f {
 		return ((byte) ((packedVector >>> 16) & 0xFF)) * DIVIDE_BY_127;
 	}
 
+	/** Returns value -127 to +127. */
+	public static int packedByteX(int packedVector) {
+		return (byte) (packedVector & 0xFF);
+	}
+
+	/** Returns value -127 to +127. */
+	public static int packedByteY(int packedVector) {
+		return (byte) ((packedVector >>> 8) & 0xFF);
+	}
+
+	/** Returns value -127 to +127. */
+	public static int packedByteZ(int packedVector) {
+		return (byte) ((packedVector >>> 16) & 0xFF);
+	}
+
 	public static Vector3f unpackTo(int packedVector, Vector3f target) {
 		target.set(
 				packedX(packedVector),

@@ -40,6 +40,7 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
+import io.vram.frex.api.config.FrexConfig;
 import io.vram.frex.api.material.BlockEntityMaterialMap;
 import io.vram.frex.impl.FrexLog;
 import io.vram.frex.impl.material.predicate.MaterialPredicate;
@@ -128,8 +129,9 @@ public class BlockEntityMaterialMapDeserializer {
 							predicates.add(predicate);
 							transforms.add(MaterialTransformLoader.loadTransform(formatLog(packId, idForLog), obj.get("material").getAsString(), defaultTransform));
 						} else {
-							// TODO: dev purpose only. remove or require dev env or config
-							FrexLog.info("Found duplicate predicate in " + formatLog(packId, idForLog));
+							if (FrexConfig.logMaterialPredicateDuplicates) {
+								FrexLog.info("Found duplicate predicate in " + formatLog(packId, idForLog));
+							}
 						}
 					}
 				}

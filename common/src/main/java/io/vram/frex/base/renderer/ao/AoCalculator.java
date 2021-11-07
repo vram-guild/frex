@@ -37,8 +37,6 @@ import io.vram.frex.base.renderer.ao.AoFace.WeightFunction;
 import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 import io.vram.frex.base.renderer.mesh.BaseQuadView;
 
-//import grondag.canvas.terrain.util.RenderRegionStateIndexer;
-
 /**
  * Adaptation of inner, non-static class in BlockModelRenderer that serves same
  * purpose.

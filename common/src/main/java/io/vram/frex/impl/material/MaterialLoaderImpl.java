@@ -38,6 +38,7 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
 
+import io.vram.frex.api.config.FrexConfig;
 import io.vram.frex.api.config.FrexFeature;
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.impl.FrexLog;
@@ -112,8 +113,7 @@ public final class MaterialLoaderImpl {
 		try (Resource res = rm.getResource(id)) {
 			result = MaterialDeserializer.deserialize(readJsonObject(res));
 		} catch (final Exception e) {
-			// TODO:  make error suppression configurable
-			if (CAUGHT.add(idIn)) {
+			if (!FrexConfig.suppressMaterialLoadingSpam || CAUGHT.add(idIn)) {
 				FrexLog.info("Unable to load render material " + idIn.toString() + " due to exception " + e.toString());
 			}
 		}

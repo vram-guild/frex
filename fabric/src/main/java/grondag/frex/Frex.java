@@ -41,6 +41,7 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 
+import io.vram.frex.api.config.FrexConfig;
 import io.vram.frex.impl.FrexLoadManager;
 import io.vram.frex.impl.config.FlawlessFramesImpl;
 
@@ -86,6 +87,8 @@ public class Frex implements ClientModInitializer {
 
 		final Function<String, Consumer<Boolean>> provider = FlawlessFramesImpl.providerFactory();
 		FabricLoader.getInstance().getEntrypoints("frex_flawless_frames", Consumer.class).forEach(api -> api.accept(provider));
+
+		FrexConfig.logMaterialPredicateDuplicates = FabricLoader.getInstance().isDevelopmentEnvironment();
 	}
 
 	private static void setupRenderer() {

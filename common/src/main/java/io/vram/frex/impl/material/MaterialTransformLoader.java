@@ -28,6 +28,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 
+import io.vram.frex.api.config.FrexConfig;
 import io.vram.frex.impl.FrexLog;
 
 @Internal
@@ -55,8 +56,7 @@ public final class MaterialTransformLoader {
 		try (Resource res = rm.getResource(id)) {
 			result = MaterialTransformDeserializer.deserialize(MaterialLoaderImpl.readJsonObject(res));
 		} catch (final Exception e) {
-			// TODO:  make error suppression configurable
-			if (CAUGHT.add(idIn)) {
+			if (!FrexConfig.suppressMaterialLoadingSpam || CAUGHT.add(idIn)) {
 				FrexLog.info("Unable to load material transform " + idIn.toString() + " due to exception " + e.toString());
 			}
 		}

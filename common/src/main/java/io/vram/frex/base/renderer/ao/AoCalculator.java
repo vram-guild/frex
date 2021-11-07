@@ -166,8 +166,6 @@ public abstract class AoCalculator {
 	public void computeFlat(BaseQuadEmitter quad) {
 		final int flags = quad.geometryFlags();
 
-		//quad.hdLight = null;
-
 		switch (flags) {
 			case AXIS_ALIGNED_FLAG | CUBIC_FLAG | LIGHT_FACE_FLAG:
 			case AXIS_ALIGNED_FLAG | LIGHT_FACE_FLAG:
@@ -272,9 +270,6 @@ public abstract class AoCalculator {
 		final float[] w = this.w;
 		final float[] aoResult = quad.ao;
 
-		//MAYBE: currently no way to handle 3d interpolation shader-side
-		//quad.hdLight = null;
-
 		for (int i = 0; i < 4; i++) {
 			final int vNormal = quad.packedNormal(i);
 
@@ -345,12 +340,71 @@ public abstract class AoCalculator {
 	}
 
 	private void irregularFaceFlat(BaseQuadEmitter quad) {
-		// use center light - interpolation too expensive given how often this happen for foliage, etc.
-		final int brightness = brightness(targetCacheIndex);
-		quad.lightmap(0, ColorUtil.maxBrightness(quad.lightmap(0), brightness));
-		quad.lightmap(1, ColorUtil.maxBrightness(quad.lightmap(1), brightness));
-		quad.lightmap(2, ColorUtil.maxBrightness(quad.lightmap(2), brightness));
-		quad.lightmap(3, ColorUtil.maxBrightness(quad.lightmap(3), brightness));
+		int normal = 0;
+		float nx = 0, ny = 0, nz = 0;
+		final float[] w = this.w;
+
+		for (int i = 0; i < 4; i++) {
+			final int vNormal = quad.packedNormal(i);
+
+			if (vNormal != normal) {
+				normal = vNormal;
+				nx = PackedVector3f.packedX(normal);
+				ny = PackedVector3f.packedY(normal);
+				nz = PackedVector3f.packedZ(normal);
+			}
+
+			// PERF: use fixed precision
+
+			float sky = 0, block = 0;
+			int maxSky = 0, maxBlock = 0;
+
+			if (!Mth.equal(0f, nx)) {
+				final int face = nx > 0 ? EAST : WEST;
+				// PERF: really need to cache these
+				final AoFaceCalc fd = blendedInsetData(quad, i, face);
+				AoFace.get(face).weightFunc.apply(quad, i, w);
+				final float n = nx * nx;
+				final float a = fd.weigtedAo(w);
+				final int s = fd.weigtedSkyLight(w);
+				final int b = fd.weightedBlockLight(w);
+				sky += n * s;
+				block += n * b;
+				maxSky = s;
+				maxBlock = b;
+			}
+
+			if (!Mth.equal(0f, ny)) {
+				final int face = ny > 0 ? UP : DOWN;
+				final AoFaceCalc fd = blendedInsetData(quad, i, face);
+				AoFace.get(face).weightFunc.apply(quad, i, w);
+				final float n = ny * ny;
+				final float a = fd.weigtedAo(w);
+				final int s = fd.weigtedSkyLight(w);
+				final int b = fd.weightedBlockLight(w);
+				sky += n * s;
+				block += n * b;
+				maxSky = Math.max(s, maxSky);
+				maxBlock = Math.max(b, maxBlock);
+			}
+
+			if (!Mth.equal(0f, nz)) {
+				final int face = nz > 0 ? SOUTH : NORTH;
+				final AoFaceCalc fd = blendedInsetData(quad, i, face);
+				AoFace.get(face).weightFunc.apply(quad, i, w);
+				final float n = nz * nz;
+				final float a = fd.weigtedAo(w);
+				final int s = fd.weigtedSkyLight(w);
+				final int b = fd.weightedBlockLight(w);
+				sky += n * s;
+				block += n * b;
+				maxSky = Math.max(s, maxSky);
+				maxBlock = Math.max(b, maxBlock);
+			}
+
+			quad.lightmap(i, ColorUtil.maxBrightness(quad.lightmap(i), (((int) ((sky + maxSky) * 0.5f) & 0xFF) << 16)
+					| ((int) ((block + maxBlock) * 0.5f) & 0xFF)));
+		}
 	}
 
 	/**

@@ -28,6 +28,7 @@ import static io.vram.frex.base.renderer.ao.AoFaceData.OPAQUE;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
+import io.vram.frex.api.math.FixedMath255;
 import io.vram.frex.api.math.PackedSectionPos;
 import io.vram.frex.api.math.PackedVector3f;
 import io.vram.frex.api.model.util.ColorUtil;
@@ -36,13 +37,9 @@ import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 import io.vram.frex.base.renderer.mesh.BaseQuadView;
 
 /**
- * Adaptation of inner, non-static class in BlockModelRenderer that serves same
- * purpose.
+ * Adaptation of inner, non-static class in BlockModelRenderer that serves same purpose.
  */
 public abstract class AoCalculator {
-	protected static final float DIVIDE_BY_255 = 1f / 255f;
-
-	//PERF: could be better - or wait for a diff Ao model
 	protected static final int BLEND_CACHE_DIVISION = 16;
 	protected static final int BLEND_CACHE_DEPTH = BLEND_CACHE_DIVISION - 1;
 	protected static final int BLEND_CACHE_ARRAY_SIZE = BLEND_CACHE_DEPTH * 6;
@@ -54,17 +51,6 @@ public abstract class AoCalculator {
 	protected static final int WEST = Direction.WEST.ordinal();
 	protected static final int NORTH = Direction.NORTH.ordinal();
 	protected static final int SOUTH = Direction.SOUTH.ordinal();
-
-	protected static final int RECIPROCAL_DIVIDE_127_MAGIC = 33026;
-	protected static final int RECIPROCAL_DIVIDE_127_SHIFT = 22;
-
-	/**
-	 * Fast re-scale of normal values from signed 127 to unsigned 0-255.
-	 * See https://www.agner.org/optimize/optimizing_assembly.pdf Sec 16.8 "Division"
-	 */
-	protected static int scaleNormal255(int base127) {
-		return ((Math.abs(base127) * 255 + 1) * RECIPROCAL_DIVIDE_127_MAGIC) >> RECIPROCAL_DIVIDE_127_SHIFT;
-	}
 
 	protected final AoFaceCalc[] blendCache = new AoFaceCalc[BLEND_CACHE_ARRAY_SIZE];
 
@@ -196,12 +182,12 @@ public abstract class AoCalculator {
 		final AoFaceCalc faceData = gatherFace(lightFace, isOnLightFace).calc;
 		final AoFace face = AoFace.get(lightFace);
 		final var weightFunc = face.weightFunc;
-		final float[] ao = quad.ao;
+		final int[] ao = quad.ao;
 
 		for (int i = 0; i < 4; i++) {
 			final var packedWeights = weightFunc.apply(quad, i);
 			quad.lightmap(i, ColorUtil.maxBrightness(quad.lightmap(i), faceData.weightedCombinedLight(packedWeights)));
-			ao[i] = faceData.weigtedAo(packedWeights) * DIVIDE_BY_255;
+			ao[i] = faceData.weigtedAo(packedWeights);
 		}
 	}
 
@@ -246,12 +232,12 @@ public abstract class AoCalculator {
 		final AoFaceCalc faceData = blendedInsetData(quad, 0, lightFace);
 		final AoFace face = AoFace.get(lightFace);
 		final var weightFunc = face.weightFunc;
-		final float[] ao = quad.ao;
+		final int[] ao = quad.ao;
 
 		for (int i = 0; i < 4; i++) {
 			final var packedWeights = weightFunc.apply(quad, i);
 			quad.lightmap(i, ColorUtil.maxBrightness(quad.lightmap(i), faceData.weightedCombinedLight(packedWeights)));
-			ao[i] = faceData.weigtedAo(packedWeights) * DIVIDE_BY_255;
+			ao[i] = faceData.weigtedAo(packedWeights);
 		}
 	}
 
@@ -270,7 +256,7 @@ public abstract class AoCalculator {
 		int normal = 0;
 		int rawNormalX = 0, rawNormalY = 0, rawNormalZ = 0;
 		int scaledNormalX = 0, scaledNormalY = 0, scaledNormalZ = 0;
-		final float[] aoResult = quad.ao;
+		final int[] aoResult = quad.ao;
 
 		for (int i = 0; i < 4; i++) {
 			final int vNormal = quad.packedNormal(i);
@@ -280,9 +266,9 @@ public abstract class AoCalculator {
 				rawNormalX = PackedVector3f.packedByteX(normal);
 				rawNormalY = PackedVector3f.packedByteY(normal);
 				rawNormalZ = PackedVector3f.packedByteZ(normal);
-				scaledNormalX = scaleNormal255(rawNormalX);
-				scaledNormalY = scaleNormal255(rawNormalY);
-				scaledNormalZ = scaleNormal255(rawNormalZ);
+				scaledNormalX = FixedMath255.from127(rawNormalX);
+				scaledNormalY = FixedMath255.from127(rawNormalY);
+				scaledNormalZ = FixedMath255.from127(rawNormalZ);
 			}
 
 			int aoSum = 0, aoMax = 0;
@@ -293,7 +279,7 @@ public abstract class AoCalculator {
 				// PERF: really need to cache these
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
 				final int weights = AoFace.get(face).weightFunc.apply(quad, i);
-				final int normalSq = AoMath.mul(scaledNormalX, scaledNormalX);
+				final int normalSq = FixedMath255.mul(scaledNormalX, scaledNormalX);
 				final int ao = fd.weigtedAo(weights);
 				final int sky = fd.weightedSkyLight(weights);
 				final int block = fd.weightedBlockLight(weights);
@@ -310,7 +296,7 @@ public abstract class AoCalculator {
 				final int face = rawNormalY > 0 ? UP : DOWN;
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
 				final int weights = AoFace.get(face).weightFunc.apply(quad, i);
-				final int normalSq = AoMath.mul(scaledNormalY, scaledNormalY);
+				final int normalSq = FixedMath255.mul(scaledNormalY, scaledNormalY);
 				final int ao = fd.weigtedAo(weights);
 				final int sky = fd.weightedSkyLight(weights);
 				final int b = fd.weightedBlockLight(weights);
@@ -327,7 +313,7 @@ public abstract class AoCalculator {
 				final int face = rawNormalZ > 0 ? SOUTH : NORTH;
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
 				final int weights = AoFace.get(face).weightFunc.apply(quad, i);
-				final int normalSq = AoMath.mul(scaledNormalZ, scaledNormalZ);
+				final int normalSq = FixedMath255.mul(scaledNormalZ, scaledNormalZ);
 				final int ao = fd.weigtedAo(weights);
 				final int sky = fd.weightedSkyLight(weights);
 				final int block = fd.weightedBlockLight(weights);
@@ -340,15 +326,15 @@ public abstract class AoCalculator {
 				blockMax = Math.max(block, blockMax);
 			}
 
-			aoSum = (aoSum + AoMath.HALF_VALUE) >> AoMath.UNIT_SHIFT;
+			aoSum = (aoSum + FixedMath255.HALF_VALUE) >> FixedMath255.UNIT_SHIFT;
 			aoSum = (aoSum + aoMax) >> 1;
 			assert (aoSum & 0xFF) == aoSum;
-			aoResult[i] = aoSum * DIVIDE_BY_255;
+			aoResult[i] = aoSum;
 
-			skySum = (skySum + AoMath.HALF_VALUE) >> AoMath.UNIT_SHIFT;
+			skySum = (skySum + FixedMath255.HALF_VALUE) >> FixedMath255.UNIT_SHIFT;
 			skySum = (skySum + skyMax) >> 1;
 
-			blockSum = (blockSum + AoMath.HALF_VALUE) >> AoMath.UNIT_SHIFT;
+			blockSum = (blockSum + FixedMath255.HALF_VALUE) >> FixedMath255.UNIT_SHIFT;
 			blockSum = (blockSum + blockMax) >> 1;
 
 			quad.lightmap(i, ColorUtil.maxBrightness(quad.lightmap(i), (skySum << 16) | blockSum));
@@ -368,9 +354,9 @@ public abstract class AoCalculator {
 				rawNormalX = PackedVector3f.packedByteX(normal);
 				rawNormalY = PackedVector3f.packedByteY(normal);
 				rawNormalZ = PackedVector3f.packedByteZ(normal);
-				scaledNormalX = scaleNormal255(rawNormalX);
-				scaledNormalY = scaleNormal255(rawNormalY);
-				scaledNormalZ = scaleNormal255(rawNormalZ);
+				scaledNormalX = FixedMath255.from127(rawNormalX);
+				scaledNormalY = FixedMath255.from127(rawNormalY);
+				scaledNormalZ = FixedMath255.from127(rawNormalZ);
 			}
 
 			int skySum = 0, blockSum = 0, skyMax = 0, blockMax = 0;
@@ -380,7 +366,7 @@ public abstract class AoCalculator {
 				// PERF: really need to cache these
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
 				final int weights = AoFace.get(face).weightFunc.apply(quad, i);
-				final int normalSq = AoMath.mul(scaledNormalX, scaledNormalX);
+				final int normalSq = FixedMath255.mul(scaledNormalX, scaledNormalX);
 				final int sky = fd.weightedSkyLight(weights);
 				final int block = fd.weightedBlockLight(weights);
 
@@ -394,7 +380,7 @@ public abstract class AoCalculator {
 				final int face = rawNormalY > 0 ? UP : DOWN;
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
 				final int weights = AoFace.get(face).weightFunc.apply(quad, i);
-				final int normalSq = AoMath.mul(scaledNormalY, scaledNormalY);
+				final int normalSq = FixedMath255.mul(scaledNormalY, scaledNormalY);
 				final int sky = fd.weightedSkyLight(weights);
 				final int block = fd.weightedBlockLight(weights);
 
@@ -408,7 +394,7 @@ public abstract class AoCalculator {
 				final int face = rawNormalZ > 0 ? SOUTH : NORTH;
 				final AoFaceCalc fd = blendedInsetData(quad, i, face);
 				final int weights = AoFace.get(face).weightFunc.apply(quad, i);
-				final int normalSq = AoMath.mul(scaledNormalZ, scaledNormalZ);
+				final int normalSq = FixedMath255.mul(scaledNormalZ, scaledNormalZ);
 				final int sky = fd.weightedSkyLight(weights);
 				final int block = fd.weightedBlockLight(weights);
 
@@ -418,10 +404,10 @@ public abstract class AoCalculator {
 				blockMax = Math.max(block, blockMax);
 			}
 
-			skySum = (skySum + AoMath.HALF_VALUE) >> AoMath.UNIT_SHIFT;
+			skySum = (skySum + FixedMath255.HALF_VALUE) >> FixedMath255.UNIT_SHIFT;
 			skySum = (skySum + skyMax) >> 1;
 
-			blockSum = (blockSum + AoMath.HALF_VALUE) >> AoMath.UNIT_SHIFT;
+			blockSum = (blockSum + FixedMath255.HALF_VALUE) >> FixedMath255.UNIT_SHIFT;
 			blockSum = (blockSum + blockMax) >> 1;
 
 			quad.lightmap(i, ColorUtil.maxBrightness(quad.lightmap(i), (skySum << 16) | blockSum));

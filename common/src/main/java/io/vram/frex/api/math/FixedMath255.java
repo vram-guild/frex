@@ -18,16 +18,17 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.base.renderer.ao;
+package io.vram.frex.api.math;
 
 /**
  * 8-bit fixed precision math routines.
  * Assumes normalized values.
  */
-public class AoMath {
+public class FixedMath255 {
 	public static final int UNIT_VALUE = 0xFF;
 	public static final int HALF_VALUE = 0x7F;
 	public static final int UNIT_SHIFT = 8;
+	public static final float FLOAT_CONVERSION_FACTOR = 1f / 255f;
 
 	public static int clamp(float x) {
 		if (x < 0f) x = 0;
@@ -39,20 +40,14 @@ public class AoMath {
 		return (x * y + UNIT_VALUE) >> UNIT_SHIFT;
 	}
 
-	// WIP: remove
-	public static boolean compare(float[] w, int fw) {
-		final float d0 = Math.abs(w[0] - (fw & 0xFF) / 255f);
-		final float d1 = Math.abs(w[1] - ((fw >> 8) & 0xFF) / 255f);
-		final float d2 = Math.abs(w[2] - ((fw >> 16) & 0xFF) / 255f);
-		final float d3 = Math.abs(w[3] - ((fw >> 24) & 0xFF) / 255f);
+	protected static final int RECIPROCAL_DIVIDE_127_MAGIC = 33026;
+	protected static final int RECIPROCAL_DIVIDE_127_SHIFT = 22;
 
-		final float dMax = Math.max(Math.max(d0, d1), Math.max(d2, d3));
-
-		if (dMax >= 0.01f) {
-			System.out.println(d0 + "  " + d1 + "  " + d2 + "  " + d3);
-			return false;
-		} else {
-			return true;
-		}
+	/**
+	 * Fast re-scale of normal values from signed 127 to unsigned 0-255.
+	 * See https://www.agner.org/optimize/optimizing_assembly.pdf Sec 16.8 "Division"
+	 */
+	public static int from127(int base127) {
+		return ((Math.abs(base127) * 255 + 1) * RECIPROCAL_DIVIDE_127_MAGIC) >> RECIPROCAL_DIVIDE_127_SHIFT;
 	}
 }

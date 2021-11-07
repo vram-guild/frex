@@ -46,6 +46,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.api.material.MaterialConstants;
+import io.vram.frex.api.math.FixedMath255;
 import io.vram.frex.api.math.MatrixStack;
 import io.vram.frex.api.math.PackedSectionPos;
 import io.vram.frex.api.model.BlockModel;
@@ -166,31 +167,31 @@ public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintG
 				final float shade = blockView.getShade(Direction.UP, false);
 
 				if (shade == 1.0f) {
-					emitter.vertexColor(0, ColorUtil.multiplyRGB(emitter.vertexColor(0), emitter.ao[0]));
-					emitter.vertexColor(1, ColorUtil.multiplyRGB(emitter.vertexColor(1), emitter.ao[1]));
-					emitter.vertexColor(2, ColorUtil.multiplyRGB(emitter.vertexColor(2), emitter.ao[2]));
-					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), emitter.ao[3]));
+					emitter.vertexColor(0, ColorUtil.multiplyRGB(emitter.vertexColor(0), emitter.ao[0] * FixedMath255.FLOAT_CONVERSION_FACTOR));
+					emitter.vertexColor(1, ColorUtil.multiplyRGB(emitter.vertexColor(1), emitter.ao[1] * FixedMath255.FLOAT_CONVERSION_FACTOR));
+					emitter.vertexColor(2, ColorUtil.multiplyRGB(emitter.vertexColor(2), emitter.ao[2] * FixedMath255.FLOAT_CONVERSION_FACTOR));
+					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), emitter.ao[3] * FixedMath255.FLOAT_CONVERSION_FACTOR));
 				} else {
-					emitter.vertexColor(0, ColorUtil.multiplyRGB(emitter.vertexColor(0), shade * emitter.ao[0]));
-					emitter.vertexColor(1, ColorUtil.multiplyRGB(emitter.vertexColor(1), shade * emitter.ao[1]));
-					emitter.vertexColor(2, ColorUtil.multiplyRGB(emitter.vertexColor(2), shade * emitter.ao[2]));
-					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), shade * emitter.ao[3]));
+					emitter.vertexColor(0, ColorUtil.multiplyRGB(emitter.vertexColor(0), shade * emitter.ao[0] * FixedMath255.FLOAT_CONVERSION_FACTOR));
+					emitter.vertexColor(1, ColorUtil.multiplyRGB(emitter.vertexColor(1), shade * emitter.ao[1] * FixedMath255.FLOAT_CONVERSION_FACTOR));
+					emitter.vertexColor(2, ColorUtil.multiplyRGB(emitter.vertexColor(2), shade * emitter.ao[2] * FixedMath255.FLOAT_CONVERSION_FACTOR));
+					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), shade * emitter.ao[3] * FixedMath255.FLOAT_CONVERSION_FACTOR));
 				}
 			} else {
 				if (emitter.hasVertexNormals()) {
 					// different shade value per vertex
-					emitter.vertexColor(0, ColorUtil.multiplyRGB(emitter.vertexColor(0), EncoderUtil.normalShade(emitter.packedNormal(0), blockView, true) * emitter.ao[0]));
-					emitter.vertexColor(1, ColorUtil.multiplyRGB(emitter.vertexColor(1), EncoderUtil.normalShade(emitter.packedNormal(1), blockView, true) * emitter.ao[1]));
-					emitter.vertexColor(2, ColorUtil.multiplyRGB(emitter.vertexColor(2), EncoderUtil.normalShade(emitter.packedNormal(2), blockView, true) * emitter.ao[2]));
-					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), EncoderUtil.normalShade(emitter.packedNormal(3), blockView, true) * emitter.ao[3]));
+					emitter.vertexColor(0, ColorUtil.multiplyRGB(emitter.vertexColor(0), EncoderUtil.normalShade(emitter.packedNormal(0), blockView, true) * emitter.ao[0] * FixedMath255.FLOAT_CONVERSION_FACTOR));
+					emitter.vertexColor(1, ColorUtil.multiplyRGB(emitter.vertexColor(1), EncoderUtil.normalShade(emitter.packedNormal(1), blockView, true) * emitter.ao[1] * FixedMath255.FLOAT_CONVERSION_FACTOR));
+					emitter.vertexColor(2, ColorUtil.multiplyRGB(emitter.vertexColor(2), EncoderUtil.normalShade(emitter.packedNormal(2), blockView, true) * emitter.ao[2] * FixedMath255.FLOAT_CONVERSION_FACTOR));
+					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), EncoderUtil.normalShade(emitter.packedNormal(3), blockView, true) * emitter.ao[3] * FixedMath255.FLOAT_CONVERSION_FACTOR));
 				} else {
 					// same shade value for all vertices
 					final float shade = blockView.getShade(emitter.lightFace(), true);
 
-					emitter.vertexColor(0, ColorUtil.multiplyRGB(emitter.vertexColor(0), shade * emitter.ao[0]));
-					emitter.vertexColor(1, ColorUtil.multiplyRGB(emitter.vertexColor(1), shade * emitter.ao[1]));
-					emitter.vertexColor(2, ColorUtil.multiplyRGB(emitter.vertexColor(2), shade * emitter.ao[2]));
-					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), shade * emitter.ao[3]));
+					emitter.vertexColor(0, ColorUtil.multiplyRGB(emitter.vertexColor(0), shade * emitter.ao[0] * FixedMath255.FLOAT_CONVERSION_FACTOR));
+					emitter.vertexColor(1, ColorUtil.multiplyRGB(emitter.vertexColor(1), shade * emitter.ao[1] * FixedMath255.FLOAT_CONVERSION_FACTOR));
+					emitter.vertexColor(2, ColorUtil.multiplyRGB(emitter.vertexColor(2), shade * emitter.ao[2] * FixedMath255.FLOAT_CONVERSION_FACTOR));
+					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), shade * emitter.ao[3] * FixedMath255.FLOAT_CONVERSION_FACTOR));
 				}
 			}
 		} else if (PastelRenderer.semiFlatLighting) {

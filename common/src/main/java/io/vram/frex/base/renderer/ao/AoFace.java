@@ -20,7 +20,7 @@
 
 package io.vram.frex.base.renderer.ao;
 
-import static io.vram.frex.base.renderer.ao.AoMath.UNIT_VALUE;
+import static io.vram.frex.api.math.FixedMath255.UNIT_VALUE;
 import static net.minecraft.core.Direction.DOWN;
 import static net.minecraft.core.Direction.EAST;
 import static net.minecraft.core.Direction.NORTH;
@@ -31,6 +31,7 @@ import static net.minecraft.core.Direction.WEST;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 
+import io.vram.frex.api.math.FixedMath255;
 import io.vram.frex.api.math.PackedSectionPos;
 import io.vram.frex.base.renderer.mesh.BaseQuadView;
 
@@ -63,12 +64,12 @@ public class AoFace {
 		(q, i) -> clampFunc.clamp(q.z(i)),
 		(q, i) -> 1 - clampFunc.clamp(q.x(i)),
 		(q, i) -> {
-			final int u = AoMath.clamp(q.z(i));
-			final int v = UNIT_VALUE - AoMath.clamp(q.x(i));
-			final int w0 = AoMath.mul(v, u);
-			final int w1 = AoMath.mul(v, UNIT_VALUE - u);
-			final int w2 = AoMath.mul(UNIT_VALUE - v, UNIT_VALUE - u);
-			final int w3 = AoMath.mul(UNIT_VALUE - v, u);
+			final int u = FixedMath255.clamp(q.z(i));
+			final int v = UNIT_VALUE - FixedMath255.clamp(q.x(i));
+			final int w0 = FixedMath255.mul(v, u);
+			final int w1 = FixedMath255.mul(v, UNIT_VALUE - u);
+			final int w2 = FixedMath255.mul(UNIT_VALUE - v, UNIT_VALUE - u);
+			final int w3 = FixedMath255.mul(UNIT_VALUE - v, u);
 			return w0 | (w1 << 8) | (w2 << 16) | (w3 << 24);
 		});
 
@@ -77,12 +78,12 @@ public class AoFace {
 		(q, i) -> clampFunc.clamp(q.z(i)),
 		(q, i) -> clampFunc.clamp(q.x(i)),
 		(q, i) -> {
-			final int u = AoMath.clamp(q.z(i));
-			final int v = AoMath.clamp(q.x(i));
-			final int w0 = AoMath.mul(v, u);
-			final int w1 = AoMath.mul(v, UNIT_VALUE - u);
-			final int w2 = AoMath.mul(UNIT_VALUE - v, UNIT_VALUE - u);
-			final int w3 = AoMath.mul(UNIT_VALUE - v, u);
+			final int u = FixedMath255.clamp(q.z(i));
+			final int v = FixedMath255.clamp(q.x(i));
+			final int w0 = FixedMath255.mul(v, u);
+			final int w1 = FixedMath255.mul(v, UNIT_VALUE - u);
+			final int w2 = FixedMath255.mul(UNIT_VALUE - v, UNIT_VALUE - u);
+			final int w3 = FixedMath255.mul(UNIT_VALUE - v, u);
 			return w0 | (w1 << 8) | (w2 << 16) | (w3 << 24);
 		});
 
@@ -91,12 +92,12 @@ public class AoFace {
 		(q, i) -> 1 - clampFunc.clamp(q.x(i)),
 		(q, i) -> clampFunc.clamp(q.y(i)),
 		(q, i) -> {
-			final int u = UNIT_VALUE - AoMath.clamp(q.x(i));
-			final int v = AoMath.clamp(q.y(i));
-			final int w0 = AoMath.mul(v, u);
-			final int w1 = AoMath.mul(v, UNIT_VALUE - u);
-			final int w2 = AoMath.mul(UNIT_VALUE - v, UNIT_VALUE - u);
-			final int w3 = AoMath.mul(UNIT_VALUE - v, u);
+			final int u = UNIT_VALUE - FixedMath255.clamp(q.x(i));
+			final int v = FixedMath255.clamp(q.y(i));
+			final int w0 = FixedMath255.mul(v, u);
+			final int w1 = FixedMath255.mul(v, UNIT_VALUE - u);
+			final int w2 = FixedMath255.mul(UNIT_VALUE - v, UNIT_VALUE - u);
+			final int w3 = FixedMath255.mul(UNIT_VALUE - v, u);
 			return w0 | (w1 << 8) | (w2 << 16) | (w3 << 24);
 		});
 
@@ -105,12 +106,12 @@ public class AoFace {
 		(q, i) -> clampFunc.clamp(q.y(i)),
 		(q, i) -> 1 - clampFunc.clamp(q.x(i)),
 		(q, i) -> {
-			final int u = AoMath.clamp(q.y(i));
-			final int v = UNIT_VALUE - AoMath.clamp(q.x(i));
-			final int w0 = AoMath.mul(u, v);
-			final int w1 = AoMath.mul(UNIT_VALUE - u, v);
-			final int w2 = AoMath.mul(UNIT_VALUE - u, UNIT_VALUE - v);
-			final int w3 = AoMath.mul(u, UNIT_VALUE - v);
+			final int u = FixedMath255.clamp(q.y(i));
+			final int v = UNIT_VALUE - FixedMath255.clamp(q.x(i));
+			final int w0 = FixedMath255.mul(u, v);
+			final int w1 = FixedMath255.mul(UNIT_VALUE - u, v);
+			final int w2 = FixedMath255.mul(UNIT_VALUE - u, UNIT_VALUE - v);
+			final int w3 = FixedMath255.mul(u, UNIT_VALUE - v);
 			return w0 | (w1 << 8) | (w2 << 16) | (w3 << 24);
 		});
 
@@ -119,12 +120,12 @@ public class AoFace {
 		(q, i) -> clampFunc.clamp(q.z(i)),
 		(q, i) -> clampFunc.clamp(q.y(i)),
 		(q, i) -> {
-			final int u = AoMath.clamp(q.z(i));
-			final int v = AoMath.clamp(q.y(i));
-			final int w0 = AoMath.mul(v, u);
-			final int w1 = AoMath.mul(v, UNIT_VALUE - u);
-			final int w2 = AoMath.mul(UNIT_VALUE - v, UNIT_VALUE - u);
-			final int w3 = AoMath.mul(UNIT_VALUE - v, u);
+			final int u = FixedMath255.clamp(q.z(i));
+			final int v = FixedMath255.clamp(q.y(i));
+			final int w0 = FixedMath255.mul(v, u);
+			final int w1 = FixedMath255.mul(v, UNIT_VALUE - u);
+			final int w2 = FixedMath255.mul(UNIT_VALUE - v, UNIT_VALUE - u);
+			final int w3 = FixedMath255.mul(UNIT_VALUE - v, u);
 			return w0 | (w1 << 8) | (w2 << 16) | (w3 << 24);
 		});
 
@@ -133,12 +134,12 @@ public class AoFace {
 		(q, i) -> clampFunc.clamp(q.z(i)),
 		(q, i) -> 1 - clampFunc.clamp(q.y(i)),
 		(q, i) -> {
-			final int u = AoMath.clamp(q.z(i));
-			final int v = UNIT_VALUE - AoMath.clamp(q.y(i));
-			final int w0 = AoMath.mul(v, u);
-			final int w1 = AoMath.mul(v, UNIT_VALUE - u);
-			final int w2 = AoMath.mul(UNIT_VALUE - v, UNIT_VALUE - u);
-			final int w3 = AoMath.mul(UNIT_VALUE - v, u);
+			final int u = FixedMath255.clamp(q.z(i));
+			final int v = UNIT_VALUE - FixedMath255.clamp(q.y(i));
+			final int w0 = FixedMath255.mul(v, u);
+			final int w1 = FixedMath255.mul(v, UNIT_VALUE - u);
+			final int w2 = FixedMath255.mul(UNIT_VALUE - v, UNIT_VALUE - u);
+			final int w3 = FixedMath255.mul(UNIT_VALUE - v, u);
 			return w0 | (w1 << 8) | (w2 << 16) | (w3 << 24);
 		});
 

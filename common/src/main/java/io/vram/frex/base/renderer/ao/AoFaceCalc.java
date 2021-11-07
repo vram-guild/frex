@@ -22,6 +22,8 @@ package io.vram.frex.base.renderer.ao;
 
 import java.util.function.IntBinaryOperator;
 
+import io.vram.frex.api.math.FixedMath255;
+
 /**
  * Handles vanilla-style calculations for ao and light blending.
  */
@@ -135,8 +137,8 @@ public class AoFaceCalc {
 						+ blockBottomLeft * ((packedWeights >> 8) & 0xFF)
 						+ blockTopLeft * ((packedWeights >> 16) & 0xFF)
 						+ blockTopRight * ((packedWeights >> 24) & 0xFF)
-					) + AoMath.UNIT_VALUE
-				) >> AoMath.UNIT_SHIFT & 0xFF;
+					) + FixedMath255.UNIT_VALUE
+				) >> FixedMath255.UNIT_SHIFT & 0xFF;
 	}
 
 	public int maxBlockLight(int oldMax) {
@@ -152,8 +154,8 @@ public class AoFaceCalc {
 						+ skyBottomLeft * ((packedWeights >> 8) & 0xFF)
 						+ skyTopLeft * ((packedWeights >> 16) & 0xFF)
 						+ skyTopRight * ((packedWeights >> 24) & 0xFF)
-					) + AoMath.UNIT_VALUE
-				) >> AoMath.UNIT_SHIFT & 0xFF;
+					) + FixedMath255.UNIT_VALUE
+				) >> FixedMath255.UNIT_SHIFT & 0xFF;
 	}
 
 	public int maxSkyLight(int oldMax) {
@@ -173,8 +175,8 @@ public class AoFaceCalc {
 						+ aoBottomLeft * ((packedWeights >> 8) & 0xFF)
 						+ aoTopLeft * ((packedWeights >> 16) & 0xFF)
 						+ aoTopRight * ((packedWeights >> 24) & 0xFF)
-					) + AoMath.UNIT_VALUE
-				) >> AoMath.UNIT_SHIFT & 0xFF;
+					) + FixedMath255.UNIT_VALUE
+				) >> FixedMath255.UNIT_SHIFT & 0xFF;
 	}
 
 	// PERF: use integer weights

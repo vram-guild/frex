@@ -66,8 +66,7 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 	public final float[] u = new float[4];
 	public final float[] v = new float[4];
 	// vanilla light outputs
-	// PERF use integer byte values for these instead of floats
-	public final float[] ao = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
+	public final int[] ao = new int[]{255, 255, 255, 255};
 	protected RenderMaterial defaultMaterial = RenderMaterial.defaultMaterial();
 
 	private int vertexIndex = 0;

@@ -24,4 +24,5 @@ package io.vram.frex.api.config;
 public class FrexConfig {
 	public static boolean suppressMaterialLoadingSpam = true;
 	public static boolean logMaterialPredicateDuplicates = false;
+	public static boolean allowDegenerateFluidFaces = false;
 }

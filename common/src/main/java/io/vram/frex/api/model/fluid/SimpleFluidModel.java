@@ -37,6 +37,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.buffer.QuadSink;
+import io.vram.frex.api.config.FrexConfig;
 import io.vram.frex.api.material.RenderMaterial;
 
 /**
@@ -52,8 +53,6 @@ public class SimpleFluidModel implements FluidModel {
 		this.blendColors = blendColors;
 		this.appearance = appearance;
 	}
-
-	// PERF: pass in normalized UVs so don't have to deinterpolate in renderer
 
 	// WIP: handle degenerate quads by emitting two triangles so that face normals are correct
 	@Override
@@ -171,13 +170,38 @@ public class SimpleFluidModel implements FluidModel {
 				v2 = Mth.lerp(centerScale, v2, vCentroid);
 				v3 = Mth.lerp(centerScale, v3, vCentroid);
 
-				qe.pos(0, 0, centerNwHeight, 0)
-				.pos(1, 0, southNwHeight, 1)
-				.pos(2, 1, southEastNwHeight, 1)
-				.pos(3, 1, eastNwHeight, 0)
-				.uvSprite(topSprite, u0, v0, u1, v1, u2, v2, u3, v3)
-				.vertexColor(nwColor, swColor, seColor, neColor)
-				.material(material).emit();
+				// If configured to do so, split non-coplanar top quads into triangles
+				// so that face normals are correct.
+				// This coplanar test finds the equation of the plane from the first three
+				// points and then tests that the fourth point is on the plane.
+				// Because x and z are always 0 or 1, many terms drop out.
+				final boolean coplanar = FrexConfig.allowDegenerateFluidFaces || Mth.equal(0f, southNwHeight - centerNwHeight - southEastNwHeight + eastNwHeight);
+
+				if (coplanar) {
+					qe.pos(0, 0, centerNwHeight, 0)
+					.pos(1, 0, southNwHeight, 1)
+					.pos(2, 1, southEastNwHeight, 1)
+					.pos(3, 1, eastNwHeight, 0)
+					.uvSprite(topSprite, u0, v0, u1, v1, u2, v2, u3, v3)
+					.vertexColor(nwColor, swColor, seColor, neColor)
+					.material(material).emit();
+				} else {
+					qe.pos(0, 0, centerNwHeight, 0)
+					.pos(1, 0, southNwHeight, 1)
+					.pos(2, 1, southEastNwHeight, 1)
+					.pos(3, 1, southEastNwHeight, 1)
+					.uvSprite(topSprite, u0, v0, u1, v1, u2, v2, u2, v2)
+					.vertexColor(nwColor, swColor, seColor, seColor)
+					.material(material).emit();
+
+					qe.pos(0, 0, centerNwHeight, 0)
+					.pos(1, 0, centerNwHeight, 0)
+					.pos(2, 1, southEastNwHeight, 1)
+					.pos(3, 1, eastNwHeight, 0)
+					.uvSprite(topSprite, u0, v0, u0, v0, u2, v2, u3, v3)
+					.vertexColor(nwColor, nwColor, seColor, neColor)
+					.material(material).emit();
+				}
 
 				// backface
 				if (fluidState.shouldRenderBackwardUpFace(world, searchPos.setWithOffset(centerPos, Direction.UP))) {

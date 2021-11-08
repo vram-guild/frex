@@ -30,16 +30,16 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.WeightedBakedModel;
+import net.minecraft.client.resources.model.MultiPartBakedModel;
 import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.model.BlockItemModel;
 import io.vram.frex.api.model.BlockModel;
 
-@Mixin(WeightedBakedModel.class)
+@Mixin(MultiPartBakedModel.class)
 public class MixinMultipartBakedModel implements BlockItemModel {
-	@Shadow protected List<Pair<Predicate<BlockState>, BakedModel>> selectors;
+	@Shadow private List<Pair<Predicate<BlockState>, BakedModel>> selectors;
 	@Shadow protected Map<BlockState, BitSet> selectorCache;
 
 	@Override

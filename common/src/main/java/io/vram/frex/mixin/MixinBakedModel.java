@@ -29,14 +29,14 @@ import io.vram.frex.api.model.BlockItemModel;
 import io.vram.frex.base.renderer.util.BakedModelTranscoder;
 
 @Mixin(BakedModel.class)
-public class MixinBakedModel implements BlockItemModel {
+public interface MixinBakedModel extends BlockItemModel {
 	@Override
-	public void renderAsItem(ItemInputContext input, QuadSink output) {
+	default void renderAsItem(ItemInputContext input, QuadSink output) {
 		BakedModelTranscoder.accept((BakedModel) this, input, output.asQuadEmitter());
 	}
 
 	@Override
-	public void renderAsBlock(BlockInputContext input, QuadSink output) {
+	default void renderAsBlock(BlockInputContext input, QuadSink output) {
 		BakedModelTranscoder.accept((BakedModel) this, input, output.asQuadEmitter());
 	}
 }

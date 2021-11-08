@@ -54,7 +54,6 @@ public class SimpleFluidModel implements FluidModel {
 		this.appearance = appearance;
 	}
 
-	// WIP: handle degenerate quads by emitting two triangles so that face normals are correct
 	@Override
 	public void renderAsBlock(BlockInputContext input, QuadSink output) {
 		final var appearance = this.appearance;
@@ -154,21 +153,18 @@ public class SimpleFluidModel implements FluidModel {
 					v3 = 0.5F + -dy - dx;
 				}
 
-				final float uCentroid = (u0 + u1 + u2 + u3) * 0.25F;
-				final float vCentroid = (v0 + v1 + v2 + v3) * 0.25F;
-
 				final float dx = stillSprite.getWidth() / (stillSprite.getU1() - stillSprite.getU0());
 				final float dy = stillSprite.getHeight() / (stillSprite.getV1() - stillSprite.getV0());
 				final float centerScale = 4.0F / Math.max(dy, dx);
 
-				u0 = Mth.lerp(centerScale, u0, uCentroid);
-				u1 = Mth.lerp(centerScale, u1, uCentroid);
-				u2 = Mth.lerp(centerScale, u2, uCentroid);
-				u3 = Mth.lerp(centerScale, u3, uCentroid);
-				v0 = Mth.lerp(centerScale, v0, vCentroid);
-				v1 = Mth.lerp(centerScale, v1, vCentroid);
-				v2 = Mth.lerp(centerScale, v2, vCentroid);
-				v3 = Mth.lerp(centerScale, v3, vCentroid);
+				u0 = Mth.lerp(centerScale, u0, 0.5f);
+				u1 = Mth.lerp(centerScale, u1, 0.5f);
+				u2 = Mth.lerp(centerScale, u2, 0.5f);
+				u3 = Mth.lerp(centerScale, u3, 0.5f);
+				v0 = Mth.lerp(centerScale, v0, 0.5f);
+				v1 = Mth.lerp(centerScale, v1, 0.5f);
+				v2 = Mth.lerp(centerScale, v2, 0.5f);
+				v3 = Mth.lerp(centerScale, v3, 0.5f);
 
 				// If configured to do so, split non-coplanar top quads into triangles
 				// so that face normals are correct.

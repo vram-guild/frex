@@ -276,23 +276,27 @@ public class SimpleFluidModel implements FluidModel {
 						overlay = false;
 					}
 
-					final float u0 = sideSprite.getU(0.0D);
-					final float u1 = sideSprite.getU(8.0D);
-					final float v0 = sideSprite.getV((1.0F - y0) * 16.0F * 0.5F);
-					final float v1 = sideSprite.getV((1.0F - y1) * 16.0F * 0.5F);
-					final float vCenter = sideSprite.getV(8.0D);
+					final float u0 = 0.0f;
+					final float u1 = 0.5f;
+					final float v0 = (1.0F - y0) * 0.5F;
+					final float v1 = (1.0F - y1) * 0.5F;
+					final float vCenter = 0.5F;
 
-					qe.pos(0, x0, y0, z0).uv(0, u0, v0).vertexColor(0, c0)
-					.pos(1, x1, y1, z1).uv(1, u1, v1).vertexColor(1, c1)
-					.pos(2, x1, downBasedOffset, z1).uv(2, u1, vCenter).vertexColor(2, c1)
-					.pos(3, x0, downBasedOffset, z0).uv(3, u0, vCenter).vertexColor(3, c0)
+					qe.pos(0, x0, y0, z0)
+					.pos(1, x1, y1, z1)
+					.pos(2, x1, downBasedOffset, z1)
+					.pos(3, x0, downBasedOffset, z0)
+					.uvSprite(sideSprite, u0, v0, u1, v1, u1, vCenter, u0, vCenter)
+					.vertexColor(c0, c1, c1, c0)
 					.material(material).emit();
 
 					if (!overlay) {
-						qe.pos(0, x0, downBasedOffset, z0).uv(0, u0, vCenter).vertexColor(0, c0)
-						.pos(1, x1, downBasedOffset, z1).uv(1, u1, vCenter).vertexColor(1, c1)
-						.pos(2, x1, y1, z1).uv(2, u1, v1).vertexColor(2, c1)
-						.pos(3, x0, y0, z0).uv(3, u0, v0).vertexColor(3, c0)
+						qe.pos(0, x0, downBasedOffset, z0)
+						.pos(1, x1, downBasedOffset, z1)
+						.pos(2, x1, y1, z1)
+						.pos(3, x0, y0, z0)
+						.uvSprite(sideSprite, u0, vCenter, u1, vCenter, u1, v1, u0, v0)
+						.vertexColor(c0, c1, c1, c0)
 						.material(material).emit();
 					}
 				}

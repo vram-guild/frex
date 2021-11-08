@@ -192,17 +192,12 @@ public class SimpleFluidModel implements FluidModel {
 			}
 
 			if (isDownVisible) {
-				float u0, u1, v1, v0;
-
-				u0 = stillSprite.getU0();
-				u1 = stillSprite.getU1();
-				v1 = stillSprite.getV0();
-				v0 = stillSprite.getV1();
-
-				qe.pos(0, 0, downBasedOffset, 1).uv(0, u0, v0).vertexColor(0, swColor)
-				.pos(1, 0, downBasedOffset, 0).uv(1, u0, v1).vertexColor(1, nwColor)
-				.pos(2, 1, downBasedOffset, 0).uv(2, u1, v1).vertexColor(2, neColor)
-				.pos(3, 1, downBasedOffset, 1).uv(3, u1, v0).vertexColor(3, seColor)
+				qe.pos(0, 0, downBasedOffset, 1)
+				.pos(1, 0, downBasedOffset, 0)
+				.pos(2, 1, downBasedOffset, 0)
+				.pos(3, 1, downBasedOffset, 1)
+				.uvSprite(stillSprite, 0, 1, 0, 0, 1, 0, 1, 1)
+				.vertexColor(swColor, nwColor, neColor, seColor)
 				.material(material).emit();
 			}
 

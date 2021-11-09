@@ -35,4 +35,15 @@ public interface QuadSink {
 	default void close() {
 		// NOOP
 	}
+
+	/**
+	 * Will be true for instances returned from {@link #withTransformQuad(InputContext, QuadTransform)}
+	 * or {@link #withTransformVertex(InputContext, QuadTransform)}.  Primary use case
+	 * if for renderers to avoid early culling tests when a transform is present.
+	 *
+	 * @return {@code true} when this instance applies a {@link QuadTransform}.
+	 */
+	default boolean isTransformer() {
+		return false;
+	}
 }

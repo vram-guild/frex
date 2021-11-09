@@ -66,4 +66,9 @@ public class TransformingQuadEmitter extends BaseQuadEmitter implements PooledQu
 	public void close() {
 		transformStack.reclaim(this);
 	}
+
+	@Override
+	public boolean isTransformer() {
+		return true;
+	}
 }

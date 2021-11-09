@@ -114,8 +114,10 @@ public final class MaterialLoaderImpl {
 			result = MaterialDeserializer.deserialize(readJsonObject(res));
 		} catch (final Exception e) {
 			if (!FrexConfig.suppressMaterialLoadingSpam || CAUGHT.add(idIn)) {
-				FrexLog.info("Unable to load render material " + idIn.toString() + " due to exception " + e.toString());
+				FrexLog.info("Unable to load render material " + idIn.toString() + " due to exception " + e.toString() + ". Using default material.");
 			}
+
+			return RenderMaterial.defaultMaterial();
 		}
 
 		return result;

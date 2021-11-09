@@ -1,0 +1,6 @@
+{
+  "_DEPRECATED_": "Here for compatibility with packs that predate FREX 6.0.  Use frex:emissive_no_ao instead. Will be removed for 1.18.",
+  "emissive": true,
+  "disableAo": true,
+  "disableDiffuse": false
+}

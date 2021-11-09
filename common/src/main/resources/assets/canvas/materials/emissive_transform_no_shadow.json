@@ -1,0 +1,6 @@
+{
+	"_DEPRECATED_": "Here for compatibility with packs that predate FREX 6.0.  Use frex:missive_transform_no_shadow instead. Will be removed for 1.18.",
+	"transform": true,
+	"emissive": true,
+	"castShadows": false
+}

@@ -65,6 +65,7 @@ public class BaseQuadView implements QuadView {
 	protected int nominalFaceId = FaceUtil.UNASSIGNED_INDEX;
 	protected boolean isGeometryInvalid = true;
 	protected boolean isTangentInvalid = true;
+	protected RenderMaterial material = null;
 
 	/**
 	 * Flag true when sprite is assumed to be interpolated and need normalization.
@@ -106,6 +107,7 @@ public class BaseQuadView implements QuadView {
 		quad.nominalFaceId = nominalFaceId;
 		quad.isGeometryInvalid = false;
 		quad.isTangentInvalid = false;
+		quad.material = material;
 	}
 
 	/**
@@ -121,6 +123,7 @@ public class BaseQuadView implements QuadView {
 	 * Only does the decoding part.
 	 */
 	public final void load() {
+		material = RenderMaterial.fromIndex(data[baseIndex + HEADER_MATERIAL]);
 		isGeometryInvalid = false;
 		isTangentInvalid = false;
 		nominalFaceId = lightFaceId();
@@ -200,10 +203,9 @@ public class BaseQuadView implements QuadView {
 		}
 	}
 
-	// PERF: cache this
 	@Override
 	public final RenderMaterial material() {
-		return RenderMaterial.fromIndex(data[baseIndex + HEADER_MATERIAL]);
+		return material;
 	}
 
 	@Override

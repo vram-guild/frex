@@ -109,6 +109,7 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 			material = defaultMaterial;
 		}
 
+		this.material = material;
 		data[baseIndex + HEADER_MATERIAL] = material.index();
 		return this;
 	}
@@ -164,6 +165,7 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 		System.arraycopy(quadData, startIndex, data, baseIndex + HEADER_STRIDE, MESH_QUAD_STRIDE);
 		convertVanillaUvPrecision();
 		normalizeSprite();
+		material(defaultMaterial);
 		isSpriteInterpolated = false;
 		isGeometryInvalid = true;
 		isTangentInvalid = true;

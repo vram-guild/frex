@@ -52,7 +52,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import io.vram.frex.api.math.PackedSectionPos;
 import io.vram.frex.api.world.BlockEntityRenderData;
 import io.vram.frex.api.world.RenderRegionBakeListener;
-import io.vram.frex.impl.event.ChunkRenderConditionContext;
+import io.vram.frex.impl.world.ChunkRenderConditionContext;
 import io.vram.frex.pastel.PastelTerrainRenderContext;
 import io.vram.frex.pastel.util.RenderChunkRegionExt;
 

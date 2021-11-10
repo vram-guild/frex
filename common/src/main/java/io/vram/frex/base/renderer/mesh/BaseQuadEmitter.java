@@ -62,9 +62,6 @@ import io.vram.frex.impl.texture.IndexedSprite;
  * because that depends on where/how it is used. (Mesh encoding vs. render-time transformation).
  */
 public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitter, VertexEmitter {
-	// PERF: pack into one array for LOR?
-	public final float[] u = new float[4];
-	public final float[] v = new float[4];
 	// vanilla light outputs
 	public final int[] ao = new int[]{255, 255, 255, 255};
 	protected RenderMaterial defaultMaterial = RenderMaterial.defaultMaterial();

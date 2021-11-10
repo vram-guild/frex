@@ -24,15 +24,13 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.resources.ResourceLocation;
 
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-
 import io.vram.frex.api.renderer.Renderer;
 import io.vram.frex.api.texture.MaterialTexture;
 import io.vram.frex.impl.material.MaterialFinderPool;
 
 /**
  * Finds standard {@link RenderMaterial} instances used to communicate
- * quad rendering characteristics to a {@link RenderContext}.
+ * quad rendering characteristics to a renderer.
  *
  * <p>Must be obtained via {@link Renderer#materialFinder()}.
  */

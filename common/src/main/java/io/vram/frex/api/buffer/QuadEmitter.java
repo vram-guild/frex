@@ -28,10 +28,9 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 
-import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
-
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.mesh.QuadView;
+import io.vram.frex.api.model.util.FaceUtil;
 
 public interface QuadEmitter extends QuadView, QuadSink {
 	/**
@@ -108,7 +107,7 @@ public interface QuadEmitter extends QuadView, QuadSink {
 	QuadEmitter fromVanilla(int[] quadData, int startIndex);
 
 	default QuadEmitter fromVanilla(BakedQuad quad, RenderMaterial material, Direction cullFace) {
-		return fromVanilla(quad, material, ModelHelper.toFaceIndex(cullFace));
+		return fromVanilla(quad, material, FaceUtil.toFaceIndex(cullFace));
 	}
 
 	QuadEmitter fromVanilla(BakedQuad quad, RenderMaterial material, int cullFaceId);

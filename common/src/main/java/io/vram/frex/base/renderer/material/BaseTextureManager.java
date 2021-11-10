@@ -29,8 +29,7 @@ import net.minecraft.resources.ResourceLocation;
 import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.renderer.MaterialTextureManager;
 import io.vram.frex.api.texture.MaterialTexture;
-
-import grondag.frex.Frex;
+import io.vram.frex.impl.FrexLog;
 
 public class BaseTextureManager implements MaterialTextureManager {
 	protected int nextIndex = 2;
@@ -60,7 +59,7 @@ public class BaseTextureManager implements MaterialTextureManager {
 			if (nextIndex >= MaterialConstants.MAX_TEXTURE_STATES) {
 				if (shouldWarn) {
 					shouldWarn = false;
-					Frex.LOG.warn(String.format("Maximum unique textures (%d) exceeded when attempting to add %s.  Missing texture will be used.", MaterialConstants.MAX_TEXTURE_STATES, id.toString()));
+					FrexLog.warn(String.format("Maximum unique textures (%d) exceeded when attempting to add %s.  Missing texture will be used.", MaterialConstants.MAX_TEXTURE_STATES, id.toString()));
 				}
 
 				return MISSING;

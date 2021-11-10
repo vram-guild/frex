@@ -65,8 +65,6 @@ public abstract class ItemRenderContext extends BakedRenderContext<BaseItemInput
 		inputContext.prepareForItem(model, stack, renderMode, light, overlay, isLeftHand, matrixStack);
 		materialMap = MaterialMap.get(stack);
 		matrixStack.push();
-
-		// PERF: optimize matrix stack operations
 		model.getTransforms().getTransform(renderMode).apply(isLeftHand, poseStack);
 		matrixStack.translate(-0.5f, -0.5f, -0.5f);
 

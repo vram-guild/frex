@@ -52,7 +52,6 @@ public class BaseTextureManager implements MaterialTextureManager {
 		return STATES[index];
 	}
 
-	// PERF: use cow or other method to avoid synch
 	@Override
 	public synchronized BaseMaterialTexture textureFromId(ResourceLocation id) {
 		BaseMaterialTexture state = MAP.get(id);

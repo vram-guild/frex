@@ -22,6 +22,7 @@ package io.vram.frex.mixin;
 
 import java.util.List;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
@@ -32,9 +33,9 @@ import io.vram.frex.impl.texture.TextureAtlasPreparationExt;
 
 @Mixin(TextureAtlas.Preparations.class)
 public class MixinTextureAtlasPreparation implements TextureAtlasPreparationExt {
-	@Shadow int width;
-	@Shadow int height;
-	@Shadow List<TextureAtlasSprite> regions;
+	@Shadow @Final int width;
+	@Shadow @Final int height;
+	@Shadow @Final List<TextureAtlasSprite> regions;
 
 	@Override
 	public int frex_atlasWidth() {

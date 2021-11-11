@@ -23,6 +23,7 @@ package io.vram.frex.mixin;
 import java.util.Deque;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -39,7 +40,7 @@ import io.vram.frex.impl.math.MatrixStackEntryHelper;
 
 @Mixin(PoseStack.class)
 public abstract class MixinPoseStack implements MatrixStack {
-	@Shadow private Deque<PoseStack.Pose> poseStack;
+	@Shadow @Final private Deque<PoseStack.Pose> poseStack;
 
 	private final ObjectArrayList<PoseStack.Pose> pool = new ObjectArrayList<>();
 	private FastMatrix4f modelMatrix;

@@ -22,6 +22,7 @@ package io.vram.frex.mixin;
 
 import java.util.Map;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -36,7 +37,7 @@ import io.vram.frex.impl.texture.SpriteFinderImpl;
 
 @Mixin(TextureAtlas.class)
 public class MixinTextureAltasSpriteLoader implements SpriteFinderImpl.SpriteFinderAccess {
-	@Shadow private Map<ResourceLocation, TextureAtlasSprite> texturesByName;
+	@Shadow @Final private Map<ResourceLocation, TextureAtlasSprite> texturesByName;
 
 	private SpriteFinderImpl frex_spriteFinder = null;
 

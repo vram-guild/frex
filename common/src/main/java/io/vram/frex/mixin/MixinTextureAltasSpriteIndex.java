@@ -23,6 +23,7 @@ package io.vram.frex.mixin;
 import java.util.Map;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -38,8 +39,8 @@ import io.vram.frex.impl.texture.SpriteIndexImpl;
 
 @Mixin(TextureAtlas.class)
 public class MixinTextureAltasSpriteIndex {
-	@Shadow private ResourceLocation location;
-	@Shadow private Map<ResourceLocation, TextureAtlasSprite> texturesByName;
+	@Shadow @Final private ResourceLocation location;
+	@Shadow @Final private Map<ResourceLocation, TextureAtlasSprite> texturesByName;
 
 	@Inject(at = @At("RETURN"), method = "reload")
 	private void afterReload(TextureAtlas.Preparations input, CallbackInfo ci) {

@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
@@ -39,8 +40,8 @@ import io.vram.frex.api.model.BlockModel;
 
 @Mixin(MultiPartBakedModel.class)
 public class MixinMultipartBakedModel implements BlockItemModel {
-	@Shadow private List<Pair<Predicate<BlockState>, BakedModel>> selectors;
-	@Shadow protected Map<BlockState, BitSet> selectorCache;
+	@Shadow @Final private List<Pair<Predicate<BlockState>, BakedModel>> selectors;
+	@Shadow @Final protected Map<BlockState, BitSet> selectorCache;
 
 	@Override
 	public void renderAsItem(ItemInputContext input, QuadSink output) {

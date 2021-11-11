@@ -1,0 +1,30 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "io.vram.frex.mixin",
+	"compatibilityLevel": "JAVA_16",
+	"refmap": "mixins.frex.refmap.json",
+	"plugin": "io.vram.frex.mixin.FrexMixinPlugin",
+	"mixins": [
+		"MixinBakedModel",
+		"MixinBlockColors",
+		"MixinBlockEntityType",
+		"MixinItemColors",
+		"MixinLevelRenderer",
+		"MixinMatrix3f",
+		"MixinMatrix4f",
+		"MixinMultipartBakedModel",
+		"MixinPoseStack",
+		"MixinWeightedBakedModel",
+		"MixinTextureAtlasPreparation",
+		"MixinTextureAtlasSprite",
+		"MixinTextureAltasSpriteIndex",
+		"MixinTextureAltasSpriteLoader"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"conformVisibility": true
+	}
+}

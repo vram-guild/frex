@@ -6,12 +6,16 @@ buildscript {
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        // MixinGradle:
+        classpath 'org.spongepowered:mixingradle:0.7.+'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+// MixinGradle:
+apply plugin: 'org.spongepowered.mixin'
 
 version = '1.0'
 group = 'io.vram.frex' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -141,9 +145,21 @@ dependencies {
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+    
     compileOnly 'org.jetbrains:annotations:19.0.0'
+    
+    // Apply Mixin AP
+    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 }
 
+mixin {
+    // MixinGradle Settings
+    add sourceSets.main, 'mixins.frex.refmap.json'
+    config 'frex.common.json'
+
+    debug.verbose = true
+    debug.export = true
+}
 // Example for how to get properties into the manifest for reading at runtime.
 jar {
     manifest {

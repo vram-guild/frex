@@ -56,7 +56,7 @@ import io.vram.frex.api.world.RenderRegionBakeListener;
 import io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext;
 import io.vram.frex.pastel.PastelBlockStateRenderer;
 import io.vram.frex.pastel.PastelTerrainRenderContext;
-import io.vram.frex.pastel.util.RenderChunkRegionExt;
+import io.vram.frex.pastel.mixinterface.RenderChunkRegionExt;
 
 @Mixin(targets = "net.minecraft.client.renderer.chunk.ChunkRenderDispatcher$RenderChunk$RebuildTask")
 public abstract class MixinChunkRebuildTask implements RenderRegionContext<BlockAndTintGetter> {

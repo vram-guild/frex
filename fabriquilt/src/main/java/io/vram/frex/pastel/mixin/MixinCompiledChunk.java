@@ -18,23 +18,32 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.pastel.util;
+package io.vram.frex.pastel.mixin;
+
+import java.util.Set;
+
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.chunk.ChunkRenderDispatcher.CompiledChunk;
 
-public interface CompiledChunkExt {
-	/**
-	 * Mark buffer initialized.
-	 *
-	 * @param renderType Identifies buffer to be initialized.
-	 * @return {@code true} if buffer was not already initialized.
-	 */
-	boolean frx_markInitialized(RenderType renderType);
+import io.vram.frex.pastel.mixinterface.CompiledChunkExt;
 
-	/**
-	 * Mark that buffer has content.
-	 *
-	 * @param renderType Identifies buffer with content.
-	 */
-	void frx_markPopulated(RenderType renderType);
+@Mixin(CompiledChunk.class)
+public class MixinCompiledChunk implements CompiledChunkExt {
+	@Shadow private Set<RenderType> hasBlocks;
+	@Shadow private Set<RenderType> hasLayer;
+	@Shadow private boolean isCompletelyEmpty;
+
+	@Override
+	public boolean frx_markInitialized(RenderType renderLayer) {
+		return hasLayer.add(renderLayer);
+	}
+
+	@Override
+	public void frx_markPopulated(RenderType renderLayer) {
+		isCompletelyEmpty = false;
+		hasBlocks.add(renderLayer);
+	}
 }

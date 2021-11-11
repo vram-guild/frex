@@ -55,8 +55,8 @@ import io.vram.frex.base.renderer.ao.AoCalculator;
 import io.vram.frex.base.renderer.context.input.BaseBlockInputContext;
 import io.vram.frex.base.renderer.context.render.BlockRenderContext;
 import io.vram.frex.base.renderer.util.EncoderUtil;
-import io.vram.frex.pastel.util.CompiledChunkExt;
-import io.vram.frex.pastel.util.RenderChunkRegionExt;
+import io.vram.frex.pastel.mixinterface.CompiledChunkExt;
+import io.vram.frex.pastel.mixinterface.RenderChunkRegionExt;
 
 public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintGetter> {
 	protected RenderChunkRegionExt regionExt;

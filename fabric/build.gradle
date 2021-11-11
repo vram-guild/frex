@@ -100,7 +100,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 sourceSets {
 	main {
 		java {
-			srcDirs = ['../common/src/main/java', 'src/main/java']
+			srcDirs = ['../common/src/main/java', 'src/main/java', '../fabriquilt/src/main/java']
 			include '**/*'
 			exclude '*.DS_Store'
 		}

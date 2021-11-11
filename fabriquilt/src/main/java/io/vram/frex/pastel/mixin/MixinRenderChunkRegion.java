@@ -54,7 +54,7 @@ import io.vram.frex.api.world.BlockEntityRenderData;
 import io.vram.frex.api.world.RenderRegionBakeListener;
 import io.vram.frex.impl.world.ChunkRenderConditionContext;
 import io.vram.frex.pastel.PastelTerrainRenderContext;
-import io.vram.frex.pastel.util.RenderChunkRegionExt;
+import io.vram.frex.pastel.mixinterface.RenderChunkRegionExt;
 
 // PERF: find a way to disable redundant Fabric MixinChunkRendeRegion mixin for fabric RenderAttachedBlockview
 @Mixin(RenderChunkRegion.class)

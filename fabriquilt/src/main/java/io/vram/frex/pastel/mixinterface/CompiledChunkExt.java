@@ -18,15 +18,23 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.pastel.util;
+package io.vram.frex.pastel.mixinterface;
 
-import java.util.BitSet;
+import net.minecraft.client.renderer.RenderType;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.block.state.BlockState;
+public interface CompiledChunkExt {
+	/**
+	 * Mark buffer initialized.
+	 *
+	 * @param renderType Identifies buffer to be initialized.
+	 * @return {@code true} if buffer was not already initialized.
+	 */
+	boolean frx_markInitialized(RenderType renderType);
 
-public interface ModelBlockRendererExt {
-	void frx_calculateShape(BlockAndTintGetter blockView, BlockState blockState, BlockPos pos, int[] vertexData, Direction face, float[] aoData, BitSet controlBits);
+	/**
+	 * Mark that buffer has content.
+	 *
+	 * @param renderType Identifies buffer with content.
+	 */
+	void frx_markPopulated(RenderType renderType);
 }

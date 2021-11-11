@@ -18,32 +18,15 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.pastel.mixin;
+package io.vram.frex.pastel.mixinterface;
 
-import java.util.Set;
+import java.util.BitSet;
 
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.chunk.ChunkRenderDispatcher.CompiledChunk;
-
-import io.vram.frex.pastel.util.CompiledChunkExt;
-
-@Mixin(CompiledChunk.class)
-public class MixinCompiledChunk implements CompiledChunkExt {
-	@Shadow private Set<RenderType> hasBlocks;
-	@Shadow private Set<RenderType> hasLayer;
-	@Shadow private boolean isCompletelyEmpty;
-
-	@Override
-	public boolean frx_markInitialized(RenderType renderLayer) {
-		return hasLayer.add(renderLayer);
-	}
-
-	@Override
-	public void frx_markPopulated(RenderType renderLayer) {
-		isCompletelyEmpty = false;
-		hasBlocks.add(renderLayer);
-	}
+public interface ModelBlockRendererExt {
+	void frx_calculateShape(BlockAndTintGetter blockView, BlockState blockState, BlockPos pos, int[] vertexData, Direction face, float[] aoData, BitSet controlBits);
 }

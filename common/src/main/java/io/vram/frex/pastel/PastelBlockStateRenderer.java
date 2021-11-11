@@ -29,7 +29,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.api.model.BlockModel;
 import io.vram.frex.api.world.RenderRegionBakeListener.BlockStateRenderer;
-import io.vram.frex.pastel.util.RenderChunkRegionExt;
+import io.vram.frex.pastel.mixinterface.RenderChunkRegionExt;
 
 public class PastelBlockStateRenderer implements BlockStateRenderer {
 	private PoseStack matrixStack;

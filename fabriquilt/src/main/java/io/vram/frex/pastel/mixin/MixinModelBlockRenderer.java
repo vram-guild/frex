@@ -37,7 +37,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.pastel.PastelBlockRenderContext;
-import io.vram.frex.pastel.util.ModelBlockRendererExt;
+import io.vram.frex.pastel.mixinterface.ModelBlockRendererExt;
 
 @Mixin(ModelBlockRenderer.class)
 public abstract class MixinModelBlockRenderer implements ModelBlockRendererExt {

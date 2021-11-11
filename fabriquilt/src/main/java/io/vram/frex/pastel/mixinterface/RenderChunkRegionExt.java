@@ -18,7 +18,7 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.pastel.util;
+package io.vram.frex.pastel.mixinterface;
 
 import org.jetbrains.annotations.Nullable;
 

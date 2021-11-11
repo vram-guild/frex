@@ -4,7 +4,6 @@
 	"package": "io.vram.frex.mixin",
 	"compatibilityLevel": "JAVA_16",
 	"refmap": "mixins.frex.refmap.json",
-	"plugin": "io.vram.frex.mixin.FrexMixinPlugin",
 	"mixins": [
 		"MixinBakedModel",
 		"MixinBlockColors",

@@ -1,0 +1,24 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "io.vram.frex.pastel.mixin",
+	"compatibilityLevel": "JAVA_16",
+	"plugin": "io.vram.frex.pastel.mixin.PastelMixinPlugin",
+	"refmap": "mixins.frex.refmap.json",
+	"mixins": [
+		"MixinBlockRenderDispatcher",
+		"MixinChunkRebuildTask",
+		"MixinCompiledChunk",
+		"MixinEntityRenderDispatcher",
+		"MixinItemFrameRenderer",
+		"MixinItemRenderer",
+		"MixinModelBlockRenderer",
+		"MixinRenderChunkRegion"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"conformVisibility": true
+	}
+}

@@ -18,30 +18,23 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.compat.fabric;
+package io.vram.frex.fabric.compat;
 
-import java.util.function.Consumer;
+import io.vram.frex.api.material.RenderMaterial;
 
-import net.fabricmc.fabric.api.renderer.v1.mesh.QuadView;
-
-import io.vram.frex.api.mesh.Mesh;
-
-public class FabricMesh implements net.fabricmc.fabric.api.renderer.v1.mesh.Mesh {
-	public static FabricMesh of(Mesh wrapped) {
-		return new FabricMesh(wrapped);
+public class FabricMaterial implements net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial {
+	public static FabricMaterial of(RenderMaterial wrapped) {
+		return new FabricMaterial(wrapped);
 	}
 
-	final Mesh wrapped;
-	private final FabricQuadView<io.vram.frex.api.mesh.QuadView> quadWrapper = FabricQuadView.of(null);
+	final RenderMaterial wrapped;
 
-	protected FabricMesh(Mesh wrapped) {
+	protected FabricMaterial(RenderMaterial wrapped) {
 		this.wrapped = wrapped;
 	}
 
 	@Override
-	public void forEach(Consumer<QuadView> consumer) {
-		wrapped.forEach(q -> {
-			consumer.accept(quadWrapper.wrap(q));
-		});
+	public final int spriteDepth() {
+		return 1;
 	}
 }

@@ -18,7 +18,7 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package grondag.frex;
+package io.vram.frex.fabric;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,9 +26,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -39,36 +36,12 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
 
 import io.vram.frex.api.config.FrexConfig;
 import io.vram.frex.impl.FrexLoadManager;
 import io.vram.frex.impl.config.FlawlessFramesImpl;
 
-public class Frex implements ClientModInitializer {
-	public static Logger LOG = LogManager.getLogger("FREX");
-
-	private static final boolean isAvailable;
-
-	static {
-		boolean result = false;
-
-		for (final ModContainer mod : FabricLoader.getInstance().getAllMods()) {
-			if (mod.getMetadata().containsCustomValue("frex:contains_frex_renderer")) {
-				result = true;
-				break;
-			}
-		}
-
-		isAvailable = result;
-	}
-
-	@Deprecated
-	@ScheduledForRemoval
-	public static boolean isAvailable() {
-		return isAvailable;
-	}
-
+public class FrexMod implements ClientModInitializer {
 	/**
 	 * All Fabric-specific hooks needed for core API should be here for now.
 	 */
@@ -82,8 +55,6 @@ public class Frex implements ClientModInitializer {
 		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(modelTextureListener);
 
 		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(lightListener);
-
-		FabricLoader.getInstance().getEntrypoints("frex", FrexInitializer.class).forEach(api -> api.onInitalizeFrex());
 
 		final Function<String, Consumer<Boolean>> provider = FlawlessFramesImpl.providerFactory();
 		FabricLoader.getInstance().getEntrypoints("frex_flawless_frames", Consumer.class).forEach(api -> api.accept(provider));

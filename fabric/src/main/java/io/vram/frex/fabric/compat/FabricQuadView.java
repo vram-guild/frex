@@ -18,7 +18,7 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.compat.fabric;
+package io.vram.frex.fabric.compat;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,8 +32,7 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import io.vram.frex.api.math.PackedVector3f;
 import io.vram.frex.api.mesh.QuadView;
 
-@SuppressWarnings("deprecation")
-public class FabricQuadView<T extends QuadView> implements grondag.frex.api.mesh.QuadView {
+public class FabricQuadView<T extends QuadView> implements net.fabricmc.fabric.api.renderer.v1.mesh.QuadView {
 	public static FabricQuadView<QuadView> of(QuadView wrapped) {
 		return new FabricQuadView<>(wrapped);
 	}
@@ -60,7 +59,7 @@ public class FabricQuadView<T extends QuadView> implements grondag.frex.api.mesh
 	}
 
 	@Override
-	public grondag.frex.api.material.RenderMaterial material() {
+	public net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial material() {
 		return FabricMaterial.of(wrapped.material());
 	}
 
@@ -161,26 +160,6 @@ public class FabricQuadView<T extends QuadView> implements grondag.frex.api.mesh
 
 	@Override
 	public float spriteV(int vertexIndex, int spriteIndex) {
-		return wrapped.v(vertexIndex);
-	}
-
-	@Override
-	public void toVanilla(int[] target, int targetIndex) {
-		wrapped.toVanilla(target, targetIndex);
-	}
-
-	@Override
-	public int vertexColor(int vertexIndex) {
-		return wrapped.vertexColor(vertexIndex);
-	}
-
-	@Override
-	public float spriteU(int vertexIndex) {
-		return wrapped.u(vertexIndex);
-	}
-
-	@Override
-	public float spriteV(int vertexIndex) {
 		return wrapped.v(vertexIndex);
 	}
 

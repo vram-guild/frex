@@ -18,24 +18,19 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.compat.fabric;
-
-import java.util.function.BooleanSupplier;
+package io.vram.frex.fabric.compat;
 
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.resources.ResourceLocation;
 
+import net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder;
+import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 
-import io.vram.frex.api.material.MaterialCondition;
 import io.vram.frex.api.renderer.Renderer;
 
-import grondag.frex.api.material.MaterialFinder;
-import grondag.frex.api.material.RenderMaterial;
-
-@SuppressWarnings("deprecation")
-public class FrexCompatibilityWrapper implements grondag.frex.api.Renderer {
+public class FrexCompatibilityWrapper implements net.fabricmc.fabric.api.renderer.v1.Renderer {
 	public static FrexCompatibilityWrapper of(Renderer wrapped) {
 		return new FrexCompatibilityWrapper(wrapped);
 	}
@@ -72,25 +67,5 @@ public class FrexCompatibilityWrapper implements grondag.frex.api.Renderer {
 		}
 
 		return wrapped.materials().registerMaterial(id, ((FabricMaterial) material).wrapped);
-	}
-
-	@Override
-	public int maxSpriteDepth() {
-		return 1;
-	}
-
-	@Override
-	public MaterialCondition createCondition(BooleanSupplier supplier, boolean affectBlocks, boolean affectItems) {
-		return wrapped.conditions().createCondition(supplier, affectBlocks, affectItems);
-	}
-
-	@Override
-	public MaterialCondition conditionById(ResourceLocation id) {
-		return wrapped.conditions().conditionFromId(id);
-	}
-
-	@Override
-	public boolean registerCondition(ResourceLocation id, MaterialCondition pipeline) {
-		return wrapped.conditions().registerCondition(id, pipeline);
 	}
 }

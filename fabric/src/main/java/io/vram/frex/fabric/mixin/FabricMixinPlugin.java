@@ -22,7 +22,7 @@ package io.vram.frex.fabric.mixin;
 
 import net.fabricmc.loader.api.FabricLoader;
 
-import grondag.frex.api.config.SimpleMixinConfig;
+import io.vram.frex.fabric.compat.SimpleMixinConfig;
 
 public class FabricMixinPlugin extends SimpleMixinConfig {
 	public FabricMixinPlugin() {

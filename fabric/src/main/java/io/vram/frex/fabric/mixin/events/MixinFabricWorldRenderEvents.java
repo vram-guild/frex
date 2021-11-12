@@ -30,7 +30,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 
-import io.vram.frex.compat.fabric.FabricWorldRenderEventBypass;
+import io.vram.frex.fabric.compat.FabricWorldRenderEventBypass;
 
 @Mixin(WorldRenderEvents.class)
 public class MixinFabricWorldRenderEvents {

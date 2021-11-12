@@ -18,7 +18,7 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package grondag.frex.api.config;
+package io.vram.frex.fabric.compat;
 
 import java.util.List;
 import java.util.Set;

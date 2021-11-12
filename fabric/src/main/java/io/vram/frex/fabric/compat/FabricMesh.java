@@ -18,39 +18,30 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.compat.fabric;
+package io.vram.frex.fabric.compat;
 
-import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
-import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
+import java.util.function.Consumer;
 
-import io.vram.frex.api.mesh.MeshBuilder;
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadView;
 
-/**
- * Interface for rendering plug-ins that provide enhanced capabilities
- * for model lighting, buffering and rendering. Such plug-ins implement the
- * enhanced model rendering interfaces specified by the Fabric API.
- */
-public class FabricMeshBuilder implements net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder {
-	public static FabricMeshBuilder of(MeshBuilder wrapped) {
-		return new FabricMeshBuilder(wrapped);
+import io.vram.frex.api.mesh.Mesh;
+
+public class FabricMesh implements net.fabricmc.fabric.api.renderer.v1.mesh.Mesh {
+	public static FabricMesh of(Mesh wrapped) {
+		return new FabricMesh(wrapped);
 	}
 
-	final MeshBuilder wrapped;
+	final Mesh wrapped;
+	private final FabricQuadView<io.vram.frex.api.mesh.QuadView> quadWrapper = FabricQuadView.of(null);
 
-	private final FabricQuadEmitter qe;
-
-	protected FabricMeshBuilder(MeshBuilder wrapped) {
+	protected FabricMesh(Mesh wrapped) {
 		this.wrapped = wrapped;
-		qe = FabricQuadEmitter.of(wrapped.getEmitter());
 	}
 
 	@Override
-	public QuadEmitter getEmitter() {
-		return qe;
-	}
-
-	@Override
-	public Mesh build() {
-		return FabricMesh.of(wrapped.build());
+	public void forEach(Consumer<QuadView> consumer) {
+		wrapped.forEach(q -> {
+			consumer.accept(quadWrapper.wrap(q));
+		});
 	}
 }

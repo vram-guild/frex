@@ -26,11 +26,10 @@ import org.spongepowered.asm.mixin.Overwrite;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 
 import io.vram.frex.api.renderer.Renderer;
-import io.vram.frex.compat.fabric.FrexCompatibilityWrapper;
+import io.vram.frex.fabric.FrexMod;
+import io.vram.frex.fabric.compat.FrexCompatibilityWrapper;
 
-import grondag.frex.Frex;
-
-@Mixin(Frex.class)
+@Mixin(FrexMod.class)
 public abstract class MixinFrex {
 	/**
 	 * @author grondag

@@ -26,7 +26,7 @@ import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 
 import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.model.BlockItemModel;
-import io.vram.frex.compat.fabric.FabricContextWrapper;
+import io.vram.frex.fabric.compat.FabricContextWrapper;
 
 @Mixin(FabricBakedModel.class)
 public interface MixinFabricBakedModel extends BlockItemModel {

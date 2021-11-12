@@ -22,7 +22,7 @@
     "frex.fabricevents.json"
   ],
   "entrypoints": {
-    "client": [ "grondag.frex.Frex" ]
+    "client": [ "io.vram.frex.fabric.FrexMod" ]
   },
   "depends": {
     "fabricloader": ">=0.11.5",

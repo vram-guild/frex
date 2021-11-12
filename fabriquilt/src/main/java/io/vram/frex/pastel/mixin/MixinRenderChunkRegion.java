@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -68,12 +68,7 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 	private final MutableBlockPos searchPos = new MutableBlockPos();
 	private final BitSet closedCheckBits = new BitSet();
 	private final BitSet closedResultBits = new BitSet();
-	private Int2ObjectOpenHashMap<Object> renderDataObjects;
-
-	// We recreated the block-based indexing to access our render data objects
-	private BlockPos frx_start;
-	private int frx_xLength;
-	private int frx_yLength;
+	private Long2ObjectOpenHashMap<Object> renderDataObjects;
 
 	private static final AtomicInteger FRX_ERROR_COUNTER = new AtomicInteger();
 	private static final Logger FRX_LOGGER = LogManager.getLogger();
@@ -97,14 +92,10 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 		final BlockPos posFrom = new BlockPos(xMin, yMin, zMin);
 		final BlockPos posTo = new BlockPos(xMax, yMax, zMax);
 
-		frx_start = posFrom;
-		frx_xLength = posTo.getX() - posFrom.getX() + 1;
-		frx_yLength = posTo.getY() - posFrom.getY() + 1;
-
 		brightnessCache.defaultReturnValue(Integer.MAX_VALUE);
 		aoLevelCache.defaultReturnValue(Integer.MAX_VALUE);
 
-		Int2ObjectOpenHashMap<Object> dataObjects = null;
+		Long2ObjectOpenHashMap<Object> dataObjects = null;
 
 		for (final LevelChunk[] chunkOuter : levelChunks) {
 			for (final LevelChunk chunk : chunkOuter) {
@@ -137,20 +128,7 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 	}
 
 	@Unique
-	protected final int frx_index(BlockPos blockPos) {
-		return this.frx_index(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-	}
-
-	@Unique
-	protected int frx_index(int blockX, int blockY, int blockZ) {
-		int xLocal = blockX - frx_start.getX();
-		int yLocal = blockY - frx_start.getY();
-		int zLocal = blockZ - frx_start.getZ();
-		return zLocal * frx_xLength * frx_yLength + yLocal * frx_xLength + xLocal;
-	}
-
-	@Unique
-	private Int2ObjectOpenHashMap<Object> frx_mapChunk(LevelChunk chunk, BlockPos posFrom, BlockPos posTo, Int2ObjectOpenHashMap<Object> map) {
+	private Long2ObjectOpenHashMap<Object> frx_mapChunk(LevelChunk chunk, BlockPos posFrom, BlockPos posTo, Long2ObjectOpenHashMap<Object> map) {
 		final int xMin = posFrom.getX();
 		final int xMax = posTo.getX();
 		final int zMin = posFrom.getZ();
@@ -168,10 +146,10 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 
 				if (o != null) {
 					if (map == null) {
-						map = new Int2ObjectOpenHashMap<>();
+						map = new Long2ObjectOpenHashMap<>();
 					}
 
-					map.put(frx_index(entPos), o);
+					map.put(entPos.asLong(), o);
 				}
 			}
 		}
@@ -182,7 +160,7 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 	@Unique
 	@Override
 	public @Nullable Object frx_getBlockEntityRenderData(BlockPos pos) {
-		return renderDataObjects == null ? null : renderDataObjects.get(frx_index(pos));
+		return renderDataObjects == null ? null : renderDataObjects.get(pos.asLong());
 	}
 
 	@Unique

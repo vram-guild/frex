@@ -9,10 +9,10 @@
   ],
   "contact": {
     "homepage": "https://minecraft.curseforge.com/projects/frex",
-    "issues": "https://github.com/grondag/frex/issues",
-    "sources": "https://github.com/grondag/frex"
+    "issues": "https://github.com/vram-guild/frex/issues",
+    "sources": "https://github.com/vram-guild/frex"
   },
-  "license": "Apache-2.0",
+  "license": "LGPL-3.0",
   "icon": "assets/frex/frex_icon.png",
   "environment": "client",
   "mixins": [

@@ -84,9 +84,6 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 
 	private static final ThreadLocal<ChunkRenderConditionContext> TRANSFER_POOL = ThreadLocal.withInitial(ChunkRenderConditionContext::new);
 
-	// TODO: Remove
-//	private static boolean ugly_test = true;
-
 	@Inject(method = "<init>", at = @At("RETURN"))
 	public void onNew(Level level, int cxOff, int czOff, LevelChunk[][] levelChunks, CallbackInfo ci) {
 		final int iLast = levelChunks.length - 1;
@@ -103,14 +100,6 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 		frx_start = posFrom;
 		frx_xLength = posTo.getX() - posFrom.getX() + 1;
 		frx_yLength = posTo.getY() - posFrom.getY() + 1;
-
-		// TODO: Remove
-//		if (ugly_test) {
-//			ugly_test = false;
-//			System.out.println("from:" + posFrom + "; x of first block:" + levelChunks[0][0].getPos().getBlockX(0));
-//			System.out.println("to:" + posTo + "; x of last block:" + levelChunks[iLast][jLast].getPos().getBlockX(15));
-//			System.out.println("length: " + frx_xLength + ", " + frx_yLength + ", " + (posTo.getZ() - posFrom.getZ() + 1));
-//		}
 
 		brightnessCache.defaultReturnValue(Integer.MAX_VALUE);
 		aoLevelCache.defaultReturnValue(Integer.MAX_VALUE);

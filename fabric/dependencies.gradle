@@ -18,9 +18,6 @@ dependencies {
 
 	modImplementation(fabricApi.module("fabric-api-base", project.fabric_version))
 	modImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
-
-	include(fabricApi.module("fabric-api-base", project.fabric_version))
-	include(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
 	
 	modImplementation("io.vram:bitkit:${bitkit_version}.+") { changing = true; }
 	
@@ -33,5 +30,7 @@ dependencies {
     
     if (!(gradle.startParameter.taskNames.contains("publish") || gradle.startParameter.taskNames.contains("publishToMavenLocal"))) {
 	    include "io.vram:bitkit:${bitkit_version}.+"
+		include(fabricApi.module("fabric-api-base", project.fabric_version))
+		include(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
  	}
 }

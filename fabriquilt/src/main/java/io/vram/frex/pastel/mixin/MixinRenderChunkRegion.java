@@ -59,12 +59,6 @@ import io.vram.frex.pastel.mixinterface.RenderChunkRegionExt;
 // PERF: find a way to disable redundant Fabric MixinChunkRendeRegion mixin for fabric RenderAttachedBlockview
 @Mixin(RenderChunkRegion.class)
 public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
-	@Shadow
-	protected abstract int index(BlockPos pos);
-
-	@Shadow
-	protected abstract int index(int x, int y, int z);
-
 	@Shadow protected Level level;
 
 	private PastelTerrainRenderContext context;
@@ -76,6 +70,11 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 	private final BitSet closedResultBits = new BitSet();
 	private Int2ObjectOpenHashMap<Object> renderDataObjects;
 
+	// We recreated the block-based indexing to access our render data objects
+	private BlockPos frx_start;
+	private int frx_xLength;
+	private int frx_yLength;
+
 	private static final AtomicInteger FRX_ERROR_COUNTER = new AtomicInteger();
 	private static final Logger FRX_LOGGER = LogManager.getLogger();
 
@@ -85,8 +84,34 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 
 	private static final ThreadLocal<ChunkRenderConditionContext> TRANSFER_POOL = ThreadLocal.withInitial(ChunkRenderConditionContext::new);
 
+	// TODO: Remove
+//	private static boolean ugly_test = true;
+
 	@Inject(method = "<init>", at = @At("RETURN"))
-	public void onNew(Level level, int cxOff, int czOff, LevelChunk[][] levelChunks, BlockPos posFrom, BlockPos posTo, CallbackInfo ci) {
+	public void onNew(Level level, int cxOff, int czOff, LevelChunk[][] levelChunks, CallbackInfo ci) {
+		final int iLast = levelChunks.length - 1;
+		final int jLast = levelChunks[iLast].length - 1;
+		final int yMin = level.getMinBuildHeight();
+		final int yMax = level.getMaxBuildHeight() - 1; // 320 isn't a legal block Y
+		final int xMin = levelChunks[0][0].getPos().getMinBlockX();
+		final int zMin = levelChunks[0][0].getPos().getMinBlockZ();
+		final int xMax = levelChunks[iLast][jLast].getPos().getMaxBlockX();
+		final int zMax = levelChunks[iLast][jLast].getPos().getMaxBlockZ();
+		final BlockPos posFrom = new BlockPos(xMin, yMin, zMin);
+		final BlockPos posTo = new BlockPos(xMax, yMax, zMax);
+
+		frx_start = posFrom;
+		frx_xLength = posTo.getX() - posFrom.getX() + 1;
+		frx_yLength = posTo.getY() - posFrom.getY() + 1;
+
+		// TODO: Remove
+//		if (ugly_test) {
+//			ugly_test = false;
+//			System.out.println("from:" + posFrom + "; x of first block:" + levelChunks[0][0].getPos().getBlockX(0));
+//			System.out.println("to:" + posTo + "; x of last block:" + levelChunks[iLast][jLast].getPos().getBlockX(15));
+//			System.out.println("length: " + frx_xLength + ", " + frx_yLength + ", " + (posTo.getZ() - posFrom.getZ() + 1));
+//		}
+
 		brightnessCache.defaultReturnValue(Integer.MAX_VALUE);
 		aoLevelCache.defaultReturnValue(Integer.MAX_VALUE);
 
@@ -123,6 +148,19 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 	}
 
 	@Unique
+	protected final int frx_index(BlockPos blockPos) {
+		return this.frx_index(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+	}
+
+	@Unique
+	protected int frx_index(int blockX, int blockY, int blockZ) {
+		int xLocal = blockX - frx_start.getX();
+		int yLocal = blockY - frx_start.getY();
+		int zLocal = blockZ - frx_start.getZ();
+		return zLocal * frx_xLength * frx_yLength + yLocal * frx_xLength + xLocal;
+	}
+
+	@Unique
 	private Int2ObjectOpenHashMap<Object> frx_mapChunk(LevelChunk chunk, BlockPos posFrom, BlockPos posTo, Int2ObjectOpenHashMap<Object> map) {
 		final int xMin = posFrom.getX();
 		final int xMax = posTo.getX();
@@ -144,7 +182,7 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 						map = new Int2ObjectOpenHashMap<>();
 					}
 
-					map.put(index(entPos), o);
+					map.put(frx_index(entPos), o);
 				}
 			}
 		}
@@ -155,7 +193,7 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 	@Unique
 	@Override
 	public @Nullable Object frx_getBlockEntityRenderData(BlockPos pos) {
-		return renderDataObjects == null ? null : renderDataObjects.get(index(pos));
+		return renderDataObjects == null ? null : renderDataObjects.get(frx_index(pos));
 	}
 
 	@Unique
@@ -265,7 +303,7 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 	}
 
 	@Inject(method = "<init>*", at = @At("RETURN"))
-	private void onInit(Level world, int chunkX, int chunkZ, LevelChunk[][] chunks, BlockPos startPos, BlockPos endPos, CallbackInfo ci) {
+	private void onInit(Level level, int i, int j, LevelChunk[][] levelChunks, CallbackInfo ci) {
 		// capture our predicate search results while still on the same thread - will happen right after the hook above
 		listeners = TRANSFER_POOL.get().getListeners();
 	}

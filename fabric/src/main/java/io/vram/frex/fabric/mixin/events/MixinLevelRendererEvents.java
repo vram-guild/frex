@@ -77,7 +77,7 @@ public class MixinLevelRendererEvents {
 	}
 
 	@Inject(method = "setupRender", at = @At("RETURN"))
-	private void afterSetupRender(Camera camera, Frustum frustum, boolean hasForcedFrustum, int frame, boolean spectator, CallbackInfo ci) {
+	private void afterSetupRender(Camera camera, Frustum frustum, boolean bl, boolean bl2, CallbackInfo ci) {
 		context.setFrustum(frustum);
 		FrustumSetupListener.invoke(context);
 	}

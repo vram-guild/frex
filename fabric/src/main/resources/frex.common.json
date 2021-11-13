@@ -15,10 +15,10 @@
 		"MixinMultipartBakedModel",
 		"MixinPoseStack",
 		"MixinWeightedBakedModel",
+		"MixinTextureAltasCommon",
+		"MixinTextureAltasNoFabric",
 		"MixinTextureAtlasPreparation",
-		"MixinTextureAtlasSprite",
-		"MixinTextureAltasSpriteIndex",
-		"MixinTextureAltasSpriteLoader"
+		"MixinTextureAtlasSprite"
 	],
 	"injectors": {
 		"defaultRequire": 1

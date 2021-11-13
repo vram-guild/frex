@@ -24,24 +24,41 @@ import java.util.function.Consumer;
 
 import net.minecraft.resources.ResourceLocation;
 
-// WIP: implement or remove
+import io.vram.frex.impl.texture.SpriteInjectorImpl;
+
+/**
+ * Use to add sprites to a sprite atlas that may not be automatically
+ * included as part of a model.
+ */
 @FunctionalInterface
 public interface SpriteInjector {
-	void inject(ResourceLocation spriteId, boolean includeColor);
+	/**
+	 * Adds a sprite to the sprite atlas identified in {@link #injectOnAtlasStitch(ResourceLocation, Consumer)}.
+	 *
+	 * @param spriteId The sprite to add - will be ignored if already present
+	 */
+	void inject(ResourceLocation spriteId);
 
-	default void inject (ResourceLocation spriteId) {
-		inject (spriteId, true);
+	/**
+	 * Adds a sprite to the identified sprite atlas every time the atlas is stitched.
+	 * This method is less trouble than {@link #injectOnAtlasStitch(ResourceLocation, SpriteInjector)}
+	 * for sprites that should always be added.
+	 *
+	 * @param atlasId Target sprite atlas
+	 * @param spriteId The sprite to add - will be ignored if already present
+	 */
+	static void injectAlways(ResourceLocation atlasId, ResourceLocation spriteId) {
+		SpriteInjectorImpl.injectAlways(atlasId, spriteId);
 	}
 
-	static void register(ResourceLocation atlasId, Consumer<SpriteInjector> listener) {
-		// TODO
-	}
-
-	static void forEachColorSprite(ResourceLocation atlasId, Consumer<ResourceLocation> consumer) {
-		// TODO
-	}
-
-	static void forEachPhysicalSprite(ResourceLocation atlasId, Consumer<ResourceLocation> consumer) {
-		// TODO
+	/**
+	 * Registers a listener that receives a sprite injector when the target atlas is about to be stitched.
+	 * Use this method when the sprites to be added may be dynamic.
+	 *
+	 * @param atlasId Target sprite atlas
+	 * @param listener Listener that will accept an injector instance at stitch time
+	 */
+	static void injectOnAtlasStitch(ResourceLocation atlasId, Consumer<SpriteInjector> listener) {
+		SpriteInjectorImpl.injectOnAtlasStitch(atlasId, listener);
 	}
 }

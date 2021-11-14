@@ -12,6 +12,7 @@
 		"MixinLevelRenderer",
 		"MixinMatrix3f",
 		"MixinMatrix4f",
+		"MixinModelBakery",
 		"MixinMultipartBakedModel",
 		"MixinPoseStack",
 		"MixinWeightedBakedModel",

@@ -18,12 +18,13 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.api.config;
+package io.vram.frex.base.client.model;
 
-// UGLY: really not sure what do about this
-public class FrexConfig {
-	public static boolean suppressMaterialLoadingSpam = true;
-	public static boolean logMaterialPredicateDuplicates = false;
-	public static boolean allowDegenerateFluidFaces = false;
-	public static boolean debugModelLoading = false;
+import io.vram.frex.api.material.MaterialFinder;
+import io.vram.frex.api.mesh.Mesh;
+import io.vram.frex.api.mesh.MeshBuilder;
+
+@FunctionalInterface
+public interface MeshFactory {
+	Mesh createMesh(MeshBuilder meshBuilder, MaterialFinder finder, SpriteProvider spriteProvider);
 }

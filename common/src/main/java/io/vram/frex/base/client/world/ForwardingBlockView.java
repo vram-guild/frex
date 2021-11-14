@@ -18,7 +18,7 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.base.client;
+package io.vram.frex.base.client.world;
 
 import java.util.Optional;
 import java.util.function.Supplier;

@@ -107,10 +107,6 @@ public class ModelProviderRegistryImpl {
 			if (!(path instanceof final ModelResourceLocation modelId)) {
 				return loadModelFromResource(path);
 			} else {
-				if (path.getPath().endsWith("glow")) {
-					System.out.println("boop");
-				}
-
 				final var variantId = (ModelResourceLocation) path;
 				final ModelProvider<ModelResourceLocation> pathProvider = blockItemProviders.get(new ResourceLocation(path.getNamespace(), path.getPath()));
 				UnbakedModel model = null;

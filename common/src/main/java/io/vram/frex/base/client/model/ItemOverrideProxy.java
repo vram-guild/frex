@@ -18,12 +18,28 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.api.config;
+package io.vram.frex.base.client.model;
 
-// UGLY: really not sure what do about this
-public class FrexConfig {
-	public static boolean suppressMaterialLoadingSpam = true;
-	public static boolean logMaterialPredicateDuplicates = false;
-	public static boolean allowDegenerateFluidFaces = false;
-	public static boolean debugModelLoading = false;
+import java.util.Collections;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+
+public class ItemOverrideProxy extends ItemOverrides {
+	private final BakedModel delegate;
+
+	public ItemOverrideProxy(BaseModel delegate) {
+		super(null, null, null, Collections.emptyList());
+		this.delegate = delegate;
+	}
+
+	@Override
+	public BakedModel resolve(BakedModel bakedModel, ItemStack itemStack, @Nullable ClientLevel clientWorld, @Nullable LivingEntity livingEntity, int seed) {
+		return this.delegate;
+	}
 }

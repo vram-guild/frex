@@ -22,7 +22,6 @@ package io.vram.frex.mixin;
 
 import java.util.Map;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -34,25 +33,28 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 
-import io.vram.frex.impl.texture.IndexedSprite;
-import io.vram.frex.impl.texture.SpriteIndexImpl;
+import io.vram.frex.impl.texture.SpriteFinderImpl;
 
 @Mixin(TextureAtlas.class)
-public class MixinTextureAltasSpriteIndex {
-	@Shadow @Final private ResourceLocation location;
+public class MixinTextureAltasNoFabric implements SpriteFinderImpl.SpriteFinderAccess {
 	@Shadow @Final private Map<ResourceLocation, TextureAtlasSprite> texturesByName;
 
-	@Inject(at = @At("RETURN"), method = "reload")
-	private void afterReload(TextureAtlas.Preparations input, CallbackInfo ci) {
-		final ObjectArrayList<TextureAtlasSprite> spriteIndexList = new ObjectArrayList<>();
-		int index = 0;
+	private SpriteFinderImpl frex_spriteFinder = null;
 
-		for (final TextureAtlasSprite sprite : texturesByName.values()) {
-			spriteIndexList.add(sprite);
-			final var spriteExt = (IndexedSprite) sprite;
-			spriteExt.frex_index(index++);
+	@Override
+	public SpriteFinderImpl frex_spriteFinder() {
+		SpriteFinderImpl result = frex_spriteFinder;
+
+		if (result == null) {
+			result = new SpriteFinderImpl(texturesByName, (TextureAtlas) (Object) this);
+			frex_spriteFinder = result;
 		}
 
-		SpriteIndexImpl.getOrCreate(location).reset(input, spriteIndexList, (TextureAtlas) (Object) this);
+		return result;
+	}
+
+	@Inject(at = @At("RETURN"), method = "reload")
+	private void uploadHook(TextureAtlas.Preparations input, CallbackInfo info) {
+		frex_spriteFinder = null;
 	}
 }

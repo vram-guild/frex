@@ -18,12 +18,16 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.api.config;
+package io.vram.frex.base.client.model;
 
-// UGLY: really not sure what do about this
-public class FrexConfig {
-	public static boolean suppressMaterialLoadingSpam = true;
-	public static boolean logMaterialPredicateDuplicates = false;
-	public static boolean allowDegenerateFluidFaces = false;
-	public static boolean debugModelLoading = false;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.resources.ResourceLocation;
+
+@FunctionalInterface
+public interface SpriteProvider {
+	TextureAtlasSprite getSprite(ResourceLocation path);
+
+	default TextureAtlasSprite getSprite(String path) {
+		return getSprite(new ResourceLocation(path));
+	}
 }

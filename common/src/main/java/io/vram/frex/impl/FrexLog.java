@@ -39,4 +39,12 @@ public abstract class FrexLog {
 	public static void warn(String message, Exception e) {
 		LOG.warn(message, e);
 	}
+
+	public static void error(Exception e) {
+		LOG.error(e);
+	}
+
+	public static void error(String error) {
+		LOG.error(error);
+	}
 }

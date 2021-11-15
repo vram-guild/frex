@@ -1,0 +1,110 @@
+/*
+ * Copyright © Contributing Authors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
+package io.vram.frex.base.client.model;
+
+import java.lang.ref.WeakReference;
+import java.util.List;
+import java.util.Random;
+import java.util.function.Function;
+
+import com.google.common.collect.ImmutableList;
+
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+
+import io.vram.frex.api.mesh.Mesh;
+import io.vram.frex.api.model.BlockItemModel;
+import io.vram.frex.api.model.util.BakedModelUtil;
+
+public abstract class BaseModel implements BlockItemModel, BakedModel {
+	protected final boolean useAmbientOcclusion;
+	protected final boolean isGui3d;
+	protected final boolean usesBlockLight;
+	protected final TextureAtlasSprite defaultParticleSprite;
+	protected final ItemOverrideProxy itemProxy = new ItemOverrideProxy(this);
+	protected final ItemTransforms itemTransforms;
+	protected WeakReference<List<BakedQuad>[]> quadLists = null;
+
+	protected BaseModel(BaseModelBuilder<?> builder, Function<Material, TextureAtlasSprite> spriteFunc) {
+		this.useAmbientOcclusion = builder.useAmbientOcclusion;
+		this.isGui3d = builder.isGui3d;
+		this.usesBlockLight = builder.usesBlockLight;
+		this.defaultParticleSprite = spriteFunc.apply(new Material(TextureAtlas.LOCATION_BLOCKS, builder.defaultParticleSprite));
+		this.itemTransforms = builder.itemTransforms;
+	}
+
+	protected abstract Mesh fallbackMesh(BlockState blockState, Direction face, Random random);
+
+	@Override
+	public List<BakedQuad> getQuads(BlockState blockState, Direction face, Random random) {
+		List<BakedQuad>[] lists = quadLists == null ? null : quadLists.get();
+
+		if (lists == null) {
+			lists = BakedModelUtil.toQuadLists(fallbackMesh(blockState, face, random));
+			quadLists = new WeakReference<>(lists);
+		}
+
+		final List<BakedQuad> result = lists[face == null ? 6 : face.get3DDataValue()];
+		return result == null ? ImmutableList.of() : result;
+	}
+
+	@Override
+	public boolean useAmbientOcclusion() {
+		return useAmbientOcclusion;
+	}
+
+	@Override
+	public boolean isGui3d() {
+		return isGui3d;
+	}
+
+	@Override
+	public boolean usesBlockLight() {
+		return usesBlockLight;
+	}
+
+	@Override
+	public boolean isCustomRenderer() {
+		return false;
+	}
+
+	@Override
+	public TextureAtlasSprite getParticleIcon() {
+		return defaultParticleSprite;
+	}
+
+	@Override
+	public ItemTransforms getTransforms() {
+		return itemTransforms;
+	}
+
+	@Override
+	public ItemOverrides getOverrides() {
+		return itemProxy;
+	}
+}

@@ -18,12 +18,13 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.api.config;
+package io.vram.frex.mixinterface;
 
-// UGLY: really not sure what do about this
-public class FrexConfig {
-	public static boolean suppressMaterialLoadingSpam = true;
-	public static boolean logMaterialPredicateDuplicates = false;
-	public static boolean allowDegenerateFluidFaces = false;
-	public static boolean debugModelLoading = false;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.resources.ResourceLocation;
+
+public interface ModelBakeryExt {
+	void frx_addModel(ResourceLocation id);
+
+	UnbakedModel frx_loadModel(ResourceLocation id);
 }

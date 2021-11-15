@@ -37,8 +37,11 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.api.buffer.QuadSink;
+import io.vram.frex.api.material.MaterialFinder;
+import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.mesh.Mesh;
 import io.vram.frex.api.model.provider.ModelProvider;
+import io.vram.frex.api.model.provider.ModelProviderRegistry;
 import io.vram.frex.api.renderer.Renderer;
 
 public class StaticModel extends BaseModel {
@@ -92,5 +95,16 @@ public class StaticModel extends BaseModel {
 			setupFunc.accept(builder);
 			return (path, subModelLoader) -> builder;
 		};
+	}
+
+	public static void registerSimpleCubeModel(ResourceLocation blockPath, ResourceLocation spritePath, int color, Function<MaterialFinder, RenderMaterial> materialFunc) {
+		final MeshFactory meshFactory = (meshBuilder, materialFinder, spriteFunc) ->
+			meshBuilder.box(materialFunc.apply(materialFinder), color, spriteFunc.getSprite(spritePath), 0, 0, 0, 1, 1, 1).build();
+
+		ModelProviderRegistry.registerBlockItemProvider(StaticModel.createProviderFunction(b -> b.defaultParticleSprite(spritePath), meshFactory), blockPath);
+	}
+
+	public static void registerSimpleCubeModel(String blockPath, String spritePath, int color, Function<MaterialFinder, RenderMaterial> materialFunc) {
+		registerSimpleCubeModel(new ResourceLocation(blockPath), new ResourceLocation(spritePath), color, materialFunc);
 	}
 }

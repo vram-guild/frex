@@ -49,7 +49,7 @@ public class StaticModel extends BaseModel {
 
 	protected StaticModel(Builder builder, Function<Material, TextureAtlasSprite> spriteFunc) {
 		super(builder, spriteFunc);
-		mesh = builder.meshFactory.createMesh(Renderer.get().meshBuilder(), Renderer.get().materials().materialFinder(), n -> spriteFunc.apply(new Material(TextureAtlas.LOCATION_BLOCKS, n)));
+		mesh = builder.meshFactory.createMesh(Renderer.get().meshBuilder(), MaterialFinder.threadLocal(), n -> spriteFunc.apply(new Material(TextureAtlas.LOCATION_BLOCKS, n)));
 	}
 
 	@Override

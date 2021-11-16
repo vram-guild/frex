@@ -85,7 +85,10 @@ public abstract class ItemRenderContext extends BakedRenderContext<BaseItemInput
 	protected void adjustMaterial() {
 		final MaterialFinder finder = this.finder;
 
-		finder.foilOverlay(inputContext.itemStack().hasFoil());
+		// NB: if material has foil enabled we leave it so, even if not enchanted
+		if (inputContext.itemStack().hasFoil()) {
+			finder.foilOverlay(true);
+		}
 
 		if (inputContext.overlay() != OverlayTexture.NO_OVERLAY) {
 			finder.overlay(inputContext.overlay());

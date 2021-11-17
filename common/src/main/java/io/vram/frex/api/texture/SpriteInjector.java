@@ -51,6 +51,10 @@ public interface SpriteInjector {
 		SpriteInjectorImpl.injectAlways(atlasId, spriteId);
 	}
 
+	static void injectAlways(ResourceLocation atlasId, String spriteId) {
+		injectAlways(atlasId, new ResourceLocation(spriteId));
+	}
+
 	/**
 	 * Registers a listener that receives a sprite injector when the target atlas is about to be stitched.
 	 * Use this method when the sprites to be added may be dynamic.

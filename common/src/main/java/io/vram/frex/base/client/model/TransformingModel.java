@@ -20,16 +20,13 @@
 
 package io.vram.frex.base.client.model;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
-
-import com.google.common.collect.ImmutableList;
+import java.util.function.Supplier;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
@@ -41,80 +38,87 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.block.state.BlockState;
 
+import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.buffer.QuadSink;
-import io.vram.frex.api.material.MaterialFinder;
-import io.vram.frex.api.material.RenderMaterial;
-import io.vram.frex.api.mesh.Mesh;
+import io.vram.frex.api.buffer.QuadTransform;
+import io.vram.frex.api.model.BlockItemModel;
 import io.vram.frex.api.model.provider.ModelProvider;
 import io.vram.frex.api.model.provider.ModelProviderRegistry;
-import io.vram.frex.api.model.util.BakedModelUtil;
-import io.vram.frex.api.renderer.Renderer;
 
-public class StaticModel extends BaseModel {
-	protected WeakReference<List<BakedQuad>[]> quadLists = null;
-	protected final Mesh mesh;
+public class TransformingModel extends BaseModel {
+	protected final Supplier<BlockItemModel> modelFunction;
+	protected final QuadTransform transform;
+	protected BlockItemModel wrapped = null;
 
-	protected StaticModel(Builder builder, Function<Material, TextureAtlasSprite> spriteFunc) {
+	protected TransformingModel(Builder builder, Function<Material, TextureAtlasSprite> spriteFunc) {
 		super(builder, spriteFunc);
-		mesh = builder.meshFactory.createMesh(Renderer.get().meshBuilder(), MaterialFinder.threadLocal(), n -> spriteFunc.apply(new Material(TextureAtlas.LOCATION_BLOCKS, n)));
+		this.modelFunction = builder.modelFunction;
+		this.transform = builder.transform;
+	}
+
+	protected BlockItemModel wrapped() {
+		var result = wrapped;
+
+		if (result == null) {
+			result = modelFunction.get();
+			wrapped = result;
+		}
+
+		return result;
 	}
 
 	@Override
 	public void renderAsBlock(BlockInputContext input, QuadSink output) {
-		mesh.outputTo(output.asQuadEmitter());
+		final QuadEmitter emitter = output.withTransformQuad(input, transform);
+		wrapped().renderAsBlock(input, emitter);
+		emitter.close();
 	}
 
 	@Override
 	public void renderAsItem(ItemInputContext input, QuadSink output) {
-		mesh.outputTo(output.asQuadEmitter());
+		final QuadEmitter emitter = output.withTransformQuad(input, transform);
+		wrapped().renderAsItem(input, emitter);
+		emitter.close();
 	}
 
 	@Override
 	public List<BakedQuad> getQuads(BlockState blockState, Direction face, Random random) {
-		List<BakedQuad>[] lists = quadLists == null ? null : quadLists.get();
-
-		if (lists == null) {
-			lists = BakedModelUtil.toQuadLists(mesh);
-			quadLists = new WeakReference<>(lists);
-		}
-
-		final List<BakedQuad> result = lists[face == null ? 6 : face.get3DDataValue()];
-		return result == null ? ImmutableList.of() : result;
+		// Should not be called so we don't apply the transform here
+		return ((BakedModel) wrapped()).getQuads(blockState, face, random);
 	}
 
-	public static Builder builder(MeshFactory meshFactory) {
-		return new Builder(meshFactory);
+	public static Builder builder(Supplier<BlockItemModel> modelFunction, QuadTransform transform) {
+		return new Builder(modelFunction, transform);
 	}
 
 	public static class Builder extends BaseModelBuilder<Builder> {
-		protected final MeshFactory meshFactory;
+		protected final Supplier<BlockItemModel> modelFunction;
+		protected final QuadTransform transform;
 
-		protected Builder(MeshFactory meshFactory) {
-			this.meshFactory = meshFactory;
+		protected Builder(Supplier<BlockItemModel> modelFunction, QuadTransform transform) {
+			this.modelFunction = modelFunction;
+			this.transform = transform;
 		}
 
 		@Override
 		public BakedModel bakeOnce(ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteFunc, ModelState modelState, ResourceLocation modelLocation) {
-			return new StaticModel(this, spriteFunc);
+			return new TransformingModel(this, spriteFunc);
 		}
 	}
 
-	public static Function<ResourceManager, ModelProvider<ModelResourceLocation>> createProviderFunction(Consumer<Builder> setupFunc, MeshFactory meshFactory) {
+	public static Function<ResourceManager, ModelProvider<ModelResourceLocation>> createProviderFunction(Consumer<Builder> setupFunc, Supplier<BlockItemModel> modelFunction, QuadTransform transform) {
 		return (rm) -> {
-			final var builder = new Builder(meshFactory);
+			final var builder = new Builder(modelFunction, transform);
 			setupFunc.accept(builder);
 			return (path, subModelLoader) -> builder;
 		};
 	}
 
-	public static void registerSimpleCubeModel(ResourceLocation blockPath, ResourceLocation spritePath, int color, Function<MaterialFinder, RenderMaterial> materialFunc) {
-		final MeshFactory meshFactory = (meshBuilder, materialFinder, spriteFunc) ->
-			meshBuilder.box(materialFunc.apply(materialFinder), color, spriteFunc.getSprite(spritePath), 0, 0, 0, 1, 1, 1).build();
-
-		ModelProviderRegistry.registerBlockItemProvider(StaticModel.createProviderFunction(b -> b.defaultParticleSprite(spritePath), meshFactory), blockPath);
+	public static void registerTransformingModel(ResourceLocation blockPath, Consumer<Builder> setupFunc, Supplier<BlockItemModel> modelFunction, QuadTransform transform) {
+		ModelProviderRegistry.registerBlockItemProvider(TransformingModel.createProviderFunction(setupFunc, modelFunction, transform), blockPath);
 	}
 
-	public static void registerSimpleCubeModel(String blockPath, String spritePath, int color, Function<MaterialFinder, RenderMaterial> materialFunc) {
-		registerSimpleCubeModel(new ResourceLocation(blockPath), new ResourceLocation(spritePath), color, materialFunc);
+	public static void registerTransformingModel(String blockPath, Consumer<Builder> setupFunc, Supplier<BlockItemModel> modelFunction, QuadTransform transform) {
+		registerTransformingModel(new ResourceLocation(blockPath), setupFunc, modelFunction, transform);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Contributing Authors
+ * Copyright © Original Authors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -61,7 +61,7 @@ public abstract class ItemRenderContext extends BakedRenderContext<BaseItemInput
 			}
 		}
 
-		final MatrixStack matrixStack = MatrixStack.cast(poseStack);
+		final MatrixStack matrixStack = MatrixStack.fromVanilla(poseStack);
 		inputContext.prepareForItem(model, stack, renderMode, light, overlay, isLeftHand, matrixStack);
 		materialMap = MaterialMap.get(stack);
 		matrixStack.push();

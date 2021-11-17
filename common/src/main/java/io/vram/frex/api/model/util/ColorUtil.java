@@ -1,5 +1,5 @@
 /*
- * Copyright © Contributing Authors
+ * Copyright © Original Authors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -30,11 +30,13 @@ import it.unimi.dsi.fastutil.ints.Int2IntFunction;
  * without the default renderer.
  */
 public abstract class ColorUtil {
+	private ColorUtil() { }
+
+	public static final int FULL_BRIGHTNESS = 15 << 20 | 15 << 4;
+
 	private static final Int2IntFunction colorSwapper = ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN
 			? color -> color == -1 ? -1 : ((color & 0xFF00FF00) | ((color & 0x00FF0000) >> 16) | ((color & 0xFF) << 16))
 			: color -> color;
-
-	private ColorUtil() { }
 
 	/**
 	 * Swaps red blue order if needed to match GPU expectations for color component

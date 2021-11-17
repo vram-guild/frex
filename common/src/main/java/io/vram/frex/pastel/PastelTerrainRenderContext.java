@@ -1,5 +1,5 @@
 /*
- * Copyright © Contributing Authors
+ * Copyright © Original Authors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -112,7 +112,7 @@ public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintG
 	}
 
 	public PastelTerrainRenderContext prepareForRegion(RenderChunkRegion region, CompiledChunk compiledChunk, PoseStack poseStack, BlockPos origin, ChunkBufferBuilderPack buffers) {
-		inputContext.prepareForWorld(region, true, (MatrixStack) poseStack);
+		inputContext.prepareForWorld(region, true, MatrixStack.fromVanilla(poseStack));
 		regionExt = (RenderChunkRegionExt) region;
 		compiledChunkExt = (CompiledChunkExt) compiledChunk;
 		usedBuffers.clear();

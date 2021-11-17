@@ -1,5 +1,5 @@
 /*
- * Copyright © Contributing Authors
+ * Copyright © Original Authors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -27,6 +27,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -37,18 +38,21 @@ import io.vram.frex.api.math.FastMatrix3f;
 import io.vram.frex.api.math.FastMatrix4f;
 import io.vram.frex.api.math.MatrixStack;
 import io.vram.frex.impl.math.MatrixStackEntryHelper;
+import io.vram.frex.mixinterface.PoseStackExt;
 
 @Mixin(PoseStack.class)
-public abstract class MixinPoseStack implements MatrixStack {
+public class MixinPoseStack implements PoseStackExt {
 	@Shadow @Final private Deque<PoseStack.Pose> poseStack;
 
 	private final ObjectArrayList<PoseStack.Pose> pool = new ObjectArrayList<>();
 	private FastMatrix4f modelMatrix;
 	private FastMatrix3f normalMatrix;
+	private PoseStack self;
 
 	@Inject(method = "<init>", at = @At("RETURN"))
 	public void onNew(CallbackInfo ci) {
-		refresh();
+		frx_refresh();
+		self = (PoseStack) (Object) this;
 	}
 
 	/**
@@ -57,8 +61,7 @@ public abstract class MixinPoseStack implements MatrixStack {
 	 */
 	@Overwrite
 	public void popPose() {
-		pool.add(poseStack.removeLast());
-		refresh();
+		frx_pop();
 	}
 
 	/**
@@ -67,6 +70,17 @@ public abstract class MixinPoseStack implements MatrixStack {
 	 */
 	@Overwrite
 	public void pushPose() {
+		frx_push();
+	}
+
+	@Unique
+	private void frx_pop() {
+		pool.add(poseStack.removeLast());
+		frx_refresh();
+	}
+
+	@Unique
+	private void frx_push() {
 		final PoseStack.Pose current = poseStack.getLast();
 		PoseStack.Pose add;
 
@@ -79,33 +93,52 @@ public abstract class MixinPoseStack implements MatrixStack {
 		}
 
 		poseStack.addLast(add);
-		refresh();
+		frx_refresh();
 	}
 
-	private void refresh() {
+	@Unique
+	private void frx_refresh() {
 		final PoseStack me = (PoseStack) (Object) this;
 		final var pose = me.last();
 		modelMatrix = (FastMatrix4f) (Object) pose.pose();
 		normalMatrix = (FastMatrix3f) (Object) pose.normal();
 	}
 
-	@Override
-	public void push() {
-		((PoseStack) (Object) this).pushPose();
+	@Unique
+	private final MatrixStack frxStack = new MatrixStack() {
+		@Override
+		public void push() {
+			frx_push();
+		}
+
+		@Override
+		public void pop() {
+			frx_pop();
+		}
+
+		@Override
+		public FastMatrix4f modelMatrix() {
+			return modelMatrix;
+		}
+
+		@Override
+		public FastMatrix3f normalMatrix() {
+			return normalMatrix;
+		}
+
+		@Override
+		public PoseStack toVanilla() {
+			return self;
+		}
+	};
+
+	@Override @Unique
+	public PoseStack frx_asPoseStack() {
+		return self;
 	}
 
-	@Override
-	public void pop() {
-		((PoseStack) (Object) this).popPose();
-	}
-
-	@Override
-	public FastMatrix4f modelMatrix() {
-		return modelMatrix;
-	}
-
-	@Override
-	public FastMatrix3f normalMatrix() {
-		return normalMatrix;
+	@Override @Unique
+	public MatrixStack frx_asMatrixStack() {
+		return frxStack;
 	}
 }

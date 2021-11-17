@@ -18,29 +18,14 @@
  * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
-package io.vram.frex.mixin;
+package io.vram.frex.mixinterface;
 
-import java.util.function.Function;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import org.spongepowered.asm.mixin.Mixin;
+import io.vram.frex.api.math.MatrixStack;
 
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+public interface PoseStackExt {
+	PoseStack frx_asPoseStack();
 
-import io.vram.frex.impl.world.BlockEntityRenderDataImpl;
-import io.vram.frex.impl.world.BlockEntityRenderDataProviderAccess;
-
-@Mixin(BlockEntityType.class)
-public class MixinBlockEntityType implements BlockEntityRenderDataProviderAccess {
-	private Function<BlockEntity, Object> frxDataProvider = BlockEntityRenderDataImpl.defaultProvider();
-
-	@Override
-	public Function<BlockEntity, Object> frxGetDataProvider() {
-		return frxDataProvider;
-	}
-
-	@Override
-	public void frxSetDataProvider(Function<BlockEntity, Object> provider) {
-		frxDataProvider = provider;
-	}
+	MatrixStack frx_asMatrixStack();
 }

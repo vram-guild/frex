@@ -1,5 +1,5 @@
 /*
- * Copyright © Contributing Authors
+ * Copyright © Original Authors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,8 +20,6 @@
 
 package io.vram.frex.base.renderer.context.input;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.renderer.texture.OverlayTexture;
 
 import io.vram.frex.api.math.MatrixStack;
@@ -30,7 +28,7 @@ import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 public class AbsentInputContext extends BaseInputContext {
 	public AbsentInputContext() {
 		super(Type.ABSENT);
-		this.setMatrixStack(MatrixStack.cast(new PoseStack()));
+		this.setMatrixStack(MatrixStack.create());
 		this.prepare(OverlayTexture.NO_OVERLAY);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © Contributing Authors
+ * Copyright © Original Authors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,6 +22,8 @@ package io.vram.frex.api.math;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import io.vram.frex.mixinterface.PoseStackExt;
+
 public interface MatrixStack {
 	void push();
 
@@ -40,11 +42,13 @@ public interface MatrixStack {
 		normalMatrix().f_setIdentity();
 	}
 
-	default PoseStack asPoseStack() {
-		return (PoseStack) this;
+	PoseStack toVanilla();
+
+	static MatrixStack fromVanilla(PoseStack poseStack) {
+		return ((PoseStackExt) poseStack).frx_asMatrixStack();
 	}
 
-	static MatrixStack cast(PoseStack poseStack) {
-		return (MatrixStack) poseStack;
+	static MatrixStack create() {
+		return fromVanilla(new PoseStack());
 	}
 }

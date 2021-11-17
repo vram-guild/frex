@@ -1,5 +1,5 @@
 /*
- * Copyright © Contributing Authors
+ * Copyright © Original Authors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -42,7 +42,7 @@ public abstract class SimpleBlockRenderContext extends BlockRenderContext<BlockA
 
 	public void render(ModelBlockRenderer vanillaRenderer, BlockAndTintGetter blockView, BakedModel model, BlockState state, BlockPos pos, PoseStack poseStack, VertexConsumer buffer, boolean checkSides, long seed, int overlay) {
 		defaultConsumer = buffer;
-		inputContext.prepareForWorld(blockView, checkSides, MatrixStack.cast(poseStack));
+		inputContext.prepareForWorld(blockView, checkSides, MatrixStack.fromVanilla(poseStack));
 		prepareForBlock(model, state, pos, seed, overlay);
 		((BlockModel) model).renderAsBlock(inputContext, emitter());
 	}

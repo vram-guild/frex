@@ -1,5 +1,5 @@
 /*
- * Copyright © Contributing Authors
+ * Copyright © Original Authors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,26 +20,16 @@
 
 package io.vram.frex.base.client.model;
 
-import java.lang.ref.WeakReference;
-import java.util.List;
-import java.util.Random;
 import java.util.function.Function;
 
-import com.google.common.collect.ImmutableList;
-
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.state.BlockState;
 
-import io.vram.frex.api.mesh.Mesh;
 import io.vram.frex.api.model.BlockItemModel;
-import io.vram.frex.api.model.util.BakedModelUtil;
 
 public abstract class BaseModel implements BlockItemModel, BakedModel {
 	protected final boolean useAmbientOcclusion;
@@ -48,7 +38,6 @@ public abstract class BaseModel implements BlockItemModel, BakedModel {
 	protected final TextureAtlasSprite defaultParticleSprite;
 	protected final ItemOverrideProxy itemProxy = new ItemOverrideProxy(this);
 	protected final ItemTransforms itemTransforms;
-	protected WeakReference<List<BakedQuad>[]> quadLists = null;
 
 	protected BaseModel(BaseModelBuilder<?> builder, Function<Material, TextureAtlasSprite> spriteFunc) {
 		this.useAmbientOcclusion = builder.useAmbientOcclusion;
@@ -56,21 +45,6 @@ public abstract class BaseModel implements BlockItemModel, BakedModel {
 		this.usesBlockLight = builder.usesBlockLight;
 		this.defaultParticleSprite = spriteFunc.apply(new Material(TextureAtlas.LOCATION_BLOCKS, builder.defaultParticleSprite));
 		this.itemTransforms = builder.itemTransforms;
-	}
-
-	protected abstract Mesh fallbackMesh(BlockState blockState, Direction face, Random random);
-
-	@Override
-	public List<BakedQuad> getQuads(BlockState blockState, Direction face, Random random) {
-		List<BakedQuad>[] lists = quadLists == null ? null : quadLists.get();
-
-		if (lists == null) {
-			lists = BakedModelUtil.toQuadLists(fallbackMesh(blockState, face, random));
-			quadLists = new WeakReference<>(lists);
-		}
-
-		final List<BakedQuad> result = lists[face == null ? 6 : face.get3DDataValue()];
-		return result == null ? ImmutableList.of() : result;
 	}
 
 	@Override

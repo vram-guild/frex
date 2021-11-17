@@ -1,5 +1,5 @@
 /*
- * Copyright © Contributing Authors
+ * Copyright © Original Authors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -124,7 +124,7 @@ public abstract class MixinChunkRebuildTask implements RenderRegionContext<Block
 			final Vec3 vec3d = blockState.getOffset(blockView, blockPos);
 
 			if (vec3d != Vec3.ZERO) {
-				MatrixStack.cast(matrix).translate((float) vec3d.x, (float) vec3d.y, (float) vec3d.z);
+				MatrixStack.fromVanilla(matrix).translate((float) vec3d.x, (float) vec3d.y, (float) vec3d.z);
 			}
 
 			((RenderChunkRegionExt) blockView).frx_getContext().renderBlock(blockState, blockPos, renderManager.getBlockModel(blockState));

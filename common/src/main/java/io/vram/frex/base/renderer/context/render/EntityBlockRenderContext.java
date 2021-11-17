@@ -1,5 +1,5 @@
 /*
- * Copyright © Contributing Authors
+ * Copyright © Original Authors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -92,7 +92,7 @@ public abstract class EntityBlockRenderContext extends BlockRenderContext<BlockA
 	public void render(ModelBlockRenderer vanillaRenderer, BakedModel model, BlockState state, PoseStack poseStack, MultiBufferSource consumers, int overlay, int light) {
 		defaultConsumer = consumers.getBuffer(ItemBlockRenderTypes.getRenderType(state, false));
 		this.light = light;
-		inputContext.prepareForWorld(level, false, MatrixStack.cast(poseStack));
+		inputContext.prepareForWorld(level, false, MatrixStack.fromVanilla(poseStack));
 		prepareForBlock(model, state, pos, 42L, overlay);
 		prepareEncoding(consumers);
 		((BlockModel) model).renderAsBlock(inputContext, emitter());
@@ -103,7 +103,7 @@ public abstract class EntityBlockRenderContext extends BlockRenderContext<BlockA
 	public void renderItemFrame(ModelBlockRenderer modelRenderer, BakedModel model, PoseStack poseStack, MultiBufferSource consumers, int overlay, int light, ItemFrame itemFrameEntity) {
 		defaultConsumer = consumers.getBuffer(Sheets.solidBlockSheet());
 		this.light = light;
-		inputContext.prepareForWorld(level, false, MatrixStack.cast(poseStack));
+		inputContext.prepareForWorld(level, false, MatrixStack.fromVanilla(poseStack));
 		pos.set(itemFrameEntity.getX(), itemFrameEntity.getY(), itemFrameEntity.getZ());
 		inputContext.prepareForBlock(model, Blocks.AIR.defaultBlockState(), pos, 42L, overlay);
 		materialMap = MaterialMap.defaultMaterialMap();

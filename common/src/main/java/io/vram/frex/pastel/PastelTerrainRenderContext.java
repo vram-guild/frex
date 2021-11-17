@@ -112,7 +112,7 @@ public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintG
 	}
 
 	public PastelTerrainRenderContext prepareForRegion(RenderChunkRegion region, CompiledChunk compiledChunk, PoseStack poseStack, BlockPos origin, ChunkBufferBuilderPack buffers) {
-		inputContext.prepareForWorld(region, true, (MatrixStack) poseStack);
+		inputContext.prepareForWorld(region, true, MatrixStack.fromVanilla(poseStack));
 		regionExt = (RenderChunkRegionExt) region;
 		compiledChunkExt = (CompiledChunkExt) compiledChunk;
 		usedBuffers.clear();

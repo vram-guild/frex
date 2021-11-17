@@ -79,10 +79,10 @@ public class PastelItemRenderContext extends ItemRenderContext {
 			}
 
 			if (inputContext.drawTranslucencyToMainTarget() || !Minecraft.useShaderTransparency()) {
-				consumer = ItemRenderer.getCompassFoilBufferDirect(vertexConsumers, Sheets.cutoutBlockSheet(), matrixStack.asPoseStack().last());
+				consumer = ItemRenderer.getCompassFoilBufferDirect(vertexConsumers, Sheets.cutoutBlockSheet(), matrixStack.toVanilla().last());
 			} else {
 				final RenderType renderType = mat.cutout() == MaterialConstants.CUTOUT_NONE ? Sheets.solidBlockSheet() : Sheets.cutoutBlockSheet();
-				consumer = ItemRenderer.getCompassFoilBuffer(vertexConsumers, renderType, matrixStack.asPoseStack().last());
+				consumer = ItemRenderer.getCompassFoilBuffer(vertexConsumers, renderType, matrixStack.toVanilla().last());
 			}
 
 			matrixStack.pop();
@@ -107,6 +107,6 @@ public class PastelItemRenderContext extends ItemRenderContext {
 
 	@Override
 	protected void renderCustomModel(BlockEntityWithoutLevelRenderer builtInRenderer, MultiBufferSource vertexConsumers) {
-		builtInRenderer.renderByItem(inputContext.itemStack(), inputContext.mode(), inputContext.matrixStack().asPoseStack(), vertexConsumers, inputContext.lightmap(), inputContext.overlay());
+		builtInRenderer.renderByItem(inputContext.itemStack(), inputContext.mode(), inputContext.matrixStack().toVanilla(), vertexConsumers, inputContext.lightmap(), inputContext.overlay());
 	}
 }

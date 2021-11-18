@@ -20,12 +20,8 @@
 
 package io.vram.frex.mixinterface;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import io.vram.frex.api.math.MatrixStack;
 
 public interface PoseStackExt {
-	PoseStack frx_asPoseStack();
-
 	MatrixStack frx_asMatrixStack();
 }

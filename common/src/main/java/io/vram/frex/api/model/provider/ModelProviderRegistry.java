@@ -21,8 +21,6 @@
 package io.vram.frex.api.model.provider;
 
 import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.spongepowered.include.com.google.common.base.Preconditions;
 
@@ -81,7 +79,7 @@ public interface ModelProviderRegistry {
 
 	static void registerBlockItemProvider(Function<ResourceManager, ModelProvider<ModelResourceLocation>> providerFunction, String... paths) {
 		Preconditions.checkNotNull(paths);
-		ModelProviderRegistryImpl.registerBlockItemProvider(providerFunction, Stream.of(paths).map(p -> new ResourceLocation(p)).collect(Collectors.toList()).toArray(new ResourceLocation[paths.length]));
+		ModelProviderRegistryImpl.registerBlockItemProvider(providerFunction, ModelProviderRegistryImpl.stringsToLocations(paths));
 	}
 
 	/**

@@ -23,8 +23,31 @@ package io.vram.frex.base.client.model;
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.mesh.Mesh;
 import io.vram.frex.api.mesh.MeshBuilder;
+import io.vram.frex.api.renderer.Renderer;
 
 @FunctionalInterface
 public interface MeshFactory {
+	default Mesh createMesh(SpriteProvider spriteProvider) {
+		return createMesh(Renderer.get().meshBuilder(), MaterialFinder.threadLocal(), spriteProvider);
+	}
+
 	Mesh createMesh(MeshBuilder meshBuilder, MaterialFinder finder, SpriteProvider spriteProvider);
+
+	static MeshFactory shared(MeshFactory factory) {
+		return new MeshFactory() {
+			Mesh mesh = null;
+
+			@Override
+			public Mesh createMesh(MeshBuilder meshBuilder, MaterialFinder finder, SpriteProvider spriteProvider) {
+				Mesh result = mesh;
+
+				if (result == null) {
+					result = factory.createMesh(meshBuilder, finder, spriteProvider);
+					mesh = result;
+				}
+
+				return result;
+			}
+		};
+	}
 }

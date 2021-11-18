@@ -106,19 +106,19 @@ public class TransformingModel extends BaseModel {
 		}
 	}
 
-	public static Function<ResourceManager, ModelProvider<ModelResourceLocation>> createProviderFunction(Consumer<Builder> setupFunc, Supplier<BlockItemModel> modelFunction, QuadTransform transform) {
+	public static Function<ResourceManager, ModelProvider<ModelResourceLocation>> createProvider(Consumer<Builder> setupFunc, Supplier<BlockItemModel> modelSupplier, QuadTransform transform) {
 		return (rm) -> {
-			final var builder = new Builder(modelFunction, transform);
+			final var builder = new Builder(modelSupplier, transform);
 			setupFunc.accept(builder);
 			return (path, subModelLoader) -> builder;
 		};
 	}
 
-	public static void registerTransformingModel(ResourceLocation blockPath, Consumer<Builder> setupFunc, Supplier<BlockItemModel> modelFunction, QuadTransform transform) {
-		ModelProviderRegistry.registerBlockItemProvider(TransformingModel.createProviderFunction(setupFunc, modelFunction, transform), blockPath);
+	public static void createAndRegisterProvider(Consumer<Builder> setupFunc, Supplier<BlockItemModel> modelSupplier, QuadTransform transform, ResourceLocation... paths) {
+		ModelProviderRegistry.registerBlockItemProvider(createProvider(setupFunc, modelSupplier, transform), paths);
 	}
 
-	public static void registerTransformingModel(String blockPath, Consumer<Builder> setupFunc, Supplier<BlockItemModel> modelFunction, QuadTransform transform) {
-		registerTransformingModel(new ResourceLocation(blockPath), setupFunc, modelFunction, transform);
+	public static void createAndRegisterProvider(Consumer<Builder> setupFunc, Supplier<BlockItemModel> modelSupplier, QuadTransform transform, String... paths) {
+		ModelProviderRegistry.registerBlockItemProvider(createProvider(setupFunc, modelSupplier, transform), paths);
 	}
 }

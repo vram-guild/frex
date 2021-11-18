@@ -22,7 +22,6 @@ package io.vram.frex.mixin;
 
 import java.util.Deque;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -34,25 +33,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import io.vram.frex.api.math.FastMatrix3f;
-import io.vram.frex.api.math.FastMatrix4f;
 import io.vram.frex.api.math.MatrixStack;
-import io.vram.frex.impl.math.MatrixStackEntryHelper;
+import io.vram.frex.impl.math.MatrixStackImpl;
 import io.vram.frex.mixinterface.PoseStackExt;
 
 @Mixin(PoseStack.class)
 public class MixinPoseStack implements PoseStackExt {
 	@Shadow @Final private Deque<PoseStack.Pose> poseStack;
-
-	private final ObjectArrayList<PoseStack.Pose> pool = new ObjectArrayList<>();
-	private FastMatrix4f modelMatrix;
-	private FastMatrix3f normalMatrix;
-	private PoseStack self;
+	private MatrixStackImpl frxStack;
 
 	@Inject(method = "<init>", at = @At("RETURN"))
 	public void onNew(CallbackInfo ci) {
-		frx_refresh();
-		self = (PoseStack) (Object) this;
+		frxStack = new MatrixStackImpl(poseStack, (PoseStack) (Object) this);
 	}
 
 	/**
@@ -61,7 +53,7 @@ public class MixinPoseStack implements PoseStackExt {
 	 */
 	@Overwrite
 	public void popPose() {
-		frx_pop();
+		frxStack.pop();
 	}
 
 	/**
@@ -70,71 +62,7 @@ public class MixinPoseStack implements PoseStackExt {
 	 */
 	@Overwrite
 	public void pushPose() {
-		frx_push();
-	}
-
-	@Unique
-	private void frx_pop() {
-		pool.add(poseStack.removeLast());
-		frx_refresh();
-	}
-
-	@Unique
-	private void frx_push() {
-		final PoseStack.Pose current = poseStack.getLast();
-		PoseStack.Pose add;
-
-		if (pool.isEmpty()) {
-			add = MatrixStackEntryHelper.create(current.pose().copy(), current.normal().copy());
-		} else {
-			add = pool.pop();
-			((FastMatrix4f) (Object) add.pose()).f_set(current.pose());
-			((FastMatrix3f) (Object) add.normal()).f_set(current.normal());
-		}
-
-		poseStack.addLast(add);
-		frx_refresh();
-	}
-
-	@Unique
-	private void frx_refresh() {
-		final PoseStack me = (PoseStack) (Object) this;
-		final var pose = me.last();
-		modelMatrix = (FastMatrix4f) (Object) pose.pose();
-		normalMatrix = (FastMatrix3f) (Object) pose.normal();
-	}
-
-	@Unique
-	private final MatrixStack frxStack = new MatrixStack() {
-		@Override
-		public void push() {
-			frx_push();
-		}
-
-		@Override
-		public void pop() {
-			frx_pop();
-		}
-
-		@Override
-		public FastMatrix4f modelMatrix() {
-			return modelMatrix;
-		}
-
-		@Override
-		public FastMatrix3f normalMatrix() {
-			return normalMatrix;
-		}
-
-		@Override
-		public PoseStack toVanilla() {
-			return self;
-		}
-	};
-
-	@Override @Unique
-	public PoseStack frx_asPoseStack() {
-		return self;
+		frxStack.push();
 	}
 
 	@Override @Unique

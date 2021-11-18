@@ -46,12 +46,14 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.include.com.google.common.base.Preconditions;
 
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -233,5 +235,10 @@ public class ModelProviderRegistryImpl {
 
 	public static void registerBlockItemProvider(Function<ResourceManager, ModelProvider<ModelResourceLocation>> providerFunction, ResourceLocation... paths) {
 		blockItemProviderFunctions.add(Pair.of(providerFunction, paths));
+	}
+
+	public static ResourceLocation[] stringsToLocations(String... paths) {
+		Preconditions.checkNotNull(paths);
+		return Stream.of(paths).map(p -> new ResourceLocation(p)).collect(Collectors.toList()).toArray(new ResourceLocation[paths.length]);
 	}
 }

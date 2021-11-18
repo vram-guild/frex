@@ -27,6 +27,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
+import org.spongepowered.include.com.google.common.base.Preconditions;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -41,32 +42,43 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.block.state.BlockState;
 
+import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.buffer.QuadSink;
+import io.vram.frex.api.buffer.QuadTransform;
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.mesh.Mesh;
+import io.vram.frex.api.model.InputContext;
 import io.vram.frex.api.model.provider.ModelProvider;
 import io.vram.frex.api.model.provider.ModelProviderRegistry;
 import io.vram.frex.api.model.util.BakedModelUtil;
-import io.vram.frex.api.renderer.Renderer;
+import io.vram.frex.impl.model.ModelProviderRegistryImpl;
 
-public class StaticModel extends BaseModel {
+public class TransformingMeshModel extends BaseModel {
 	protected WeakReference<List<BakedQuad>[]> quadLists = null;
 	protected final Mesh mesh;
+	protected final QuadTransform transform;
 
-	protected StaticModel(Builder builder, Function<Material, TextureAtlasSprite> spriteFunc) {
+	protected TransformingMeshModel(Builder builder, Function<Material, TextureAtlasSprite> spriteFunc) {
 		super(builder, spriteFunc);
-		mesh = builder.meshFactory.createMesh(Renderer.get().meshBuilder(), MaterialFinder.threadLocal(), n -> spriteFunc.apply(new Material(TextureAtlas.LOCATION_BLOCKS, n)));
+		mesh = builder.meshFactory.createMesh(n -> spriteFunc.apply(new Material(TextureAtlas.LOCATION_BLOCKS, n)));
+		this.transform = builder.transform;
+	}
+
+	protected void render(InputContext input, QuadSink output) {
+		final QuadEmitter emitter = output.withTransformQuad(input, transform);
+		mesh.outputTo(emitter);
+		emitter.close();
 	}
 
 	@Override
 	public void renderAsBlock(BlockInputContext input, QuadSink output) {
-		mesh.outputTo(output.asQuadEmitter());
+		render(input, output);
 	}
 
 	@Override
 	public void renderAsItem(ItemInputContext input, QuadSink output) {
-		mesh.outputTo(output.asQuadEmitter());
+		render(input, output);
 	}
 
 	@Override
@@ -82,39 +94,50 @@ public class StaticModel extends BaseModel {
 		return result == null ? ImmutableList.of() : result;
 	}
 
-	public static Builder builder(MeshFactory meshFactory) {
-		return new Builder(meshFactory);
+	public static Builder builder(MeshFactory meshFactory, QuadTransform transform) {
+		return new Builder(meshFactory, transform);
 	}
 
 	public static class Builder extends BaseModelBuilder<Builder> {
 		protected final MeshFactory meshFactory;
+		protected final QuadTransform transform;
 
-		protected Builder(MeshFactory meshFactory) {
+		protected Builder(MeshFactory meshFactory, QuadTransform transform) {
 			this.meshFactory = meshFactory;
+			this.transform = transform;
 		}
 
 		@Override
 		public BakedModel bakeOnce(ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteFunc, ModelState modelState, ResourceLocation modelLocation) {
-			return new StaticModel(this, spriteFunc);
+			return new TransformingMeshModel(this, spriteFunc);
 		}
 	}
 
-	public static Function<ResourceManager, ModelProvider<ModelResourceLocation>> createProviderFunction(Consumer<Builder> setupFunc, MeshFactory meshFactory) {
+	public static Function<ResourceManager, ModelProvider<ModelResourceLocation>> createProvider(Consumer<Builder> setupFunc, MeshFactory meshFactory, QuadTransform transform) {
 		return (rm) -> {
-			final var builder = new Builder(meshFactory);
+			final var builder = new Builder(meshFactory, transform);
 			setupFunc.accept(builder);
 			return (path, subModelLoader) -> builder;
 		};
 	}
 
-	public static void registerSimpleCubeModel(ResourceLocation blockPath, ResourceLocation spritePath, int color, Function<MaterialFinder, RenderMaterial> materialFunc) {
-		final MeshFactory meshFactory = (meshBuilder, materialFinder, spriteFunc) ->
-			meshBuilder.box(materialFunc.apply(materialFinder), color, spriteFunc.getSprite(spritePath), 0, 0, 0, 1, 1, 1).build();
-
-		ModelProviderRegistry.registerBlockItemProvider(StaticModel.createProviderFunction(b -> b.defaultParticleSprite(spritePath), meshFactory), blockPath);
+	public static void createAndRegisterProvider(Consumer<Builder> setupFunc, MeshFactory meshFactory, QuadTransform transform, ResourceLocation... paths) {
+		ModelProviderRegistry.registerBlockItemProvider(createProvider(setupFunc, meshFactory, transform), paths);
 	}
 
-	public static void registerSimpleCubeModel(String blockPath, String spritePath, int color, Function<MaterialFinder, RenderMaterial> materialFunc) {
-		registerSimpleCubeModel(new ResourceLocation(blockPath), new ResourceLocation(spritePath), color, materialFunc);
+	public static void createAndRegisterProvider(Consumer<Builder> setupFunc, MeshFactory meshFactory, QuadTransform transform, String... paths) {
+		ModelProviderRegistry.registerBlockItemProvider(createProvider(setupFunc, meshFactory, transform), paths);
+	}
+
+	public static void createAndRegisterCube(ResourceLocation spritePath, int color, Function<MaterialFinder, RenderMaterial> materialFunc, QuadTransform transform, ResourceLocation... paths) {
+		final MeshFactory meshFactory = MeshFactory.shared((meshBuilder, materialFinder, spriteFunc) ->
+			meshBuilder.box(materialFunc.apply(materialFinder), color, spriteFunc.getSprite(spritePath), 0, 0, 0, 1, 1, 1).build());
+
+		ModelProviderRegistry.registerBlockItemProvider(createProvider(b -> b.defaultParticleSprite(spritePath), meshFactory, transform), paths);
+	}
+
+	public static void createAndRegisterCube(String spritePath, int color, Function<MaterialFinder, RenderMaterial> materialFunc, QuadTransform transform, String... paths) {
+		Preconditions.checkNotNull(paths);
+		createAndRegisterCube(new ResourceLocation(spritePath), color, materialFunc, transform, ModelProviderRegistryImpl.stringsToLocations(paths));
 	}
 }

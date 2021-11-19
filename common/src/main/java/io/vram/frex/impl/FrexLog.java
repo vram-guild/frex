@@ -26,7 +26,7 @@ import org.apache.logging.log4j.Logger;
 public abstract class FrexLog {
 	private FrexLog() { }
 
-	private static Logger LOG = LogManager.getLogger("FREX CORE API");
+	public static Logger LOG = LogManager.getLogger("FREX CORE API");
 
 	public static void warn(String string) {
 		LOG.warn(string);

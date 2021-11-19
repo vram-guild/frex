@@ -23,6 +23,7 @@ package io.vram.frex.api.mesh;
 import java.util.function.Consumer;
 
 import io.vram.frex.api.buffer.QuadEmitter;
+import io.vram.frex.api.buffer.QuadSink;
 
 /**
  * A bundle of one or more {@link QuadView} instances encoded by the renderer,
@@ -34,6 +35,7 @@ import io.vram.frex.api.buffer.QuadEmitter;
  *
  * <p>Only the renderer should implement or extend this interface.
  */
+@FunctionalInterface
 public interface Mesh {
 	/**
 	 * Use to access all of the quads encoded in this mesh. The quad instances
@@ -48,4 +50,10 @@ public interface Mesh {
 			editor.emit();
 		});
 	}
+
+	default void outputTo(QuadSink quadSink) {
+		outputTo(quadSink.asQuadEmitter());
+	}
+
+	Mesh EMPTY = c -> { };
 }

@@ -24,6 +24,8 @@ import java.util.Random;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -114,6 +116,29 @@ public interface BlockModel extends DynamicModel {
 		 * registered or not applicable.
 		 */
 		@Nullable Object blockEntityRenderData(BlockPos pos);
+	}
+
+	/**
+	 * Called at the end of block breaking and dust particle initialization to give
+	 * block models an opportunity to adjust sprite and color based on dynamic state.
+	 *
+	 * <p>The particle itself is not exposed to eventually accommodate 3D particles
+	 * or other novel particle types that may be of a class unknown to the model.
+	 *
+	 * @param clientLevel
+	 * @param blockState
+	 * @param blockPos
+	 * @param delegate
+	 */
+	default void onNewTerrainParticle(@Nullable ClientLevel clientLevel, BlockState blockState, @Nullable BlockPos blockPos, TerrainParticleDelegate delegate) {
+		// NOOP
+	}
+
+	// NB: names are long to reduce risk of conflict with mapped named
+	public interface TerrainParticleDelegate {
+		void setModelParticleSprite(TextureAtlasSprite sprite);
+
+		void setModelParticleColor(int color);
 	}
 
 	/**

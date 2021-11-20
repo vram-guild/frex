@@ -33,6 +33,7 @@ public abstract class ColorUtil {
 	private ColorUtil() { }
 
 	public static final int FULL_BRIGHTNESS = 15 << 20 | 15 << 4;
+	public static final int WHITE = -1;
 
 	private static final Int2IntFunction colorSwapper = ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN
 			? color -> color == -1 ? -1 : ((color & 0xFF00FF00) | ((color & 0x00FF0000) >> 16) | ((color & 0xFF) << 16))

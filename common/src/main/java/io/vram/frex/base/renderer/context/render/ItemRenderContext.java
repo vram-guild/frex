@@ -94,6 +94,10 @@ public abstract class ItemRenderContext extends BakedRenderContext<BaseItemInput
 			finder.overlay(inputContext.overlay());
 		}
 
+		if (inputContext.isGui()) {
+			finder.fog(false);
+		}
+
 		int preset = finder.preset();
 
 		// fully specific renderable material

@@ -204,9 +204,9 @@ public abstract class GeometryUtil {
 	 */
 	public static int lightFaceId(QuadView quad) {
 		final int packedNormal = quad.packedFaceNormal();
-		final float x = PackedVector3f.packedX(packedNormal);
-		final float y = PackedVector3f.packedY(packedNormal);
-		final float z = PackedVector3f.packedZ(packedNormal);
+		final float x = PackedVector3f.unpackX(packedNormal);
+		final float y = PackedVector3f.unpackY(packedNormal);
+		final float z = PackedVector3f.unpackZ(packedNormal);
 
 		switch (GeometryUtil.longestAxis(x, y, z)) {
 			case X:

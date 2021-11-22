@@ -34,6 +34,12 @@ in vec4 frx_vertexColor;
 in vec3 frx_vertexNormal;
 
 /*
+ * Interpoliated vertex tangent in camera/world space. Component w is -1.0
+ * when the tangent handedness is inverted because of texture flipping, and 1.0 normally.
+ */
+in vec4 frx_vertexTangent;
+
+/*
  * Interpolated vanilla lighting data from CPU.
  * Depending on the context or lighting model in effect,
  * this may not be a unit vector and/or unused.

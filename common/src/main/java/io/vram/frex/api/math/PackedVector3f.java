@@ -53,38 +53,46 @@ public abstract class PackedVector3f {
 				| (k < 0 ? 0x810000 : k > 0xFE0000 ? 0x7F0000 : ((k - 0x7F0000) & 0xFF0000));
 	}
 
-	public static float packedX(int packedVector) {
+	public static int pack(float x, float y, float z, boolean inverted) {
+		return pack(x, y, z) | (inverted ? 0x1000000 : 0);
+	}
+
+	public static float unpackX(int packedVector) {
 		return ((byte) (packedVector & 0xFF)) * DIVIDE_BY_127;
 	}
 
-	public static float packedY(int packedVector) {
+	public static float unpackY(int packedVector) {
 		return ((byte) ((packedVector >>> 8) & 0xFF)) * DIVIDE_BY_127;
 	}
 
-	public static float packedZ(int packedVector) {
+	public static float unpackZ(int packedVector) {
 		return ((byte) ((packedVector >>> 16) & 0xFF)) * DIVIDE_BY_127;
 	}
 
+	public static boolean unpackInverted(int packedVector) {
+		return (packedVector & 0x1000000) != 0;
+	}
+
 	/** Returns value -127 to +127. */
-	public static int packedByteX(int packedVector) {
+	public static int unpackByteX(int packedVector) {
 		return (byte) (packedVector & 0xFF);
 	}
 
 	/** Returns value -127 to +127. */
-	public static int packedByteY(int packedVector) {
+	public static int unpackByteY(int packedVector) {
 		return (byte) ((packedVector >>> 8) & 0xFF);
 	}
 
 	/** Returns value -127 to +127. */
-	public static int packedByteZ(int packedVector) {
+	public static int unpackByteZ(int packedVector) {
 		return (byte) ((packedVector >>> 16) & 0xFF);
 	}
 
 	public static Vector3f unpackTo(int packedVector, Vector3f target) {
 		target.set(
-				packedX(packedVector),
-				packedY(packedVector),
-				packedZ(packedVector));
+				unpackX(packedVector),
+				unpackY(packedVector),
+				unpackZ(packedVector));
 
 		return target;
 	}

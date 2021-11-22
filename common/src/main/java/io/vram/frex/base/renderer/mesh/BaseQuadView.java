@@ -270,7 +270,8 @@ public class BaseQuadView implements QuadView {
 		final float ty = inverseLength * (dv1 * (y1 - y(0)) - dv0 * (y(2) - y1));
 		final float tz = inverseLength * (dv1 * (z1 - z(0)) - dv0 * (z(2) - z1));
 
-		return PackedVector3f.pack(tx, ty, tz);
+		// TODO: populate inverted flag correctly
+		return PackedVector3f.pack(tx, ty, tz, false);
 	}
 
 	public int packedFaceTanget() {

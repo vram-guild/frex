@@ -1,41 +1,79 @@
+// VRAM STANDARD GRADLE BUILD FOR FABRIC 1.17
+// DO NOT MAKE CHANGES HERE - THEY WILL BE OVERWRITTEN BY AUTOMATED UPDATE
+
 plugins {
-	id "fabric-loom" version "${loom_version}"
-	id "eclipse"
-	id "idea"
-	id "maven-publish"
-	id "com.github.breadmoirai.github-release" version "2.2.9"
+	id 'fabric-loom' version '0.10.58'
+	id 'eclipse'
+	id 'idea'
+	id 'maven-publish'
+	id 'com.github.breadmoirai.github-release' version '2.2.9'
 	id 'org.cadixdev.licenser' version '0.6.1'
-	id "org.ajoberstar.grgit" version "3.1.1"
-	id "com.matthewprenger.cursegradle" version "1.4.0"
-	id "checkstyle"
+	id 'org.ajoberstar.grgit' version '3.1.1'
+	id 'com.matthewprenger.cursegradle' version '1.4.0'
+	id 'checkstyle'
 }
+
+ext.mc_tag = 'mc117'
+ext.minecraft_version = '1.17.1'
+ext.release_version = '1.17.1'
+ext.loader_version = '0.12.5'
+ext.fabric_version = '0.42.1+1.17'
 
 sourceCompatibility = JavaVersion.VERSION_16
 targetCompatibility = JavaVersion.VERSION_16
 
-def ENV = System.getenv()
+repositories {
+	mavenLocal()
+    jcenter();
+    maven { 
+    	name = "Fabric"
+    	url "https://maven.fabricmc.net/"
+	}
+	maven {
+		name = "vram"
+		url = "https://maven.vram.io"
+	}
+}
 
-def version_tag = project.mod_name.replaceAll('-', '_') + '_version'
+ext.archivesBaseName = project.mod_name + "-fabric-" + project.mc_tag
+
+if (project.hasProperty('mod_version') && grgit != null) {
+	if(grgit.status().isClean()) {
+		ext.version = project.getProperty('mod_version') + '.' + grgit.log().size()
+	} else {
+		ext.version = project.getProperty('mod_version') + '.' + (grgit.log().size() + 1) + '-SNAPSHOT'
+	}
+} else {
+	ext.version = '99.0.0-LOCAL'
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${minecraft_version}"
+	mappings loom.officialMojangMappings()
+}
+
+
+// Hat tip to JellySquid
+configurations {
+    modIncludeImplementation
+    modImplementation.extendsFrom modIncludeImplementation
+    
+    if (!(gradle.startParameter.taskNames.contains("publish") || gradle.startParameter.taskNames.contains("publishToMavenLocal"))) {
+    	include.extendsFrom modIncludeImplementation
+    }
+}
 
 loom {
 	mixin.defaultRefmapName = project.mod_name + "-refmap.json"
-	accessWidenerPath = file("src/main/resources/${project.mod_name}.accesswidener")
+	
+	if (project.hasProperty('accesswidener')) {
+		accessWidenerPath = file(project.getProperty('accesswidener'))
+	}
 }
 
-def artifact_name = project.mod_name + "-fabric-" + project.mc_tag
-
-project.archivesBaseName = artifact_name
-
-if (grgit == null) {
-	project.version = '99.0.0-nogit'
-} else if (project.hasProperty(version_tag)) {
-	if(grgit.status().isClean()) {
-		project.version = project.getProperty(version_tag) + '.' + grgit.log().size()
-	} else {
-		project.version = project.getProperty(version_tag) + '.' + (grgit.log().size() + 1) + '-snapshot'
-	}
-} else {
-	project.version = '99.0.0-local'
+tasks.withType(JavaCompile) {
+	it.options.encoding = "UTF-8"
+	it.options.release = 16
 }
 
 processResources {
@@ -46,27 +84,23 @@ processResources {
 	}
 }
 
-license {
-	header rootProject.file("../HEADER")
-	include "**/*.java"
-}
-
-checkstyle {
-	configFile = rootProject.file("../checkstyle.xml")
-	toolVersion = "8.44"
-}
-
-def eclipseName =  project.mod_name;
+// We define this outside of the eclipse block because eclipse has it's own "project" instance
+def eclipseName = project.mod_name + " fabric " + project.minecraft_version 
 
 eclipse {
 	project {
-		name = eclipseName;
+		name = eclipseName
 	}
 }
 
-tasks.withType(JavaCompile) {
-	it.options.encoding = "UTF-8"
-	it.options.release = 16
+license {
+	header rootProject.file(project.license_file)
+	include '**/*.java'
+}
+
+checkstyle {
+	configFile = rootProject.file(project.checkstyle)
+	toolVersion = "8.44"
 }
 
 jar {
@@ -76,7 +110,7 @@ jar {
 		attributes "Implementation-Title": project.archivesBaseName
 		attributes "Implementation-Version": project.version
 		attributes "Maven-Artifact": "${group}:${project.archivesBaseName}:${project.version}"
-		attributes "Built-On-Minecraft": "${project.minecraft_version}"
+		attributes "Built-On-Minecraft": "${minecraft_version}"
 		attributes "Built-On-Java": "${System.getProperty("java.vm.version")} (${System.getProperty("java.vm.vendor")})"
 	}
 }
@@ -92,35 +126,15 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 		attributes "Implementation-Title": project.archivesBaseName + "-sources"
 		attributes "Implementation-Version": project.version
 		attributes "Maven-Artifact": "${project.group}:${project.archivesBaseName}:${project.version}:sources"
-		attributes "Built-On-Minecraft": "${project.minecraft_version}"
+		attributes "Built-On-Minecraft": "${minecraft_version}"
 		attributes "Built-On-Java": "${System.getProperty("java.vm.version")} (${System.getProperty("java.vm.vendor")})"
-	}
-}
-
-sourceSets {
-	main {
-		java {
-			srcDirs = ['../common/src/main/java', 'src/main/java', '../fabriquilt/src/main/java']
-			include '**/*'
-			exclude '*.DS_Store'
-		}
-		resources {
-			srcDirs = ['../common/src/main/resources', 'src/main/resources']
-			include '**/*'
-			exclude '*.DS_Store'
-		}
-	}
-	test {
-			java {
-				exclude '**/*'
-			}
 	}
 }
 
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-			artifactId = artifact_name;
+			artifactId = project.archivesBaseName;
 			artifact(remapJar) {
 				builtBy remapJar
 			}
@@ -225,4 +239,4 @@ curseforge {
 	}
 }
 
-apply from: 'dependencies.gradle'
+apply from: 'project.gradle'

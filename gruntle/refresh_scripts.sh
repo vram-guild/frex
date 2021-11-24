@@ -1,0 +1,1 @@
+echo 'THIS IS A TEST SCRIPT'

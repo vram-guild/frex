@@ -276,14 +276,21 @@ public class BaseQuadView implements QuadView {
 		final float by = inverseLength * (-du1 * (y1 - y(0)) + du0 * (y(2) - y1));
 		final float bz = inverseLength * (-du1 * (z1 - z(0)) + du0 * (z(2) - z1));
 
-		// TODO: optimize construction
-		final Vector3f NxT = PackedVector3f.unpackTo(packedFaceNormal(), new Vector3f());
-		final Vector3f T = new Vector3f(tx, ty, tz);
+		// Compute handedness
+		final int packedNormal = packedFaceNormal();
+		final float nx = PackedVector3f.unpackX(packedNormal);
+		final float ny = PackedVector3f.unpackY(packedNormal);
+		final float nz = PackedVector3f.unpackZ(packedNormal);
 
-		NxT.cross(T);
-		T.set(bx, by, bz);
+		// N cross T
+		final float NcTx = ny * tz - nz * ty;
+		final float NcTy = nz * tx - nx * tz;
+		final float NcTz = nx * ty - ny * tx;
 
-		final boolean inverted = T.dot(NxT) < 0f;
+		// B dot NcT
+		final float BdotNcT = bx * NcTx + by * NcTy + bz * NcTz;
+
+		final boolean inverted = BdotNcT < 0f;
 
 		return PackedVector3f.pack(tx, ty, tz, inverted);
 	}

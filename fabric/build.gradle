@@ -39,15 +39,15 @@ ext.archivesBaseName = project.mod_name + "-fabric-" + project.mc_tag
 
 if (project.hasProperty('mod_version') && grgit != null) {
 	if(grgit.status().isClean()) {
-		ext.version = project.getProperty('mod_version') + '.' + grgit.log().size()
+		ext.mod_version = project.getProperty('mod_version') + '.' + grgit.log().size()
 	} else {
-		ext.version = project.getProperty('mod_version') + '.' + (grgit.log().size() + 1) + '-SNAPSHOT'
+		ext.mod_version = project.getProperty('mod_version') + '.' + (grgit.log().size() + 1) + '-SNAPSHOT'
 	}
 } else {
-	ext.version = '99.0.0-LOCAL'
+	ext.mod_version = '99.0.0-LOCAL'
 }
 
-
+println "Building: ${group}:${project.archivesBaseName}:${project.mod_version}"
 
 if (!project.hasProperty('license_file')) {
 	ext.license_file = '../HEADER'
@@ -87,10 +87,10 @@ tasks.withType(JavaCompile) {
 }
 
 processResources {
-	inputs.property "version", project.version
+	inputs.property "version", project.mod_version
 
 	filesMatching("fabric.mod.json") {
-		expand "version": project.version
+		expand "version": project.mod_version
 	}
 }
 
@@ -118,8 +118,8 @@ jar {
 	manifest
 	{
 		attributes "Implementation-Title": "${project.archivesBaseName}"
-		attributes "Implementation-Version": "${project.version}"
-		attributes "Maven-Artifact": "${group}:${project.archivesBaseName}:${project.version}"
+		attributes "Implementation-Version": "${project.mod_version}"
+		attributes "Maven-Artifact": "${group}:${project.archivesBaseName}:${project.mod_version}"
 		attributes "Built-On-Minecraft": "${minecraft_version}"
 		attributes "Built-On-Java": "${System.getProperty("java.vm.version")} (${System.getProperty("java.vm.vendor")})"
 	}
@@ -134,8 +134,8 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 	manifest
 	{
 		attributes "Implementation-Title": "${project.archivesBaseName}" + "-sources"
-		attributes "Implementation-Version": "${project.version}"
-		attributes "Maven-Artifact": "${project.group}:${project.archivesBaseName}:${project.version}:sources"
+		attributes "Implementation-Version": "${project.mod_version}"
+		attributes "Maven-Artifact": "${project.group}:${project.archivesBaseName}:${project.mod_version}:sources"
 		attributes "Built-On-Minecraft": "${minecraft_version}"
 		attributes "Built-On-Java": "${System.getProperty("java.vm.version")} (${System.getProperty("java.vm.vendor")})"
 	}
@@ -157,17 +157,22 @@ publishing {
 
 	repositories {
 		mavenLocal()
-        maven {
-            url = 'sftp://maven.vram.io:22'
-            credentials {
-            	if (project.hasProperty('maven_user')){
-					username = project.getProperty('maven_user')
-				}
-				if (project.hasProperty('maven_password')){
-					password = project.getProperty('maven_password')
-				}
-            }
-        }
+
+		if (project.mod_version.endsWith('LOCAL') || project.mod_version.endsWith('SNAPSHOT')) {
+			println "Snapshot build will be local only - not pushed to public maven"
+		} else {
+	    maven {
+	        url = 'sftp://maven.vram.io:22'
+	        credentials {
+	        	if (project.hasProperty('maven_user')){
+				username = project.getProperty('maven_user')
+			}
+			if (project.hasProperty('maven_password')){
+				password = project.getProperty('maven_password')
+			}
+	        }
+	    }
+		}
 	}
 }
 
@@ -180,11 +185,11 @@ githubRelease {
 		repo project.github_repository
 	}
 
-	tagName project.version
+	tagName project.mod_version
 	targetCommitish { org.ajoberstar.grgit.Grgit.open(dir: ".").branch.current().name }
-	releaseName project.version
+	releaseName project.mod_version
 
-	FilenameFilter filter = { dir, filename -> filename.contains(project.version) && !filename.contains("-dev.jar") }
+	FilenameFilter filter = { dir, filename -> filename.contains(project.mod_version) && !filename.contains("-dev.jar") }
 	releaseAssets = jar.destinationDir.listFiles filter
 }
 

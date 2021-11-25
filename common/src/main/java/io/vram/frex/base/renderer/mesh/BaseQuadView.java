@@ -282,15 +282,15 @@ public class BaseQuadView implements QuadView {
 		final float ny = PackedVector3f.unpackY(packedNormal);
 		final float nz = PackedVector3f.unpackZ(packedNormal);
 
-		// N cross T
-		final float NcTx = ny * tz - nz * ty;
-		final float NcTy = nz * tx - nx * tz;
-		final float NcTz = nx * ty - ny * tx;
+		// T cross N
+		final float TcNx = ty * nz - tz * ny;
+		final float TcNy = tz * nx - tx * nz;
+		final float TcNz = tx * ny - ty * nx;
 
-		// B dot NcT
-		final float BdotNcT = bx * NcTx + by * NcTy + bz * NcTz;
+		// B dot TcN
+		final float BdotTcN = bx * TcNx + by * TcNy + bz * TcNz;
 
-		final boolean inverted = BdotNcT < 0f;
+		final boolean inverted = BdotTcN < 0f;
 
 		return PackedVector3f.pack(tx, ty, tz, inverted);
 	}

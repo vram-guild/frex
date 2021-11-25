@@ -47,6 +47,8 @@ if (project.hasProperty('mod_version') && grgit != null) {
 	ext.version = '99.0.0-LOCAL'
 }
 
+
+
 if (!project.hasProperty('license_file')) {
 	ext.license_file = '../HEADER'
 }
@@ -115,8 +117,8 @@ jar {
 	from "LICENSE"
 	manifest
 	{
-		attributes "Implementation-Title": project.archivesBaseName
-		attributes "Implementation-Version": project.version
+		attributes "Implementation-Title": "${project.archivesBaseName}"
+		attributes "Implementation-Version": "${project.version}"
 		attributes "Maven-Artifact": "${group}:${project.archivesBaseName}:${project.version}"
 		attributes "Built-On-Minecraft": "${minecraft_version}"
 		attributes "Built-On-Java": "${System.getProperty("java.vm.version")} (${System.getProperty("java.vm.vendor")})"
@@ -131,8 +133,8 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 	from sourceSets.main.allSource
 	manifest
 	{
-		attributes "Implementation-Title": project.archivesBaseName + "-sources"
-		attributes "Implementation-Version": project.version
+		attributes "Implementation-Title": "${project.archivesBaseName}" + "-sources"
+		attributes "Implementation-Version": "${project.version}"
 		attributes "Maven-Artifact": "${project.group}:${project.archivesBaseName}:${project.version}:sources"
 		attributes "Built-On-Minecraft": "${minecraft_version}"
 		attributes "Built-On-Java": "${System.getProperty("java.vm.version")} (${System.getProperty("java.vm.vendor")})"

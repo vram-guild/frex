@@ -53,8 +53,8 @@ if (!project.hasProperty('license_file')) {
 	ext.license_file = '../HEADER'
 }
 
-if (!project.hasProperty('checkstyle')) {
-	ext.checkstyle = '../checkstyle.xml'
+if (!project.hasProperty('checkstyle_config')) {
+	ext.checkstyle_config = '../checkstyle.xml'
 }
 
 dependencies {
@@ -109,7 +109,7 @@ license {
 }
 
 checkstyle {
-	configFile = rootProject.file(project.checkstyle)
+	configFile = rootProject.file(project.checkstyle_config)
 	toolVersion = "8.44"
 }
 

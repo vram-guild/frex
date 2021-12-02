@@ -263,9 +263,9 @@ public abstract class AoCalculator {
 
 			if (vNormal != normal) {
 				normal = vNormal;
-				rawNormalX = PackedVector3f.packedByteX(normal);
-				rawNormalY = PackedVector3f.packedByteY(normal);
-				rawNormalZ = PackedVector3f.packedByteZ(normal);
+				rawNormalX = PackedVector3f.unpackByteX(normal);
+				rawNormalY = PackedVector3f.unpackByteY(normal);
+				rawNormalZ = PackedVector3f.unpackByteZ(normal);
 				scaledNormalX = FixedMath255.from127(rawNormalX);
 				scaledNormalY = FixedMath255.from127(rawNormalY);
 				scaledNormalZ = FixedMath255.from127(rawNormalZ);
@@ -351,9 +351,9 @@ public abstract class AoCalculator {
 
 			if (vNormal != normal) {
 				normal = vNormal;
-				rawNormalX = PackedVector3f.packedByteX(normal);
-				rawNormalY = PackedVector3f.packedByteY(normal);
-				rawNormalZ = PackedVector3f.packedByteZ(normal);
+				rawNormalX = PackedVector3f.unpackByteX(normal);
+				rawNormalY = PackedVector3f.unpackByteY(normal);
+				rawNormalZ = PackedVector3f.unpackByteZ(normal);
 				scaledNormalX = FixedMath255.from127(rawNormalX);
 				scaledNormalY = FixedMath255.from127(rawNormalY);
 				scaledNormalZ = FixedMath255.from127(rawNormalZ);

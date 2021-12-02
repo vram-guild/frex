@@ -260,7 +260,9 @@ public class BaseQuadView implements QuadView {
 		final float dv0 = v1 - spriteFloatV(0);
 		final float dv1 = spriteFloatV(2) - v1;
 		final float u1 = spriteFloatU(1);
-		final float inverseLength = 1.0f / ((u1 - spriteFloatU(0)) * dv1 - (spriteFloatU(2) - u1) * dv0);
+		final float du0 = u1 - spriteFloatU(0);
+		final float du1 = spriteFloatU(2) - u1;
+		final float inverseLength = 1.0f / (du0 * dv1 - du1 * dv0);
 
 		final float x1 = x(1);
 		final float y1 = y(1);
@@ -270,7 +272,27 @@ public class BaseQuadView implements QuadView {
 		final float ty = inverseLength * (dv1 * (y1 - y(0)) - dv0 * (y(2) - y1));
 		final float tz = inverseLength * (dv1 * (z1 - z(0)) - dv0 * (z(2) - z1));
 
-		return PackedVector3f.pack(tx, ty, tz);
+		final float bx = inverseLength * (-du1 * (x1 - x(0)) + du0 * (x(2) - x1));
+		final float by = inverseLength * (-du1 * (y1 - y(0)) + du0 * (y(2) - y1));
+		final float bz = inverseLength * (-du1 * (z1 - z(0)) + du0 * (z(2) - z1));
+
+		// Compute handedness
+		final int packedNormal = packedFaceNormal();
+		final float nx = PackedVector3f.unpackX(packedNormal);
+		final float ny = PackedVector3f.unpackY(packedNormal);
+		final float nz = PackedVector3f.unpackZ(packedNormal);
+
+		// T cross N
+		final float TcNx = ty * nz - tz * ny;
+		final float TcNy = tz * nx - tx * nz;
+		final float TcNz = tx * ny - ty * nx;
+
+		// B dot TcN
+		final float BdotTcN = bx * TcNx + by * TcNy + bz * TcNz;
+
+		final boolean inverted = BdotTcN < 0f;
+
+		return PackedVector3f.pack(tx, ty, tz, inverted);
 	}
 
 	public int packedFaceTanget() {

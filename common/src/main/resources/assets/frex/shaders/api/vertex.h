@@ -42,6 +42,12 @@ out vec4 frx_vertexColor;
 out vec3 frx_vertexNormal;
 
 /*
+ * Vertex tangent in camera/world space. Component w is -1.0 when the tangent
+ * space handedness is inverted because of texture flipping, and 1.0 normally.
+ */
+out vec4 frx_vertexTangent;
+
+/*
  * Initialized with vanilla lighting data from CPU.
  * Depending on the context or lighting model in effect,
  * this may not be a unit vector and/or unused.

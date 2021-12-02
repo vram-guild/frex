@@ -130,17 +130,17 @@ public class FabricQuadView<T extends QuadView> implements net.fabricmc.fabric.a
 
 	@Override
 	public float normalX(int vertexIndex) {
-		return hasNormal(vertexIndex) ? PackedVector3f.packedX(wrapped.packedNormal(vertexIndex)) : Float.NaN;
+		return hasNormal(vertexIndex) ? PackedVector3f.unpackX(wrapped.packedNormal(vertexIndex)) : Float.NaN;
 	}
 
 	@Override
 	public float normalY(int vertexIndex) {
-		return hasNormal(vertexIndex) ? PackedVector3f.packedY(wrapped.packedNormal(vertexIndex)) : Float.NaN;
+		return hasNormal(vertexIndex) ? PackedVector3f.unpackY(wrapped.packedNormal(vertexIndex)) : Float.NaN;
 	}
 
 	@Override
 	public float normalZ(int vertexIndex) {
-		return hasNormal(vertexIndex) ? PackedVector3f.packedZ(wrapped.packedNormal(vertexIndex)) : Float.NaN;
+		return hasNormal(vertexIndex) ? PackedVector3f.unpackZ(wrapped.packedNormal(vertexIndex)) : Float.NaN;
 	}
 
 	@Override

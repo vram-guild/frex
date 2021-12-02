@@ -49,9 +49,9 @@ public abstract class MixinMatrix3f implements FastMatrix3f {
 	@Unique
 	@Override
 	public int f_transformPacked3f(int packedVector3f) {
-		final float x = PackedVector3f.packedX(packedVector3f);
-		final float y = PackedVector3f.packedY(packedVector3f);
-		final float z = PackedVector3f.packedZ(packedVector3f);
+		final float x = PackedVector3f.unpackX(packedVector3f);
+		final float y = PackedVector3f.unpackY(packedVector3f);
+		final float z = PackedVector3f.unpackZ(packedVector3f);
 
 		final float nx = fma(m00, x, fma(m01, y, m02 * z));
 		final float ny = fma(m10, x, fma(m11, y, m12 * z));

@@ -71,9 +71,9 @@ public abstract class EncoderUtil {
 			if (p != packedNormal) {
 				packedNormal = p;
 				final int transformedNormal = isNormalMatrixUseful ? normalMatrix.f_transformPacked3f(packedNormal) : packedNormal;
-				nx = PackedVector3f.packedX(transformedNormal);
-				ny = PackedVector3f.packedY(transformedNormal);
-				nz = PackedVector3f.packedZ(transformedNormal);
+				nx = PackedVector3f.unpackX(transformedNormal);
+				ny = PackedVector3f.unpackY(transformedNormal);
+				nz = PackedVector3f.unpackZ(transformedNormal);
 			}
 
 			buff.normal(nx, ny, nz);
@@ -87,9 +87,9 @@ public abstract class EncoderUtil {
 	 * and this gives reasonable results for non-cubic surfaces in a vanilla-style renderer.
 	 */
 	public static float normalShade(int packedNormal, BlockAndTintGetter blockView, boolean hasShade) {
-		final float normalX = PackedVector3f.packedX(packedNormal);
-		final float normalY = PackedVector3f.packedY(packedNormal);
-		final float normalZ = PackedVector3f.packedZ(packedNormal);
+		final float normalX = PackedVector3f.unpackX(packedNormal);
+		final float normalY = PackedVector3f.unpackY(packedNormal);
+		final float normalZ = PackedVector3f.unpackZ(packedNormal);
 
 		float sum = 0;
 		float div = 0;

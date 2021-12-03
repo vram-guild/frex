@@ -74,18 +74,21 @@ public abstract class MixinModelBakery implements ModelBakeryExt {
 	@Shadow private void loadModel(ResourceLocation id) { }
 	@Shadow public abstract UnbakedModel getModel(ResourceLocation id);
 
-	@Inject(at = @At("HEAD"), method = "loadTopLevel")
-	private void addModelHook(ModelResourceLocation id, CallbackInfo info) {
-		// Relies on the fact that missing ID is always first
-		if (id == ModelBakery.MISSING_MODEL_LOCATION) {
-			frexHandler = ModelProviderRegistryImpl.begin((ModelBakery) (Object) this, resourceManager);
+	private ModelProviderRegistryImpl.LoaderInstance frexHandler() {
+		var result = frexHandler;
+
+		if (result == null) {
+			result = ModelProviderRegistryImpl.begin((ModelBakery) (Object) this, resourceManager);
+			frexHandler = result;
 			ModelProviderRegistryImpl.onModelPopulation(resourceManager, this::frx_addModel);
 		}
+
+		return result;
 	}
 
 	@Inject(at = @At("HEAD"), method = "loadModel", cancellable = true)
 	private void loadModelHook(ResourceLocation id, CallbackInfo ci) {
-		final UnbakedModel customModel = frexHandler.loadModelFromVariant(id);
+		final UnbakedModel customModel = frexHandler().loadModelFromVariant(id);
 
 		if (customModel != null) {
 			cacheAndQueueDependencies(id, customModel);
@@ -95,7 +98,7 @@ public abstract class MixinModelBakery implements ModelBakeryExt {
 
 	@Inject(at = @At("RETURN"), method = "<init>")
 	private void initFinishedHook(CallbackInfo info) {
-		frexHandler.finish();
+		frexHandler().finish();
 	}
 
 	@Override @Unique

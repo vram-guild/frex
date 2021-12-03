@@ -31,7 +31,7 @@ repositories {
 	maven {url "https://maven.terraformersmc.com/releases/"}
 }
 
-ext.archivesBaseName = project.mod_name + "-fabric-" + project.mc_tag
+project.archivesBaseName = project.mod_name + "-fabric-" + project.mc_tag
 
 if (project.hasProperty('mod_version') && grgit != null) {
 	if(grgit.status().isClean()) {
@@ -185,7 +185,7 @@ githubRelease {
 	targetCommitish { grgit.branch.current().name }
 	releaseName project.minecraft_version + "-" + project.version
 
-	FilenameFilter filter = { dir, filename -> filename.contains(project.version) && !filename.contains("-dev.jar") }
+	FilenameFilter filter = { dir, filename -> filename.contains(project.version) && !filename.contains("-dev.jar") && !filename.contains("SNAPSHOT") }
 	releaseAssets = jar.destinationDir.listFiles filter
 }
 

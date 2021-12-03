@@ -182,7 +182,7 @@ githubRelease {
 	}
 
 	tagName project.minecraft_version + "-" + project.version
-	targetCommitish { org.ajoberstar.grgit.Grgit.open(dir: ".").branch.current().name }
+	targetCommitish { grgit.branch.current().name }
 	releaseName project.minecraft_version + "-" + project.version
 
 	FilenameFilter filter = { dir, filename -> filename.contains(project.version) && !filename.contains("-dev.jar") }

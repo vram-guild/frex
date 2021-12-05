@@ -1,10 +1,15 @@
 // VRAM STANDARD GRADLE BUILD FOR FABRIC 1.17
 // DO NOT MAKE CHANGES HERE - THEY WILL BE OVERWRITTEN BY AUTOMATED UPDATE
 
+buildscript {
+	dependencies {
+		classpath 'org.kohsuke:github-api:1.135'
+	}
+}
+
 plugins {
 	id 'fabric-loom' version '0.10.63'
 	id 'maven-publish'
-	id 'com.github.breadmoirai.github-release' version '2.2.12'
 	id 'org.cadixdev.licenser' version '0.6.1'
 	id 'org.ajoberstar.grgit' version '4.1.1'
 	id 'com.matthewprenger.cursegradle' version '1.4.0'
@@ -182,24 +187,29 @@ publishing {
 	}
 }
 
-githubRelease {
-	if (project.version.endsWith('LOCAL') || project.version.endsWith('SNAPSHOT')) {
-		println "Snapshot build will be local only - not pushed to github"
-	} else {
-		token project.hasProperty("github_releases_token") ? project.github_releases_token : ""
-		if(project.hasProperty("github_repository_owner")) {
-			owner project.github_repository_owner
-		}
-		if(project.hasProperty("github_repository")) {
-			repo project.github_repository
-		}
+import org.kohsuke.github.GHReleaseBuilder
+import org.kohsuke.github.GitHub
 
-		tagName project.minecraft_version + "-" + project.version
-		targetCommitish { grgit.branch.current().name }
-		releaseName project.minecraft_version + "-" + project.version
+task github(dependsOn: remapMavenJar) {
+	onlyIf {
+		project.github_releases_token
+	}
 
-		FilenameFilter filter = { dir, filename -> filename.contains(project.version) && !filename.contains("-dev.jar") && !filename.contains("SNAPSHOT") }
-		releaseAssets = jar.destinationDir.listFiles filter
+	doLast {
+		if (project.version.endsWith('LOCAL') || project.version.endsWith('SNAPSHOT')) {
+			println "Snapshot build will be local only - not pushed to github"
+		} else {
+			def github = GitHub.connectUsingOAuth(project.github_releases_token)
+			def repository = github.getRepository(project.github_repository_owner)
+	
+			def releaseBuilder = new GHReleaseBuilder(repository, version as String)
+			releaseBuilder.name(project.minecraft_version + "-" + project.version)
+			releaseBuilder.commitish(grgit.branch.current().name)
+			releaseBuilder.prerelease(true)
+	
+			def ghRelease = releaseBuilder.create()
+			ghRelease.uploadAsset(file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"), "application/java-archive");
+		}
 	}
 }
 
@@ -254,7 +264,7 @@ curseforge {
 			}
 
 			afterEvaluate {
-				uploadTask.dependsOn remapSourcesJar
+				uploadTask.dependsOn remapJar
 			}
 		}
 

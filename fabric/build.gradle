@@ -137,7 +137,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 
 task remapMavenJar(type: net.fabricmc.loom.task.RemapJarTask, dependsOn: jar) {
 	input = jar.archiveFile
-	archiveFileName = "${archivesBaseName}-${project.version}-maven.jar"
+	archiveFileName = "${archivesBaseName}-${project.version}-slim.jar"
 	addNestedDependencies = false
 }
 

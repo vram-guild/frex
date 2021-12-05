@@ -3,8 +3,6 @@
 
 plugins {
 	id 'fabric-loom' version '0.10.63'
-	id 'eclipse'
-	id 'idea'
 	id 'maven-publish'
 	id 'com.github.breadmoirai.github-release' version '2.2.12'
 	id 'org.cadixdev.licenser' version '0.6.1'
@@ -25,8 +23,6 @@ targetCompatibility = JavaVersion.VERSION_16
 
 repositories {
 	mavenLocal()
-  jcenter();
-  maven {url "https://maven.fabricmc.net/"}
 	maven {url "https://maven.vram.io"}
 	maven {url "https://maven.shedaniel.me/"}
 	maven {url "https://maven.terraformersmc.com/releases/"}
@@ -139,6 +135,7 @@ task remapMavenJar(type: net.fabricmc.loom.task.RemapJarTask, dependsOn: jar) {
 	input = jar.archiveFile
 	archiveFileName = "${archivesBaseName}-${project.version}-slim.jar"
 	addNestedDependencies = false
+	remapAccessWidener = true
 }
 
 build.dependsOn remapMavenJar

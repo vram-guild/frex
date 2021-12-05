@@ -190,7 +190,7 @@ publishing {
 import org.kohsuke.github.GHReleaseBuilder
 import org.kohsuke.github.GitHub
 
-task github(dependsOn: remapMavenJar) {
+task github(dependsOn: build) {
 	onlyIf {
 		project.github_releases_token
 	}
@@ -200,15 +200,15 @@ task github(dependsOn: remapMavenJar) {
 			println "Snapshot build will be local only - not pushed to github"
 		} else {
 			def github = GitHub.connectUsingOAuth(project.github_releases_token)
-			def repository = github.getRepository(project.github_repository_owner)
-	
+			def repository = github.getRepository("${project.github_repository_owner}/${project.github_repository}")
+
 			def releaseBuilder = new GHReleaseBuilder(repository, version as String)
 			releaseBuilder.name(project.minecraft_version + "-" + project.version)
 			releaseBuilder.commitish(grgit.branch.current().name)
-			releaseBuilder.prerelease(true)
-	
+
 			def ghRelease = releaseBuilder.create()
 			ghRelease.uploadAsset(file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"), "application/java-archive");
+			ghRelease.uploadAsset(file("${project.buildDir}/libs/${archivesBaseName}-${version}-sources.jar"), "application/java-archive");
 		}
 	}
 }

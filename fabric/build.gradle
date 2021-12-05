@@ -64,10 +64,7 @@ dependencies {
 configurations {
     modIncludeImplementation
     modImplementation.extendsFrom modIncludeImplementation
-
-    if (!(gradle.startParameter.taskNames.contains("publish") || gradle.startParameter.taskNames.contains("publishToMavenLocal"))) {
-    	include.extendsFrom modIncludeImplementation
-    }
+    include.extendsFrom modIncludeImplementation
 }
 
 loom {
@@ -138,13 +135,28 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 	}
 }
 
+task remapMavenJar(type: net.fabricmc.loom.task.RemapJarTask, dependsOn: jar) {
+	input = jar.archiveFile
+	archiveFileName = "${archivesBaseName}-${project.version}-maven.jar"
+	addNestedDependencies = false
+}
+
+build.dependsOn remapMavenJar
+
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
 			artifactId = project.archivesBaseName;
+
+			artifact(remapMavenJar) {
+				builtBy remapMavenJar
+			}
+
 			artifact(remapJar) {
+				classifier = "fat"
 				builtBy remapJar
 			}
+
 			artifact(sourcesJar) {
 				classifier = "sources"
 				builtBy remapSourcesJar
@@ -174,20 +186,24 @@ publishing {
 }
 
 githubRelease {
-	token project.hasProperty("github_releases_token") ? project.github_releases_token : ""
-	if(project.hasProperty("github_repository_owner")) {
-		owner project.github_repository_owner
-	}
-	if(project.hasProperty("github_repository")) {
-		repo project.github_repository
-	}
+	if (project.version.endsWith('LOCAL') || project.version.endsWith('SNAPSHOT')) {
+		println "Snapshot build will be local only - not pushed to github"
+	} else {
+		token project.hasProperty("github_releases_token") ? project.github_releases_token : ""
+		if(project.hasProperty("github_repository_owner")) {
+			owner project.github_repository_owner
+		}
+		if(project.hasProperty("github_repository")) {
+			repo project.github_repository
+		}
 
-	tagName project.minecraft_version + "-" + project.version
-	targetCommitish { grgit.branch.current().name }
-	releaseName project.minecraft_version + "-" + project.version
+		tagName project.minecraft_version + "-" + project.version
+		targetCommitish { grgit.branch.current().name }
+		releaseName project.minecraft_version + "-" + project.version
 
-	FilenameFilter filter = { dir, filename -> filename.contains(project.version) && !filename.contains("-dev.jar") && !filename.contains("SNAPSHOT") }
-	releaseAssets = jar.destinationDir.listFiles filter
+		FilenameFilter filter = { dir, filename -> filename.contains(project.version) && !filename.contains("-dev.jar") && !filename.contains("SNAPSHOT") }
+		releaseAssets = jar.destinationDir.listFiles filter
+	}
 }
 
 curseforge {

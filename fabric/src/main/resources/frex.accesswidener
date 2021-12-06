@@ -145,3 +145,6 @@ accessible method net/minecraft/client/renderer/culling/Frustum calculateFrustum
 accessible field net/minecraft/client/renderer/ShaderInstance name Ljava/lang/String;
 
 accessible field net/minecraft/client/renderer/entity/ItemRenderer blockEntityRenderer Lnet/minecraft/client/renderer/BlockEntityWithoutLevelRenderer;
+
+accessible class net/minecraft/client/renderer/chunk/RenderChunk
+accessible class net/minecraft/client/renderer/chunk/RenderRegionCache$ChunkInfo

@@ -12,7 +12,8 @@
 		"MixinItemFrameRenderer",
 		"MixinItemRenderer",
 		"MixinModelBlockRenderer",
-		"MixinRenderChunkRegion"
+		"MixinRenderChunkRegion",
+		"MixinRenderRegionCache"
 	],
 	"injectors": {
 		"defaultRequire": 1

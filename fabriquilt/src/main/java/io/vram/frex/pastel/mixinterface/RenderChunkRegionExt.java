@@ -20,6 +20,7 @@
 
 package io.vram.frex.pastel.mixinterface;
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
@@ -39,6 +40,8 @@ public interface RenderChunkRegionExt {
 
 	@Nullable
 	Object frx_getBlockEntityRenderData(BlockPos pos);
+
+	void frx_setBlockEntityRenderData(Long2ObjectOpenHashMap<Object> renderData);
 
 	PastelTerrainRenderContext frx_getContext();
 

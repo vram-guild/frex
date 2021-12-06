@@ -21,15 +21,10 @@
 package io.vram.frex.pastel.mixin;
 
 import java.util.BitSet;
-import java.util.ConcurrentModificationException;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -37,20 +32,17 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
+import net.minecraft.client.renderer.chunk.RenderChunk;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.LevelChunk;
 
 import io.vram.frex.api.math.PackedSectionPos;
-import io.vram.frex.api.world.BlockEntityRenderData;
 import io.vram.frex.api.world.RenderRegionBakeListener;
 import io.vram.frex.impl.world.ChunkRenderConditionContext;
 import io.vram.frex.pastel.PastelTerrainRenderContext;
@@ -70,9 +62,6 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 	private final BitSet closedResultBits = new BitSet();
 	private Long2ObjectOpenHashMap<Object> renderDataObjects;
 
-	private static final AtomicInteger FRX_ERROR_COUNTER = new AtomicInteger();
-	private static final Logger FRX_LOGGER = LogManager.getLogger();
-
 	// For RenderRegionBakeListener
 	@Unique
 	private @Nullable RenderRegionBakeListener[] listeners;
@@ -80,81 +69,17 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 	private static final ThreadLocal<ChunkRenderConditionContext> TRANSFER_POOL = ThreadLocal.withInitial(ChunkRenderConditionContext::new);
 
 	@Inject(method = "<init>", at = @At("RETURN"))
-	public void onNew(Level level, int cxOff, int czOff, LevelChunk[][] levelChunks, CallbackInfo ci) {
-		final int iLast = levelChunks.length - 1;
-		final int jLast = levelChunks[iLast].length - 1;
-		final int yMin = level.getMinBuildHeight();
-		final int yMax = level.getMaxBuildHeight() - 1; // 320 isn't a legal block Y
-		final int xMin = levelChunks[0][0].getPos().getMinBlockX();
-		final int zMin = levelChunks[0][0].getPos().getMinBlockZ();
-		final int xMax = levelChunks[iLast][jLast].getPos().getMaxBlockX();
-		final int zMax = levelChunks[iLast][jLast].getPos().getMaxBlockZ();
-		final BlockPos posFrom = new BlockPos(xMin, yMin, zMin);
-		final BlockPos posTo = new BlockPos(xMax, yMax, zMax);
-
+	public void onNew(Level level, int cxOff, int czOff, RenderChunk[][] renderChunks, CallbackInfo ci) {
 		brightnessCache.defaultReturnValue(Integer.MAX_VALUE);
 		aoLevelCache.defaultReturnValue(Integer.MAX_VALUE);
-
-		Long2ObjectOpenHashMap<Object> dataObjects = null;
-
-		for (final LevelChunk[] chunkOuter : levelChunks) {
-			for (final LevelChunk chunk : chunkOuter) {
-				// Hash maps in chunks should generally not be modified outside of client thread
-				// but does happen in practice, due to mods or inconsistent vanilla behaviors, causing
-				// CMEs when we iterate the map.  (Vanilla does not iterate these maps when it builds
-				// the chunk cache and does not suffer from this problem.)
-				//
-				// We handle this simply by retrying until it works.  Ugly but effective.
-				for (;;) {
-					try {
-						dataObjects = frx_mapChunk(chunk, posFrom, posTo, dataObjects);
-						break;
-					} catch (final ConcurrentModificationException e) {
-						final int count = FRX_ERROR_COUNTER.incrementAndGet();
-
-						if (count <= 5) {
-							FRX_LOGGER.warn("[Render Data Attachment] Encountered CME during render region build. A mod is accessing or changing chunk data outside the main thread. Retrying.", e);
-
-							if (count == 5) {
-								FRX_LOGGER.info("[Render Data Attachment] Subsequent exceptions will be suppressed.");
-							}
-						}
-					}
-				}
-			}
-		}
-
-		renderDataObjects = dataObjects;
+		// capture our predicate search results while still on the same thread - will happen right after the hook above
+		listeners = TRANSFER_POOL.get().getListeners();
 	}
 
 	@Unique
-	private Long2ObjectOpenHashMap<Object> frx_mapChunk(LevelChunk chunk, BlockPos posFrom, BlockPos posTo, Long2ObjectOpenHashMap<Object> map) {
-		final int xMin = posFrom.getX();
-		final int xMax = posTo.getX();
-		final int zMin = posFrom.getZ();
-		final int zMax = posTo.getZ();
-		final int yMin = posFrom.getY();
-		final int yMax = posTo.getY();
-
-		for (final Map.Entry<BlockPos, BlockEntity> entry : chunk.getBlockEntities().entrySet()) {
-			final BlockPos entPos = entry.getKey();
-
-			if (entPos.getX() >= xMin && entPos.getX() <= xMax
-					&& entPos.getY() >= yMin && entPos.getY() <= yMax
-					&& entPos.getZ() >= zMin && entPos.getZ() <= zMax) {
-				final Object o = BlockEntityRenderData.get(entry.getValue());
-
-				if (o != null) {
-					if (map == null) {
-						map = new Long2ObjectOpenHashMap<>();
-					}
-
-					map.put(entPos.asLong(), o);
-				}
-			}
-		}
-
-		return map;
+	@Override
+	public void frx_setBlockEntityRenderData(Long2ObjectOpenHashMap<Object> renderData) {
+		renderDataObjects = renderData;
 	}
 
 	@Unique
@@ -253,26 +178,6 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 		}
 
 		return result;
-	}
-
-	@Inject(method = "createIfNotEmpty", at = @At("HEAD"))
-	private static void onCreateIfNotEmpty(Level level, BlockPos startPos, BlockPos endPos, int i, CallbackInfoReturnable<RenderChunkRegion> cir) {
-		final ChunkRenderConditionContext context = TRANSFER_POOL.get().prepare(level, startPos.getX() + 1, startPos.getY() + 1, startPos.getZ() + 1);
-		RenderRegionBakeListener.prepareInvocations(context, context.listeners);
-	}
-
-	@Inject(method = "isAllEmpty", at = @At("RETURN"), cancellable = true)
-	private static void isChunkEmpty(BlockPos startPos, BlockPos endPos, int i, int j, LevelChunk[][] levelChunks, CallbackInfoReturnable<Boolean> cir) {
-		// if empty but has listeners, force it to build
-		if (cir.getReturnValueZ() && !TRANSFER_POOL.get().listeners.isEmpty()) {
-			cir.setReturnValue(false);
-		}
-	}
-
-	@Inject(method = "<init>*", at = @At("RETURN"))
-	private void onInit(Level level, int i, int j, LevelChunk[][] levelChunks, CallbackInfo ci) {
-		// capture our predicate search results while still on the same thread - will happen right after the hook above
-		listeners = TRANSFER_POOL.get().getListeners();
 	}
 
 	@Override

@@ -62,6 +62,14 @@ public interface MaterialFinder extends MaterialView {
 
 	MaterialFinder emissive(boolean isEmissive);
 
+	/**
+	 * Unlit means the material is rendered without lighting - using only texture and vertex color.
+	 * Intended for debug overlays, etc.  Many vanilla render types have this property
+	 * and some mods that don't rely on FREX may use it for emissive effects. This is not ideal
+	 * - emissive would be better - but there's no simple and reliable way to know intent of these mods.
+	 */
+	MaterialFinder unlit(boolean unlit);
+
 	RenderMaterial find();
 
 	MaterialFinder copyFrom(RenderMaterial material);

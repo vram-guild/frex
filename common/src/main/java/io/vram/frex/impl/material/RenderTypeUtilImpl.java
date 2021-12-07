@@ -55,8 +55,7 @@ public final class RenderTypeUtilImpl {
 
 		final VanillaShaderInfo sd = VanillaShaderInfoImpl.get(compositeState.shaderState);
 
-		if (texBase != null && texBase instanceof TextureStateShard) {
-			final TextureStateShard tex = (TextureStateShard) compositeState.textureState;
+		if (texBase != null && texBase instanceof TextureStateShard tex) {
 			finder.texture(tex.texture.orElse(null));
 			finder.unmipped(!tex.mipmap);
 			finder.blur(tex.blur);
@@ -76,6 +75,7 @@ public final class RenderTypeUtilImpl {
 		finder.cutout(sd.cutout());
 		finder.sorted(renderType.sortOnUpload);
 		finder.label(renderType.name);
+		finder.unlit(sd.unlit());
 
 		// vanilla sets these as part of draw process but we don't want special casing
 		if (renderType == RenderType.solid() || renderType == RenderType.cutoutMipped() || renderType == RenderType.cutout() || renderType == RenderType.translucent()) {

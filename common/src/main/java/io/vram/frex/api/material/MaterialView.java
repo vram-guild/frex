@@ -51,6 +51,8 @@ public interface MaterialView {
 
 	boolean emissive();
 
+	boolean unlit();
+
 	boolean flashOverlay();
 
 	boolean fog();

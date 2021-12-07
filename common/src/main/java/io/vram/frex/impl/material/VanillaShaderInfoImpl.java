@@ -36,16 +36,23 @@ import io.vram.frex.api.rendertype.VanillaShaderInfo;
 
 @Internal
 public final class VanillaShaderInfoImpl implements VanillaShaderInfo {
+	private static final int FOG = 1;
+	private static final int DIFFUSE = 2;
+	private static final int FOIL = 4;
+	private static final int UNLIT = 8;
+
 	public final boolean fog;
 	public final int cutout;
 	public final boolean diffuse;
 	public final boolean foil;
+	public final boolean unlit;
 
-	private VanillaShaderInfoImpl(boolean fog, boolean foil, int cutout, boolean diffuse) {
-		this.fog = fog;
-		this.foil = foil;
+	private VanillaShaderInfoImpl(int cutout, int flags) {
 		this.cutout = cutout;
-		this.diffuse = diffuse;
+		this.fog = (flags & FOG) == FOG;
+		this.foil = (flags & FOIL) == FOIL;
+		this.diffuse = (flags & DIFFUSE) == DIFFUSE;
+		this.unlit = (flags & UNLIT) == UNLIT;
 	}
 
 	@Override
@@ -68,63 +75,68 @@ public final class VanillaShaderInfoImpl implements VanillaShaderInfo {
 		return foil;
 	}
 
+	@Override
+	public boolean unlit() {
+		return unlit;
+	}
+
 	private static final Object2ObjectOpenHashMap<String, VanillaShaderInfoImpl> MAP = new Object2ObjectOpenHashMap<>(64, Hash.VERY_FAST_LOAD_FACTOR);
 
-	public static final VanillaShaderInfoImpl MISSING = of(false, false, CUTOUT_NONE);
+	public static final VanillaShaderInfoImpl MISSING = of(CUTOUT_NONE, 0);
 
 	static {
-		MAP.put("block", of(false, CUTOUT_NONE));
-		MAP.put("new_entity", of(false, CUTOUT_NONE));
-		MAP.put("particle", of(true, CUTOUT_TENTH));
-		MAP.put("position_color_lightmap", of(false, CUTOUT_NONE));
-		MAP.put("position", of(true, CUTOUT_NONE));
-		MAP.put("position_color", of(false, CUTOUT_ZERO));
-		MAP.put("position_color_tex", of(false, CUTOUT_TENTH));
-		MAP.put("position_tex", of(false, CUTOUT_ZERO));
-		MAP.put("position_tex_color", of(false, CUTOUT_TENTH));
-		MAP.put("position_color_tex_lightmap", of(false, CUTOUT_TENTH));
-		MAP.put("position_tex_color_normal", of(true, CUTOUT_TENTH));
-		MAP.put("position_tex_lightmap_color", of(false, CUTOUT_NONE));
-		MAP.put("rendertype_solid", of(true, CUTOUT_NONE, true));
-		MAP.put("rendertype_cutout_mipped", of(true, CUTOUT_HALF, true));
-		MAP.put("rendertype_cutout", of(true, CUTOUT_TENTH, true));
-		MAP.put("rendertype_translucent", of(true, CUTOUT_NONE, true));
-		MAP.put("rendertype_translucent_moving_block", of(false, CUTOUT_NONE));
-		MAP.put("rendertype_translucent_no_crumbling", of(false, CUTOUT_NONE));
-		MAP.put("rendertype_armor_cutout_no_cull", of(true, CUTOUT_TENTH, true));
-		MAP.put("rendertype_entity_solid", of(true, CUTOUT_NONE, true));
-		MAP.put("rendertype_entity_cutout", of(true, CUTOUT_TENTH, true));
-		MAP.put("rendertype_entity_cutout_no_cull", of(true, CUTOUT_TENTH, true));
-		MAP.put("rendertype_entity_cutout_no_cull_z_offset", of(true, CUTOUT_TENTH, true));
-		MAP.put("rendertype_item_entity_translucent_cull", of(true, CUTOUT_TENTH, true));
-		MAP.put("rendertype_entity_translucent_cull", of(true, CUTOUT_TENTH, true));
-		MAP.put("rendertype_entity_translucent", of(true, CUTOUT_TENTH, true));
-		MAP.put("rendertype_entity_smooth_cutout", of(true, CUTOUT_TENTH, true));
-		MAP.put("rendertype_beacon_beam", of(false, CUTOUT_NONE));
-		MAP.put("rendertype_entity_decal", of(true, CUTOUT_TENTH, true));
-		MAP.put("rendertype_entity_no_outline", of(true, CUTOUT_NONE, true));
-		MAP.put("rendertype_entity_shadow", of(true, CUTOUT_NONE));
-		MAP.put("rendertype_entity_alpha", of(false, CUTOUT_ALPHA));
-		MAP.put("rendertype_eyes", of(false, CUTOUT_NONE));
-		MAP.put("rendertype_energy_swirl", of(false, CUTOUT_TENTH));
-		MAP.put("rendertype_leash", of(true, CUTOUT_NONE));
-		MAP.put("rendertype_water_mask", of(false, CUTOUT_NONE));
-		MAP.put("rendertype_outline", of(false, CUTOUT_ZERO));
-		MAP.put("rendertype_armor_glint", of(false, false, CUTOUT_TENTH));
-		MAP.put("rendertype_armor_entity_glint", of(false, false, CUTOUT_TENTH));
-		MAP.put("rendertype_glint_translucent", of(false, false, CUTOUT_TENTH));
-		MAP.put("rendertype_glint", of(false, false, CUTOUT_TENTH));
-		MAP.put("rendertype_glint_direct", of(false, false, CUTOUT_TENTH));
-		MAP.put("rendertype_entity_glint", of(false, false, CUTOUT_TENTH));
-		MAP.put("rendertype_entity_glint_direct", of(false, false, CUTOUT_TENTH));
-		MAP.put("rendertype_text", of(true, CUTOUT_TENTH));
-		MAP.put("rendertype_text_see_through", of(false, CUTOUT_TENTH));
-		MAP.put("rendertype_crumbling", of(false, CUTOUT_TENTH));
-		MAP.put("rendertype_end_gateway", of(false, CUTOUT_NONE));
-		MAP.put("rendertype_end_portal", of(true, CUTOUT_TENTH));
-		MAP.put("rendertype_lightning", of(false, CUTOUT_NONE));
-		MAP.put("rendertype_lines", of(true, CUTOUT_NONE));
-		MAP.put("rendertype_tripwire", of(false, CUTOUT_TENTH));
+		MAP.put("block", of(CUTOUT_NONE, UNLIT));
+		MAP.put("new_entity", of(CUTOUT_NONE, 0));
+		MAP.put("particle", of(CUTOUT_TENTH, FOG));
+		MAP.put("position_color_lightmap", of(CUTOUT_NONE, 0));
+		MAP.put("position", of(CUTOUT_NONE, FOG | UNLIT));
+		MAP.put("position_color", of(CUTOUT_ZERO, UNLIT));
+		MAP.put("position_color_tex", of(CUTOUT_TENTH, UNLIT));
+		MAP.put("position_tex", of(CUTOUT_ZERO, UNLIT));
+		MAP.put("position_tex_color", of(CUTOUT_TENTH, UNLIT));
+		MAP.put("position_color_tex_lightmap", of(CUTOUT_TENTH, 0));
+		MAP.put("position_tex_color_normal", of(CUTOUT_TENTH, FOG | UNLIT));
+		MAP.put("position_tex_lightmap_color", of(CUTOUT_NONE, 0));
+		MAP.put("rendertype_solid", of(CUTOUT_NONE, FOG | DIFFUSE));
+		MAP.put("rendertype_cutout_mipped", of(CUTOUT_HALF, FOG | DIFFUSE));
+		MAP.put("rendertype_cutout", of(CUTOUT_TENTH, FOG | DIFFUSE));
+		MAP.put("rendertype_translucent", of(CUTOUT_NONE, FOG | DIFFUSE));
+		MAP.put("rendertype_translucent_moving_block", of(CUTOUT_NONE, 0));
+		MAP.put("rendertype_translucent_no_crumbling", of(CUTOUT_NONE, 0));
+		MAP.put("rendertype_armor_cutout_no_cull", of(CUTOUT_TENTH, FOG | DIFFUSE));
+		MAP.put("rendertype_entity_solid", of(CUTOUT_NONE, FOG | DIFFUSE));
+		MAP.put("rendertype_entity_cutout", of(CUTOUT_TENTH, FOG | DIFFUSE));
+		MAP.put("rendertype_entity_cutout_no_cull", of(CUTOUT_TENTH, FOG | DIFFUSE));
+		MAP.put("rendertype_entity_cutout_no_cull_z_offset", of(CUTOUT_TENTH, FOG | DIFFUSE));
+		MAP.put("rendertype_item_entity_translucent_cull", of(CUTOUT_TENTH, FOG | DIFFUSE));
+		MAP.put("rendertype_entity_translucent_cull", of(CUTOUT_TENTH, FOG | DIFFUSE));
+		MAP.put("rendertype_entity_translucent", of(CUTOUT_TENTH, FOG | DIFFUSE));
+		MAP.put("rendertype_entity_smooth_cutout", of(CUTOUT_TENTH, FOG | DIFFUSE));
+		MAP.put("rendertype_beacon_beam", of(CUTOUT_NONE, 0));
+		MAP.put("rendertype_entity_decal", of(CUTOUT_TENTH, FOG | DIFFUSE));
+		MAP.put("rendertype_entity_no_outline", of(CUTOUT_NONE, FOG | DIFFUSE));
+		MAP.put("rendertype_entity_shadow", of(CUTOUT_NONE, FOG | UNLIT));
+		MAP.put("rendertype_entity_alpha", of(CUTOUT_ALPHA, UNLIT));
+		MAP.put("rendertype_eyes", of(CUTOUT_NONE, UNLIT));
+		MAP.put("rendertype_energy_swirl", of(CUTOUT_TENTH, UNLIT));
+		MAP.put("rendertype_leash", of(CUTOUT_NONE, FOG));
+		MAP.put("rendertype_water_mask", of(CUTOUT_NONE, 0));
+		MAP.put("rendertype_outline", of(CUTOUT_ZERO, UNLIT));
+		MAP.put("rendertype_armor_glint", of(CUTOUT_TENTH, UNLIT | FOIL));
+		MAP.put("rendertype_armor_entity_glint", of(CUTOUT_TENTH, UNLIT | FOIL));
+		MAP.put("rendertype_glint_translucent", of(CUTOUT_TENTH, UNLIT | FOIL));
+		MAP.put("rendertype_glint", of(CUTOUT_TENTH, UNLIT | FOIL));
+		MAP.put("rendertype_glint_direct", of(CUTOUT_TENTH, UNLIT | FOIL));
+		MAP.put("rendertype_entity_glint", of(CUTOUT_TENTH, UNLIT | FOIL));
+		MAP.put("rendertype_entity_glint_direct", of(CUTOUT_TENTH, UNLIT | FOIL));
+		MAP.put("rendertype_text", of(CUTOUT_TENTH, FOG));
+		MAP.put("rendertype_text_see_through", of(CUTOUT_TENTH, 0));
+		MAP.put("rendertype_crumbling", of(CUTOUT_TENTH, UNLIT));
+		MAP.put("rendertype_end_gateway", of(CUTOUT_NONE, UNLIT));
+		MAP.put("rendertype_end_portal", of(CUTOUT_TENTH, UNLIT));
+		MAP.put("rendertype_lightning", of(CUTOUT_NONE, UNLIT));
+		MAP.put("rendertype_lines", of(CUTOUT_NONE, FOG | UNLIT));
+		MAP.put("rendertype_tripwire", of(CUTOUT_TENTH, FOG));
 	}
 
 	public static VanillaShaderInfoImpl get(Object shaderStateShard) {
@@ -136,15 +148,7 @@ public final class VanillaShaderInfoImpl implements VanillaShaderInfo {
 		return MAP.getOrDefault(shaderName, MISSING);
 	}
 
-	private static VanillaShaderInfoImpl of(boolean fog, int cutout) {
-		return new VanillaShaderInfoImpl(fog, false, cutout, false);
-	}
-
-	private static VanillaShaderInfoImpl of(boolean fog, int cutout, boolean diffuse) {
-		return new VanillaShaderInfoImpl(fog, false, cutout, diffuse);
-	}
-
-	private static VanillaShaderInfoImpl of(boolean fog, boolean glint, int cutout) {
-		return new VanillaShaderInfoImpl(fog, glint, cutout, false);
+	private static VanillaShaderInfoImpl of(int cutout, int flags) {
+		return new VanillaShaderInfoImpl(cutout, flags);
 	}
 }

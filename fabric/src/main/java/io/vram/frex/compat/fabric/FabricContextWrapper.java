@@ -79,7 +79,7 @@ public class FabricContextWrapper implements RenderContext {
 
 	@Override
 	public void popTransform() {
-		output.asQuadEmitter().close();
+		output.close();
 		output = outputStack.pop();
 	}
 

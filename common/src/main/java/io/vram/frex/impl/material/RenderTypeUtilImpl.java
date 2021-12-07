@@ -34,6 +34,7 @@ import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.rendertype.RenderTypeExclusion;
 import io.vram.frex.api.rendertype.VanillaShaderInfo;
+import io.vram.frex.api.texture.MaterialTexture;
 
 @Internal
 public final class RenderTypeUtilImpl {
@@ -59,6 +60,8 @@ public final class RenderTypeUtilImpl {
 			finder.texture(tex.texture.orElse(null));
 			finder.unmipped(!tex.mipmap);
 			finder.blur(tex.blur);
+		} else {
+			finder.texture(MaterialTexture.none());
 		}
 
 		finder.transparency(RenderTypeShardHelper.toMaterialTransparency(compositeState.transparencyState));

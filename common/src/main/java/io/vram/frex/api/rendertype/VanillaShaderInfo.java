@@ -37,6 +37,8 @@ public interface VanillaShaderInfo {
 
 	boolean foil();
 
+	boolean unlit();
+
 	VanillaShaderInfo MISSING = VanillaShaderInfoImpl.MISSING;
 
 	/**

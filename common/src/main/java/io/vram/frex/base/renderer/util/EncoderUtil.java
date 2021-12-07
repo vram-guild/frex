@@ -42,7 +42,7 @@ public abstract class EncoderUtil {
 		final boolean isNormalMatrixUseful = !normalMatrix.f_isIdentity();
 
 		final var mat = quad.material();
-		final boolean emissive = mat.emissive();
+		final boolean emissive = mat.emissive() | mat.unlit();
 
 		final boolean isHurt = mat.hurtOverlay();
 		final boolean isFlash = mat.flashOverlay();

@@ -127,6 +127,12 @@ public abstract class BaseMaterialFinder extends BaseMaterialView implements Mat
 	}
 
 	@Override
+	public BaseMaterialFinder unlit(boolean unlit) {
+		bits0 = UNLIT.setValue(unlit, bits0);
+		return this;
+	}
+
+	@Override
 	public BaseMaterialFinder flashOverlay(boolean flashOverlay) {
 		bits0 = FLASH_OVERLAY.setValue(flashOverlay, bits0);
 		return this;

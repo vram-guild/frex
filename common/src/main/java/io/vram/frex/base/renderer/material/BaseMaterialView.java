@@ -92,6 +92,11 @@ public abstract class BaseMaterialView implements MaterialView {
 	}
 
 	@Override
+	public boolean unlit() {
+		return UNLIT.getValue(bits0);
+	}
+
+	@Override
 	public boolean disableDiffuse() {
 		return DISABLE_DIFFUSE.getValue(bits0);
 	}
@@ -213,6 +218,7 @@ public abstract class BaseMaterialView implements MaterialView {
 	public static final BitPacker64<Void>.BooleanElement DISABLE_COLOR_INDEX = PACKER_0.createBooleanElement();
 	public static final BitPacker64<Void>.BooleanElement DISCARDS_TEXTURE = PACKER_0.createBooleanElement();
 	public static final BitPacker64<Void>.BooleanElement EMISSIVE = PACKER_0.createBooleanElement();
+	public static final BitPacker64<Void>.BooleanElement UNLIT = PACKER_0.createBooleanElement();
 	public static final BitPacker64<Void>.BooleanElement DISABLE_DIFFUSE = PACKER_0.createBooleanElement();
 	public static final BitPacker64<Void>.BooleanElement DISABLE_AO = PACKER_0.createBooleanElement();
 	public static final BitPacker64<Void>.BooleanElement UNMIPPED = PACKER_0.createBooleanElement();

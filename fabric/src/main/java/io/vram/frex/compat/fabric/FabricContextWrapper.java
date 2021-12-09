@@ -35,19 +35,37 @@ import io.vram.frex.api.model.BakedInputContext;
 import io.vram.frex.base.renderer.util.BakedModelTranscoder;
 
 public class FabricContextWrapper implements RenderContext {
+	// NB: We need to keep a stack of the QE wrappers also because we don't
+	// control how the wrappers are used or the order or number of operations.
+
+	private static class Output{
+		QuadSink sink;
+		final FabricQuadEmitter emitter = FabricQuadEmitter.of(null);
+
+		private void prepare(QuadSink sink) {
+			this.sink = sink;
+			emitter.wrapped = sink.asQuadEmitter();
+		}
+
+		private void clear() {
+			sink.close();
+			sink = null;
+			emitter.wrapped = null;
+		}
+	}
+
 	private BakedInputContext input;
-	private QuadSink output;
-	private final ObjectArrayList<QuadSink> outputStack = new ObjectArrayList<>();
+	private Output output = new Output();
+	private final ObjectArrayList<Output> outputStack = new ObjectArrayList<>();
+	private final ObjectArrayList<Output> pool = new ObjectArrayList<>();
 
 	private final Consumer<Mesh> meshConsumer = m -> {
-		(((FabricMesh) m).wrapped).outputTo(output.asQuadEmitter());
+		(((FabricMesh) m).wrapped).outputTo(output.sink.asQuadEmitter());
 	};
 
 	private final Consumer<BakedModel> fallbackConsumer = bm -> {
-		BakedModelTranscoder.accept(bm, input, output.asQuadEmitter());
+		BakedModelTranscoder.accept(bm, input, output.sink.asQuadEmitter());
 	};
-
-	private final FabricQuadEmitter qe = FabricQuadEmitter.of(null);
 
 	@Override
 	public Consumer<Mesh> meshConsumer() {
@@ -61,25 +79,36 @@ public class FabricContextWrapper implements RenderContext {
 
 	@Override
 	public QuadEmitter getEmitter() {
-		return qe.wrap(output.asQuadEmitter());
+		return output.emitter;
 	}
 
 	@Override
 	public void pushTransform(QuadTransform transform) {
 		outputStack.push(output);
 
-		output = output.withTransformQuad(input, (ctx, in, out) -> {
+		final var outEmitter = output.emitter;
+
+		final var newSink = output.sink.withTransformQuad(input, (ctx, in, out) -> {
 			in.copyTo(out);
 
-			if (transform.transform(qe.wrap(out))) {
+			if (transform.transform(outEmitter)) {
 				out.emit();
 			}
 		});
+
+		output = createOutput(newSink);
+	}
+
+	private Output createOutput(QuadSink sink) {
+		final var result = pool.isEmpty() ? new Output() : pool.pop();
+		result.prepare(sink);
+		return result;
 	}
 
 	@Override
 	public void popTransform() {
-		output.close();
+		output.clear();
+		pool.push(output);
 		output = outputStack.pop();
 	}
 
@@ -88,7 +117,7 @@ public class FabricContextWrapper implements RenderContext {
 	public static FabricContextWrapper wrap(BakedInputContext input, QuadSink output) {
 		final var result = POOL.get();
 		result.input = input;
-		result.output = output;
+		result.output.prepare(output.asQuadEmitter());
 		return result;
 	}
 }

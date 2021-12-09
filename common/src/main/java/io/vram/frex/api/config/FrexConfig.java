@@ -26,4 +26,7 @@ public class FrexConfig {
 	public static boolean logMaterialPredicateDuplicates = false;
 	public static boolean allowDegenerateFluidFaces = false;
 	public static boolean debugModelLoading = false;
+
+	// Driven by feature flag at renderer setup
+	public static boolean computeVertexTangents = false;
 }

@@ -34,15 +34,18 @@ public interface FrexFeature {
 	 */
 	static void registerFeatures(int... features) {
 		FrexFeatureImpl.registerFeatures(features);
+		FrexConfig.computeVertexTangents = isAvailable(VERTEX_TANGENT);
 	}
 
 	// IDs 0 - 4095 are reserved for FREX.
 
+	// TODO: should remove this - is always present now
 	/**
 	 * Present when registerOrUpdateMaterial is supported.
 	 * If not present, materials cannot be changed once registered.
 	 * Renderer-dependent, unavailable with Fabric API implementations.
 	 */
+	@Deprecated
 	int UPDATE_MATERIAL_REGISTRATION = 0;
 
 	/**
@@ -55,6 +58,15 @@ public interface FrexFeature {
 	 * special handling is required to create a soft dependency.
 	 */
 	int HELD_ITEM_LIGHTS = 1;
+
+	/**
+	 * Present when the renderer uses vertex tangents,
+	 * making them available in shaders.  This flag
+	 * also controls the execution of tangent computation
+	 * in the FREX base classes - disabling it for performance
+	 * reasons if not needed.
+	 */
+	int VERTEX_TANGENT = 2;
 
 	int MATERIAL_SHADERS = 1024;
 

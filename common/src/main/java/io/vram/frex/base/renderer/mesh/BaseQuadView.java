@@ -50,6 +50,7 @@ import com.mojang.math.Vector3f;
 import net.minecraft.core.Direction;
 
 import io.vram.frex.api.buffer.QuadEmitter;
+import io.vram.frex.api.config.FrexConfig;
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.math.FastMatrix4f;
 import io.vram.frex.api.math.PackedVector3f;
@@ -97,7 +98,7 @@ public class BaseQuadView implements QuadView {
 		// force geometry compute
 		computeGeometry();
 		// force tangent compute
-		this.packedFaceTanget();
+		packedFaceTanget();
 
 		final BaseQuadEmitter quad = (BaseQuadEmitter) target;
 
@@ -255,6 +256,7 @@ public class BaseQuadView implements QuadView {
 		return data[baseIndex + HEADER_FACE_NORMAL];
 	}
 
+	// PERF: need to avoid in render loop - problematic for item/entity rendering
 	private int computePackedFaceTangent() {
 		final float v1 = spriteFloatV(1);
 		final float dv0 = v1 - spriteFloatV(0);
@@ -296,6 +298,8 @@ public class BaseQuadView implements QuadView {
 	}
 
 	public int packedFaceTanget() {
+		if (!FrexConfig.computeVertexTangents) return PackedVector3f.POSITIVE_X;
+
 		if (isGeometryInvalid) {
 			isTangentInvalid = true;
 			computeGeometry();

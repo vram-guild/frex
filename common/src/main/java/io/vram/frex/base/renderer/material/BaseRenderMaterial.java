@@ -50,9 +50,11 @@ public abstract class BaseRenderMaterial extends BaseMaterialView implements Ren
 	protected final boolean unmipped;
 	protected final int writeMask;
 	protected final BaseMaterialManager<? extends BaseRenderMaterial> manager;
+	protected final int hashCode;
 
 	public BaseRenderMaterial(BaseMaterialManager<? extends BaseRenderMaterial> manager, int index, BaseMaterialView template) {
 		super(template.bits0, template.bits1, template.label);
+		this.hashCode = super.hashCode();
 		this.manager = manager;
 		this.index = index;
 		blur = super.blur();
@@ -80,6 +82,11 @@ public abstract class BaseRenderMaterial extends BaseMaterialView implements Ren
 		transparency = super.transparency();
 		unmipped = super.unmipped();
 		writeMask = super.writeMask();
+	}
+
+	@Override
+	public int hashCode() {
+		return hashCode;
 	}
 
 	@Override

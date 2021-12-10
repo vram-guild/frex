@@ -28,9 +28,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import io.vram.frex.api.math.FastMatrix3f;
 import io.vram.frex.api.math.FastMatrix4f;
 import io.vram.frex.api.math.PackedVector3f;
-import io.vram.frex.api.model.BakedInputContext;
 import io.vram.frex.api.model.InputContext;
-import io.vram.frex.api.model.util.ColorUtil;
 import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 import io.vram.frex.base.renderer.mesh.MeshEncodingHelper;
 
@@ -119,49 +117,5 @@ public abstract class EncoderUtil {
 		}
 
 		return sum / div;
-	}
-
-	/**
-	 * handles block color and red-blue swizzle, common to all renders.
-	 */
-	public static void colorizeQuad(BaseQuadEmitter quad, BakedInputContext context) {
-		final int colorIndex = quad.colorIndex();
-
-		if (colorIndex == -1 || quad.material().disableColorIndex()) {
-			quad.vertexColor(0, ColorUtil.swapRedBlueIfNeeded(quad.vertexColor(0)));
-			quad.vertexColor(1, ColorUtil.swapRedBlueIfNeeded(quad.vertexColor(1)));
-			quad.vertexColor(2, ColorUtil.swapRedBlueIfNeeded(quad.vertexColor(2)));
-			quad.vertexColor(3, ColorUtil.swapRedBlueIfNeeded(quad.vertexColor(3)));
-		} else {
-			final int indexedColor = context.indexedColor(colorIndex);
-			quad.vertexColor(0, ColorUtil.swapRedBlueIfNeeded(ColorUtil.multiplyColor(indexedColor, quad.vertexColor(0))));
-			quad.vertexColor(1, ColorUtil.swapRedBlueIfNeeded(ColorUtil.multiplyColor(indexedColor, quad.vertexColor(1))));
-			quad.vertexColor(2, ColorUtil.swapRedBlueIfNeeded(ColorUtil.multiplyColor(indexedColor, quad.vertexColor(2))));
-			quad.vertexColor(3, ColorUtil.swapRedBlueIfNeeded(ColorUtil.multiplyColor(indexedColor, quad.vertexColor(3))));
-		}
-	}
-
-	public static void colorizeQuadDiffuse(BaseQuadEmitter quad, BakedInputContext context) {
-		final int colorIndex = quad.colorIndex();
-
-		if (colorIndex == -1 || quad.material().disableColorIndex()) {
-			quad.vertexColor(0, ColorUtil.swapRedBlueIfNeeded(quad.vertexColor(0)));
-			quad.vertexColor(1, ColorUtil.swapRedBlueIfNeeded(quad.vertexColor(1)));
-			quad.vertexColor(2, ColorUtil.swapRedBlueIfNeeded(quad.vertexColor(2)));
-			quad.vertexColor(3, ColorUtil.swapRedBlueIfNeeded(quad.vertexColor(3)));
-		} else {
-			final int indexedColor = context.indexedColor(colorIndex);
-			quad.vertexColor(0, ColorUtil.swapRedBlueIfNeeded(ColorUtil.multiplyColor(indexedColor, quad.vertexColor(0))));
-			quad.vertexColor(1, ColorUtil.swapRedBlueIfNeeded(ColorUtil.multiplyColor(indexedColor, quad.vertexColor(1))));
-			quad.vertexColor(2, ColorUtil.swapRedBlueIfNeeded(ColorUtil.multiplyColor(indexedColor, quad.vertexColor(2))));
-			quad.vertexColor(3, ColorUtil.swapRedBlueIfNeeded(ColorUtil.multiplyColor(indexedColor, quad.vertexColor(3))));
-		}
-	}
-
-	public static void applyFlatLighting(BaseQuadEmitter quad, int lightmap) {
-		quad.lightmap(0, ColorUtil.maxBrightness(quad.lightmap(0), lightmap));
-		quad.lightmap(1, ColorUtil.maxBrightness(quad.lightmap(1), lightmap));
-		quad.lightmap(2, ColorUtil.maxBrightness(quad.lightmap(2), lightmap));
-		quad.lightmap(3, ColorUtil.maxBrightness(quad.lightmap(3), lightmap));
 	}
 }

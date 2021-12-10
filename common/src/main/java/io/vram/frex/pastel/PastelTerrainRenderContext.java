@@ -20,8 +20,6 @@
 
 package io.vram.frex.pastel;
 
-import static io.vram.frex.base.renderer.util.EncoderUtil.colorizeQuad;
-
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.Nullable;
 
@@ -156,7 +154,7 @@ public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintG
 	@Override
 	protected void shadeQuad() {
 		// tint before we apply shading
-		colorizeQuad(emitter, this.inputContext);
+		emitter.colorize(this.inputContext);
 
 		if (!emitter.material().disableAo() && Minecraft.useAmbientOcclusion()) {
 			aoCalc.compute(emitter);
@@ -226,7 +224,7 @@ public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintG
 				}
 			}
 		} else {
-			EncoderUtil.applyFlatLighting(emitter, inputContext.flatBrightness(emitter));
+			emitter.applyFlatLighting(inputContext.flatBrightness(emitter));
 		}
 	}
 

@@ -22,8 +22,6 @@ package io.vram.frex.api.model.util;
 
 import java.nio.ByteOrder;
 
-import it.unimi.dsi.fastutil.ints.Int2IntFunction;
-
 /**
  * Static routines of general utility for renderer implementations. Renderers
  * are not required to use these helpers, but they were designed to be usable
@@ -34,17 +32,13 @@ public abstract class ColorUtil {
 
 	public static final int FULL_BRIGHTNESS = 15 << 20 | 15 << 4;
 	public static final int WHITE = -1;
-
-	private static final Int2IntFunction colorSwapper = ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN
-			? color -> color == -1 ? -1 : ((color & 0xFF00FF00) | ((color & 0x00FF0000) >> 16) | ((color & 0xFF) << 16))
-			: color -> color;
+	public static final boolean SWAP_RED_BLUE = ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN;
 
 	/**
-	 * Swaps red blue order if needed to match GPU expectations for color component
-	 * order.
+	 * Swaps red blue order. Use if needed to match GPU expectations for color component order.
 	 */
-	public static int swapRedBlueIfNeeded(int color) {
-		return colorSwapper.applyAsInt(color);
+	public static int swapRedBlue(int color) {
+		return color == -1 ? -1 : ((color & 0xFF00FF00) | ((color & 0x00FF0000) >> 16) | ((color & 0xFF) << 16));
 	}
 
 	/**
@@ -78,15 +72,37 @@ public abstract class ColorUtil {
 	}
 
 	/**
+	 * Combination of {@link #multiplyColor(int, int)} and {@link #swapRedBlue(int)}.
+	 * These tend to be in hot loop for quad encoding so avoid an extra call is
+	 * worth a little redundant code.
+	 */
+	public static int multiplyColorSwapRedBlue(int color1, int color2) {
+		if (color1 == -1) {
+			return swapRedBlue(color2);
+		} else if (color2 == -1) {
+			return swapRedBlue(color1);
+		}
+
+		final int alpha = ((color1 >> 24) & 0xFF) * ((color2 >> 24) & 0xFF) / 0xFF;
+		final int red = ((color1 >> 16) & 0xFF) * ((color2 >> 16) & 0xFF) / 0xFF;
+		final int green = ((color1 >> 8) & 0xFF) * ((color2 >> 8) & 0xFF) / 0xFF;
+		final int blue = (color1 & 0xFF) * (color2 & 0xFF) / 0xFF;
+
+		return (alpha << 24) | (blue << 16) | (green << 8) | red;
+	}
+
+	/**
 	 * Component-wise max.
 	 */
 	public static int maxBrightness(int b0, int b1) {
-		if (b0 == 0) {
-			return b1;
-		} else if (b1 == 0) {
-			return b0;
-		}
+		// wouldn't work if had negative values
+		assert b0 >= 0;
+		assert b1 >= 0;
 
-		return Math.max(b0 & 0xFFFF, b1 & 0xFFFF) | Math.max(b0 & 0xFFFF0000, b1 & 0xFFFF0000);
+		final int low0 = b0 & 0xFFFF;
+		final int low1 = b1 & 0xFFFF;
+		final int high0 = b0 & 0xFFFF0000;
+		final int high1 = b1 & 0xFFFF0000;
+		return (low0 > low1 ? low0 : low1) | (high0 > high1 ? high0 : high1);
 	}
 }

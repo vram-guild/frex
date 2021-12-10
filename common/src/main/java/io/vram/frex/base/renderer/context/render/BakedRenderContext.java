@@ -22,12 +22,11 @@ package io.vram.frex.base.renderer.context.render;
 
 import io.vram.frex.base.renderer.context.input.BaseBakedInputContext;
 import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
-import io.vram.frex.base.renderer.util.EncoderUtil;
 
 public abstract class BakedRenderContext<C extends BaseBakedInputContext> extends BaseRenderContext<C> {
 	protected void shadeQuad() {
-		EncoderUtil.applyFlatLighting(emitter, inputContext.flatBrightness(emitter));
-		EncoderUtil.colorizeQuad(emitter, inputContext);
+		emitter.applyFlatLighting(inputContext.flatBrightness(emitter));
+		emitter.colorize(inputContext);
 	}
 
 	protected abstract void adjustMaterial();

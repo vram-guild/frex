@@ -33,7 +33,13 @@ import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.MESH_VERTEX_STR
 import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.MESH_VERTEX_STRIDE_SHIFT;
 import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.UV_PRECISE_UNIT_VALUE;
 import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.VERTEX_COLOR0;
+import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.VERTEX_COLOR1;
+import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.VERTEX_COLOR2;
+import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.VERTEX_COLOR3;
 import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.VERTEX_LIGHTMAP0;
+import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.VERTEX_LIGHTMAP1;
+import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.VERTEX_LIGHTMAP2;
+import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.VERTEX_LIGHTMAP3;
 import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.VERTEX_NORMAL0;
 import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.VERTEX_U0;
 import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.VERTEX_X0;
@@ -54,6 +60,8 @@ import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.math.FastMatrix3f;
 import io.vram.frex.api.math.FastMatrix4f;
 import io.vram.frex.api.math.PackedVector3f;
+import io.vram.frex.api.model.BakedInputContext;
+import io.vram.frex.api.model.util.ColorUtil;
 import io.vram.frex.api.model.util.FaceUtil;
 import io.vram.frex.impl.texture.IndexedSprite;
 
@@ -228,10 +236,84 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 		return this;
 	}
 
+	public void applyFlatLighting(final int lightmap) {
+		final int baseIndex = this.baseIndex;
+		final int[] data = this.data;
+		final int i0 = baseIndex + VERTEX_LIGHTMAP0;
+		data[i0] = ColorUtil.maxBrightness(data[i0], lightmap);
+		final int i1 = baseIndex + VERTEX_LIGHTMAP1;
+		data[i1] = ColorUtil.maxBrightness(data[i1], lightmap);
+		final int i2 = baseIndex + VERTEX_LIGHTMAP2;
+		data[i2] = ColorUtil.maxBrightness(data[i2], lightmap);
+		final int i3 = baseIndex + VERTEX_LIGHTMAP3;
+		data[i3] = ColorUtil.maxBrightness(data[i3], lightmap);
+	}
+
 	@Override
 	public BaseQuadEmitter vertexColor(int vertexIndex, int color) {
 		data[baseIndex + (vertexIndex << MESH_VERTEX_STRIDE_SHIFT) + VERTEX_COLOR0] = color;
 		return this;
+	}
+
+	/**
+	 * Handles block color and red-blue swizzle, common to all renders.
+	 */
+	public void colorize(BakedInputContext context) {
+		final int colorIndex = data[baseIndex + HEADER_COLOR_INDEX];
+		final int color = colorIndex == -1 || material().disableColorIndex() ? ColorUtil.WHITE : context.indexedColor(colorIndex);
+
+		if (color == ColorUtil.WHITE) {
+			// NB: static final input, so assuming JVM optimization will eliminate if not needed
+			if (ColorUtil.SWAP_RED_BLUE) {
+				swapRedBlue();
+			}
+		} else {
+			// NB: static final input, so assuming JVM optimization will mitigate branching
+			if (ColorUtil.SWAP_RED_BLUE) {
+				colorizeSwapRedBlue(color);
+			} else {
+				colorize(color);
+			}
+		}
+	}
+
+	private void swapRedBlue() {
+		final int[] data = this.data;
+		final int baseIndex = this.baseIndex;
+		final int i0 = baseIndex + VERTEX_COLOR0;
+		data[i0] = ColorUtil.swapRedBlue(data[i0]);
+		final int i1 = baseIndex + VERTEX_COLOR1;
+		data[i1] = ColorUtil.swapRedBlue(data[i1]);
+		final int i2 = baseIndex + VERTEX_COLOR2;
+		data[i2] = ColorUtil.swapRedBlue(data[i2]);
+		final int i3 = baseIndex + VERTEX_COLOR3;
+		data[i3] = ColorUtil.swapRedBlue(data[i3]);
+	}
+
+	private void colorizeSwapRedBlue(final int color) {
+		final int[] data = this.data;
+		final int baseIndex = this.baseIndex;
+		final int i0 = baseIndex + VERTEX_COLOR0;
+		data[i0] = ColorUtil.multiplyColorSwapRedBlue(color, data[i0]);
+		final int i1 = baseIndex + VERTEX_COLOR1;
+		data[i1] = ColorUtil.multiplyColorSwapRedBlue(color, data[i1]);
+		final int i2 = baseIndex + VERTEX_COLOR2;
+		data[i2] = ColorUtil.multiplyColorSwapRedBlue(color, data[i2]);
+		final int i3 = baseIndex + VERTEX_COLOR3;
+		data[i3] = ColorUtil.multiplyColorSwapRedBlue(color, data[i3]);
+	}
+
+	private void colorize(int color) {
+		final int[] data = this.data;
+		final int baseIndex = this.baseIndex;
+		final int i0 = baseIndex + VERTEX_COLOR0;
+		data[i0] = ColorUtil.multiplyColor(color, data[i0]);
+		final int i1 = baseIndex + VERTEX_COLOR1;
+		data[i1] = ColorUtil.multiplyColor(color, data[i1]);
+		final int i2 = baseIndex + VERTEX_COLOR2;
+		data[i2] = ColorUtil.multiplyColor(color, data[i2]);
+		final int i3 = baseIndex + VERTEX_COLOR3;
+		data[i3] = ColorUtil.multiplyColor(color, data[i3]);
 	}
 
 	public final void setSpriteNormalized() {

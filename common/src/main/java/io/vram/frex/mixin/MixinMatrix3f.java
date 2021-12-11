@@ -53,6 +53,7 @@ public abstract class MixinMatrix3f implements FastMatrix3f {
 		final float y = PackedVector3f.unpackY(packedVector3f);
 		final float z = PackedVector3f.unpackZ(packedVector3f);
 
+		// PERF: not certain FMA is helping here because may be preventing parallel/out-of-order execution
 		final float nx = fma(m00, x, fma(m01, y, m02 * z));
 		final float ny = fma(m10, x, fma(m11, y, m12 * z));
 		final float nz = fma(m20, x, fma(m21, y, m22 * z));

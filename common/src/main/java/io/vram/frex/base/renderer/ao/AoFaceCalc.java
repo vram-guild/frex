@@ -131,14 +131,17 @@ public class AoFaceCalc {
 	}
 
 	public int weightedBlockLight(int packedWeights) {
-		return (
-					(
-						blockBottomRight * (packedWeights & 0xFF)
-						+ blockBottomLeft * ((packedWeights >> 8) & 0xFF)
-						+ blockTopLeft * ((packedWeights >> 16) & 0xFF)
-						+ blockTopRight * ((packedWeights >> 24) & 0xFF)
-					) + FixedMath255.UNIT_VALUE
-				) >> FixedMath255.UNIT_SHIFT & 0xFF;
+		final var sum = (
+				blockBottomRight * (packedWeights & 0xFF)
+				+ blockBottomLeft * ((packedWeights >> 8) & 0xFF)
+				+ blockTopLeft * ((packedWeights >> 16) & 0xFF)
+				+ blockTopRight * ((packedWeights >> 24) & 0xFF)
+		) + FixedMath255.UNIT_VALUE;
+
+		// In rare cases we exceed the shifted unit value of 0xFFFF
+		// and if that happen the shifted result will typically be zero
+		// or greatly reduced.  So to catch these we clamp at 0xFFFF.
+		return ((sum > 0xFFFF ? 0xFFFF : sum) >> FixedMath255.UNIT_SHIFT) & 0xFF;
 	}
 
 	public int maxBlockLight(int oldMax) {
@@ -169,14 +172,14 @@ public class AoFaceCalc {
 	}
 
 	public int weigtedAo(int packedWeights) {
-		return (
+		return Math.min(0xFFFF, (
 					(
 						aoBottomRight * (packedWeights & 0xFF)
 						+ aoBottomLeft * ((packedWeights >> 8) & 0xFF)
 						+ aoTopLeft * ((packedWeights >> 16) & 0xFF)
 						+ aoTopRight * ((packedWeights >> 24) & 0xFF)
-					) + FixedMath255.UNIT_VALUE
-				) >> FixedMath255.UNIT_SHIFT & 0xFF;
+					) + FixedMath255.HALF_VALUE
+				)) >> FixedMath255.UNIT_SHIFT & 0xFF;
 	}
 
 	// PERF: use integer weights

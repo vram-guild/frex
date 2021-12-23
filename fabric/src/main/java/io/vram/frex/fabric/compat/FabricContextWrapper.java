@@ -1,5 +1,8 @@
 /*
- * Copyright © Original Authors
+ * This file is part of FREX and is licensed to the project under
+ * terms that are compatible with the GNU Lesser General Public License.
+ * See the NOTICE file distributed with this work for additional information
+ * regarding copyright ownership and licensing.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -13,9 +16,6 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Additional copyright and licensing notices may apply for content that was
- * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
 package io.vram.frex.fabric.compat;
@@ -38,7 +38,7 @@ public class FabricContextWrapper implements RenderContext {
 	// NB: We need to keep a stack of the QE wrappers also because we don't
 	// control how the wrappers are used or the order or number of operations.
 
-	private static class Output{
+	private static class Output {
 		QuadSink sink;
 		final FabricQuadEmitter emitter = FabricQuadEmitter.of(null);
 

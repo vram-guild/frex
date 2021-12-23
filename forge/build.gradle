@@ -1,214 +1,115 @@
+// VRAM STANDARD GRADLE BUILD FOR FORGE 1.18
+// DO NOT MAKE CHANGES HERE - THEY WILL BE OVERWRITTEN BY AUTOMATED UPDATE
+
 buildscript {
-    repositories {
-        // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
-        maven { url = 'https://maven.minecraftforge.net' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        // MixinGradle:
-        classpath 'org.spongepowered:mixingradle:0.7.+'
-    }
-}
-apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-// MixinGradle:
-apply plugin: 'org.spongepowered.mixin'
-
-version = '1.0'
-group = 'io.vram.frex' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'frex'
-
-// Mojang ships Java 16 to end users in 1.17+ instead of Java 8 in 1.16 or lower, so your mod should target Java 16.
-java.toolchain.languageVersion = JavaLanguageVersion.of(16)
-
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
-
-minecraft {
-    // The mappings can be changed at any time and must be in the following format.
-    // Channel:   Version:
-    // snapshot   YYYYMMDD   Snapshot are built nightly.
-    // stable     #          Stables are built at the discretion of the MCP team.
-    // official   MCVersion  Official field/method names from Mojang mapping files
-    //
-    // You must be aware of the Mojang license when using the 'official' mappings.
-    // See more information here: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
-    //
-    // Use non-default mappings at your own risk. They may not always work.
-    // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'official', version: '1.17.1'
-
-    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg') // Currently, this location cannot be changed from the default.
-
-    // Default run configurations.
-    // These can be tweaked, removed, or duplicated as needed.
-    runs {
-        client {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            // The markers can be added/remove as needed separated by commas.
-            // "SCAN": For mods scan.
-            // "REGISTRIES": For firing of registry events.
-            // "REGISTRYDUMP": For getting the contents of all registries.
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            // Recommended logging level for the console
-            // You can set various levels here.
-            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                frex {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            // The markers can be added/remove as needed separated by commas.
-            // "SCAN": For mods scan.
-            // "REGISTRIES": For firing of registry events.
-            // "REGISTRYDUMP": For getting the contents of all registries.
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            // Recommended logging level for the console
-            // You can set various levels here.
-            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                frex {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            // The markers can be added/remove as needed separated by commas.
-            // "SCAN": For mods scan.
-            // "REGISTRIES": For firing of registry events.
-            // "REGISTRYDUMP": For getting the contents of all registries.
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            // Recommended logging level for the console
-            // You can set various levels here.
-            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-            property 'forge.logging.console.level', 'debug'
-
-            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', 'frex', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-            mods {
-                frex {
-                    source sourceSets.main
-                }
-            }
-        }
-    }
-}
-
-sourceSets {
-	main {
-		java {
-			srcDirs = ['../common/src/main/java', 'src/main/java']
-			include '**/*'
-			exclude '*.DS_Store'
-		}
-		resources {
-			srcDirs = ['../common/src/main/resources', 'src/main/resources', 'src/generated/resources']
-			include '**/*'
-			exclude '*.DS_Store'
-		}
-	}
-	test {
-			java {
-				exclude '**/*'
-			}
+	dependencies {
+		classpath 'org.kohsuke:github-api:1.135'
 	}
 }
 
-repositories {
-    // Put repositories for dependencies here
-    // ForgeGradle automatically adds the Forge maven and Maven Central for you
-
-    // If you have mod jar dependencies in ./libs, you can declare them as a repository like so:
-    // flatDir {
-    //     dir 'libs'
-    // }
+plugins {
+	id 'dev.architectury.loom' version '0.10.0-SNAPSHOT'
+	id 'maven-publish'
+	id 'org.cadixdev.licenser' version '0.6.1'
+	id 'org.ajoberstar.grgit' version '4.1.1'
+	id 'com.matthewprenger.cursegradle' version '1.4.0'
+	id 'checkstyle'
+	id 'com.modrinth.minotaur' version '1.2.1'
+	id "com.github.johnrengelman.shadow" version "7.0.0"
 }
+
+ext.platform_name = 'forge'
+ext.forge_version = '39.0.8'
+
+configurations {
+	bundle { transitive = false }
+	implementation.extendsFrom bundle
+}
+
+apply from: '../project_common.gradle'
+apply from: 'project.gradle'
+apply from: '../gruntle_common.gradle'
 
 dependencies {
-    // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft', it is assumed
-    // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
-    // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.17.1-37.0.107'
-
-    // Real mod deobf dependency examples - these get remapped to your current mappings
-    // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
-    // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency
-    // implementation fg.deobf("com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}") // Adds registrate as a dependency
-
-    // Examples using mod jars from ./libs
-    // implementation fg.deobf("blank:coolmod-${mc_version}:${coolmod_version}")
-
-    // For more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-    
-    compileOnly 'org.jetbrains:annotations:19.0.0'
-    
-    // Apply Mixin AP
-    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+	minecraft "com.mojang:minecraft:${minecraft_version}"
+	forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+	mappings loom.officialMojangMappings()
 }
 
-mixin {
-    // MixinGradle Settings
-    add sourceSets.main, 'mixins.frex.refmap.json'
-    config 'frex.common.json'
-	config 'frex.pastel.json'
-
-    debug.verbose = true
-    debug.export = true
+loom {
+	mixin.defaultRefmapName = project.mod_name + "-refmap.json"
+	silentMojangMappingsLicense()
 }
-// Example for how to get properties into the manifest for reading at runtime.
-jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : "frex",
-                "Specification-Vendor"    : "vram",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "vram",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
+
+processResources {
+	inputs.property "version", project.version
+
+    filesMatching("META-INF/mods.toml") {
+        expand "version": project.version
     }
 }
 
-// Example configuration to allow publishing using the maven-publish plugin
-// This is the preferred method to reobfuscate your jar file
-jar.finalizedBy('reobfJar')
-// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
-// publish.dependsOn('reobfJar')
+if (project.build_fat_jar) {
+	shadowJar {
+	    configurations = [project.configurations.bundle]
+	    classifier "dev-shadow"
+	}
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-        }
-    }
-    repositories {
-        maven {
-            url "file://${project.projectDir}/mcmodsrepo"
-        }
-    }
+	remapJar {
+	    input.set shadowJar.archiveFile
+	    dependsOn shadowJar
+	    classifier null
+	}
+
+	jar {
+	    classifier "dev"
+	}
+
+	build.dependsOn shadowJar
+}
+
+// Remainder unfortunately does not work in common script due to build script class path
+// limitations and so must be duplicated for each platform script.
+// Probably a way around it but Gradle has already exhausted my will to keep going.
+
+import org.kohsuke.github.GHReleaseBuilder
+import org.kohsuke.github.GitHub
+
+task github(dependsOn: build) {
+	onlyIf {
+		project.github_releases_token
+	}
+
+	doLast {
+		if (project.version.endsWith('LOCAL') || project.version.endsWith('SNAPSHOT')) {
+			println "Snapshot build will be local only - not pushed to github"
+		} else {
+			def github = GitHub.connectUsingOAuth(project.github_releases_token)
+			def repository = github.getRepository("${project.github_repository_owner}/${project.github_repository}")
+
+			def releaseBuilder = new GHReleaseBuilder(repository, project.platform_name + '-' + project.mc_tag + '-' + project.version)
+			releaseBuilder.name(project.platform_name + '-' + project.mc_tag + '-' + project.version)
+			releaseBuilder.commitish(grgit.branch.current().name)
+
+			def ghRelease = releaseBuilder.create()
+			ghRelease.uploadAsset(file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"), "application/java-archive");
+			ghRelease.uploadAsset(file("${project.buildDir}/libs/${archivesBaseName}-${version}-sources.jar"), "application/java-archive");
+		}
+	}
+}
+
+import com.modrinth.minotaur.TaskModrinthUpload
+
+task publishModrinth (type: TaskModrinthUpload){ // Make sure it runs after build!
+  if (project.hasProperty("modrinth_token") && project.hasProperty("modrinth_id")) {
+		token = project.modrinth_token
+		projectId = project.modrinth_id
+		versionName = project.platform_name + '-' + project.mc_tag + '-' + project.version
+		versionNumber = project.platform_name + '-' + project.mc_tag + '-' + project.version // Will fail if Modrinth has this version already
+		versionType = project.release_type
+		// On fabric, use 'remapJar' instead of 'jar'
+		uploadFile = remapJar // This is the java jar task. If it can't find the jar, try 'jar.outputs.getFiles().asPath' in place of 'jar'
+		addGameVersion(project.minecraft_version) // Call this multiple times to add multiple game versions. There are tools that can help you generate the list of versions
+		addLoader(project.platform_name)
+	}
 }

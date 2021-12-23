@@ -1,5 +1,8 @@
 /*
- * Copyright © Original Authors
+ * This file is part of FREX and is licensed to the project under
+ * terms that are compatible with the GNU Lesser General Public License.
+ * See the NOTICE file distributed with this work for additional information
+ * regarding copyright ownership and licensing.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -13,9 +16,6 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Additional copyright and licensing notices may apply for content that was
- * included from other projects. For more information, see ATTRIBUTION.md.
  */
 
 package io.vram.frex.base.renderer.mesh;
@@ -68,7 +68,6 @@ public abstract class MeshEncodingHelper {
 	public static final int VERTEX_LIGHTMAP2 = VERTEX_LIGHTMAP1 + MESH_VERTEX_STRIDE;
 	public static final int VERTEX_LIGHTMAP3 = VERTEX_LIGHTMAP2 + MESH_VERTEX_STRIDE;
 	public static final int VERTEX_NORMAL0 = HEADER_STRIDE + VERTEX_NORMAL;
-
 
 	public static final int VERTEX_START = VERTEX_X0;
 	public static final int MESH_QUAD_STRIDE = MESH_VERTEX_STRIDE * 4;

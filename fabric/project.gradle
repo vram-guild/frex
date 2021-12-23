@@ -1,16 +1,23 @@
+// Hat tip to JellySquid
+configurations {
+    modIncludeImplementation
+    modImplementation.extendsFrom modIncludeImplementation
+    include.extendsFrom modIncludeImplementation
+}
+
 dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	
+
 	modIncludeImplementation(fabricApi.module("fabric-api-base", project.fabric_version))
 	modIncludeImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
 	modIncludeImplementation("io.vram:bitkit:1.0.1")
-	
-    modCompileOnly(fabricApi.module("fabric-rendering-fluids-v1", project.fabric_version))
-    modCompileOnly(fabricApi.module("fabric-rendering-data-attachment-v1", project.fabric_version))
-    modCompileOnly(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
-    modCompileOnly(fabricApi.module("fabric-renderer-api-v1", project.fabric_version))
-    modCompileOnly(fabricApi.module("fabric-rendering-v1", project.fabric_version))
-    modCompileOnly(fabricApi.module("fabric-renderer-indigo", project.fabric_version))
+
+  modCompileOnly(fabricApi.module("fabric-rendering-fluids-v1", project.fabric_version))
+  modCompileOnly(fabricApi.module("fabric-rendering-data-attachment-v1", project.fabric_version))
+  modCompileOnly(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
+  modCompileOnly(fabricApi.module("fabric-renderer-api-v1", project.fabric_version))
+  modCompileOnly(fabricApi.module("fabric-rendering-v1", project.fabric_version))
+  modCompileOnly(fabricApi.module("fabric-renderer-indigo", project.fabric_version))
 }
 
 sourceSets {

@@ -38,6 +38,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 
+// WIP: create go-forward version of this for BakedModels if seems to have any use (see request from Pepper)
+// WIP: also a non-lazy version
+
 /**
  * Improved base class for specialized model implementations that need to wrap other baked models.
  * Avoids boilerplate code for pass-through methods.}.

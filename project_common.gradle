@@ -9,7 +9,7 @@ ext.github_repository_owner = 'vram-guild'
 ext.github_repository = 'frex'
 
 ext.curseforge_id = '318827'
-//ext.modrinth_id = ''
+ext.modrinth_id = 'cFvMB8zZ'
 ext.release_type = 'release'
 
 ext.build_fat_jar = true

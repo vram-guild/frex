@@ -96,4 +96,6 @@ public interface ItemModel extends DynamicModel {
 	static BakedModel get(ItemStack itemStack) {
 		return ModelLookups.ITEM_MODEL_SHAPER.getItemModel(itemStack);
 	}
+
+	ItemModel EMPTY = (in, out) -> { };
 }

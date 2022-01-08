@@ -50,4 +50,6 @@ public interface MeshFactory {
 			}
 		};
 	}
+
+	MeshFactory EMPTY = (mb, finder, sp) -> Mesh.EMPTY;
 }

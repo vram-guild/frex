@@ -64,9 +64,13 @@ public abstract class ItemRenderContext extends BakedRenderContext<BaseItemInput
 		final MatrixStack matrixStack = MatrixStack.fromVanilla(poseStack);
 		inputContext.prepareForItem(model, stack, renderMode, light, overlay, isLeftHand, matrixStack);
 		materialMap = MaterialMap.get(stack);
-		matrixStack.push();
-		model.getTransforms().getTransform(renderMode).apply(isLeftHand, poseStack);
-		matrixStack.translate(-0.5f, -0.5f, -0.5f);
+		final var itemTransforms = model.getTransforms();
+
+		if (itemTransforms != null) {
+			matrixStack.push();
+			itemTransforms.getTransform(renderMode).apply(isLeftHand, poseStack);
+			matrixStack.translate(-0.5f, -0.5f, -0.5f);
+		}
 
 		prepareEncoding(vertexConsumers);
 

@@ -27,7 +27,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
-import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import org.spongepowered.include.com.google.common.base.Preconditions;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -43,83 +42,45 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.api.buffer.QuadSink;
-import io.vram.frex.api.mesh.Mesh;
+import io.vram.frex.api.model.BlockModel;
+import io.vram.frex.api.model.ItemModel;
 import io.vram.frex.api.model.provider.ModelProvider;
 import io.vram.frex.api.model.provider.ModelProviderRegistry;
 import io.vram.frex.api.model.util.BakedModelUtil;
-import io.vram.frex.impl.FrexLog;
 
-// WIP: name can't stay
-public class DynamicModel extends BaseModel {
-	protected final Int2ObjectFunction<Mesh> meshFactory;
-	protected final int keyCount;
-	protected final Mesh[] meshes;
-	protected final WeakReference<List<BakedQuad>[]>[] quadLists;
-	protected final BlockKeyFunction blockKeyFunction;
-	protected final ItemKeyFunction itemKeyFunction;
-	protected final VanillaKeyFunction vanillaKeyFunction;
+public class ProceduralModel extends BaseModel {
+	protected final BlockModel blockModel;
+	protected final ItemModel itemModel;
+	protected final MeshFactory defaultMeshFactory;
+	protected WeakReference<List<BakedQuad>[]> quadLists = null;
 	protected boolean shouldWarn = true;
 	protected String label;
 
-	@SuppressWarnings("unchecked")
-	protected DynamicModel(Builder builder, Function<Material, TextureAtlasSprite> spriteFunc) {
+	protected ProceduralModel(Builder builder, Function<Material, TextureAtlasSprite> spriteFunc) {
 		super(builder, spriteFunc);
-		meshFactory = builder.meshFactory;
-		keyCount = builder.keyCount;
-		meshes = new Mesh[keyCount];
-		quadLists = new WeakReference[keyCount];
-		blockKeyFunction = builder.blockKeyFunction;
-		itemKeyFunction = builder.itemKeyFunction;
-		vanillaKeyFunction = builder.vanillaKeyFunction;
-	}
-
-	protected Mesh getMesh(int key) {
-		if (key < 0 || key >= keyCount) {
-			if (shouldWarn) {
-				shouldWarn = false;
-				FrexLog.LOG.warn("Invalid key result in DynamicModel " + label +". Subsequent errors will be supressed", new Throwable());
-				return Mesh.EMPTY;
-			}
-		}
-
-		Mesh result = meshes[key];
-
-		if (result == null) {
-			result = meshFactory.apply(key);
-			meshes[key] = result;
-		}
-
-		return result;
+		blockModel = builder.blockModel;
+		itemModel = builder.itemModel;
+		defaultMeshFactory = builder.defaultMeshFactory;
 	}
 
 	@Override
 	public void renderAsBlock(BlockInputContext input, QuadSink output) {
-		getMesh(blockKeyFunction.computeKey(input)).outputTo(output);
+		blockModel.renderAsBlock(input, output);
 	}
 
 	@Override
 	public void renderAsItem(ItemInputContext input, QuadSink output) {
-		getMesh(itemKeyFunction.computeKey(input)).outputTo(output);
+		itemModel.renderAsItem(input, output);
 	}
 
 	@Override
 	public List<BakedQuad> getQuads(BlockState blockState, Direction face, Random random) {
-		final int key = vanillaKeyFunction.computeKey(blockState, random);
-
-		if (key < 0 || key >= keyCount) {
-			if (shouldWarn) {
-				shouldWarn = false;
-				FrexLog.LOG.warn("Invalid key result in DynamicModel " + label +". Subsequent errors will be supressed", new Throwable());
-				return ImmutableList.of();
-			}
-		}
-
-		final WeakReference<List<BakedQuad>[]> listReference = quadLists[key];
+		final WeakReference<List<BakedQuad>[]> listReference = quadLists;
 		List<BakedQuad>[] lists = listReference == null ? null : listReference.get();
 
 		if (lists == null) {
-			lists = BakedModelUtil.toQuadLists(getMesh(key));
-			quadLists[key] = new WeakReference<>(lists);
+			lists = BakedModelUtil.toQuadLists(defaultMeshFactory.createMesh(SpriteProvider.forBlocksAndItems()));
+			quadLists = new WeakReference<>(lists);
 		}
 
 		final List<BakedQuad> result = lists[face == null ? 6 : face.get3DDataValue()];
@@ -131,46 +92,31 @@ public class DynamicModel extends BaseModel {
 	}
 
 	public static class Builder extends BaseModelBuilder<Builder> {
-		protected int keyCount = 1;
-		protected Int2ObjectFunction<Mesh> meshFactory = i -> Mesh.EMPTY;
-		protected BlockKeyFunction blockKeyFunction = c -> 0;
-		protected ItemKeyFunction itemKeyFunction = c -> 0;
-		protected VanillaKeyFunction vanillaKeyFunction = (b, r) -> 0;
+		protected BlockModel blockModel = BlockModel.EMPTY;
+		protected ItemModel itemModel = ItemModel.EMPTY;
+		protected MeshFactory defaultMeshFactory = MeshFactory.EMPTY;
 
-		public Builder keyCount(int keyCount) {
-			Preconditions.checkArgument(keyCount >= 0);
-			Preconditions.checkArgument(keyCount < 4096);
-			this.keyCount = keyCount;
+		public Builder blockModel(BlockModel blockModel) {
+			Preconditions.checkNotNull(blockModel);
+			this.blockModel = blockModel;
 			return this;
 		}
 
-		public Builder meshFactory(Int2ObjectFunction<Mesh> meshFactory) {
-			Preconditions.checkNotNull(meshFactory);
-			this.meshFactory = meshFactory;
+		public Builder itemModel(ItemModel itemModel) {
+			Preconditions.checkNotNull(itemModel);
+			this.itemModel = itemModel;
 			return this;
 		}
 
-		public Builder blockKeyFunction(BlockKeyFunction blockKeyFunction) {
-			Preconditions.checkNotNull(blockKeyFunction);
-			this.blockKeyFunction = blockKeyFunction;
-			return this;
-		}
-
-		public Builder itemKeyFunction(ItemKeyFunction itemKeyFunction) {
-			Preconditions.checkNotNull(itemKeyFunction);
-			this.itemKeyFunction = itemKeyFunction;
-			return this;
-		}
-
-		public Builder vanillaKeyFunction(VanillaKeyFunction vanillaKeyFunction) {
-			Preconditions.checkNotNull(vanillaKeyFunction);
-			this.vanillaKeyFunction = vanillaKeyFunction;
+		public Builder defaultMeshFactory(MeshFactory defaultMeshFactory) {
+			Preconditions.checkNotNull(defaultMeshFactory);
+			this.defaultMeshFactory = defaultMeshFactory;
 			return this;
 		}
 
 		@Override
 		public BakedModel bakeOnce(ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteFunc, ModelState modelState, ResourceLocation modelLocation) {
-			return new DynamicModel(this, spriteFunc);
+			return new ProceduralModel(this, spriteFunc);
 		}
 	}
 
@@ -188,20 +134,5 @@ public class DynamicModel extends BaseModel {
 
 	public static void createAndRegisterProvider(Consumer<Builder> setupFunc, String... paths) {
 		ModelProviderRegistry.registerBlockItemProvider(createProvider(setupFunc), paths);
-	}
-
-	@FunctionalInterface
-	public interface VanillaKeyFunction {
-		int computeKey(BlockState blockState, Random random);
-	}
-
-	@FunctionalInterface
-	public interface BlockKeyFunction {
-		int computeKey(BlockInputContext input);
-	}
-
-	@FunctionalInterface
-	public interface ItemKeyFunction {
-		int computeKey(ItemInputContext input);
 	}
 }

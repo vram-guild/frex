@@ -53,6 +53,7 @@ public interface BlockModel extends DynamicModel {
 		}
 	}
 
+	// WIP: How do models override block state for sub-models in a way that don't require the renderer to do anything?
 	public interface BlockInputContext extends BakedInputContext {
 		@Override
 		default Type type() {
@@ -148,4 +149,6 @@ public interface BlockModel extends DynamicModel {
 	static BakedModel get(BlockState blockState) {
 		return ModelLookups.BLOCK_MODEL_SHAPER.getBlockModel(blockState);
 	}
+
+	BlockModel EMPTY = (in, out) -> { };
 }

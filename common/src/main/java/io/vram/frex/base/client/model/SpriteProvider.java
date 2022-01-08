@@ -20,6 +20,8 @@
 
 package io.vram.frex.base.client.model;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 
@@ -29,5 +31,14 @@ public interface SpriteProvider {
 
 	default TextureAtlasSprite getSprite(String path) {
 		return getSprite(new ResourceLocation(path));
+	}
+
+	@SuppressWarnings("resource")
+	static SpriteProvider forAtlas(ResourceLocation id) {
+		return Minecraft.getInstance().getTextureAtlas(id)::apply;
+	}
+
+	static SpriteProvider forBlocksAndItems() {
+		return forAtlas(TextureAtlas.LOCATION_BLOCKS);
 	}
 }

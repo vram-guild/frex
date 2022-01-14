@@ -80,7 +80,9 @@ public abstract class ItemRenderContext extends BakedRenderContext<BaseItemInput
 			((ItemModel) model).renderAsItem(inputContext, emitter());
 		}
 
-		matrixStack.pop();
+		if (itemTransforms != null) {
+			matrixStack.pop();
+		}
 	}
 
 	protected abstract void renderCustomModel(BlockEntityWithoutLevelRenderer builtInRenderer, MultiBufferSource vertexConsumers);

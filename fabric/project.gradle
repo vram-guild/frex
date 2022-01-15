@@ -10,7 +10,7 @@ dependencies {
 
 	modIncludeImplementation(fabricApi.module("fabric-api-base", project.fabric_version))
 	modIncludeImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
-	modIncludeImplementation("io.vram:bitkit:1.0.1")
+	modIncludeImplementation("io.vram:bitkit:1.0.4")
 
   modCompileOnly(fabricApi.module("fabric-rendering-fluids-v1", project.fabric_version))
   modCompileOnly(fabricApi.module("fabric-rendering-data-attachment-v1", project.fabric_version))

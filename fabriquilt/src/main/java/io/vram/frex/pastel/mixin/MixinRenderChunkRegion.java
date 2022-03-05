@@ -34,8 +34,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.client.renderer.chunk.RenderChunk;
+import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.world.level.Level;
@@ -187,6 +187,6 @@ public abstract class MixinRenderChunkRegion implements RenderChunkRegionExt {
 
 	@Override
 	public Biome frx_getBiome(BlockPos pos) {
-		return level.getBiome(pos);
+		return level.getBiome(pos).value();
 	}
 }

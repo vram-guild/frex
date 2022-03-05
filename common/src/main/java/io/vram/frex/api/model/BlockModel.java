@@ -76,7 +76,7 @@ public interface BlockModel extends DynamicModel {
 		 * @return Biome at given position, or plains biome if biome information is unavailable.
 		 */
 		default Biome getBiome(BlockPos pos) {
-			return RegistryAccess.builtin().registryOrThrow(Registry.BIOME_REGISTRY).getOrThrow(Biomes.PLAINS);
+			return RegistryAccess.BUILTIN.get().registryOrThrow(Registry.BIOME_REGISTRY).getOrThrow(Biomes.PLAINS);
 		}
 
 		/**

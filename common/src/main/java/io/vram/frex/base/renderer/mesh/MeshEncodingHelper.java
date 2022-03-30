@@ -172,7 +172,7 @@ public abstract class MeshEncodingHelper {
 	}
 
 	public static int packColor(int red, int green, int blue, int alpha) {
-		return red | (green << 8) | (blue << 16) | (alpha << 24);
+		return ((byte) red) | (((byte) green) << 8) | (((byte) blue) << 16) | (((byte) alpha) << 24);
 	}
 
 	public static int packColor(float red, float green, float blue, float alpha) {

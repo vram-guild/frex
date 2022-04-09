@@ -63,9 +63,6 @@ public abstract class MixinChunkRebuildTask implements RenderRegionContext<Block
 	//e -> field_20839 -> this$1
 	@Shadow protected RenderChunk this$1;
 
-	/** Holds block state for use in fluid render. */
-	private BlockState currentBlockState;
-
 	// Below are for RenderRegionBakeListener support
 
 	@Unique
@@ -106,16 +103,6 @@ public abstract class MixinChunkRebuildTask implements RenderRegionContext<Block
 		}
 	}
 
-	/** Capture block state for use in fluid render. */
-	@Redirect(method = "Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask;compile(FFFLnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$CompiledChunk;Lnet/minecraft/client/renderer/ChunkBufferBuilderPack;)Ljava/util/Set;",
-			require = 1, at = @At(value = "INVOKE",
-			target = "Lnet/minecraft/client/renderer/chunk/RenderChunkRegion;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"))
-	private BlockState onGetBlockState(RenderChunkRegion blockView, BlockPos pos) {
-		final var result = blockView.getBlockState(pos);
-		currentBlockState = result;
-		return result;
-	}
-
 	@Redirect(method = "Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask;compile(FFFLnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$CompiledChunk;Lnet/minecraft/client/renderer/ChunkBufferBuilderPack;)Ljava/util/Set;",
 			require = 1, at = @At(value = "INVOKE",
 			target = "Lnet/minecraft/client/renderer/block/BlockRenderDispatcher;renderBatched(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/BlockAndTintGetter;Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;ZLjava/util/Random;)Z"))
@@ -137,8 +124,8 @@ public abstract class MixinChunkRebuildTask implements RenderRegionContext<Block
 
 	@Redirect(method = "Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask;compile(FFFLnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$CompiledChunk;Lnet/minecraft/client/renderer/ChunkBufferBuilderPack;)Ljava/util/Set;",
 			require = 1, at = @At(value = "INVOKE",
-			target = "Lnet/minecraft/client/renderer/block/BlockRenderDispatcher;renderLiquid(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/BlockAndTintGetter;Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/world/level/material/FluidState;)Z"))
-	private boolean fluidRenderHook(BlockRenderDispatcher renderManager, BlockPos blockPos, BlockAndTintGetter blockView, VertexConsumer vertexConsumer, FluidState fluidState) {
+			target = "Lnet/minecraft/client/renderer/block/BlockRenderDispatcher;renderLiquid(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/BlockAndTintGetter;Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/material/FluidState;)Z"))
+	private boolean fluidRenderHook(BlockRenderDispatcher renderManager, BlockPos blockPos, BlockAndTintGetter blockView, VertexConsumer vertexConsumer, BlockState currentBlockState, FluidState fluidState) {
 		((RenderChunkRegionExt) blockView).frx_getContext().renderFluid(currentBlockState, blockPos, false, FluidModel.get(fluidState.getType()));
 		// we handle all initialization/tracking in render context
 		return false;

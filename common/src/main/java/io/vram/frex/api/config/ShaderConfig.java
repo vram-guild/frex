@@ -89,6 +89,6 @@ public interface ShaderConfig {
 	 */
 	@SuppressWarnings("resource")
 	static void invalidateShaderConfig() {
-		Minecraft.getInstance().levelRenderer.allChanged();
+		if (Minecraft.getInstance().levelRenderer != null) Minecraft.getInstance().levelRenderer.allChanged();
 	}
 }

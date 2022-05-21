@@ -378,14 +378,7 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 			v += spriteFloatV(i);
 		}
 
-		final TextureAtlasSprite result = material().texture().spriteFinder().find(u * 0.25f, v * 0.25f);
-
-		// Handle bug in SpriteFinder that can return sprite for the wrong atlas
-		if (result instanceof MissingTextureAtlasSprite) {
-			return material().texture().textureAsAtlas().getSprite(MissingTextureAtlasSprite.getLocation());
-		} else {
-			return result;
-		}
+		return material().texture().spriteFinder().find(u * 0.25f, v * 0.25f);
 	}
 
 	@Override

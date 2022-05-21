@@ -24,16 +24,25 @@ import java.util.function.Supplier;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
+/**
+ * Holds a reference to an object that should be cleared on resource reload.
+ * @param <T> Type of the cached object
+ */
 public final class ResourceCache<T> {
+	private static final ObjectArrayList<ResourceCache<?>> CACHED = new ObjectArrayList<>(64);
+	private final Supplier<T> loader;
+	private T value;
+
+	public static void invalidateAll() {
+		CACHED.forEach(ResourceCache::invalidate);
+	}
+
 	public ResourceCache(Supplier<T> loader) {
 		CACHED.add(this);
 		this.loader = loader;
 	}
 
-	protected final Supplier<T> loader;
-	protected T value;
-
-	protected void invalidate() {
+	private void invalidate() {
 		value = null;
 	}
 
@@ -43,11 +52,5 @@ public final class ResourceCache<T> {
 		}
 
 		return value;
-	}
-
-	protected static final ObjectArrayList<ResourceCache<?>> CACHED = new ObjectArrayList<>(64);
-
-	public static void invalidateAll() {
-		CACHED.forEach(ResourceCache::invalidate);
 	}
 }

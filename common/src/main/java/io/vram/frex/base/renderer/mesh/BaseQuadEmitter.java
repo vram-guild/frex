@@ -50,7 +50,6 @@ import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 

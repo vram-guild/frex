@@ -20,12 +20,19 @@
 
 package io.vram.frex.api.model;
 
+import java.util.Random;
+
 import org.jetbrains.annotations.Nullable;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.api.material.MaterialConstants;
@@ -76,8 +83,26 @@ public interface BakedInputContext extends InputContext {
 		return null;
 	}
 
+	/**
+	 * Tests whether the model face with the specified index should be rendered.
+	 *
+	 * <p>Mainly used for block state face culling during terrain rendering.
+	 *
+	 * <p>If the implementation supports {@link ModelBlockRenderer#tesselateBlock( BlockAndTintGetter,
+	 * BakedModel, BlockState, BlockPos, PoseStack, VertexConsumer, boolean, Random, long, int)},
+	 * the passed boolean argument must be respected.
+	 *
+	 * @param faceId index of the face to be tested.
+	 * @return Whether the face should be rendered.
+	 */
 	boolean cullTest(int faceId);
 
+	/**
+	 * Variation of {@link BakedInputContext#cullTest(int)} with direction parameter.
+	 *
+	 * @param face direction of the face to be tested.
+	 * @return Whether the face should be rendered.
+	 */
 	default boolean cullTest(Direction face) {
 		return cullTest(FaceUtil.toFaceIndex(face));
 	}

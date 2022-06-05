@@ -50,7 +50,7 @@ tasks.withType(JavaCompile) {
 }
 
 // We define this outside of the eclipse block because eclipse has it's own "project" instance
-def eclipseName = project.minecraft_version + " " + project.mod_name + " " + project.platform_name
+def eclipseName = project.mod_name + " " + project.platform_name + " " + project.minecraft_version
 
 eclipse {
 	project {

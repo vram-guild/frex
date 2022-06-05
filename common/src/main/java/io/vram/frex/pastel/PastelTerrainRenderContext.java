@@ -20,6 +20,8 @@
 
 package io.vram.frex.pastel;
 
+import java.util.Set;
+
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +36,6 @@ import net.minecraft.ReportedException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ChunkBufferBuilderPack;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.chunk.ChunkRenderDispatcher.CompiledChunk;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
@@ -53,13 +54,13 @@ import io.vram.frex.base.renderer.ao.AoCalculator;
 import io.vram.frex.base.renderer.context.input.BaseBlockInputContext;
 import io.vram.frex.base.renderer.context.render.BlockRenderContext;
 import io.vram.frex.base.renderer.util.EncoderUtil;
-import io.vram.frex.pastel.mixinterface.CompiledChunkExt;
 import io.vram.frex.pastel.mixinterface.RenderChunkRegionExt;
 
 public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintGetter> {
 	protected RenderChunkRegionExt regionExt;
 	protected ChunkBufferBuilderPack buffers;
-	protected CompiledChunkExt compiledChunkExt;
+	@SuppressWarnings("rawtypes")
+	protected Set initializedBuffers;
 	protected final Object2ObjectOpenHashMap<RenderType, BufferBuilder> usedBuffers = new Object2ObjectOpenHashMap<>();
 
 	private final AoCalculator aoCalc = new AoCalculator() {
@@ -109,11 +110,11 @@ public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintG
 		};
 	}
 
-	public PastelTerrainRenderContext prepareForRegion(RenderChunkRegion region, CompiledChunk compiledChunk, PoseStack poseStack, BlockPos origin, ChunkBufferBuilderPack buffers) {
+	public PastelTerrainRenderContext prepareForRegion(RenderChunkRegion region, PoseStack poseStack, BlockPos origin, ChunkBufferBuilderPack buffers, @SuppressWarnings("rawtypes") Set set) {
 		inputContext.prepareForWorld(region, true, MatrixStack.fromVanilla(poseStack));
 		regionExt = (RenderChunkRegionExt) region;
-		compiledChunkExt = (CompiledChunkExt) compiledChunk;
 		usedBuffers.clear();
+		this.initializedBuffers = set;
 		regionExt.frx_setContext(this, origin);
 		this.buffers = buffers;
 		return this;
@@ -229,16 +230,16 @@ public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintG
 	}
 
 	/** Lazily retrieves output buffer for given layer, initializing as needed. */
+	@SuppressWarnings("unchecked")
 	protected BufferBuilder getInitializedBuffer(RenderType renderLayer) {
 		BufferBuilder result = usedBuffers.get(renderLayer);
 
 		if (result == null) {
 			final BufferBuilder builder = buffers.builder(renderLayer);
 			result = builder;
-			compiledChunkExt.frx_markPopulated(renderLayer);
 			usedBuffers.put(renderLayer, result);
 
-			if (compiledChunkExt.frx_markInitialized(renderLayer)) {
+			if (initializedBuffers.add(renderLayer)) {
 				result.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
 			}
 		}

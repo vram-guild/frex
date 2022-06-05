@@ -37,6 +37,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.ChunkBufferBuilderPack;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.chunk.ChunkRenderDispatcher.RenderChunk;
+import net.minecraft.client.renderer.chunk.ChunkRenderDispatcher.RenderChunk.RebuildTask;
 import net.minecraft.client.renderer.chunk.ChunkRenderDispatcher.RenderChunk.RebuildTask.CompileResults;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.client.renderer.chunk.VisGraph;
@@ -58,7 +59,7 @@ import io.vram.frex.pastel.PastelBlockStateRenderer;
 import io.vram.frex.pastel.PastelTerrainRenderContext;
 import io.vram.frex.pastel.mixinterface.RenderChunkRegionExt;
 
-@Mixin(targets = "net.minecraft.client.renderer.chunk.ChunkRenderDispatcher$RenderChunk$RebuildTask")
+@Mixin(RebuildTask.class)
 public abstract class MixinChunkRebuildTask implements RenderRegionContext<BlockAndTintGetter> {
 	//e -> field_20839 -> this$1
 	@Shadow(aliases = {"field_20839"}) protected RenderChunk this$1;
@@ -75,7 +76,7 @@ public abstract class MixinChunkRebuildTask implements RenderRegionContext<Block
 	@Unique
 	private final BlockPos.MutableBlockPos searchPos = new BlockPos.MutableBlockPos();
 
-	@Inject(method = "Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask;compile(FFFLnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$CompiledChunk;Lnet/minecraft/client/renderer/ChunkBufferBuilderPack;)Ljava/util/Set;",
+	@Inject(method = "Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask;compile(FFFLnet/minecraft/client/renderer/ChunkBufferBuilderPack;)Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask$CompileResults;",
 				require = 1, locals = LocalCapture.CAPTURE_FAILHARD,
 				at = @At(value = "INVOKE", target = "Lnet/minecraft/util/RandomSource;create()Lnet/minecraft/util/RandomSource;"))
 	private void regionStartHook(float arg0, float arg1, float arg2, ChunkBufferBuilderPack arg3, CallbackInfoReturnable<CompileResults> cir, CompileResults compileResults, int i, BlockPos blockPos, BlockPos blockPos2, VisGraph visGraph, RenderChunkRegion renderChunkRegion, PoseStack poseStack, @SuppressWarnings("rawtypes") Set set) {
@@ -101,7 +102,7 @@ public abstract class MixinChunkRebuildTask implements RenderRegionContext<Block
 		}
 	}
 
-	@Redirect(method = "Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask;compile(FFFLnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$CompiledChunk;Lnet/minecraft/client/renderer/ChunkBufferBuilderPack;)Ljava/util/Set;",
+	@Redirect(method = "Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask;compile(FFFLnet/minecraft/client/renderer/ChunkBufferBuilderPack;)Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask$CompileResults;",
 			require = 1, at = @At(value = "INVOKE",
 			target = "Lnet/minecraft/client/renderer/block/BlockRenderDispatcher;renderBatched(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/BlockAndTintGetter;Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;ZLnet/minecraft/util/RandomSource;)V"))
 	private void blockRenderHook(BlockRenderDispatcher renderManager, BlockState blockState, BlockPos blockPos, BlockAndTintGetter blockView, PoseStack matrix, VertexConsumer bufferBuilder, boolean checkSides, RandomSource random) {
@@ -116,14 +117,14 @@ public abstract class MixinChunkRebuildTask implements RenderRegionContext<Block
 		}
 	}
 
-	@Redirect(method = "Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask;compile(FFFLnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$CompiledChunk;Lnet/minecraft/client/renderer/ChunkBufferBuilderPack;)Ljava/util/Set;",
+	@Redirect(method = "Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask;compile(FFFLnet/minecraft/client/renderer/ChunkBufferBuilderPack;)Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask$CompileResults;",
 			require = 1, at = @At(value = "INVOKE",
 			target = "Lnet/minecraft/client/renderer/block/BlockRenderDispatcher;renderLiquid(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/BlockAndTintGetter;Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/material/FluidState;)V"))
 	private void fluidRenderHook(BlockRenderDispatcher renderManager, BlockPos blockPos, BlockAndTintGetter blockView, VertexConsumer vertexConsumer, BlockState currentBlockState, FluidState fluidState) {
 		((RenderChunkRegionExt) blockView).frx_getContext().renderFluid(currentBlockState, blockPos, false, FluidModel.get(fluidState.getType()));
 	}
 
-	@Inject(at = @At("RETURN"), method = "Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask;compile(FFFLnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$CompiledChunk;Lnet/minecraft/client/renderer/ChunkBufferBuilderPack;)Ljava/util/Set;")
+	@Inject(at = @At("RETURN"), method = "Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask;compile(FFFLnet/minecraft/client/renderer/ChunkBufferBuilderPack;)Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask$CompileResults;")
 	private void hookRebuildChunkReturn(CallbackInfoReturnable<Set<BlockEntity>> ci) {
 		PastelTerrainRenderContext.POOL.get().inputContext.release();
 	}

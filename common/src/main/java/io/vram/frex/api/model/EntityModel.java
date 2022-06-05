@@ -37,7 +37,7 @@ public interface EntityModel<T extends Entity> extends DynamicModel {
 		}
 	}
 
-	public interface EntityInputContext<E extends Entity> extends InputContext {
+	interface EntityInputContext<E extends Entity> extends InputContext {
 		@Override
 		default Type type() {
 			return Type.ENTITY;

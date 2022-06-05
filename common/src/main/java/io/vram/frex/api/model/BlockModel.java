@@ -53,7 +53,7 @@ public interface BlockModel extends DynamicModel {
 	}
 
 	// WIP: How do models override block state for sub-models in a way that don't require the renderer to do anything?
-	public interface BlockInputContext extends BakedInputContext {
+	interface BlockInputContext extends BakedInputContext {
 		@Override
 		default Type type() {
 			return Type.BLOCK;
@@ -135,7 +135,7 @@ public interface BlockModel extends DynamicModel {
 	}
 
 	// NB: names are long to reduce risk of conflict with mapped named
-	public interface TerrainParticleDelegate {
+	interface TerrainParticleDelegate {
 		void setModelParticleSprite(TextureAtlasSprite sprite);
 
 		void setModelParticleColor(int color);

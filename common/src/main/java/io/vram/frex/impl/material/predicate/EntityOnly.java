@@ -39,7 +39,7 @@ import io.vram.frex.api.material.RenderMaterial;
 /**
  * Stripped-down adaptation of vanilla class used for entity loot predicates.
  *
- * Note that prior to 1.19 this had predicates for player and fish hook, but in 1.19
+ * <p>Note that prior to 1.19 this had predicates for player and fish hook, but in 1.19
  * those predicate types require server level instances which is not possible for FREX.
  * As a result, they were stripped.
  */

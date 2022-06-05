@@ -41,7 +41,7 @@ public interface ItemModel extends DynamicModel {
 		}
 	}
 
-	public interface ItemInputContext extends BakedInputContext {
+	interface ItemInputContext extends BakedInputContext {
 		@Override
 		default Type type() {
 			return Type.ITEM;

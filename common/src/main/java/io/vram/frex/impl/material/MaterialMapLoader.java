@@ -175,7 +175,6 @@ public class MaterialMapLoader {
 						ITEM_MAP.put(item, map);
 					}
 				}
-
 			}
 		} catch (final Exception e) {
 			FrexLog.info("Unable to load block material map " + id.toString() + " due to exception " + e.toString());

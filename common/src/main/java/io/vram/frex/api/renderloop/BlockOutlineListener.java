@@ -69,7 +69,7 @@ public interface BlockOutlineListener {
 	 * Used to convey the parameters normally sent to
 	 * {@code WorldRenderer.drawBlockOutline}.
 	 */
-	public interface BlockOutlineContext {
+	interface BlockOutlineContext {
 		Entity entity();
 
 		double cameraX();

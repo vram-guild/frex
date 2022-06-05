@@ -52,6 +52,7 @@ public class ItemLightLoader {
 
 		try {
 			final var res = manager.getResource(id);
+
 			if (res.isPresent()) {
 				final ItemLight light = ItemLightDeserializer.deserialize(new InputStreamReader(res.get().open(), StandardCharsets.UTF_8));
 

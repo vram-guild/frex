@@ -39,7 +39,6 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
 
 import io.vram.frex.api.config.FrexConfig;
-import io.vram.frex.api.config.FrexFeature;
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.impl.FrexLog;
 
@@ -86,14 +85,8 @@ public final class MaterialLoaderImpl {
 
 		if (result == null) {
 			result = loadMaterialInner(idIn);
-
 			LOAD_CACHE.put(idIn, result);
-
-			if (FrexFeature.isAvailable(FrexFeature.UPDATE_MATERIAL_REGISTRATION)) {
-				result.registerOrUpdateWithId(idIn);
-			} else {
-				result.registerWithId(idIn);
-			}
+			result.registerOrUpdateWithId(idIn);
 		}
 
 		return result;
@@ -110,7 +103,8 @@ public final class MaterialLoaderImpl {
 		RenderMaterial result = null;
 		final ResourceManager rm = Minecraft.getInstance().getResourceManager();
 
-		try (Resource res = rm.getResource(id)) {
+		try {
+			final Resource res = rm.getResource(id).get();
 			result = MaterialDeserializer.deserialize(readJsonObject(res));
 		} catch (final Exception e) {
 			if (!FrexConfig.suppressMaterialLoadingSpam || CAUGHT.add(idIn)) {
@@ -140,7 +134,7 @@ public final class MaterialLoaderImpl {
 		JsonObject result = null;
 
 		try {
-			stream = res.getInputStream();
+			stream = res.open();
 			reader = new InputStreamReader(stream, StandardCharsets.UTF_8);
 			result = GsonHelper.parse(reader);
 		} catch (final Exception e) {

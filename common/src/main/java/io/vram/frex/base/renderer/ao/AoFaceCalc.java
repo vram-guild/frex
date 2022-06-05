@@ -183,7 +183,6 @@ public class AoFaceCalc {
 	}
 
 	// PERF: use integer weights
-	@Deprecated
 	public void weightedMean(AoFaceCalc in0, float w0, AoFaceCalc in1, float w1) {
 		aoBottomRight = Math.round(in0.aoBottomRight * w0 + in1.aoBottomRight * w1);
 		aoBottomLeft = Math.round(in0.aoBottomLeft * w0 + in1.aoBottomLeft * w1);

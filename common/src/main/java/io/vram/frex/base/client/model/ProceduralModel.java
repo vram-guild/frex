@@ -22,7 +22,6 @@ package io.vram.frex.base.client.model;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
-import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -39,6 +38,7 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.api.buffer.QuadSink;
@@ -74,7 +74,7 @@ public class ProceduralModel extends BaseModel {
 	}
 
 	@Override
-	public List<BakedQuad> getQuads(BlockState blockState, Direction face, Random random) {
+	public List<BakedQuad> getQuads(BlockState blockState, Direction face, RandomSource random) {
 		final WeakReference<List<BakedQuad>[]> listReference = quadLists;
 		List<BakedQuad>[] lists = listReference == null ? null : listReference.get();
 

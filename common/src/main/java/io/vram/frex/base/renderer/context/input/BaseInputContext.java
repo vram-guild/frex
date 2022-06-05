@@ -20,7 +20,7 @@
 
 package io.vram.frex.base.renderer.context.input;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import io.vram.frex.api.math.MatrixStack;
 import io.vram.frex.api.model.InputContext;
@@ -28,7 +28,7 @@ import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 
 public abstract class BaseInputContext implements InputContext {
 	protected final Type type;
-	protected final Random random = new Random();
+	protected final RandomSource random = RandomSource.create();
 	protected boolean needsRandomReseed = true;
 	protected int overlay;
 	protected MatrixStack matrixStack;
@@ -54,8 +54,8 @@ public abstract class BaseInputContext implements InputContext {
 	protected abstract long randomSeed();
 
 	@Override
-	public Random random() {
-		final Random result = random;
+	public RandomSource random() {
+		final RandomSource result = random;
 
 		if (needsRandomReseed) {
 			result.setSeed(randomSeed());

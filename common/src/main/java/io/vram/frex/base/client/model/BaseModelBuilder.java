@@ -31,7 +31,6 @@ import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
@@ -39,6 +38,7 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 
 import io.vram.frex.api.model.util.BakedModelUtil;
 
@@ -110,7 +110,7 @@ public abstract class BaseModelBuilder<T extends BaseModelBuilder<T>> implements
 		}
 
 		for (final var s : sprites) {
-			materials.add(new Material(TextureAtlas.LOCATION_BLOCKS, s));
+			materials.add(new Material(InventoryMenu.BLOCK_ATLAS, s));
 		}
 
 		return (T) this;

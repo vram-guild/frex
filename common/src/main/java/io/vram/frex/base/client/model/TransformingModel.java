@@ -21,7 +21,6 @@
 package io.vram.frex.base.client.model;
 
 import java.util.List;
-import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -36,6 +35,7 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.api.buffer.QuadEmitter;
@@ -82,7 +82,7 @@ public class TransformingModel extends BaseModel {
 	}
 
 	@Override
-	public List<BakedQuad> getQuads(BlockState blockState, Direction face, Random random) {
+	public List<BakedQuad> getQuads(BlockState blockState, Direction face, RandomSource random) {
 		// Should not be called so we don't apply the transform here
 		return ((BakedModel) wrapped()).getQuads(blockState, face, random);
 	}

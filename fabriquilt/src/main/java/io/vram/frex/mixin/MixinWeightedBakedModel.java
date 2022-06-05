@@ -21,7 +21,6 @@
 package io.vram.frex.mixin;
 
 import java.util.List;
-import java.util.Random;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,6 +28,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.WeightedBakedModel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandom;
 
@@ -42,7 +42,7 @@ public class MixinWeightedBakedModel implements BlockItemModel {
 	@Shadow @Final private List<WeightedEntry.Wrapper<BakedModel>> list;
 	@Shadow @Final private int totalWeight;
 
-	private BakedModel getModel(Random random) {
+	private BakedModel getModel(RandomSource random) {
 		return WeightedRandom.getWeightedItem(list, Math.abs((int) random.nextLong()) % totalWeight).get().getData();
 	}
 

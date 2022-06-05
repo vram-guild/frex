@@ -20,8 +20,6 @@
 
 package io.vram.frex.api.model;
 
-import java.util.Random;
-
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -31,6 +29,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
@@ -95,7 +94,7 @@ public interface BlockModel extends DynamicModel {
 		BlockPos pos();
 
 		@Override
-		Random random();
+		RandomSource random();
 
 		@Override
 		boolean cullTest(int faceId);

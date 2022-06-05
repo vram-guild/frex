@@ -27,8 +27,8 @@ import java.util.function.Function;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 
 import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.material.RenderMaterial;
@@ -148,7 +148,7 @@ public class BaseMaterialManager<M extends BaseMaterialView & RenderMaterial> im
 	protected long computeDefaultBits1() {
 		long defaultBits1 = 0;
 		defaultBits1 = BaseMaterialView.CONDITION.setValue(conditions.alwaysTrue().index(), defaultBits1);
-		defaultBits1 = BaseMaterialView.TEXTURE.setValue(textures.textureFromId(TextureAtlas.LOCATION_BLOCKS).index(), defaultBits1);
+		defaultBits1 = BaseMaterialView.TEXTURE.setValue(textures.textureFromId(InventoryMenu.BLOCK_ATLAS).index(), defaultBits1);
 		defaultBits1 = BaseMaterialView.SHADER.setValue(shaders.defaultShader().index(), defaultBits1);
 
 		return defaultBits1;

@@ -39,15 +39,6 @@ public interface FrexFeature {
 
 	// IDs 0 - 4095 are reserved for FREX.
 
-	// TODO: should remove this - is always present now
-	/**
-	 * Present when registerOrUpdateMaterial is supported.
-	 * If not present, materials cannot be changed once registered.
-	 * Renderer-dependent, unavailable with Fabric API implementations.
-	 */
-	@Deprecated
-	int UPDATE_MATERIAL_REGISTRATION = 0;
-
 	/**
 	 * Present when renderer uses held item light API.
 	 * Renderer-dependent, unavailable with Fabric API implementations.

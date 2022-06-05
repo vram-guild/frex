@@ -36,6 +36,7 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.StateHolder;
 
 import io.vram.frex.api.material.MaterialMap;
@@ -58,7 +59,7 @@ public final class MaterialMapDeserializer {
 			}
 
 			if (mapObject.has("spriteMap")) {
-				final TextureAtlas blockAtlas = Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS);
+				final TextureAtlas blockAtlas = Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS);
 				final TextureAtlasSprite missingSprite = blockAtlas.getSprite(MissingTextureAtlasSprite.getLocation());
 
 				final JsonArray jsonArray = mapObject.getAsJsonArray("spriteMap");

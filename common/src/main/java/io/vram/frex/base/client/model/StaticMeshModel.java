@@ -22,14 +22,12 @@ package io.vram.frex.base.client.model;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
-import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
@@ -39,6 +37,8 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.api.buffer.QuadSink;
@@ -55,7 +55,7 @@ public class StaticMeshModel extends BaseModel {
 
 	protected StaticMeshModel(Builder builder, Function<Material, TextureAtlasSprite> spriteFunc) {
 		super(builder, spriteFunc);
-		mesh = builder.meshFactory.createMesh(n -> spriteFunc.apply(new Material(TextureAtlas.LOCATION_BLOCKS, n)));
+		mesh = builder.meshFactory.createMesh(n -> spriteFunc.apply(new Material(InventoryMenu.BLOCK_ATLAS, n)));
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class StaticMeshModel extends BaseModel {
 	}
 
 	@Override
-	public List<BakedQuad> getQuads(BlockState blockState, Direction face, Random random) {
+	public List<BakedQuad> getQuads(BlockState blockState, Direction face, RandomSource random) {
 		List<BakedQuad>[] lists = quadLists == null ? null : quadLists.get();
 
 		if (lists == null) {

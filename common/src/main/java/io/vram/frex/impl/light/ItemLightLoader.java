@@ -20,7 +20,6 @@
 
 package io.vram.frex.impl.light;
 
-import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.IdentityHashMap;
@@ -28,7 +27,6 @@ import java.util.Iterator;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -52,14 +50,15 @@ public class ItemLightLoader {
 		final ResourceLocation itemId = Registry.ITEM.getKey(item);
 		final ResourceLocation id = new ResourceLocation(itemId.getNamespace(), "lights/item/" + itemId.getPath() + ".json");
 
-		try (Resource res = manager.getResource(id)) {
-			final ItemLight light = ItemLightDeserializer.deserialize(new InputStreamReader(res.getInputStream(), StandardCharsets.UTF_8));
+		try {
+			final var res = manager.getResource(id);
+			if (res.isPresent()) {
+				final ItemLight light = ItemLightDeserializer.deserialize(new InputStreamReader(res.get().open(), StandardCharsets.UTF_8));
 
-			if (light != ItemLight.NONE) {
-				MAP.put(item, light);
+				if (light != ItemLight.NONE) {
+					MAP.put(item, light);
+				}
 			}
-		} catch (final FileNotFoundException e) {
-			// eat these, lights are not required
 		} catch (final Exception e) {
 			FrexLog.info("Unable to load item light data for " + id.toString() + " due to exception " + e.toString());
 		}

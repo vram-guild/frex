@@ -20,10 +20,9 @@
 
 package io.vram.frex.api.model;
 
-import java.util.Random;
-
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -53,7 +52,7 @@ public interface ItemModel extends DynamicModel {
 		ItemTransforms.TransformType mode();
 
 		@Override
-		Random random();
+		RandomSource random();
 
 		boolean isGui();
 

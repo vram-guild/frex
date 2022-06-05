@@ -21,9 +21,9 @@
 package io.vram.frex.base.client.model;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 
 @FunctionalInterface
 public interface SpriteProvider {
@@ -39,6 +39,6 @@ public interface SpriteProvider {
 	}
 
 	static SpriteProvider forBlocksAndItems() {
-		return forAtlas(TextureAtlas.LOCATION_BLOCKS);
+		return forAtlas(InventoryMenu.BLOCK_ATLAS);
 	}
 }

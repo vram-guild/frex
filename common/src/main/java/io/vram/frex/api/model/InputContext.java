@@ -20,12 +20,12 @@
 
 package io.vram.frex.api.model;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import io.vram.frex.api.math.MatrixStack;
 
 public interface InputContext {
-	Random random();
+	RandomSource random();
 
 	Type type();
 

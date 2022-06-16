@@ -145,6 +145,17 @@ const vec3 frx_skyLightAtmosphericColor;
  */
 const float frx_skyLightTransitionFactor;
 
+/**
+ * Strength of sky flashing during a lightning strike.
+ *
+ * Forms a reverse sawtooth pattern with random peaks over time.
+ * UNCLAMPED, but meant to be clamped to values between 0 and 1.
+ * HDR implementation might want to use values above 1 to represent stronger flashes.
+ *
+ * Locked to 0 if Accessibility Setting > Hide Lightning Flashes is ON.
+ */
+const float frx_skyFlashStrength;
+
 /*
  * Ambient light intensity of the currently rendering world.
  * Zero represents the morning / start of the day cycle in Minecraft.
@@ -180,6 +191,12 @@ const float frx_thunderGradient;
  * Speed is controlled in pipeline config.
  */
 const float frx_smoothedRainGradient;
+
+/**
+ * Same as frx_thunderGradient but with exponential smoothing.
+ * Speed is controlled in pipeline config.
+ */
+const float frx_smoothedThunderGradient;
 
 /*
  * The background clear color as computed by vanilla logic. Incorporates

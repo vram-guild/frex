@@ -14,14 +14,6 @@
 const float frx_renderSeconds;
 
 /*
- * The difference of frx_renderSeconds between the current and last frame,
- * with finer millisecond precision.
- *
- * Can be used to animate a buffer in a non-deterministic fashion.
- */
-const float frx_dRenderSeconds;
-
-/*
  * The number of frames this world has been rendering since the last render
  * reload.
  *

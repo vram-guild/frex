@@ -165,17 +165,6 @@ const float frx_skyFlashStrength;
 const float frx_ambientIntensity;
 
 /*
- * Brightness manipulation factor of the "Darkness" effect.
- *
- * Value is interpolated between 0 for lowest brightness,
- * and 1 for full brightness.
- *
- * Note that this factor is pre-applied to lightmap texture.
- * It is meant for custom lighting models or visual effects.
- */
-const float frx_darknessFactor;
-
-/*
  * Gamma-corrected max light color from lightmap texture.
  * Updated whenever lightmap texture is updated.
  *

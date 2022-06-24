@@ -12,6 +12,17 @@
 const float frx_effectModifier;
 
 /*
+ * Brightness manipulation factor when player has "Darkness" effect.
+ *
+ * Value is interpolated between 0 for lowest brightness,
+ * and 1 for full brightness.
+ *
+ * Note that this factor is pre-applied to lightmap texture.
+ * It is meant for custom lighting models or visual effects.
+ */
+const float frx_darknessEffectFactor;
+
+/*
  * Color and magnitude of light source held by player in either hand.
  * RGB are the light color, alpha channel holds the 0-1 magnitude.
  *

@@ -39,7 +39,7 @@ const float frx_heldLightOuterRadius;
 
 // Player effect indicators.
 // Will equal 1 when player has the given effect.
-// Includes all vanilla player effects as of 1.16.4
+// Includes all vanilla player effects as of 1.19
 const int frx_effectSpeed;
 const int frx_effectSlowness;
 const int frx_effectHast;
@@ -72,6 +72,7 @@ const int frx_effectConduitPower;
 const int frx_effectDolphinsGrace;
 const int frx_effectBadOmen;
 const int frx_effectHeroOfTheVillage;
+const int frx_effectDarkness;
 
 // Player situation indicators.
 // Will equal 1 when the situation is true.

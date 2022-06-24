@@ -145,7 +145,7 @@ const vec3 frx_skyLightAtmosphericColor;
  */
 const float frx_skyLightTransitionFactor;
 
-/**
+/*
  * Strength of sky flashing during a lightning strike.
  *
  * Forms a reverse sawtooth pattern with random peaks over time.
@@ -163,6 +163,17 @@ const float frx_skyFlashStrength;
  * Experimental, likely to change.
  */
 const float frx_ambientIntensity;
+
+/*
+ * Brightness manipulation factor of the "Darkness" effect.
+ *
+ * Value is interpolated between 0 for lowest brightness,
+ * and 1 for full brightness.
+ *
+ * Note that this factor is pre-applied to lightmap texture.
+ * It is meant for custom lighting models or visual effects.
+ */
+const float frx_darknessFactor;
 
 /*
  * Gamma-corrected max light color from lightmap texture.

@@ -12,6 +12,17 @@
 const float frx_effectModifier;
 
 /*
+ * Brightness manipulation factor when player has "Darkness" effect.
+ *
+ * Value is interpolated between 0 for lowest brightness,
+ * and 1 for full brightness.
+ *
+ * Note that this factor is pre-applied to lightmap texture.
+ * It is meant for custom lighting models or visual effects.
+ */
+const float frx_darknessEffectFactor;
+
+/*
  * Color and magnitude of light source held by player in either hand.
  * RGB are the light color, alpha channel holds the 0-1 magnitude.
  *
@@ -39,7 +50,7 @@ const float frx_heldLightOuterRadius;
 
 // Player effect indicators.
 // Will equal 1 when player has the given effect.
-// Includes all vanilla player effects as of 1.16.4
+// Includes all vanilla player effects as of 1.19
 const int frx_effectSpeed;
 const int frx_effectSlowness;
 const int frx_effectHast;
@@ -72,12 +83,14 @@ const int frx_effectConduitPower;
 const int frx_effectDolphinsGrace;
 const int frx_effectBadOmen;
 const int frx_effectHeroOfTheVillage;
+const int frx_effectDarkness;
 
 // Player situation indicators.
 // Will equal 1 when the situation is true.
 const int frx_playerEyeInFluid;
 const int frx_playerEyeInWater;
 const int frx_playerEyeInLava;
+const int frx_playerEyeInSnow;
 const int frx_playerSneaking;
 const int frx_playerSwimming;
 const int frx_playerSneakingPose;
@@ -86,6 +99,7 @@ const int frx_playerCreative;
 const int frx_playerSpectator;
 const int frx_playerRiding;
 const int frx_playerOnFire;
+const int frx_playerIsFreezing;
 const int frx_playerSleeping;
 const int frx_playerSprinting;
 const int frx_playerWet;

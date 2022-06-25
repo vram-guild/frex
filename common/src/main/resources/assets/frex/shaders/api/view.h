@@ -218,3 +218,8 @@ const int frx_cameraInWater;
  */
 const int frx_cameraInLava;
 
+/*
+ * Returns 1 when camera is in powdered snow. Zero otherwise.
+ */
+const int frx_cameraInSnow;
+

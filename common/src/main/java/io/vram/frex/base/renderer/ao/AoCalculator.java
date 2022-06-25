@@ -454,7 +454,15 @@ public abstract class AoCalculator {
 			}
 		}
 
-		fd.center = brightness(centerCacheIndex);
+		// Normally the center position will not be opaque if we are using it - in most cases
+		// a non-opaque block would occlude whatever we are lighting.  However, some resource
+		// packs have quads that extend outside the unit cube and if use a zero light value
+		// for center they will be very dark because the zero center value will be used as the
+		// proxy for opaque light samples.  By using OPAQUE as the center value when the center
+		// is opaque, we'll enable min brightness to use whatever light it can find.  This is
+		// still an ugly hack - but it manages to be acceptably wrong similar to vanilla.
+		fd.center = isOpaque(centerCacheIndex) ? OPAQUE : brightness(centerCacheIndex);
+
 		final int aoCenter = ao(centerCacheIndex);
 		fd.aoCenter = aoCenter;
 

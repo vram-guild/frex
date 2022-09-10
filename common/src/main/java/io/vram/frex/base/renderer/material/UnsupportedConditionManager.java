@@ -29,7 +29,7 @@ import io.vram.frex.api.renderer.ConditionManager;
 
 public class UnsupportedConditionManager implements ConditionManager {
 	@Override
-	public MaterialCondition createCondition(BooleanSupplier supplier, boolean affectBlocks, boolean affectItems) {
+	public MaterialCondition createCondition(BooleanSupplier supplier) {
 		return ALWAYS_TRUE;
 	}
 

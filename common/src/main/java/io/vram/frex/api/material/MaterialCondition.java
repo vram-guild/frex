@@ -41,8 +41,17 @@ public interface MaterialCondition {
 		return Renderer.get().conditions().registerCondition(id, this);
 	}
 
+	@Deprecated
+	/**
+	 * @deprecated Not practical for implementations to segregate item/block usage.
+	 * If this is really needed can use separate conditions.
+	 */
 	static MaterialCondition create(BooleanSupplier supplier, boolean affectBlocks, boolean affectItems) {
-		return Renderer.get().conditions().createCondition(supplier, affectBlocks, affectItems);
+		return create(supplier);
+	}
+
+	static MaterialCondition create(BooleanSupplier supplier) {
+		return Renderer.get().conditions().createCondition(supplier);
 	}
 
 	static MaterialCondition fromIndex(int index) {

@@ -38,7 +38,7 @@ public class BaseConditionManager implements ConditionManager {
 	public final BaseMaterialCondition[] conditions = new BaseMaterialCondition[MaterialConstants.MAX_CONDITIONS];
 	public final int[] conditionFlags = new int[CONDITION_FLAG_ARRAY_LENGTH];
 	protected int nextIndex = 0;
-	public final BaseMaterialCondition alwaysTrue = createCondition(() -> true, false, false);
+	public final BaseMaterialCondition alwaysTrue = createCondition(() -> true);
 
 	@Override
 	public BaseMaterialCondition conditionFromIndex(int index) {
@@ -46,12 +46,12 @@ public class BaseConditionManager implements ConditionManager {
 	}
 
 	@Override
-	public BaseMaterialCondition createCondition(BooleanSupplier supplier, boolean affectBlocks, boolean affectItems) {
+	public BaseMaterialCondition createCondition(BooleanSupplier supplier) {
 		if (nextIndex >= MaterialConstants.MAX_CONDITIONS) {
 			FrexLog.warn("Unable to create new render condition because max conditions have already been created.  Some renders may not work correctly.");
 			return alwaysTrue;
 		} else {
-			return new BaseMaterialCondition(supplier, affectBlocks, affectItems);
+			return new BaseMaterialCondition(supplier);
 		}
 	}
 
@@ -95,16 +95,12 @@ public class BaseConditionManager implements ConditionManager {
 
 	public class BaseMaterialCondition implements MaterialCondition {
 		public final BooleanSupplier supplier;
-		public final boolean affectItems;
-		public final boolean affectBlocks;
 		public final int index;
 		private final int arrayIndex;
 		private final int testMask;
 
-		BaseMaterialCondition(BooleanSupplier supplier, boolean affectBlocks, boolean affectItems) {
+		BaseMaterialCondition(BooleanSupplier supplier) {
 			this.supplier = supplier;
-			this.affectBlocks = affectBlocks;
-			this.affectItems = affectItems;
 
 			synchronized (conditions) {
 				index = nextIndex++;

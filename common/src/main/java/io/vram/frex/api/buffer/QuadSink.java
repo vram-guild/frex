@@ -20,9 +20,23 @@
 
 package io.vram.frex.api.buffer;
 
-import io.vram.frex.api.model.InputContext;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 
-public interface QuadSink {
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+
+import io.vram.frex.api.model.InputContext;
+import io.vram.frex.api.rendertype.RenderTypeUtil;
+
+/**
+ * Universal interface for models to send vertex data to the back end.
+ * Supports both polygon-at-a-time and vanilla-style vertex streaming
+ * input patterns.
+ *
+ * <p>Implements MultiBufferSource to support use cases where we want
+ * to intercept output from vanilla or mod code that isn't API aware.
+ */
+public interface QuadSink extends MultiBufferSource {
 	QuadEmitter asQuadEmitter();
 
 	VertexEmitter asVertexEmitter();
@@ -45,5 +59,19 @@ public interface QuadSink {
 	 */
 	default boolean isTransformer() {
 		return false;
+	}
+
+	/**
+	 * This default implementation won't handle all use cases.
+	 * Implementations should provide something suitable for each context.
+	 * In terrain rendering, for example, this probably will not be used.
+	 *
+	 * <p>Does not return VertexEmitter to support implementations
+	 * that need to fall back to vanilla classes for some render types.
+	 * API-aware models should simply use {@link #asVertexEmitter()}.
+	 */
+	@Override
+	default VertexConsumer getBuffer(RenderType renderTYpe) {
+		return asVertexEmitter().defaultMaterial(RenderTypeUtil.toMaterial(renderTYpe));
 	}
 }

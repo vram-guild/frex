@@ -78,6 +78,11 @@ public interface ItemModel extends DynamicModel {
 		boolean isLeftHand();
 
 		int lightmap();
+
+		@Override
+		default boolean cullTest(int faceId) {
+			return true;
+		}
 	}
 
 	/**

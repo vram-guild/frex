@@ -26,7 +26,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.util.RandomSource;
@@ -37,7 +36,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.model.InputContext.Type;
-import io.vram.frex.api.model.util.FaceUtil;
 import io.vram.frex.api.world.BlockEntityRenderData;
 import io.vram.frex.impl.model.ModelLookups;
 
@@ -95,14 +93,6 @@ public interface BlockModel extends DynamicModel {
 
 		@Override
 		RandomSource random();
-
-		@Override
-		boolean cullTest(int faceId);
-
-		@Override
-		default boolean cullTest(Direction face) {
-			return cullTest(FaceUtil.toFaceIndex(face));
-		}
 
 		/**
 		 * In terrain rendering this will hold the result of functions

@@ -23,7 +23,29 @@ package io.vram.frex.base.renderer.context.render;
 import io.vram.frex.base.renderer.context.input.BaseBakedInputContext;
 import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 
+/**
+ * Base class for block and item contexts, or "baked" models.
+ *
+ * <p>Baked models generally require CPU-side color modification
+ * for block/item tinting. For blocks in vanilla-like lighting
+ * models, diffuse and AO shading are also computed and applied
+ * CPU side.  In terrain, face culling based on neighbor blocks
+ * is used to reduce polygon count.
+ */
 public abstract class BakedRenderContext<C extends BaseBakedInputContext> extends BaseRenderContext<C> {
+	/**
+	 * Applies CPU-side color, which should generally always include
+	 * block/item tint and diffuse/AO shading for blocks (unless those
+	 * are handled in GPU.)
+	 *
+	 *
+	 * <p>To be called from {@link #renderQuad()} during model output phase.
+	 * Should be invoked after material is final because results
+	 * are material-dependent.
+	 *
+	 * <p>The base implementation is suitable for most non-terrain
+	 * scenarios with vanilla-style lighting models.
+	 */
 	protected void shadeQuad() {
 		emitter.applyFlatLighting(inputContext.flatBrightness(emitter));
 		emitter.colorize(inputContext);
@@ -41,12 +63,7 @@ public abstract class BakedRenderContext<C extends BaseBakedInputContext> extend
 			finder.copyFrom(quad.material());
 			adjustMaterial();
 			quad.material(finder.find());
-
-			// needs to happen before offsets are applied
 			shadeQuad();
-
-			// Renderer-specific
-			// Responsible for block offsets in terrain rendering
 			encodeQuad();
 		}
 	}

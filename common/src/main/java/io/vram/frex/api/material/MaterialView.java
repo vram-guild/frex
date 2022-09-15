@@ -22,6 +22,9 @@ package io.vram.frex.api.material;
 
 import io.vram.frex.api.texture.MaterialTexture;
 
+/**
+ * Getter methods for {@link RenderMaterial} (immutable) and {@link MaterialFinder} (mutable).
+ */
 public interface MaterialView {
 	int preset();
 

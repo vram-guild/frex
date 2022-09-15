@@ -20,6 +20,7 @@
 
 package io.vram.frex.api.model;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 
 import io.vram.frex.api.buffer.QuadSink;
@@ -44,6 +45,8 @@ public interface EntityModel<T extends Entity> extends DynamicModel {
 		}
 
 		E entity();
+
+		Component entityDisplayName();
 
 		float yawDelta();
 

@@ -23,20 +23,22 @@ package io.vram.frex.impl.material;
 import java.util.function.BiPredicate;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
+import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.entity.Entity;
 
 import io.vram.frex.api.material.EntityMaterialMap;
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.MaterialTransform;
-import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.material.MaterialView;
 
 @Internal
 class EntityMultiMaterialMap implements EntityMaterialMap {
-	private final BiPredicate<Entity, RenderMaterial>[] predicates;
+	private final BiPredicate<Entity, MaterialView>[] predicates;
 	private final MaterialTransform[] transforms;
 
-	EntityMultiMaterialMap(BiPredicate<Entity, RenderMaterial>[] predicates, MaterialTransform[] transforms) {
+	EntityMultiMaterialMap(BiPredicate<Entity, MaterialView>[] predicates, MaterialTransform[] transforms) {
 		assert predicates != null;
 		assert transforms != null;
 
@@ -45,15 +47,19 @@ class EntityMultiMaterialMap implements EntityMaterialMap {
 	}
 
 	@Override
-	public RenderMaterial getMapped(RenderMaterial material, Entity entity, MaterialFinder finder) {
+	public void map(MaterialFinder finder, Entity gameObject, @Nullable TextureAtlasSprite sprite) {
+		map(finder, gameObject);
+	}
+
+	@Override
+	public void map(MaterialFinder finder, Entity gameObject) {
 		final int limit = predicates.length;
 
 		for (int i = 0; i < limit; ++i) {
-			if (predicates[i].test(entity, material)) {
-				return transforms[i].transform(material, finder);
+			if (predicates[i].test(gameObject, finder)) {
+				transforms[i].apply(finder);
+				return;
 			}
 		}
-
-		return material;
 	}
 }

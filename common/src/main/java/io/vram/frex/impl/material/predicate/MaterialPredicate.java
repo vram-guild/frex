@@ -22,9 +22,9 @@ package io.vram.frex.impl.material.predicate;
 
 import java.util.function.Predicate;
 
-import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.material.MaterialView;
 
-public abstract class MaterialPredicate implements Predicate<RenderMaterial> {
+public abstract class MaterialPredicate implements Predicate<MaterialView> {
 	public static MaterialPredicate MATERIAL_ALWAYS_TRUE = new MaterialPredicate() {
 		@Override
 		public boolean equals(Object obj) {
@@ -32,7 +32,7 @@ public abstract class MaterialPredicate implements Predicate<RenderMaterial> {
 		}
 
 		@Override
-		public boolean test(RenderMaterial renderMaterial) {
+		public boolean test(MaterialView renderMaterial) {
 			return true;
 		}
 	};

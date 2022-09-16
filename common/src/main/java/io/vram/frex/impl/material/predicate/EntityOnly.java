@@ -34,7 +34,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.scores.Team;
 
-import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.material.MaterialView;
 
 /**
  * Stripped-down adaptation of vanilla class used for entity loot predicates.
@@ -67,7 +67,7 @@ public class EntityOnly extends EntityBiPredicate {
 	}
 
 	@Override
-	public boolean test(Entity entity, RenderMaterial ignored) {
+	public boolean test(Entity entity, MaterialView ignored) {
 		if (this == ANY) {
 			return true;
 		} else if (entity == null) {

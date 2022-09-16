@@ -22,7 +22,7 @@ package io.vram.frex.impl.material.predicate;
 
 import net.minecraft.world.entity.Entity;
 
-import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.material.MaterialView;
 
 public class EntityMaterialOnly extends EntityBiPredicate {
 	private final MaterialPredicate materialPredicate;
@@ -32,7 +32,7 @@ public class EntityMaterialOnly extends EntityBiPredicate {
 	}
 
 	@Override
-	public boolean test(Entity ignored, RenderMaterial renderMaterial) {
+	public boolean test(Entity ignored, MaterialView renderMaterial) {
 		return materialPredicate.test(renderMaterial);
 	}
 

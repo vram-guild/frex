@@ -25,15 +25,16 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
+import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.MaterialMap;
-import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.material.MaterialTransform;
 
 @Internal
-class SingleMaterialMap implements MaterialMap {
-	private final RenderMaterial material;
+class SingleMaterialMap<T> implements MaterialMap<T> {
+	private final MaterialTransform transform;
 
-	SingleMaterialMap(RenderMaterial material) {
-		this.material = material;
+	SingleMaterialMap(MaterialTransform transform) {
+		this.transform = transform;
 	}
 
 	@Override
@@ -42,7 +43,7 @@ class SingleMaterialMap implements MaterialMap {
 	}
 
 	@Override
-	public @Nullable RenderMaterial getMapped(TextureAtlasSprite sprite) {
-		return material;
+	public void map(MaterialFinder finder, T gameObject, @Nullable TextureAtlasSprite sprite) {
+		transform.apply(finder);
 	}
 }

@@ -26,7 +26,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
-import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.material.MaterialView;
 
 public class ArrayPredicate extends MaterialPredicate {
 	private final MaterialPredicate[] compact;
@@ -93,7 +93,7 @@ public class ArrayPredicate extends MaterialPredicate {
 	}
 
 	@Override
-	public boolean test(RenderMaterial material) {
+	public boolean test(MaterialView material) {
 		final int limit = compact.length;
 
 		for (int i = 0; i < limit; ++i) {

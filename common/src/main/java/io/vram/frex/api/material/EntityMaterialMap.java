@@ -30,12 +30,13 @@ import io.vram.frex.impl.material.MaterialMapLoader;
  * Requires FREX material extensions.
  */
 @FunctionalInterface
-public interface EntityMaterialMap {
-	RenderMaterial getMapped(RenderMaterial material, Entity entity, MaterialFinder finder);
-
+@Deprecated
+public interface EntityMaterialMap extends MaterialMap<Entity> {
+	@Deprecated
 	static EntityMaterialMap get(EntityType<?> entityType) {
 		return MaterialMapLoader.INSTANCE.get(entityType);
 	}
 
-	EntityMaterialMap IDENTITY = (m, e, f) -> m;
+	@Deprecated
+	EntityMaterialMap IDENTITY = (f, o, s) -> { };
 }

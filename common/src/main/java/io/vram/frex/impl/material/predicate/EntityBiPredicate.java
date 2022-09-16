@@ -24,12 +24,12 @@ import java.util.function.BiPredicate;
 
 import net.minecraft.world.entity.Entity;
 
-import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.material.MaterialView;
 
-public abstract class EntityBiPredicate implements BiPredicate<Entity, RenderMaterial> {
+public abstract class EntityBiPredicate implements BiPredicate<Entity, MaterialView> {
 	public static EntityBiPredicate ENTITY_ALWAYS_TRUE = new EntityBiPredicate() {
 		@Override
-		public boolean test(Entity entity, RenderMaterial renderMaterial) {
+		public boolean test(Entity entity, MaterialView renderMaterial) {
 			return true;
 		}
 

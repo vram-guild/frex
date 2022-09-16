@@ -22,6 +22,7 @@ package io.vram.frex.api.material;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.world.item.ItemStack;
@@ -30,35 +31,62 @@ import net.minecraft.world.level.material.FluidState;
 
 import io.vram.frex.impl.material.MaterialMapLoader;
 
-public interface MaterialMap {
+public interface MaterialMap<T> {
+	void map(MaterialFinder finder, T gameObject, @Nullable TextureAtlasSprite sprite);
+
+	default void map(MaterialFinder finder, T gameObject) {
+		map(finder, gameObject, null);
+	}
+
 	/**
 	 * Used by renderer to avoid overhead of sprite reverse lookup when not needed.
 	 * @return true if map is sprite-sensitive, false if always returns same material
 	 */
-	boolean needsSprite();
+	default boolean needsSprite() {
+		return false;
+	}
 
 	/**
 	 * Returns null if sprite is unmapped or if this is the default material map.
 	 */
-	@Nullable RenderMaterial getMapped(@Nullable TextureAtlasSprite sprite);
+	@Deprecated
+	default @Nullable RenderMaterial getMapped(@Nullable TextureAtlasSprite sprite) {
+		return null;
+	}
 
-	static MaterialMap get(BlockState state) {
+	@Deprecated
+	default RenderMaterial getMapped(RenderMaterial material, T gameObject, MaterialFinder finder) {
+		finder.copyFrom(material);
+		map(finder, gameObject);
+		return finder.find();
+	}
+
+	static MaterialMap<BlockState> get(BlockState state) {
 		return MaterialMapLoader.INSTANCE.get(state);
 	}
 
-	static MaterialMap get(FluidState fluidState) {
+	static MaterialMap<FluidState> get(FluidState fluidState) {
 		return MaterialMapLoader.INSTANCE.get(fluidState);
 	}
 
-	static MaterialMap getForParticle(ParticleType<?> particleType) {
+	static MaterialMap<Particle> getForParticle(ParticleType<?> particleType) {
 		return MaterialMapLoader.INSTANCE.get(particleType);
 	}
 
-	static MaterialMap defaultMaterialMap() {
+	@Deprecated
+	@SuppressWarnings("unchecked")
+	static <T> MaterialMap<T> defaultMaterialMap() {
 		return MaterialMapLoader.DEFAULT_MAP;
 	}
 
-	static MaterialMap get(ItemStack itemStack) {
+	static MaterialMap<ItemStack> get(ItemStack itemStack) {
 		return MaterialMapLoader.INSTANCE.get(itemStack);
+	}
+
+	MaterialMap<?> IDENTITY = (f, o, s) -> { };
+
+	@SuppressWarnings("unchecked")
+	static <T> MaterialMap<T> identity() {
+		return (MaterialMap<T>) IDENTITY;
 	}
 }

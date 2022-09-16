@@ -28,6 +28,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.api.material.BlockEntityMaterialMap;
 import io.vram.frex.api.material.MaterialFinder;
+import io.vram.frex.api.material.MaterialTransform;
 import io.vram.frex.api.material.RenderMaterial;
 
 @Internal

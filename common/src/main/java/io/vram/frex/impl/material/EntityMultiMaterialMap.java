@@ -28,6 +28,7 @@ import net.minecraft.world.entity.Entity;
 
 import io.vram.frex.api.material.EntityMaterialMap;
 import io.vram.frex.api.material.MaterialFinder;
+import io.vram.frex.api.material.MaterialTransform;
 import io.vram.frex.api.material.RenderMaterial;
 
 @Internal

@@ -41,6 +41,7 @@ import net.minecraft.world.entity.EntityType;
 
 import io.vram.frex.api.config.FrexConfig;
 import io.vram.frex.api.material.EntityMaterialMap;
+import io.vram.frex.api.material.MaterialTransform;
 import io.vram.frex.impl.FrexLog;
 import io.vram.frex.impl.material.predicate.EntityBiPredicate;
 import io.vram.frex.impl.material.predicate.EntityMaterialBoth;

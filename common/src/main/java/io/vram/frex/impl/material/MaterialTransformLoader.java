@@ -29,6 +29,7 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 import io.vram.frex.api.config.FrexConfig;
+import io.vram.frex.api.material.MaterialTransform;
 import io.vram.frex.impl.FrexLog;
 
 @Internal

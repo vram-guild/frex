@@ -42,6 +42,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import io.vram.frex.api.config.FrexConfig;
 import io.vram.frex.api.material.BlockEntityMaterialMap;
+import io.vram.frex.api.material.MaterialTransform;
 import io.vram.frex.impl.FrexLog;
 import io.vram.frex.impl.material.predicate.MaterialPredicate;
 import io.vram.frex.impl.material.predicate.MaterialPredicateDeserializer;

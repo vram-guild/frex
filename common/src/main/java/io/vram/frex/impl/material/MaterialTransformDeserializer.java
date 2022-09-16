@@ -28,6 +28,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 
 import io.vram.frex.api.material.MaterialFinder;
+import io.vram.frex.api.material.MaterialTransform;
 
 @Internal
 public class MaterialTransformDeserializer {

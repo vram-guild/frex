@@ -32,7 +32,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 
-import io.vram.frex.impl.material.MaterialMapLoader;
+import io.vram.frex.impl.material.map.MaterialMapLoader;
 
 public interface MaterialMap<T> {
 	void map(MaterialFinder finder, T gameObject, @Nullable TextureAtlasSprite sprite);
@@ -86,11 +86,6 @@ public interface MaterialMap<T> {
 
 	static MaterialMap<BlockState> get(BlockEntityType<?> blockEntityType) {
 		return MaterialMapLoader.INSTANCE.get(blockEntityType);
-	}
-
-	@Deprecated
-	static <T> MaterialMap<T> defaultMaterialMap() {
-		return identity();
 	}
 
 	static MaterialMap<ItemStack> get(ItemStack itemStack) {

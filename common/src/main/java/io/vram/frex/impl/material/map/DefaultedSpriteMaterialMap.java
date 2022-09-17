@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.vram.frex.impl.material;
+package io.vram.frex.impl.material.map;
 
 import java.util.IdentityHashMap;
 
@@ -33,21 +33,17 @@ import io.vram.frex.api.material.MaterialTransform;
 import io.vram.frex.api.material.RenderMaterial;
 
 @Internal
-class SpriteMaterialMap<T> implements MaterialMap<T> {
-	protected final IdentityHashMap<TextureAtlasSprite, RenderMaterial> spriteMap;
+class DefaultedSpriteMaterialMap<T> extends SpriteMaterialMap<T> implements MaterialMap<T> {
+	protected final RenderMaterial defaultMaterial;
 
-	SpriteMaterialMap(IdentityHashMap<TextureAtlasSprite, RenderMaterial> spriteMap) {
-		this.spriteMap = spriteMap;
-	}
-
-	@Override
-	public boolean needsSprite() {
-		return true;
+	DefaultedSpriteMaterialMap(RenderMaterial defaultMaterial, IdentityHashMap<TextureAtlasSprite, RenderMaterial> spriteMap) {
+		super(spriteMap);
+		this.defaultMaterial = defaultMaterial;
 	}
 
 	@Override
 	public void map(MaterialFinder finder, T gameObject, @Nullable TextureAtlasSprite sprite) {
-		final MaterialTransform result = spriteMap.get(sprite);
+		final MaterialTransform result = spriteMap.getOrDefault(sprite, defaultMaterial);
 
 		if (result != null) {
 			result.apply(finder);

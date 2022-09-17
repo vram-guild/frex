@@ -62,7 +62,7 @@ public final class MaterialLoaderImpl {
 		LOAD_CACHE.clear();
 	}
 
-	static RenderMaterial loadMaterial(String materialString, RenderMaterial defaultValue) {
+	public static RenderMaterial loadMaterial(String materialString, RenderMaterial defaultValue) {
 		final ResourceLocation id = new ResourceLocation(materialString);
 
 		RenderMaterial result = loadMaterialCached(id);
@@ -117,7 +117,7 @@ public final class MaterialLoaderImpl {
 		return result;
 	}
 
-	static TextureAtlasSprite loadSprite(String idForLog, String spriteId, TextureAtlas atlas, TextureAtlasSprite missingSprite) {
+	public static TextureAtlasSprite loadSprite(String idForLog, String spriteId, TextureAtlas atlas, TextureAtlasSprite missingSprite) {
 		final TextureAtlasSprite sprite = atlas.getSprite(new ResourceLocation(spriteId));
 
 		if (sprite == null || sprite == missingSprite) {

@@ -38,7 +38,7 @@ public final class MaterialTransformLoader {
 
 	private static final ObjectOpenHashSet<ResourceLocation> CAUGHT = new ObjectOpenHashSet<>();
 
-	static MaterialTransform loadTransform(String idForLog, String materialString, MaterialTransform defaultValue) {
+	public static MaterialTransform loadTransform(String idForLog, String materialString, MaterialTransform defaultValue) {
 		try {
 			final MaterialTransform result = loadTransformInner(new ResourceLocation(materialString));
 			return result == null ? defaultValue : result;

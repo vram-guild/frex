@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.vram.frex.impl.material;
+package io.vram.frex.impl.material.map;
 
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -47,6 +47,7 @@ import net.minecraft.world.level.material.FluidState;
 
 import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.impl.FrexLog;
+import io.vram.frex.impl.material.MaterialLoaderImpl;
 
 @Internal
 public class MaterialMapLoader {

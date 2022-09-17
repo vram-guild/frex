@@ -47,7 +47,7 @@ import io.vram.frex.impl.FrexLog;
 public final class MaterialMapDeserializer {
 	private MaterialMapDeserializer() { }
 
-	public static MaterialMap loadMaterialMap(String idForLog, JsonObject mapObject, MaterialMap defaultMap, @Nullable RenderMaterial defaultMaterial) {
+	public static <T> MaterialMap<T> loadMaterialMap(String idForLog, JsonObject mapObject, MaterialMap<T> defaultMap, @Nullable RenderMaterial defaultMaterial) {
 		if (mapObject == null || mapObject.isJsonNull()) {
 			return defaultMap;
 		}
@@ -55,7 +55,7 @@ public final class MaterialMapDeserializer {
 		try {
 			if (mapObject.has("defaultMaterial")) {
 				defaultMaterial = MaterialLoaderImpl.loadMaterial(mapObject.get("defaultMaterial").getAsString(), defaultMaterial);
-				defaultMap = new SingleMaterialMap(defaultMaterial);
+				defaultMap = new SingleInvariantMaterialMap<>(defaultMaterial);
 			}
 
 			if (mapObject.has("spriteMap")) {
@@ -88,7 +88,7 @@ public final class MaterialMapDeserializer {
 					spriteMap.put(sprite, MaterialLoaderImpl.loadMaterial(obj.get("material").getAsString(), defaultMaterial));
 				}
 
-				return spriteMap.isEmpty() ? defaultMap : (defaultMaterial == null ? new MultiMaterialMap(spriteMap) : new DefaultedMultiMaterialMap(defaultMaterial, spriteMap));
+				return spriteMap.isEmpty() ? defaultMap : (defaultMaterial == null ? new SpriteMaterialMap<>(spriteMap) : new DefaultedSpriteMaterialMap<>(defaultMaterial, spriteMap));
 			} else {
 				return defaultMap;
 			}
@@ -98,18 +98,18 @@ public final class MaterialMapDeserializer {
 		}
 	}
 
-	public static <T extends StateHolder<?, ?>> void deserialize(List<T> states, ResourceLocation idForLog, InputStreamReader reader, IdentityHashMap<T, MaterialMap> map) {
+	public static <T extends StateHolder<?, ?>> void deserialize(List<T> states, ResourceLocation idForLog, InputStreamReader reader, IdentityHashMap<T, MaterialMap<T>> map) {
 		try {
 			final JsonObject json = GsonHelper.parse(reader);
 			final String idString = idForLog.toString();
 
-			final MaterialMap globalDefaultMap = MaterialMap.IDENTITY;
+			final MaterialMap<T> globalDefaultMap = MaterialMap.identity();
 			@Nullable RenderMaterial defaultMaterial = null;
-			MaterialMap defaultMap = globalDefaultMap;
+			MaterialMap<T> defaultMap = globalDefaultMap;
 
 			if (json.has("defaultMaterial")) {
 				defaultMaterial = MaterialLoaderImpl.loadMaterial(json.get("defaultMaterial").getAsString(), defaultMaterial);
-				defaultMap = new SingleMaterialMap(defaultMaterial);
+				defaultMap = new SingleInvariantMaterialMap<>(defaultMaterial);
 			}
 
 			if (json.has("defaultMap")) {
@@ -128,7 +128,7 @@ public final class MaterialMapDeserializer {
 			}
 
 			for (final T state : states) {
-				MaterialMap result = defaultMap;
+				MaterialMap<T> result = defaultMap;
 
 				if (variants != null) {
 					final String stateId = BlockModelShaper.statePropertiesToString(state.getValues());

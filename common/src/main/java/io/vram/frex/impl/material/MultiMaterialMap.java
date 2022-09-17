@@ -20,7 +20,7 @@
 
 package io.vram.frex.impl.material;
 
-import java.util.IdentityHashMap;
+import java.util.function.BiPredicate;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
@@ -30,32 +30,35 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.api.material.MaterialTransform;
-import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.material.MaterialView;
 
 @Internal
 class MultiMaterialMap<T> implements MaterialMap<T> {
-	private final IdentityHashMap<TextureAtlasSprite, RenderMaterial> spriteMap;
+	private final BiPredicate<T, MaterialView>[] predicates;
+	private final MaterialTransform[] transforms;
 
-	MultiMaterialMap(IdentityHashMap<TextureAtlasSprite, RenderMaterial> spriteMap) {
-		this.spriteMap = spriteMap;
-	}
+	MultiMaterialMap(BiPredicate<T, MaterialView>[] predicates, MaterialTransform[] transforms) {
+		assert predicates != null;
+		assert transforms != null;
 
-	@Override
-	public boolean needsSprite() {
-		return true;
-	}
-
-	@Override
-	public RenderMaterial getMapped(TextureAtlasSprite sprite) {
-		return spriteMap.get(sprite);
+		this.predicates = predicates;
+		this.transforms = transforms;
 	}
 
 	@Override
 	public void map(MaterialFinder finder, T gameObject, @Nullable TextureAtlasSprite sprite) {
-		final MaterialTransform result = spriteMap.get(sprite);
+		map(finder, gameObject, null);
+	}
 
-		if (result != null) {
-			result.apply(finder);
+	@Override
+	public void map(MaterialFinder finder, T gameObject) {
+		final int limit = predicates.length;
+
+		for (int i = 0; i < limit; ++i) {
+			if (predicates[i].test(gameObject, finder)) {
+				transforms[i].apply(finder);
+				return;
+			}
 		}
 	}
 }

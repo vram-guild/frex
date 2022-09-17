@@ -28,11 +28,13 @@ import java.util.List;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
 
+import net.minecraft.client.particle.Particle;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -43,8 +45,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 
-import io.vram.frex.api.material.BlockEntityMaterialMap;
-import io.vram.frex.api.material.EntityMaterialMap;
 import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.impl.FrexLog;
 
@@ -52,28 +52,28 @@ import io.vram.frex.impl.FrexLog;
 public class MaterialMapLoader {
 	private MaterialMapLoader() { }
 
-	public MaterialMap get(BlockState state) {
-		return BLOCK_MAP.getOrDefault(state, MaterialMap.IDENTITY);
+	public MaterialMap<BlockState> get(BlockState state) {
+		return BLOCK_MAP.getOrDefault(state, MaterialMap.identity());
 	}
 
-	public MaterialMap get(FluidState fluidState) {
-		return FLUID_MAP.getOrDefault(fluidState, MaterialMap.IDENTITY);
+	public MaterialMap<FluidState> get(FluidState fluidState) {
+		return FLUID_MAP.getOrDefault(fluidState, MaterialMap.identity());
 	}
 
-	public MaterialMap get(ItemStack itemStack) {
-		return ITEM_MAP.getOrDefault(itemStack.getItem(), MaterialMap.IDENTITY);
+	public MaterialMap<ItemStack> get(ItemStack itemStack) {
+		return ITEM_MAP.getOrDefault(itemStack.getItem(), MaterialMap.identity());
 	}
 
-	public MaterialMap get(ParticleType<?> particleType) {
-		return PARTICLE_MAP.getOrDefault(particleType, MaterialMap.IDENTITY);
+	public MaterialMap<Particle> get(ParticleType<?> particleType) {
+		return PARTICLE_MAP.getOrDefault(particleType, MaterialMap.identity());
 	}
 
-	public BlockEntityMaterialMap get(BlockEntityType<?> blockEntityType) {
-		return BLOCK_ENTITY_MAP.getOrDefault(blockEntityType, BlockEntityMaterialMap.IDENTITY);
+	public MaterialMap<BlockState> get(BlockEntityType<?> blockEntityType) {
+		return BLOCK_ENTITY_MAP.getOrDefault(blockEntityType, MaterialMap.identity());
 	}
 
-	public EntityMaterialMap get(EntityType<?> entityType) {
-		return ENTITY_MAP.getOrDefault(entityType, EntityMaterialMap.IDENTITY);
+	public MaterialMap<Entity> get(EntityType<?> entityType) {
+		return ENTITY_MAP.getOrDefault(entityType, MaterialMap.identity());
 	}
 
 	public void reload(ResourceManager manager) {
@@ -169,10 +169,11 @@ public class MaterialMapLoader {
 				// fall back to block map for block items
 				// otherwise material maps are not required
 				if (item instanceof BlockItem) {
-					final MaterialMap map = BLOCK_MAP.get(((BlockItem) item).getBlock().defaultBlockState());
+					final var defaultBlockState = ((BlockItem) item).getBlock().defaultBlockState();
+					final MaterialMap<BlockState> blockMap = BLOCK_MAP.get(defaultBlockState);
 
-					if (map != null) {
-						ITEM_MAP.put(item, map);
+					if (blockMap != null) {
+						ITEM_MAP.put(item, (f, i, s) -> blockMap.map(f, defaultBlockState, s));
 					}
 				}
 			}
@@ -227,12 +228,12 @@ public class MaterialMapLoader {
 		}
 	}
 
-	private static final IdentityHashMap<BlockState, MaterialMap> BLOCK_MAP = new IdentityHashMap<>();
-	private static final IdentityHashMap<FluidState, MaterialMap> FLUID_MAP = new IdentityHashMap<>();
-	private static final IdentityHashMap<Item, MaterialMap> ITEM_MAP = new IdentityHashMap<>();
-	private static final IdentityHashMap<ParticleType<?>, MaterialMap> PARTICLE_MAP = new IdentityHashMap<>();
-	private static final IdentityHashMap<BlockEntityType<?>, BlockEntityMaterialMap> BLOCK_ENTITY_MAP = new IdentityHashMap<>();
-	private static final IdentityHashMap<EntityType<?>, EntityMaterialMap> ENTITY_MAP = new IdentityHashMap<>();
+	private static final IdentityHashMap<BlockState, MaterialMap<BlockState>> BLOCK_MAP = new IdentityHashMap<>();
+	private static final IdentityHashMap<FluidState, MaterialMap<FluidState>> FLUID_MAP = new IdentityHashMap<>();
+	private static final IdentityHashMap<Item, MaterialMap<ItemStack>> ITEM_MAP = new IdentityHashMap<>();
+	private static final IdentityHashMap<ParticleType<?>, MaterialMap<Particle>> PARTICLE_MAP = new IdentityHashMap<>();
+	private static final IdentityHashMap<BlockEntityType<?>, MaterialMap<BlockState>> BLOCK_ENTITY_MAP = new IdentityHashMap<>();
+	private static final IdentityHashMap<EntityType<?>, MaterialMap<Entity>> ENTITY_MAP = new IdentityHashMap<>();
 
 	public static final MaterialMapLoader INSTANCE = new MaterialMapLoader();
 }

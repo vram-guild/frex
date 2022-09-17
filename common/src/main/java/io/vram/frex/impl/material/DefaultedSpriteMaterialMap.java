@@ -20,40 +20,33 @@
 
 package io.vram.frex.impl.material;
 
-import java.util.function.BiPredicate;
+import java.util.IdentityHashMap;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
+import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
-import io.vram.frex.api.material.BlockEntityMaterialMap;
 import io.vram.frex.api.material.MaterialFinder;
+import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.api.material.MaterialTransform;
 import io.vram.frex.api.material.RenderMaterial;
 
 @Internal
-class BlockEntityMultiMaterialMap implements BlockEntityMaterialMap {
-	private final BiPredicate<BlockState, RenderMaterial>[] predicates;
-	private final MaterialTransform[] transforms;
+class DefaultedSpriteMaterialMap<T> extends SpriteMaterialMap<T> implements MaterialMap<T> {
+	protected final RenderMaterial defaultMaterial;
 
-	BlockEntityMultiMaterialMap(BiPredicate<BlockState, RenderMaterial>[] predicates, MaterialTransform[] transforms) {
-		assert predicates != null;
-		assert transforms != null;
-
-		this.predicates = predicates;
-		this.transforms = transforms;
+	DefaultedSpriteMaterialMap(RenderMaterial defaultMaterial, IdentityHashMap<TextureAtlasSprite, RenderMaterial> spriteMap) {
+		super(spriteMap);
+		this.defaultMaterial = defaultMaterial;
 	}
 
 	@Override
-	public RenderMaterial getMapped(RenderMaterial material, BlockState blockState, MaterialFinder finder) {
-		final int limit = predicates.length;
+	public void map(MaterialFinder finder, T gameObject, @Nullable TextureAtlasSprite sprite) {
+		final MaterialTransform result = spriteMap.getOrDefault(sprite, defaultMaterial);
 
-		for (int i = 0; i < limit; ++i) {
-			if (predicates[i].test(blockState, material)) {
-				return transforms[i].transform(material, finder);
-			}
+		if (result != null) {
+			result.apply(finder);
 		}
-
-		return material;
 	}
 }

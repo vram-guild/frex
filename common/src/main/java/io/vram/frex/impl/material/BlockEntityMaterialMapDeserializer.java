@@ -39,9 +39,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.api.config.FrexConfig;
-import io.vram.frex.api.material.BlockEntityMaterialMap;
+import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.api.material.MaterialTransform;
 import io.vram.frex.impl.FrexLog;
 import io.vram.frex.impl.material.predicate.MaterialPredicate;
@@ -53,15 +54,15 @@ import io.vram.frex.impl.material.predicate.StateOnly;
 
 @Internal
 public class BlockEntityMaterialMapDeserializer {
-	public static void deserialize(BlockEntityType<?> key, ResourceLocation idForLog, List<Resource> orderedResourceList, IdentityHashMap<BlockEntityType<?>, BlockEntityMaterialMap> map) {
+	public static void deserialize(BlockEntityType<?> key, ResourceLocation idForLog, List<Resource> orderedResourceList, IdentityHashMap<BlockEntityType<?>, MaterialMap<BlockState>> map) {
 		try {
 			final JsonObject[] reversedJsonList = new JsonObject[orderedResourceList.size()];
 			final String[] packIds = new String[orderedResourceList.size()];
 			final String idString = idForLog.toString();
 
-			final BlockEntityMaterialMap defaultMap = BlockEntityMaterialMap.IDENTITY;
+			final MaterialMap<BlockState> defaultMap = MaterialMap.identity();
 			MaterialTransform defaultTransform = MaterialTransform.IDENTITY;
-			BlockEntityMaterialMap result = defaultMap;
+			MaterialMap<BlockState> result = defaultMap;
 
 			int j = 0;
 
@@ -75,7 +76,7 @@ public class BlockEntityMaterialMapDeserializer {
 				// Only read top-most resource for defaultMaterial
 				if (json.has("defaultMaterial") && defaultTransform == MaterialTransform.IDENTITY) {
 					defaultTransform = MaterialTransformLoader.loadTransform(formatLog(packIds[j], idString), json.get("defaultMaterial").getAsString(), defaultTransform);
-					result = new BlockEntitySingleMaterialMap(BLOCK_ALWAYS_TRUE, defaultTransform);
+					result = new SingleMaterialMap<>(BLOCK_ALWAYS_TRUE, defaultTransform);
 				}
 
 				j++;
@@ -92,7 +93,7 @@ public class BlockEntityMaterialMapDeserializer {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static BlockEntityMaterialMap loadBlockEntityMaterialMap(String idForLog, String[] packIdsForLog, JsonObject[] reversedJsonList, BlockEntityMaterialMap defaultMap, MaterialTransform defaultTransform) {
+	public static MaterialMap<BlockState> loadBlockEntityMaterialMap(String idForLog, String[] packIdsForLog, JsonObject[] reversedJsonList, MaterialMap<BlockState> defaultMap, MaterialTransform defaultTransform) {
 		try {
 			final ObjectArrayList<StateBiPredicate> predicates = new ObjectArrayList<>();
 			final ObjectArrayList<MaterialTransform> transforms = new ObjectArrayList<>();
@@ -144,7 +145,7 @@ public class BlockEntityMaterialMapDeserializer {
 				predicates.add(BLOCK_ALWAYS_TRUE);
 				transforms.add(defaultTransform);
 				final int n = predicates.size();
-				return new BlockEntityMultiMaterialMap(predicates.toArray(new BiPredicate[n]), transforms.toArray(new MaterialTransform[n]));
+				return new MultiMaterialMap<>(predicates.toArray(new BiPredicate[n]), transforms.toArray(new MaterialTransform[n]));
 			}
 		} catch (final Exception e) {
 			FrexLog.warn("Unable to load material map " + idForLog + " because of exception. Using default material map.", e);

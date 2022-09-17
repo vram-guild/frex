@@ -20,8 +20,6 @@
 
 package io.vram.frex.impl.material;
 
-import java.util.IdentityHashMap;
-
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,29 +28,18 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.api.material.MaterialTransform;
-import io.vram.frex.api.material.RenderMaterial;
 
 @Internal
-class DefaultedMultiMaterialMap<T> implements MaterialMap<T> {
-	protected final IdentityHashMap<TextureAtlasSprite, RenderMaterial> spriteMap;
-	protected final RenderMaterial defaultMaterial;
+class SingleInvariantMaterialMap<T> implements MaterialMap<T> {
+	protected final MaterialTransform transform;
 
-	DefaultedMultiMaterialMap(RenderMaterial defaultMaterial, IdentityHashMap<TextureAtlasSprite, RenderMaterial> spriteMap) {
-		this.defaultMaterial = defaultMaterial;
-		this.spriteMap = spriteMap;
-	}
-
-	@Override
-	public boolean needsSprite() {
-		return true;
+	SingleInvariantMaterialMap(MaterialTransform transform) {
+		assert transform != null;
+		this.transform = transform;
 	}
 
 	@Override
 	public void map(MaterialFinder finder, T gameObject, @Nullable TextureAtlasSprite sprite) {
-		final MaterialTransform result = spriteMap.getOrDefault(sprite, defaultMaterial);
-
-		if (result != null) {
-			result.apply(finder);
-		}
+		transform.apply(finder);
 	}
 }

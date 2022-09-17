@@ -20,31 +20,35 @@
 
 package io.vram.frex.impl.material;
 
+import java.util.function.BiPredicate;
+
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 import io.vram.frex.api.material.MaterialFinder;
-import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.api.material.MaterialTransform;
+import io.vram.frex.api.material.MaterialView;
 
 @Internal
-class SingleMaterialMap<T> implements MaterialMap<T> {
-	private final MaterialTransform transform;
+class SingleMaterialMap<T> extends SingleInvariantMaterialMap<T> {
+	protected final BiPredicate<T, MaterialView> predicate;
 
-	SingleMaterialMap(MaterialTransform transform) {
-		assert transform != null;
-		this.transform = transform;
-	}
-
-	@Override
-	public boolean needsSprite() {
-		return false;
+	SingleMaterialMap(BiPredicate<T, MaterialView> predicate, MaterialTransform transform) {
+		super(transform);
+		this.predicate = predicate;
 	}
 
 	@Override
 	public void map(MaterialFinder finder, T gameObject, @Nullable TextureAtlasSprite sprite) {
-		transform.apply(finder);
+		map(finder, gameObject, null);
+	}
+
+	@Override
+	public void map(MaterialFinder finder, T gameObject) {
+		if (predicate.test(gameObject, finder)) {
+			transform.apply(finder);
+		}
 	}
 }

@@ -25,7 +25,10 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 
@@ -75,6 +78,14 @@ public interface MaterialMap<T> {
 
 	static MaterialMap<Particle> getForParticle(ParticleType<?> particleType) {
 		return MaterialMapLoader.INSTANCE.get(particleType);
+	}
+
+	static MaterialMap<Entity> get(EntityType<?> entityType) {
+		return MaterialMapLoader.INSTANCE.get(entityType);
+	}
+
+	static MaterialMap<BlockState> get(BlockEntityType<?> blockEntityType) {
+		return MaterialMapLoader.INSTANCE.get(blockEntityType);
 	}
 
 	@Deprecated

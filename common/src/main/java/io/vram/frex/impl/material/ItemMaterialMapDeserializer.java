@@ -30,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.api.material.RenderMaterial;
@@ -37,18 +38,18 @@ import io.vram.frex.impl.FrexLog;
 
 @Internal
 public class ItemMaterialMapDeserializer {
-	public static void deserialize(Item item, ResourceLocation idForLog, InputStreamReader reader, IdentityHashMap<Item, MaterialMap> itemMap) {
+	public static void deserialize(Item item, ResourceLocation idForLog, InputStreamReader reader, IdentityHashMap<Item, MaterialMap<ItemStack>> itemMap) {
 		try {
 			final JsonObject json = GsonHelper.parse(reader);
 			final String idString = idForLog.toString();
 
-			final MaterialMap globalDefaultMap = MaterialMap.IDENTITY;
+			final MaterialMap<ItemStack> globalDefaultMap = MaterialMap.identity();
 			@Nullable RenderMaterial defaultMaterial = null;
-			MaterialMap result = globalDefaultMap;
+			MaterialMap<ItemStack> result = globalDefaultMap;
 
 			if (json.has("defaultMaterial")) {
 				defaultMaterial = MaterialLoaderImpl.loadMaterial(json.get("defaultMaterial").getAsString(), defaultMaterial);
-				result = new SingleMaterialMap(defaultMaterial);
+				result = new SingleInvariantMaterialMap<>(defaultMaterial);
 			}
 
 			if (json.has("defaultMap")) {

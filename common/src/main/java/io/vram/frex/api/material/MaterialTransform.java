@@ -22,27 +22,7 @@ package io.vram.frex.api.material;
 
 @FunctionalInterface
 public interface MaterialTransform {
-	default RenderMaterial transform(RenderMaterial material, MaterialFinder finder) {
-		finder.copyFrom(material);
-		apply(finder);
-		return finder.find();
-	}
-
 	void apply(MaterialFinder finder);
 
 	MaterialTransform IDENTITY = (f) -> { };
-
-	static MaterialTransform constant(RenderMaterial material) {
-		return new MaterialTransform() {
-			@Override
-			public RenderMaterial transform(RenderMaterial ignored, MaterialFinder finder) {
-				return material;
-			}
-
-			@Override
-			public void apply(MaterialFinder finder) {
-				// NOOP
-			}
-		};
-	}
 }

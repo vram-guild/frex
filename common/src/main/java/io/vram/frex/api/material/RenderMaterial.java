@@ -68,11 +68,6 @@ public interface RenderMaterial extends MaterialView, MaterialTransform {
 	}
 
 	@Override
-	default RenderMaterial transform(RenderMaterial material, MaterialFinder finder) {
-		return this;
-	}
-
-	@Override
 	default void apply(MaterialFinder finder) {
 		finder.copyFrom(this);
 	}

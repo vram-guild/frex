@@ -49,21 +49,6 @@ public interface MaterialMap<T> {
 		return false;
 	}
 
-	/**
-	 * Returns null if sprite is unmapped or if this is the default material map.
-	 */
-	@Deprecated
-	default @Nullable RenderMaterial getMapped(@Nullable TextureAtlasSprite sprite) {
-		return null;
-	}
-
-	@Deprecated
-	default RenderMaterial getMapped(RenderMaterial material, T gameObject, MaterialFinder finder) {
-		finder.copyFrom(material);
-		map(finder, gameObject);
-		return finder.find();
-	}
-
 	default boolean isIdentity() {
 		return this == IDENTITY;
 	}

@@ -36,7 +36,7 @@ public class MaterialTransformDeserializer {
 
 	public static MaterialTransform deserialize(JsonObject json) {
 		if (!GsonHelper.getAsBoolean(json, "transform", false)) {
-			return MaterialTransform.constant(MaterialDeserializer.deserialize(json));
+			return MaterialDeserializer.deserialize(json);
 		}
 
 		final ObjectArrayList<MaterialTransform> transforms = new ObjectArrayList<>();

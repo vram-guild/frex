@@ -30,13 +30,12 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.api.material.MaterialTransform;
-import io.vram.frex.api.material.RenderMaterial;
 
 @Internal
 class SpriteMaterialMap<T> implements MaterialMap<T> {
-	protected final IdentityHashMap<TextureAtlasSprite, RenderMaterial> spriteMap;
+	protected final IdentityHashMap<TextureAtlasSprite, MaterialTransform> spriteMap;
 
-	SpriteMaterialMap(IdentityHashMap<TextureAtlasSprite, RenderMaterial> spriteMap) {
+	SpriteMaterialMap(IdentityHashMap<TextureAtlasSprite, MaterialTransform> spriteMap) {
 		this.spriteMap = spriteMap;
 	}
 

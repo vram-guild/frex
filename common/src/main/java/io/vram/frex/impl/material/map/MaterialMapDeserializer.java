@@ -40,23 +40,25 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.StateHolder;
 
 import io.vram.frex.api.material.MaterialMap;
+import io.vram.frex.api.material.MaterialTransform;
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.impl.FrexLog;
 import io.vram.frex.impl.material.MaterialLoaderImpl;
+import io.vram.frex.impl.material.MaterialTransformLoader;
 
 @Internal
 public final class MaterialMapDeserializer {
 	private MaterialMapDeserializer() { }
 
-	public static <T> MaterialMap<T> loadMaterialMap(String idForLog, JsonObject mapObject, MaterialMap<T> defaultMap, @Nullable RenderMaterial defaultMaterial) {
+	public static <T> MaterialMap<T> loadMaterialMap(String idForLog, JsonObject mapObject, MaterialMap<T> defaultMap, @Nullable MaterialTransform defaultTransform) {
 		if (mapObject == null || mapObject.isJsonNull()) {
 			return defaultMap;
 		}
 
 		try {
 			if (mapObject.has("defaultMaterial")) {
-				defaultMaterial = MaterialLoaderImpl.loadMaterial(mapObject.get("defaultMaterial").getAsString(), defaultMaterial);
-				defaultMap = new SingleInvariantMaterialMap<>(defaultMaterial);
+				defaultTransform = MaterialTransformLoader.loadTransform(idForLog, mapObject.get("defaultMaterial").getAsString(), defaultTransform);
+				defaultMap = new SingleInvariantMaterialMap<>(defaultTransform);
 			}
 
 			if (mapObject.has("spriteMap")) {
@@ -65,7 +67,7 @@ public final class MaterialMapDeserializer {
 
 				final JsonArray jsonArray = mapObject.getAsJsonArray("spriteMap");
 				final int limit = jsonArray.size();
-				final IdentityHashMap<TextureAtlasSprite, RenderMaterial> spriteMap = new IdentityHashMap<>();
+				final IdentityHashMap<TextureAtlasSprite, MaterialTransform> spriteMap = new IdentityHashMap<>();
 
 				for (int i = 0; i < limit; ++i) {
 					final JsonObject obj = jsonArray.get(i).getAsJsonObject();
@@ -86,10 +88,10 @@ public final class MaterialMapDeserializer {
 						continue;
 					}
 
-					spriteMap.put(sprite, MaterialLoaderImpl.loadMaterial(obj.get("material").getAsString(), defaultMaterial));
+					spriteMap.put(sprite, MaterialTransformLoader.loadTransform(idForLog, obj.get("material").getAsString(), defaultTransform));
 				}
 
-				return spriteMap.isEmpty() ? defaultMap : (defaultMaterial == null ? new SpriteMaterialMap<>(spriteMap) : new DefaultedSpriteMaterialMap<>(defaultMaterial, spriteMap));
+				return spriteMap.isEmpty() ? defaultMap : (defaultTransform == null ? new SpriteMaterialMap<>(spriteMap) : new DefaultedSpriteMaterialMap<>(defaultTransform, spriteMap));
 			} else {
 				return defaultMap;
 			}

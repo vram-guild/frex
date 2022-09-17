@@ -30,20 +30,19 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.api.material.MaterialTransform;
-import io.vram.frex.api.material.RenderMaterial;
 
 @Internal
 class DefaultedSpriteMaterialMap<T> extends SpriteMaterialMap<T> implements MaterialMap<T> {
-	protected final RenderMaterial defaultMaterial;
+	protected final MaterialTransform defaultTransform;
 
-	DefaultedSpriteMaterialMap(RenderMaterial defaultMaterial, IdentityHashMap<TextureAtlasSprite, RenderMaterial> spriteMap) {
+	DefaultedSpriteMaterialMap(MaterialTransform defaultTransform, IdentityHashMap<TextureAtlasSprite, MaterialTransform> spriteMap) {
 		super(spriteMap);
-		this.defaultMaterial = defaultMaterial;
+		this.defaultTransform = defaultTransform;
 	}
 
 	@Override
 	public void map(MaterialFinder finder, T gameObject, @Nullable TextureAtlasSprite sprite) {
-		final MaterialTransform result = spriteMap.getOrDefault(sprite, defaultMaterial);
+		final MaterialTransform result = spriteMap.getOrDefault(sprite, defaultTransform);
 
 		if (result != null) {
 			result.apply(finder);

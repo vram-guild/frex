@@ -33,9 +33,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import io.vram.frex.api.material.MaterialMap;
-import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.material.MaterialTransform;
 import io.vram.frex.impl.FrexLog;
-import io.vram.frex.impl.material.MaterialLoaderImpl;
+import io.vram.frex.impl.material.MaterialTransformLoader;
 
 @Internal
 public class ItemMaterialMapDeserializer {
@@ -45,16 +45,16 @@ public class ItemMaterialMapDeserializer {
 			final String idString = idForLog.toString();
 
 			final MaterialMap<ItemStack> globalDefaultMap = MaterialMap.identity();
-			@Nullable RenderMaterial defaultMaterial = null;
+			@Nullable MaterialTransform defaultTransform = null;
 			MaterialMap<ItemStack> result = globalDefaultMap;
 
 			if (json.has("defaultMaterial")) {
-				defaultMaterial = MaterialLoaderImpl.loadMaterial(json.get("defaultMaterial").getAsString(), defaultMaterial);
-				result = new SingleInvariantMaterialMap<>(defaultMaterial);
+				defaultTransform = MaterialTransformLoader.loadTransform(idString, json.get("defaultMaterial").getAsString(), defaultTransform);
+				result = new SingleInvariantMaterialMap<>(defaultTransform);
 			}
 
 			if (json.has("defaultMap")) {
-				result = MaterialMapDeserializer.loadMaterialMap(idString + "#default", json.getAsJsonObject("defaultMap"), result, defaultMaterial);
+				result = MaterialMapDeserializer.loadMaterialMap(idString + "#default", json.getAsJsonObject("defaultMap"), result, defaultTransform);
 			}
 
 			if (result != globalDefaultMap) {

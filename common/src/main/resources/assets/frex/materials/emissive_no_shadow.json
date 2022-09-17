@@ -1,5 +1,4 @@
 {
-	"_DEPRECATED_": "use emissive_no_shadow.json instead",
 	"transform": true,
 	"emissive": true,
 	"castShadows": false

@@ -34,6 +34,7 @@ class SingleMaterialMap<T> implements MaterialMap<T> {
 	private final MaterialTransform transform;
 
 	SingleMaterialMap(MaterialTransform transform) {
+		assert transform != null;
 		this.transform = transform;
 	}
 

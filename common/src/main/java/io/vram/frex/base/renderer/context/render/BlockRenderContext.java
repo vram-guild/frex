@@ -61,14 +61,18 @@ public abstract class BlockRenderContext<T extends BlockAndTintGetter> extends B
 		prepareForBlock(blockState, model.useAmbientOcclusion());
 	}
 
-	public void prepareForFluid(BlockState blockState, BlockPos blockPos, boolean modelAO) {
-		inputContext.prepareForFluid(blockState, blockPos);
-		prepareForBlock(blockState, modelAO);
+	private void prepareForBlock(BlockState blockState, boolean modelAO) {
+		materialMap = MaterialMap.get(blockState);
+		gameObject = blockState;
+		defaultAo = modelAO && Minecraft.useAmbientOcclusion() && blockState.getLightEmission() == 0;
 	}
 
-	private void prepareForBlock(BlockState blockState, boolean modelAO) {
-		materialMap = inputContext.isFluidModel() ? MaterialMap.get(blockState.getFluidState()) : MaterialMap.get(blockState);
-		defaultAo = modelAO && Minecraft.useAmbientOcclusion() && blockState.getLightEmission() == 0;
+	public void prepareForFluid(BlockState blockState, BlockPos blockPos, boolean modelAO) {
+		inputContext.prepareForFluid(blockState, blockPos);
+		final var fluidState = blockState.getFluidState();
+		materialMap = MaterialMap.get(fluidState);
+		gameObject = fluidState;
+		defaultAo = modelAO && Minecraft.useAmbientOcclusion();
 	}
 
 	@Override

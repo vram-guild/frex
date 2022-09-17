@@ -53,19 +53,19 @@ public class MaterialMapLoader {
 	private MaterialMapLoader() { }
 
 	public MaterialMap get(BlockState state) {
-		return BLOCK_MAP.getOrDefault(state, DEFAULT_MAP);
+		return BLOCK_MAP.getOrDefault(state, MaterialMap.IDENTITY);
 	}
 
 	public MaterialMap get(FluidState fluidState) {
-		return FLUID_MAP.getOrDefault(fluidState, DEFAULT_MAP);
+		return FLUID_MAP.getOrDefault(fluidState, MaterialMap.IDENTITY);
 	}
 
 	public MaterialMap get(ItemStack itemStack) {
-		return ITEM_MAP.getOrDefault(itemStack.getItem(), DEFAULT_MAP);
+		return ITEM_MAP.getOrDefault(itemStack.getItem(), MaterialMap.IDENTITY);
 	}
 
 	public MaterialMap get(ParticleType<?> particleType) {
-		return PARTICLE_MAP.getOrDefault(particleType, DEFAULT_MAP);
+		return PARTICLE_MAP.getOrDefault(particleType, MaterialMap.IDENTITY);
 	}
 
 	public BlockEntityMaterialMap get(BlockEntityType<?> blockEntityType) {
@@ -226,8 +226,6 @@ public class MaterialMapLoader {
 			FrexLog.info("Unable to load block entity material map " + id.toString() + " due to exception " + e.toString());
 		}
 	}
-
-	public static final MaterialMap DEFAULT_MAP = new SingleMaterialMap(null);
 
 	private static final IdentityHashMap<BlockState, MaterialMap> BLOCK_MAP = new IdentityHashMap<>();
 	private static final IdentityHashMap<FluidState, MaterialMap> FLUID_MAP = new IdentityHashMap<>();

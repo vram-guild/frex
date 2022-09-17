@@ -61,6 +61,10 @@ public interface MaterialMap<T> {
 		return finder.find();
 	}
 
+	default boolean isIdentity() {
+		return this == IDENTITY;
+	}
+
 	static MaterialMap<BlockState> get(BlockState state) {
 		return MaterialMapLoader.INSTANCE.get(state);
 	}
@@ -74,9 +78,8 @@ public interface MaterialMap<T> {
 	}
 
 	@Deprecated
-	@SuppressWarnings("unchecked")
 	static <T> MaterialMap<T> defaultMaterialMap() {
-		return MaterialMapLoader.DEFAULT_MAP;
+		return identity();
 	}
 
 	static MaterialMap<ItemStack> get(ItemStack itemStack) {

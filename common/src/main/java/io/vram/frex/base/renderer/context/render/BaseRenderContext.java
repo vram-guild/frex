@@ -89,17 +89,6 @@ import io.vram.frex.pastel.PastelTerrainRenderContext;
  * </ul>
  */
 public abstract class BaseRenderContext<C extends BaseInputContext> {
-	/**
-	 * Convenient and fast access to the default (empty) material map.
-	 * During the model setup phase, {@link #materialMap} should be set to
-	 * this value if no object-specific material map can be obtained.
-	 *
-	 * <p>Because this is a final instance value, fast `==` comparison can be
-	 * used to test if a non-default material map is present and material mapping
-	 * skipped if not.
-	 */
-	protected static final MaterialMap defaultMap = MaterialMap.defaultMaterialMap();
-
 	protected final MaterialFinder finder = MaterialFinder.newInstance();
 
 	/**
@@ -111,6 +100,8 @@ public abstract class BaseRenderContext<C extends BaseInputContext> {
 
 	public final C inputContext;
 
+	protected Object gameObject;
+
 	/**
 	 * Handles material mapping for whatever game object/model is being rendered.
 	 * Should be initialized during the model setup phase so that it is ready
@@ -121,8 +112,12 @@ public abstract class BaseRenderContext<C extends BaseInputContext> {
 	 *
 	 * <p>This base class includes {@link #mapMaterials(BaseQuadEmitter)} for the
 	 * per-quad handling but the setup for each game object must live in sub-types.
+	 *
+	 * <p>We use a raw type here because at least one render context (Block) handles
+	 * two types of game objects (blocks and fluids).
 	 */
-	protected MaterialMap materialMap = defaultMap;
+	@SuppressWarnings("rawtypes")
+	protected MaterialMap materialMap = MaterialMap.IDENTITY;
 
 	protected BaseRenderContext() {
 		inputContext = createInputContext();
@@ -172,16 +167,17 @@ public abstract class BaseRenderContext<C extends BaseInputContext> {
 	 * but the design goal was to avoid coupling MaterialMap to QuadEmitter and
 	 * sprite mechanics in the API.
 	 */
-	protected void mapMaterials(BaseQuadEmitter quad) {
-		if (materialMap == defaultMap) {
+	@SuppressWarnings("unchecked")
+	protected void mapMaterials() {
+		if (materialMap.isIdentity()) {
 			return;
 		}
 
-		final TextureAtlasSprite sprite = materialMap.needsSprite() ? quad.material().texture().spriteIndex().fromIndex(quad.spriteId()) : null;
-		final RenderMaterial mapped = materialMap.getMapped(sprite);
-
-		if (mapped != null) {
-			quad.material(mapped);
+		if (materialMap.needsSprite()) {
+			final TextureAtlasSprite sprite = emitter.material().texture().spriteIndex().fromIndex(emitter.spriteId());
+			materialMap.map(finder, gameObject, sprite);
+		} else {
+			materialMap.map(finder, gameObject);
 		}
 	}
 

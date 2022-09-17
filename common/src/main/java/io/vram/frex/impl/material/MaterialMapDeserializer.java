@@ -103,7 +103,7 @@ public final class MaterialMapDeserializer {
 			final JsonObject json = GsonHelper.parse(reader);
 			final String idString = idForLog.toString();
 
-			final MaterialMap globalDefaultMap = MaterialMapLoader.DEFAULT_MAP;
+			final MaterialMap globalDefaultMap = MaterialMap.IDENTITY;
 			@Nullable RenderMaterial defaultMaterial = null;
 			MaterialMap defaultMap = globalDefaultMap;
 

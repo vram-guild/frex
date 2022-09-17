@@ -57,10 +57,9 @@ public abstract class BakedRenderContext<C extends BaseBakedInputContext> extend
 	public void renderQuad() {
 		final BaseQuadEmitter quad = emitter;
 
-		mapMaterials(quad);
-
 		if (inputContext.cullTest(quad.cullFaceId())) {
 			finder.copyFrom(quad.material());
+			mapMaterials();
 			adjustMaterial();
 			quad.material(finder.find());
 			shadeQuad();

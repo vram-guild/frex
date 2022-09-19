@@ -109,24 +109,24 @@ out float frx_distance;
  * API METHODS
 ****************************************************************/
 
- /*
-  * Called by renderer after all variables are initialized and before
-  * frx_pipelineVertex() is called to update vertex outputs.
-  *
-  * The running vertex shader will have multiple, renamed versions of
-  * this method - one for each unique material vertex shader present
-  * in the game. The specific method called is controlled by the material
-  * associated with the current triangle.  If the current material does
-  * not define a custom material shader, no extra processing will happen
-  * before frx_pipelineVertex() is called.
-  */
+/*
+* Called by renderer after all variables are initialized and before
+* frx_pipelineVertex() is called to update vertex outputs.
+*
+* The running vertex shader will have multiple, renamed versions of
+* this method - one for each unique material vertex shader present
+* in the game. The specific method called is controlled by the material
+* associated with the current triangle.  If the current material does
+* not define a custom material shader, no extra processing will happen
+* before frx_pipelineVertex() is called.
+*/
 void frx_materialVertex();
 
 /*
  * Called by renderer after frx_materialVertex() completes.
  * Pipeline authors implement this method to read vertex data,
  * apply transformation and update as needed. Pipeline vertex shaders
- * may also capture additional vertex outputs as neeed.
+ * may also capture additional vertex outputs as needed.
  * These steps are specific to the design of each pipeline.
  *
  * The pipeline shader is responsible for ALL updates to vertex outputs,

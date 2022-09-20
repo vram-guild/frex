@@ -20,7 +20,6 @@
 
 package io.vram.frex.base.renderer.context.render;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
@@ -37,8 +36,6 @@ public abstract class BlockRenderContext<T extends BlockAndTintGetter> extends B
 	 * For use by chunk builder - avoids another threadlocal.
 	 */
 	public final BlockPos.MutableBlockPos searchPos = new BlockPos.MutableBlockPos();
-
-	protected boolean defaultAo;
 
 	@Override
 	protected BaseBlockInputContext<T> createInputContext() {
@@ -64,7 +61,6 @@ public abstract class BlockRenderContext<T extends BlockAndTintGetter> extends B
 	private void prepareForBlock(BlockState blockState, boolean modelAO) {
 		materialMap = MaterialMap.get(blockState);
 		gameObject = blockState;
-		defaultAo = modelAO && Minecraft.useAmbientOcclusion() && blockState.getLightEmission() == 0;
 	}
 
 	public void prepareForFluid(BlockState blockState, BlockPos blockPos, boolean modelAO) {
@@ -72,7 +68,6 @@ public abstract class BlockRenderContext<T extends BlockAndTintGetter> extends B
 		final var fluidState = blockState.getFluidState();
 		materialMap = MaterialMap.get(fluidState);
 		gameObject = fluidState;
-		defaultAo = modelAO && Minecraft.useAmbientOcclusion();
 	}
 
 	@Override

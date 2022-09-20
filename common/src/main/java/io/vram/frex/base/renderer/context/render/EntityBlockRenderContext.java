@@ -107,7 +107,6 @@ public abstract class EntityBlockRenderContext extends BlockRenderContext<BlockA
 		pos.set(itemFrameEntity.getX(), itemFrameEntity.getY(), itemFrameEntity.getZ());
 		inputContext.prepareForBlock(model, Blocks.AIR.defaultBlockState(), pos, 42L, overlay);
 		materialMap = MaterialMap.identity();
-		defaultAo = false;
 		prepareEncoding(consumers);
 		((BlockModel) model).renderAsBlock(inputContext, emitter());
 		defaultConsumer = null;

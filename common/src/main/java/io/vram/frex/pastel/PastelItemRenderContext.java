@@ -64,9 +64,6 @@ public class PastelItemRenderContext extends ItemRenderContext {
 		final var mat = emitter.material();
 		final VertexConsumer consumer;
 
-		// NB: by the time we get here material should be fully specified - no default preset
-		assert mat.preset() != MaterialConstants.PRESET_DEFAULT;
-
 		if (mat.foilOverlay() && inputContext.itemStack().is(ItemTags.COMPASSES)) {
 			// C'mon Mojang...
 			final var matrixStack = inputContext.matrixStack();

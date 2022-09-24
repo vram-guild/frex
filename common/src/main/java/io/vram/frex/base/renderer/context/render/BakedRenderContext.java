@@ -51,7 +51,17 @@ public abstract class BakedRenderContext<C extends BaseBakedInputContext> extend
 		emitter.colorize(inputContext);
 	}
 
-	protected abstract void adjustMaterial();
+	/**
+	 * Applies defaults and presets that are context-sensitive.  This makes the material fully specified.
+	 * Should be applied both before and after material transforms.
+	 */
+	protected abstract void resolveMaterial();
+
+	/**
+	 * Adjustments made for the renderer implementation. For example, to disable
+	 * or force material properties to match limitations/expectations of a given context.
+	 */
+	protected void adjustMaterialForEncoding() { }
 
 	@Override
 	public void renderQuad() {
@@ -59,8 +69,10 @@ public abstract class BakedRenderContext<C extends BaseBakedInputContext> extend
 
 		if (inputContext.cullTest(quad.cullFaceId())) {
 			finder.copyFrom(quad.material());
+			resolveMaterial();
 			mapMaterials();
-			adjustMaterial();
+			resolveMaterial();
+			adjustMaterialForEncoding();
 			quad.material(finder.find());
 			shadeQuad();
 			encodeQuad();

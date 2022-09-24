@@ -193,8 +193,13 @@ public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintG
 					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), shade * emitter.ao[3] * FixedMath255.FLOAT_CONVERSION_FACTOR));
 				}
 			}
-		} else if (PastelRenderer.semiFlatLighting) {
-			aoCalc.computeFlat(emitter);
+		} else {
+			if (PastelRenderer.semiFlatLighting) {
+				aoCalc.computeFlat(emitter);
+			} else {
+				emitter.applyFlatLighting(inputContext.flatBrightness(emitter));
+			}
+
 			final var blockView = inputContext.blockView();
 
 			if (emitter.material().disableDiffuse()) {
@@ -224,8 +229,6 @@ public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintG
 					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), shade));
 				}
 			}
-		} else {
-			emitter.applyFlatLighting(inputContext.flatBrightness(emitter));
 		}
 	}
 

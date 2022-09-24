@@ -71,22 +71,28 @@ public abstract class BlockRenderContext<T extends BlockAndTintGetter> extends B
 	}
 
 	@Override
-	protected void adjustMaterial() {
+	protected void resolveMaterial() {
 		final MaterialFinder finder = this.finder;
 
 		int bm = finder.preset();
 
-		if (bm == MaterialConstants.PRESET_DEFAULT) {
-			bm = inputContext.defaultPreset();
-			finder.preset(MaterialConstants.PRESET_NONE);
+		if (bm == MaterialConstants.PRESET_NONE) {
+			return;
 		}
 
+		// TODO: honor tri-state from material when implemented
 		if (inputContext.overlay() != OverlayTexture.NO_OVERLAY) {
 			finder.overlay(inputContext.overlay());
 		}
 
-		// fully specific renderable material
-		if (bm == MaterialConstants.PRESET_NONE) return;
+		// TODO: honor tri-state from material when implemented
+		if (inputContext.isEmissiveRendering()) {
+			finder.emissive(true);
+		}
+
+		if (bm == MaterialConstants.PRESET_DEFAULT) {
+			bm = inputContext.defaultPreset();
+		}
 
 		switch (bm) {
 			case MaterialConstants.PRESET_CUTOUT: {
@@ -120,7 +126,9 @@ public abstract class BlockRenderContext<T extends BlockAndTintGetter> extends B
 					.sorted(false);
 				break;
 			default:
-				assert false : "Unhandled blend mode";
+				assert false : "Unhandled preset";
 		}
+
+		finder.preset(MaterialConstants.PRESET_NONE);
 	}
 }

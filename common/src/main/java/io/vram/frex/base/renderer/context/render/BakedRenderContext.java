@@ -43,19 +43,34 @@ public abstract class BakedRenderContext<C extends BaseBakedInputContext> extend
 	 * Should be invoked after material is final because results
 	 * are material-dependent.
 	 *
-	 * <p>The base implementation is suitable for most non-terrain
-	 * scenarios with vanilla-style lighting models.
+	 * <p>No base implementation is provided because shading is highly
+	 * dependent on context and lighting model.
 	 */
-	protected void shadeQuad() {
-		emitter.applyFlatLighting(inputContext.flatBrightness(emitter));
-		emitter.colorize(inputContext);
-	}
+	protected abstract void shadeQuad();
 
 	/**
-	 * Applies defaults and presets that are context-sensitive.  This makes the material fully specified.
+	 * Applies defaults that are context-sensitive. This covers a handful
+	 * of material attributes that should differ from their specification
+	 * needed to emulate vanilla behavior. This includes enchantment glint,
+	 * flash/health overlay and GUI-specific shading.
+	 *
+	 * <p>These should be applied both before material transforms so that
+	 * transforms have the ability to change them.
+	 *
+	 * <p>It would improve the API if these material attributes had tri-state
+	 * values so that material specification could override the default vanilla
+	 * behavior if desired - for example, making some parts of an enchanted item
+	 * appear without glint.  If that improvement is made, this routine will have
+	 * to be updated to honor those new values.
+	 */
+	protected abstract void applyMaterialDefaults();
+
+	/**
+	 * Applies preset if present.  Preset resolution is context-sensitive.
+	 * This makes material attributes related to presets fully specified.
 	 * Should be applied both before and after material transforms.
 	 */
-	protected abstract void resolveMaterial();
+	protected abstract void resolvePreset();
 
 	/**
 	 * Adjustments made for the renderer implementation. For example, to disable
@@ -69,9 +84,10 @@ public abstract class BakedRenderContext<C extends BaseBakedInputContext> extend
 
 		if (inputContext.cullTest(quad.cullFaceId())) {
 			finder.copyFrom(quad.material());
-			resolveMaterial();
+			applyMaterialDefaults();
+			resolvePreset();
 			mapMaterials();
-			resolveMaterial();
+			resolvePreset();
 			adjustMaterialForEncoding();
 			quad.material(finder.find());
 			shadeQuad();

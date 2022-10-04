@@ -87,12 +87,7 @@ public abstract class ItemRenderContext extends BakedRenderContext<BaseItemInput
 	protected abstract void renderCustomModel(BlockEntityWithoutLevelRenderer builtInRenderer, MultiBufferSource vertexConsumers);
 
 	@Override
-	protected void resolveMaterial() {
-		int preset = finder.preset();
-
-		// fully specific renderable material
-		if (preset == MaterialConstants.PRESET_NONE) return;
-
+	protected void applyMaterialDefaults() {
 		// TODO: use tri-state value from material when available
 		if (inputContext.itemStack().hasFoil()) {
 			finder.foilOverlay(true);
@@ -107,10 +102,13 @@ public abstract class ItemRenderContext extends BakedRenderContext<BaseItemInput
 		if (inputContext.overlay() != OverlayTexture.NO_OVERLAY) {
 			finder.overlay(inputContext.overlay());
 		}
+	}
 
-		if (preset == MaterialConstants.PRESET_DEFAULT) {
-			preset = inputContext.defaultPreset();
-		}
+	@Override
+	protected void resolvePreset() {
+		final int preset = finder.preset();
+
+		if (preset == MaterialConstants.PRESET_NONE) return;
 
 		switch (preset) {
 			case MaterialConstants.PRESET_CUTOUT:
@@ -146,6 +144,12 @@ public abstract class ItemRenderContext extends BakedRenderContext<BaseItemInput
 		}
 
 		finder.preset(MaterialConstants.PRESET_NONE);
+	}
+
+	@Override
+	protected void shadeQuad() {
+		emitter.applyFlatLighting(inputContext.flatBrightness(emitter));
+		emitter.colorize(inputContext);
 	}
 
 	@Override

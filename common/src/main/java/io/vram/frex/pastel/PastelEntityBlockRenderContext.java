@@ -64,6 +64,13 @@ public class PastelEntityBlockRenderContext extends EntityBlockRenderContext {
 	}
 
 	@Override
+	protected void shadeQuad() {
+		emitter.applyFlatLighting(inputContext.flatBrightness(emitter));
+		emitter.colorize(inputContext);
+		applySimpleDiffuseShade();
+	}
+
+	@Override
 	protected void encodeQuad() {
 		RenderType renderType;
 		final var mat = emitter.material();

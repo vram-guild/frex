@@ -124,13 +124,13 @@ public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintG
 		inputContext.setWorld(blockView);
 	}
 
-	public void renderFluid(BlockState blockState, BlockPos blockPos, boolean defaultAo, final BlockModel model) {
+	public void renderFluid(BlockState blockState, BlockPos blockPos, final BlockModel model) {
 		aoCalc.prepare(PackedSectionPos.packWithSectionMask(blockPos));
 		// for whatever reason, Mojang doesn't do section position transformation before invoking fluid render so we do it here
 		final var matrixStack = inputContext.matrixStack();
 		matrixStack.push();
 		matrixStack.translate(blockPos.getX() & 15, blockPos.getY() & 15, blockPos.getZ() & 15);
-		prepareForFluid(blockState, blockPos, defaultAo);
+		prepareForFluid(blockState, blockPos);
 		renderInner(model);
 		matrixStack.pop();
 	}
@@ -200,35 +200,7 @@ public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintG
 				emitter.applyFlatLighting(inputContext.flatBrightness(emitter));
 			}
 
-			final var blockView = inputContext.blockView();
-
-			if (emitter.material().disableDiffuse()) {
-				// if diffuse is disabled, some dimensions can still have an ambient shading value.
-				final float shade = blockView.getShade(Direction.UP, false);
-
-				if (shade != 1.0f) {
-					emitter.vertexColor(0, ColorUtil.multiplyRGB(emitter.vertexColor(0), shade));
-					emitter.vertexColor(1, ColorUtil.multiplyRGB(emitter.vertexColor(1), shade));
-					emitter.vertexColor(2, ColorUtil.multiplyRGB(emitter.vertexColor(2), shade));
-					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), shade));
-				}
-			} else {
-				if (emitter.hasVertexNormals()) {
-					// different shade value per vertex
-					emitter.vertexColor(0, ColorUtil.multiplyRGB(emitter.vertexColor(0), EncoderUtil.normalShade(emitter.packedNormal(0), blockView, true)));
-					emitter.vertexColor(1, ColorUtil.multiplyRGB(emitter.vertexColor(1), EncoderUtil.normalShade(emitter.packedNormal(1), blockView, true)));
-					emitter.vertexColor(2, ColorUtil.multiplyRGB(emitter.vertexColor(2), EncoderUtil.normalShade(emitter.packedNormal(2), blockView, true)));
-					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), EncoderUtil.normalShade(emitter.packedNormal(3), blockView, true)));
-				} else {
-					// same shade value for all vertices
-					final float shade = blockView.getShade(emitter.lightFace(), true);
-
-					emitter.vertexColor(0, ColorUtil.multiplyRGB(emitter.vertexColor(0), shade));
-					emitter.vertexColor(1, ColorUtil.multiplyRGB(emitter.vertexColor(1), shade));
-					emitter.vertexColor(2, ColorUtil.multiplyRGB(emitter.vertexColor(2), shade));
-					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), shade));
-				}
-			}
+			applySimpleDiffuseShade();
 		}
 	}
 

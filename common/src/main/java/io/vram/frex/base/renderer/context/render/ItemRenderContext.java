@@ -106,9 +106,13 @@ public abstract class ItemRenderContext extends BakedRenderContext<BaseItemInput
 
 	@Override
 	protected void resolvePreset() {
-		final int preset = finder.preset();
+		int preset = finder.preset();
 
 		if (preset == MaterialConstants.PRESET_NONE) return;
+
+		if (preset == MaterialConstants.PRESET_DEFAULT) {
+			preset = inputContext.defaultPreset();
+		}
 
 		switch (preset) {
 			case MaterialConstants.PRESET_CUTOUT:

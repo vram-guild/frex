@@ -98,17 +98,17 @@ public abstract class BlockRenderContext<T extends BlockAndTintGetter> extends B
 	protected void resolvePreset() {
 		final MaterialFinder finder = this.finder;
 
-		int bm = finder.preset();
+		int preset = finder.preset();
 
-		if (bm == MaterialConstants.PRESET_NONE) {
+		if (preset == MaterialConstants.PRESET_NONE) {
 			return;
 		}
 
-		if (bm == MaterialConstants.PRESET_DEFAULT) {
-			bm = inputContext.defaultPreset();
+		if (preset == MaterialConstants.PRESET_DEFAULT) {
+			preset = inputContext.defaultPreset();
 		}
 
-		switch (bm) {
+		switch (preset) {
 			case MaterialConstants.PRESET_CUTOUT: {
 				finder.transparency(MaterialConstants.TRANSPARENCY_NONE)
 					.cutout(MaterialConstants.CUTOUT_HALF)

@@ -157,7 +157,7 @@ public class BaseBlockInputContext<T extends BlockAndTintGetter> extends BaseBak
 			cullCompletionFlags |= mask;
 			final Direction face = FaceUtil.faceFromIndex(faceIndex);
 
-			if (Block.shouldRenderFace(blockState, blockView, blockPos, face, internalSearchPos.setWithOffset(blockPos, face))) {
+			if (shouldRenderFace(face, internalSearchPos.setWithOffset(blockPos, face))) {
 				cullResultFlags |= mask;
 				return true;
 			} else {
@@ -166,6 +166,13 @@ public class BaseBlockInputContext<T extends BlockAndTintGetter> extends BaseBak
 		} else {
 			return (cullResultFlags & mask) != 0;
 		}
+	}
+
+	/**
+	 * Override if renderer has additional optimizations or checks.
+	 */
+	protected boolean shouldRenderFace(Direction face, BlockPos offsetPos) {
+		return Block.shouldRenderFace(blockState, blockView, blockPos, face, offsetPos);
 	}
 
 	@Override

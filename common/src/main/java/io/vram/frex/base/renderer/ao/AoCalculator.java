@@ -118,11 +118,11 @@ public abstract class AoCalculator {
 	/**
 	 * Call at start of each new block.
 	 *
-	 * @param index region-relative index - must be an interior index - for block context, will always be 0
+	 * @param packedSectionPos region-relative index - must be an interior index - for block context, will always be 0
 	 */
-	public void prepare(int packedSectionIndex) {
-		this.targetSectionPos = packedSectionIndex;
-		targetCacheIndex = this.cacheIndexFromSectionIndex(packedSectionIndex);
+	public void prepare(int packedSectionPos) {
+		this.targetSectionPos = packedSectionPos;
+		targetCacheIndex = this.cacheIndexFromSectionIndex(packedSectionPos);
 
 		completionFlags = 0;
 		blendCacheCompletionLowFlags = 0;

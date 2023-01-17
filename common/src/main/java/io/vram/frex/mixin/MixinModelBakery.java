@@ -40,6 +40,7 @@
 
 package io.vram.frex.mixin;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -63,6 +64,7 @@ import io.vram.frex.mixinterface.ModelBakeryExt;
 @Mixin(ModelBakery.class)
 public abstract class MixinModelBakery implements ModelBakeryExt {
 	@Shadow @Final private Map<ResourceLocation, BlockModel> modelResources;
+	@Shadow @Final private Map<ResourceLocation, List<ModelBakery.LoadedJson>> blockStateResources;
 	@Shadow @Final private Set<ResourceLocation> loadingStack;
 	@Shadow @Final private Map<ResourceLocation, UnbakedModel> unbakedCache;
 	@Shadow @Final private Map<ResourceLocation, UnbakedModel> topLevelModels;
@@ -78,9 +80,9 @@ public abstract class MixinModelBakery implements ModelBakeryExt {
 		var result = frexHandler;
 
 		if (result == null) {
-			result = ModelProviderRegistryImpl.begin((ModelBakery) (Object) this, modelResources);
+			result = ModelProviderRegistryImpl.begin((ModelBakery) (Object) this, modelResources, blockStateResources);
 			frexHandler = result;
-			ModelProviderRegistryImpl.onModelPopulation(modelResources, this::frx_addModel);
+			ModelProviderRegistryImpl.onModelPopulation(modelResources, blockStateResources, this::frx_addModel);
 		}
 
 		return result;

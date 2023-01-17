@@ -20,12 +20,15 @@
 
 package io.vram.frex.api.model.provider;
 
+import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import org.spongepowered.include.com.google.common.base.Preconditions;
 
 import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 
@@ -61,7 +64,7 @@ public interface ModelProviderRegistry {
 	 * @param providerFunction Called each time model loading runs to instantiate the provider,
 	 * which is then reused for the entire model loading cycle.
 	 */
-	static void registerVariantProvider(Function<Map<ResourceLocation, BlockModel>, ModelProvider<ModelResourceLocation>> providerFunction) {
+	static void registerVariantProvider(BiFunction<Map<ResourceLocation, BlockModel>, Map<ResourceLocation, List<ModelBakery.LoadedJson>>, ModelProvider<ModelResourceLocation>> providerFunction) {
 		ModelProviderRegistryImpl.registerVariantProvider(providerFunction);
 	}
 
@@ -73,12 +76,12 @@ public interface ModelProviderRegistry {
 	 * which is then reused for the entire model loading cycle.
 	 * @param paths Identifies one or more blocks or items that share the same provider.
 	 */
-	static void registerBlockItemProvider(Function<Map<ResourceLocation, BlockModel>, ModelProvider<ModelResourceLocation>> providerFunction, ResourceLocation... paths) {
+	static void registerBlockItemProvider(BiFunction<Map<ResourceLocation, BlockModel>, Map<ResourceLocation, List<ModelBakery.LoadedJson>>, ModelProvider<ModelResourceLocation>> providerFunction, ResourceLocation... paths) {
 		Preconditions.checkNotNull(paths);
 		ModelProviderRegistryImpl.registerBlockItemProvider(providerFunction, paths);
 	}
 
-	static void registerBlockItemProvider(Function<Map<ResourceLocation, BlockModel>, ModelProvider<ModelResourceLocation>> providerFunction, String... paths) {
+	static void registerBlockItemProvider(BiFunction<Map<ResourceLocation, BlockModel>, Map<ResourceLocation, List<ModelBakery.LoadedJson>>, ModelProvider<ModelResourceLocation>> providerFunction, String... paths) {
 		Preconditions.checkNotNull(paths);
 		ModelProviderRegistryImpl.registerBlockItemProvider(providerFunction, ModelProviderRegistryImpl.stringsToLocations(paths));
 	}
@@ -91,7 +94,7 @@ public interface ModelProviderRegistry {
 	 * @param providerFunction Called each time model loading runs to instantiate the provider,
 	 * which is then reused for the entire model loading cycle.
 	 */
-	static void registerResourceProvider(Function<Map<ResourceLocation, BlockModel>, ModelProvider<ResourceLocation>> providerFunction) {
+	static void registerResourceProvider(BiFunction<Map<ResourceLocation, BlockModel>, Map<ResourceLocation, List<ModelBakery.LoadedJson>>, ModelProvider<ResourceLocation>> providerFunction) {
 		ModelProviderRegistryImpl.registerResourceProvider(providerFunction);
 	}
 

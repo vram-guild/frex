@@ -20,10 +20,12 @@
 
 package io.vram.frex.api.model.provider;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
 import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 
@@ -32,7 +34,8 @@ public interface ModelLocationProvider {
 	/**
 	 * Adds model paths to be loaded and baked, even if that model is not used by any blocks or items.
 	 *
-	 * @param manager Provides access to game resources.
+	 * @param models Provides access to model resources.
+	 * @param blockStates Provides access to block state resources.
 	 * @param target Accepts paths to be loaded. Arguments that are {@link ModelResourceLocation} will be
 	 *            parsed as if they are a block or item variant and the load call can be intercepted by a
 	 *            {@link VariantModelProvider}. Plain {@link ResourceLocation} arguments will be loaded
@@ -40,5 +43,5 @@ public interface ModelLocationProvider {
 	 *            For example, <pre>new ResourceLocation("mymod", "foo/bar")</pre> will request loading
 	 *            of the file <pre>/assets/mymod/models/foo/bar.json</pre>
 	 */
-	void provideLocations(Map<ResourceLocation, BlockModel> manager, Consumer<ResourceLocation> target);
+	void provideLocations(Map<ResourceLocation, BlockModel> models, Map<ResourceLocation, List<ModelBakery.LoadedJson>> blockStates, Consumer<ResourceLocation> target);
 }

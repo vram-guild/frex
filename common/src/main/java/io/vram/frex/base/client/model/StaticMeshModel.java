@@ -23,6 +23,7 @@ package io.vram.frex.base.client.model;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -34,6 +35,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
@@ -99,8 +101,8 @@ public class StaticMeshModel extends BaseModel {
 		}
 	}
 
-	public static Function<Map<ResourceLocation, BlockModel>, ModelProvider<ModelResourceLocation>> createProvider(Consumer<Builder> setupFunc, MeshFactory meshFactory) {
-		return (rm) -> {
+	public static BiFunction<Map<ResourceLocation, BlockModel>, Map<ResourceLocation, List<ModelBakery.LoadedJson>>, ModelProvider<ModelResourceLocation>> createProvider(Consumer<Builder> setupFunc, MeshFactory meshFactory) {
+		return (models, blockStates) -> {
 			final var builder = new Builder(meshFactory);
 			setupFunc.accept(builder);
 			return (path, subModelLoader) -> builder;

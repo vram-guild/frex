@@ -44,6 +44,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -77,13 +78,13 @@ public class ModelProviderRegistryImpl {
 
 		private ModelBakery loader;
 
-		private LoaderInstance(ModelBakery loader, Map<ResourceLocation, BlockModel> manager) {
+		private LoaderInstance(ModelBakery loader, Map<ResourceLocation, BlockModel> models, Map<ResourceLocation, List<ModelBakery.LoadedJson>> blockStates) {
 			this.loader = loader;
-			this.modelVariantProviders = variantProviderFunctions.stream().map((s) -> s.apply(manager)).collect(Collectors.toList());
-			this.modelResourceProviders = resourceProviderFunctions.stream().map((s) -> s.apply(manager)).collect(Collectors.toList());
+			this.modelVariantProviders = variantProviderFunctions.stream().map((s) -> s.apply(models, blockStates)).collect(Collectors.toList());
+			this.modelResourceProviders = resourceProviderFunctions.stream().map((s) -> s.apply(models, blockStates)).collect(Collectors.toList());
 
 			for (final var pair : blockItemProviderFunctions) {
-				final var func = pair.getLeft().apply(manager);
+				final var func = pair.getLeft().apply(models, blockStates);
 
 				for (final var path : pair.getRight()) {
 					blockItemProviders.putIfAbsent(path, func);
@@ -207,34 +208,34 @@ public class ModelProviderRegistryImpl {
 		}
 	}
 
-	private static final ObjectArrayList<Function<Map<ResourceLocation, BlockModel>, ModelProvider<ModelResourceLocation>>> variantProviderFunctions = new ObjectArrayList<>();
-	private static final ObjectArrayList<Function<Map<ResourceLocation, BlockModel>, ModelProvider<ResourceLocation>>> resourceProviderFunctions = new ObjectArrayList<>();
-	private static final ObjectArrayList<Pair<Function<Map<ResourceLocation, BlockModel>, ModelProvider<ModelResourceLocation>>, ResourceLocation[]>> blockItemProviderFunctions = new ObjectArrayList<>();
+	private static final ObjectArrayList<BiFunction<Map<ResourceLocation, BlockModel>, Map<ResourceLocation, List<ModelBakery.LoadedJson>>, ModelProvider<ModelResourceLocation>>> variantProviderFunctions = new ObjectArrayList<>();
+	private static final ObjectArrayList<BiFunction<Map<ResourceLocation, BlockModel>, Map<ResourceLocation, List<ModelBakery.LoadedJson>>, ModelProvider<ResourceLocation>>> resourceProviderFunctions = new ObjectArrayList<>();
+	private static final ObjectArrayList<Pair<BiFunction<Map<ResourceLocation, BlockModel>, Map<ResourceLocation, List<ModelBakery.LoadedJson>>, ModelProvider<ModelResourceLocation>>, ResourceLocation[]>> blockItemProviderFunctions = new ObjectArrayList<>();
 	private static final ObjectArrayList<ModelLocationProvider> locationProviders = new ObjectArrayList<>();
 
 	public static void registerLocationProvider(ModelLocationProvider provider) {
 		locationProviders.add(provider);
 	}
 
-	public static void registerResourceProvider(Function<Map<ResourceLocation, BlockModel>, ModelProvider<ResourceLocation>> providerFunction) {
+	public static void registerResourceProvider(BiFunction<Map<ResourceLocation, BlockModel>, Map<ResourceLocation, List<ModelBakery.LoadedJson>>, ModelProvider<ResourceLocation>> providerFunction) {
 		resourceProviderFunctions.add(providerFunction);
 	}
 
-	public static void registerVariantProvider(Function<Map<ResourceLocation, BlockModel>, ModelProvider<ModelResourceLocation>> providerFunction) {
+	public static void registerVariantProvider(BiFunction<Map<ResourceLocation, BlockModel>, Map<ResourceLocation, List<ModelBakery.LoadedJson>>, ModelProvider<ModelResourceLocation>> providerFunction) {
 		variantProviderFunctions.add(providerFunction);
 	}
 
-	public static LoaderInstance begin(ModelBakery loader, Map<ResourceLocation, BlockModel> manager) {
-		return new LoaderInstance(loader, manager);
+	public static LoaderInstance begin(ModelBakery loader, Map<ResourceLocation, BlockModel> models, Map<ResourceLocation, List<ModelBakery.LoadedJson>> blockStates) {
+		return new LoaderInstance(loader, models, blockStates);
 	}
 
-	public static void onModelPopulation(Map<ResourceLocation, BlockModel> resourceManager, Consumer<ResourceLocation> target) {
+	public static void onModelPopulation(Map<ResourceLocation, BlockModel> models, Map<ResourceLocation, List<ModelBakery.LoadedJson>> blockStates, Consumer<ResourceLocation> target) {
 		for (final ModelLocationProvider appender : locationProviders) {
-			appender.provideLocations(resourceManager, target);
+			appender.provideLocations(models, blockStates, target);
 		}
 	}
 
-	public static void registerBlockItemProvider(Function<Map<ResourceLocation, BlockModel>, ModelProvider<ModelResourceLocation>> providerFunction, ResourceLocation... paths) {
+	public static void registerBlockItemProvider(BiFunction<Map<ResourceLocation, BlockModel>, Map<ResourceLocation, List<ModelBakery.LoadedJson>>, ModelProvider<ModelResourceLocation>> providerFunction, ResourceLocation... paths) {
 		blockItemProviderFunctions.add(Pair.of(providerFunction, paths));
 	}
 

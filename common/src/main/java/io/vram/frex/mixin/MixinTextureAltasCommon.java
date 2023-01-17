@@ -20,9 +20,7 @@
 
 package io.vram.frex.mixin;
 
-import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.spongepowered.asm.mixin.Final;
@@ -31,24 +29,22 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import net.minecraft.client.renderer.texture.SpriteLoader;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
 
 import io.vram.frex.impl.texture.IndexedSprite;
 import io.vram.frex.impl.texture.SpriteIndexImpl;
-import io.vram.frex.impl.texture.SpriteInjectorImpl;
 
 @Mixin(TextureAtlas.class)
 public class MixinTextureAltasCommon {
 	@Shadow @Final private ResourceLocation location;
 	@Shadow @Final private Map<ResourceLocation, TextureAtlasSprite> texturesByName;
 
-	@Inject(at = @At("RETURN"), method = "reload")
-	private void afterReload(TextureAtlas.Preparations input, CallbackInfo ci) {
+	@Inject(at = @At("RETURN"), method = "upload")
+	private void afterUpload(SpriteLoader.Preparations input, CallbackInfo ci) {
 		final ObjectArrayList<TextureAtlasSprite> spriteIndexList = new ObjectArrayList<>();
 		int index = 0;
 
@@ -59,10 +55,5 @@ public class MixinTextureAltasCommon {
 		}
 
 		SpriteIndexImpl.getOrCreate(location).reset(input, spriteIndexList, (TextureAtlas) (Object) this);
-	}
-
-	@Inject(at = @At("HEAD"), method = "getBasicSpriteInfos")
-	private void onGetBasicSpriteInfos(ResourceManager resourceManager, Set<ResourceLocation> set, CallbackInfoReturnable<Collection<TextureAtlasSprite.Info>> ci) {
-		SpriteInjectorImpl.forEachInjection(location, set::add);
 	}
 }

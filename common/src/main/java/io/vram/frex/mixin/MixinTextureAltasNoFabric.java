@@ -29,6 +29,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import net.minecraft.client.renderer.texture.SpriteLoader;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
@@ -53,8 +54,8 @@ public class MixinTextureAltasNoFabric implements SpriteFinderImpl.SpriteFinderA
 		return result;
 	}
 
-	@Inject(at = @At("RETURN"), method = "reload")
-	private void uploadHook(TextureAtlas.Preparations input, CallbackInfo info) {
+	@Inject(at = @At("RETURN"), method = "upload")
+	private void uploadHook(SpriteLoader.Preparations preparations, CallbackInfo ci) {
 		frex_spriteFinder = null;
 	}
 }

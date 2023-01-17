@@ -82,7 +82,7 @@ public abstract class BaseModelBuilder<T extends BaseModelBuilder<T>> implements
 	}
 
 	public T defaultParticleSprite(TextureAtlasSprite sprite) {
-		defaultParticleSprite = sprite.getName();
+		defaultParticleSprite = sprite.contents().name();
 		return (T) this;
 	}
 

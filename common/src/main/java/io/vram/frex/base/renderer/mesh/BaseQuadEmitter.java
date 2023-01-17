@@ -386,7 +386,8 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 		spriteFloat(3, u3, v3);
 
 		if (sprite != null) {
-			assert material().texture().isAtlas() && material().texture().textureAsAtlas() == sprite.atlas();
+			// TODO migrate 1.19.3: assertion?
+			// assert material().texture().isAtlas() && material().texture().textureAsAtlas() == sprite.atlas();
 			spriteId(((IndexedSprite) sprite).frex_index());
 		}
 

@@ -34,7 +34,7 @@ public class ItemOverrideProxy extends ItemOverrides {
 	private final BakedModel delegate;
 
 	public ItemOverrideProxy(BaseModel delegate) {
-		super(null, null, null, Collections.emptyList());
+		super(null, null, Collections.emptyList());
 		this.delegate = delegate;
 	}
 

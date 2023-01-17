@@ -70,8 +70,8 @@ public class MixinLevelRendererEvents {
 	@Unique private boolean didRenderParticles;
 
 	@Inject(method = "renderLevel", at = @At("HEAD"))
-	private void beforeRenderLevel(PoseStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightmapTextureManager, Matrix4f matrix4f, CallbackInfo ci) {
-		context.prepare((LevelRenderer) (Object) this, matrices, tickDelta, limitTime, renderBlockOutline, camera, gameRenderer, lightmapTextureManager, matrix4f, renderBuffers.bufferSource(), level.getProfiler(), transparencyChain != null, level);
+	private void beforeRenderLevel(PoseStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f matrix4f, CallbackInfo ci) {
+		context.prepare((LevelRenderer) (Object) this, matrices, tickDelta, limitTime, renderBlockOutline, camera, gameRenderer, lightTexture, matrix4f, renderBuffers.bufferSource(), level.getProfiler(), transparencyChain != null, level);
 		WorldRenderStartListener.invoke(context);
 		didRenderParticles = false;
 	}

@@ -24,8 +24,8 @@ import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
+import net.minecraft.client.renderer.texture.SpriteLoader;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlas.Preparations;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 
@@ -48,12 +48,12 @@ public class SpriteIndexImpl implements SpriteIndex {
 		this.id = id;
 	}
 
-	public void reset(Preparations dataIn, ObjectArrayList<TextureAtlasSprite> spriteIndexIn, TextureAtlas atlasIn) {
+	public void reset(SpriteLoader.Preparations dataIn, ObjectArrayList<TextureAtlasSprite> spriteIndexIn, TextureAtlas atlasIn) {
 		atlas = atlasIn;
 
 		spriteIndexList = spriteIndexIn;
-		atlasWidth = ((TextureAtlasPreparationExt) dataIn).frex_atlasWidth();
-		atlasHeight = ((TextureAtlasPreparationExt) dataIn).frex_atlasHeight();
+		atlasWidth = dataIn.width();
+		atlasHeight = dataIn.height();
 	}
 
 	@Override

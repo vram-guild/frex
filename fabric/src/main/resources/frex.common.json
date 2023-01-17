@@ -14,12 +14,11 @@
 		"MixinModelBakery",
 		"MixinMultipartBakedModel",
 		"MixinPoseStack",
-		"MixinWeightedBakedModel",
 		"MixinTerrainParticle",
 		"MixinTextureAltasCommon",
 		"MixinTextureAltasNoFabric",
-		"MixinTextureAtlasPreparation",
-		"MixinTextureAtlasSprite"
+		"MixinTextureAtlasSprite",
+		"MixinWeightedBakedModel"
 	],
 	"injectors": {
 		"defaultRequire": 1

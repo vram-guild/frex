@@ -153,8 +153,8 @@ public class SimpleFluidModel implements FluidModel {
 					v3 = 0.5F + -dy - dx;
 				}
 
-				final float dx = stillSprite.getWidth() / (stillSprite.getU1() - stillSprite.getU0());
-				final float dy = stillSprite.getHeight() / (stillSprite.getV1() - stillSprite.getV0());
+				final float dx = stillSprite.contents().width() / (stillSprite.getU1() - stillSprite.getU0());
+				final float dy = stillSprite.contents().height() / (stillSprite.getV1() - stillSprite.getV0());
 				final float centerScale = 4.0F / Math.max(dy, dx);
 
 				u0 = Mth.lerp(centerScale, u0, 0.5f);

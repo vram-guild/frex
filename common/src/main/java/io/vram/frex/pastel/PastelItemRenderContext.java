@@ -70,9 +70,9 @@ public class PastelItemRenderContext extends ItemRenderContext {
 			matrixStack.push();
 
 			if (inputContext.mode() == ItemTransforms.TransformType.GUI) {
-				matrixStack.modelMatrix().f_scale(0.5f);
+				matrixStack.modelMatrix().scale(0.5f);
 			} else if (inputContext.mode().firstPerson()) {
-				matrixStack.modelMatrix().f_scale(0.75F);
+				matrixStack.modelMatrix().scale(0.75F);
 			}
 
 			if (inputContext.drawTranslucencyToMainTarget() || !Minecraft.useShaderTransparency()) {

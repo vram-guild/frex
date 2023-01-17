@@ -23,19 +23,19 @@ package io.vram.frex.impl.math;
 import java.util.Deque;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import io.vram.frex.api.math.FastMatrix3f;
-import io.vram.frex.api.math.FastMatrix4f;
 import io.vram.frex.api.math.MatrixStack;
 
 public class MatrixStackImpl implements MatrixStack {
 	private final Deque<PoseStack.Pose> stack;
 	private final PoseStack wrapped;
 	private final ObjectArrayList<PoseStack.Pose> pool = new ObjectArrayList<>();
-	private FastMatrix4f modelMatrix;
-	private FastMatrix3f normalMatrix;
+	private Matrix4f modelMatrix;
+	private Matrix3f normalMatrix;
 
 	public MatrixStackImpl(Deque<PoseStack.Pose> stack, PoseStack wrapped) {
 		this.stack = stack;
@@ -45,8 +45,8 @@ public class MatrixStackImpl implements MatrixStack {
 
 	protected void refresh() {
 		final var pose = wrapped.last();
-		modelMatrix = (FastMatrix4f) (Object) pose.pose();
-		normalMatrix = (FastMatrix3f) (Object) pose.normal();
+		modelMatrix = pose.pose();
+		normalMatrix = pose.normal();
 	}
 
 	@Override
@@ -55,11 +55,11 @@ public class MatrixStackImpl implements MatrixStack {
 		PoseStack.Pose add;
 
 		if (pool.isEmpty()) {
-			add = MatrixStackEntryHelper.create(current.pose().copy(), current.normal().copy());
+			add = MatrixStackEntryHelper.create(new Matrix4f(current.pose()), new Matrix3f(current.normal()));
 		} else {
 			add = pool.pop();
-			((FastMatrix4f) (Object) add.pose()).f_set(current.pose());
-			((FastMatrix3f) (Object) add.normal()).f_set(current.normal());
+			add.pose().set(current.pose());
+			add.normal().set(current.normal());
 		}
 
 		stack.addLast(add);
@@ -73,12 +73,12 @@ public class MatrixStackImpl implements MatrixStack {
 	}
 
 	@Override
-	public FastMatrix4f modelMatrix() {
+	public Matrix4f modelMatrix() {
 		return modelMatrix;
 	}
 
 	@Override
-	public FastMatrix3f normalMatrix() {
+	public Matrix3f normalMatrix() {
 		return normalMatrix;
 	}
 

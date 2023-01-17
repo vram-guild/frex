@@ -23,8 +23,8 @@ package io.vram.frex.api.model.util;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-
-import com.mojang.math.Vector3f;
+import org.joml.Math;
+import org.joml.Vector3f;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -46,7 +46,9 @@ public class BakedModelUtil {
 	private static ItemTransform makeTransform(float rotationX, float rotationY, float rotationZ, float translationX, float translationY, float translationZ, float scaleX, float scaleY, float scaleZ) {
 		final Vector3f translation = new Vector3f(translationX, translationY, translationZ);
 		translation.mul(0.0625f);
-		translation.clamp(-5.0F, 5.0F);
+		translation.x = Math.clamp(translation.x, -5.0f, 5.0f);
+		translation.y = Math.clamp(translation.y, -5.0f, 5.0f);
+		translation.z = Math.clamp(translation.z, -5.0f, 5.0f);
 		return new ItemTransform(new Vector3f(rotationX, rotationY, rotationZ), translation, new Vector3f(scaleX, scaleY, scaleZ));
 	}
 

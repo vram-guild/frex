@@ -20,18 +20,20 @@
 
 package io.vram.frex.api.math;
 
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import org.joml.Matrix3f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 public interface FrexMathUtil {
 	/**
 	 * Non-allocating substitute for {@link Vector3f#rotate(Quaternion)}.
 	 */
-	static void applyRotation(Vector3f vec, Quaternion rotation) {
-		final float rx = rotation.i();
-		final float ry = rotation.j();
-		final float rz = rotation.k();
-		final float rw = rotation.r();
+	@Deprecated
+	static void applyRotation(Vector3f vec, Quaternionf rotation) {
+		final float rx = rotation.x;
+		final float ry = rotation.y;
+		final float rz = rotation.z;
+		final float rw = rotation.w;
 
 		final float x = vec.x();
 		final float y = vec.y();
@@ -51,11 +53,11 @@ public interface FrexMathUtil {
 	/**
 	 * Non-allocating substitute for {@link Vector3f#rotate(Quaternion)} that assumes vec.z == 0.
 	 */
-	static void applyBillboardRotation(Vector3f vec, Quaternion rotation) {
-		final float rx = rotation.i();
-		final float ry = rotation.j();
-		final float rz = rotation.k();
-		final float rw = rotation.r();
+	static void applyBillboardRotation(Vector3f vec, Quaternionf rotation) {
+		final float rx = rotation.x;
+		final float ry = rotation.y;
+		final float rz = rotation.z;
+		final float rw = rotation.w;
 
 		final float x = vec.x();
 		final float y = vec.y();
@@ -71,7 +73,7 @@ public interface FrexMathUtil {
 			qw * -rz - qx * ry + qy * rx + qz * rw);
 	}
 
-	static void setRadialRotation(Quaternion target, Vector3f axis, float radians) {
+	static void setRadialRotation(Quaternionf target, Vector3f axis, float radians) {
 		final float f = (float) Math.sin(radians / 2.0F);
 
 		target.set(
@@ -94,5 +96,24 @@ public interface FrexMathUtil {
 
 	static float clampNormalized(float val) {
 		return val < 0f ? 0f : (val > 1f ? 1f : val);
+	}
+
+	static boolean isIdentity(Matrix3f mat) {
+		return mat.m00 == 1.0F && mat.m01 == 0.0F && mat.m02 == 0.0F
+				&& mat.m10 == 0.0F && mat.m11 == 1.0F && mat.m12 == 0.0
+				&& mat.m20 == 0.0F && mat.m21 == 0.0F && mat.m22 == 1.0F;
+	}
+
+	static int transformPacked3f(Matrix3f mat, int packedVector3f) {
+		final float x = PackedVector3f.unpackX(packedVector3f);
+		final float y = PackedVector3f.unpackY(packedVector3f);
+		final float z = PackedVector3f.unpackZ(packedVector3f);
+
+		// PERF: not certain FMA is helping here because may be preventing parallel/out-of-order execution
+		final float nx = Math.fma(mat.m00, x, Math.fma(mat.m01, y, mat.m02 * z));
+		final float ny = Math.fma(mat.m10, x, Math.fma(mat.m11, y, mat.m12 * z));
+		final float nz = Math.fma(mat.m20, x, Math.fma(mat.m21, y, mat.m22 * z));
+
+		return PackedVector3f.pack(nx, ny, nz);
 	}
 }

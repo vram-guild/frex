@@ -22,9 +22,10 @@ package io.vram.frex.impl.math;
 
 import java.lang.reflect.Constructor;
 
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
 
 public class MatrixStackEntryHelper {
 	private static final Constructor<PoseStack.Pose> CONSTRUCTOR;

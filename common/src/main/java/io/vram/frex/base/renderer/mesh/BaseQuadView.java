@@ -44,15 +44,16 @@ import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.VERTEX_X0;
 import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.VERTEX_Y0;
 import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.VERTEX_Z0;
 
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
 
 import net.minecraft.core.Direction;
 
 import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.config.FrexConfig;
 import io.vram.frex.api.material.RenderMaterial;
-import io.vram.frex.api.math.FastMatrix4f;
 import io.vram.frex.api.math.PackedVector3f;
 import io.vram.frex.api.mesh.QuadView;
 import io.vram.frex.api.model.util.FaceUtil;
@@ -470,16 +471,16 @@ public class BaseQuadView implements QuadView {
 		return data[baseIndex + HEADER_SPRITE];
 	}
 
-	public void transformAndAppendVertex(final int vertexIndex, final FastMatrix4f matrix, final VertexConsumer buff) {
+	public void transformAndAppendVertex(final int vertexIndex, final Matrix4f matrix, final VertexConsumer buff) {
 		final int[] data = this.data;
 		final int index = baseIndex + (vertexIndex << MESH_VERTEX_STRIDE_SHIFT) + VERTEX_X0;
 		final float x = Float.intBitsToFloat(data[index]);
 		final float y = Float.intBitsToFloat(data[index + 1]);
 		final float z = Float.intBitsToFloat(data[index + 2]);
 
-		final float xOut = matrix.f_m00() * x + matrix.f_m10() * y + matrix.f_m20() * z + matrix.f_m30();
-		final float yOut = matrix.f_m01() * x + matrix.f_m11() * y + matrix.f_m21() * z + matrix.f_m31();
-		final float zOut = matrix.f_m02() * x + matrix.f_m12() * y + matrix.f_m22() * z + matrix.f_m32();
+		final float xOut = matrix.m00() * x + matrix.m10() * y + matrix.m20() * z + matrix.m30();
+		final float yOut = matrix.m01() * x + matrix.m11() * y + matrix.m21() * z + matrix.m31();
+		final float zOut = matrix.m02() * x + matrix.m12() * y + matrix.m22() * z + matrix.m32();
 
 		buff.vertex(xOut, yOut, zOut);
 	}

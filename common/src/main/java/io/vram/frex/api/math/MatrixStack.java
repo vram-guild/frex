@@ -20,6 +20,9 @@
 
 package io.vram.frex.api.math;
 
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import io.vram.frex.mixinterface.PoseStackExt;
@@ -29,17 +32,17 @@ public interface MatrixStack {
 
 	void pop();
 
-	FastMatrix4f modelMatrix();
+	Matrix4f modelMatrix();
 
-	FastMatrix3f normalMatrix();
+	Matrix3f normalMatrix();
 
 	default void translate(float x, float y, float z) {
-		modelMatrix().f_translate(x, y, z);
+		modelMatrix().translate(x, y, z);
 	}
 
 	default void setIdentity() {
-		modelMatrix().f_setIdentity();
-		normalMatrix().f_setIdentity();
+		modelMatrix().identity();
+		normalMatrix().identity();
 	}
 
 	PoseStack toVanilla();

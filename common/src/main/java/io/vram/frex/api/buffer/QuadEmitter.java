@@ -21,8 +21,7 @@
 package io.vram.frex.api.buffer;
 
 import org.jetbrains.annotations.Nullable;
-
-import com.mojang.math.Vector3f;
+import org.joml.Vector3f;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;

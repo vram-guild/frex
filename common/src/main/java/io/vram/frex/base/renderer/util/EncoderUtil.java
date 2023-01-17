@@ -20,13 +20,15 @@
 
 package io.vram.frex.base.renderer.util;
 
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
 
-import io.vram.frex.api.math.FastMatrix3f;
-import io.vram.frex.api.math.FastMatrix4f;
+import io.vram.frex.api.math.FrexMathUtil;
 import io.vram.frex.api.math.PackedVector3f;
 import io.vram.frex.api.model.InputContext;
 import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
@@ -35,9 +37,9 @@ import io.vram.frex.base.renderer.mesh.MeshEncodingHelper;
 public abstract class EncoderUtil {
 	public static void encodeQuad(BaseQuadEmitter quad, InputContext inputContext, VertexConsumer buff) {
 		final var matrixStack = inputContext.matrixStack();
-		final FastMatrix4f matrix = matrixStack.modelMatrix();
-		final FastMatrix3f normalMatrix = matrixStack.normalMatrix();
-		final boolean isNormalMatrixUseful = !normalMatrix.f_isIdentity();
+		final Matrix4f matrix = matrixStack.modelMatrix();
+		final Matrix3f normalMatrix = matrixStack.normalMatrix();
+		final boolean isNormalMatrixUseful = !FrexMathUtil.isIdentity(normalMatrix);
 
 		final var mat = quad.material();
 		final boolean emissive = mat.emissive() | mat.unlit();
@@ -68,7 +70,7 @@ public abstract class EncoderUtil {
 
 			if (p != packedNormal) {
 				packedNormal = p;
-				final int transformedNormal = isNormalMatrixUseful ? normalMatrix.f_transformPacked3f(packedNormal) : packedNormal;
+				final int transformedNormal = isNormalMatrixUseful ? FrexMathUtil.transformPacked3f(normalMatrix, packedNormal) : packedNormal;
 				nx = PackedVector3f.unpackX(transformedNormal);
 				ny = PackedVector3f.unpackY(transformedNormal);
 				nz = PackedVector3f.unpackZ(transformedNormal);

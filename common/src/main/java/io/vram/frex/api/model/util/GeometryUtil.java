@@ -22,7 +22,7 @@ package io.vram.frex.api.model.util;
 
 import static net.minecraft.util.Mth.equal;
 
-import com.mojang.math.Vector3f;
+import org.joml.Vector3f;
 
 import net.minecraft.client.renderer.FaceInfo.Constants;
 import net.minecraft.client.renderer.block.model.BakedQuad;

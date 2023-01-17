@@ -45,9 +45,8 @@ import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.VERTEX_U0;
 import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.VERTEX_X0;
 
 import org.jetbrains.annotations.Nullable;
-
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -56,8 +55,6 @@ import net.minecraft.core.Direction;
 import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.buffer.VertexEmitter;
 import io.vram.frex.api.material.RenderMaterial;
-import io.vram.frex.api.math.FastMatrix3f;
-import io.vram.frex.api.math.FastMatrix4f;
 import io.vram.frex.api.math.PackedVector3f;
 import io.vram.frex.api.model.BakedInputContext;
 import io.vram.frex.api.model.util.ColorUtil;
@@ -546,23 +543,19 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 	}
 
 	@Override
-	public VertexEmitter vertex(Matrix4f matrix, float x, float y, float z) {
-		final FastMatrix4f mat = (FastMatrix4f) (Object) matrix;
-
-		final float tx = mat.f_m00() * x + mat.f_m10() * y + mat.f_m20() * z + mat.f_m30();
-		final float ty = mat.f_m01() * x + mat.f_m11() * y + mat.f_m21() * z + mat.f_m31();
-		final float tz = mat.f_m02() * x + mat.f_m12() * y + mat.f_m22() * z + mat.f_m32();
+	public VertexEmitter vertex(Matrix4f mat, float x, float y, float z) {
+		final float tx = mat.m00() * x + mat.m10() * y + mat.m20() * z + mat.m30();
+		final float ty = mat.m01() * x + mat.m11() * y + mat.m21() * z + mat.m31();
+		final float tz = mat.m02() * x + mat.m12() * y + mat.m22() * z + mat.m32();
 
 		return this.vertex(tx, ty, tz);
 	}
 
 	@Override
-	public VertexEmitter normal(Matrix3f matrix, float x, float y, float z) {
-		final FastMatrix3f mat = (FastMatrix3f) (Object) matrix;
-
-		final float tx = mat.f_m00() * x + mat.f_m10() * y + mat.f_m20() * z;
-		final float ty = mat.f_m01() * x + mat.f_m11() * y + mat.f_m21() * z;
-		final float tz = mat.f_m02() * x + mat.f_m12() * y + mat.f_m22() * z;
+	public VertexEmitter normal(Matrix3f mat, float x, float y, float z) {
+		final float tx = mat.m00() * x + mat.m10() * y + mat.m20() * z;
+		final float ty = mat.m01() * x + mat.m11() * y + mat.m21() * z;
+		final float tz = mat.m02() * x + mat.m12() * y + mat.m22() * z;
 
 		return this.normal(tx, ty, tz);
 	}

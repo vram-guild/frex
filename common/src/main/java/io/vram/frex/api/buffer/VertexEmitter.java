@@ -21,10 +21,10 @@
 package io.vram.frex.api.buffer;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
 
 import io.vram.frex.api.material.RenderMaterial;
 

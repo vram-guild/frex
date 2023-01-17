@@ -42,6 +42,7 @@ package io.vram.frex.impl.model;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -55,11 +56,11 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.include.com.google.common.base.Preconditions;
 
+import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
 
 import io.vram.frex.api.config.FrexConfig;
 import io.vram.frex.api.model.provider.ModelLocationProvider;
@@ -76,7 +77,7 @@ public class ModelProviderRegistryImpl {
 
 		private ModelBakery loader;
 
-		private LoaderInstance(ModelBakery loader, ResourceManager manager) {
+		private LoaderInstance(ModelBakery loader, Map<ResourceLocation, BlockModel> manager) {
 			this.loader = loader;
 			this.modelVariantProviders = variantProviderFunctions.stream().map((s) -> s.apply(manager)).collect(Collectors.toList());
 			this.modelResourceProviders = resourceProviderFunctions.stream().map((s) -> s.apply(manager)).collect(Collectors.toList());
@@ -206,34 +207,34 @@ public class ModelProviderRegistryImpl {
 		}
 	}
 
-	private static final ObjectArrayList<Function<ResourceManager, ModelProvider<ModelResourceLocation>>> variantProviderFunctions = new ObjectArrayList<>();
-	private static final ObjectArrayList<Function<ResourceManager, ModelProvider<ResourceLocation>>> resourceProviderFunctions = new ObjectArrayList<>();
-	private static final ObjectArrayList<Pair<Function<ResourceManager, ModelProvider<ModelResourceLocation>>, ResourceLocation[]>> blockItemProviderFunctions = new ObjectArrayList<>();
+	private static final ObjectArrayList<Function<Map<ResourceLocation, BlockModel>, ModelProvider<ModelResourceLocation>>> variantProviderFunctions = new ObjectArrayList<>();
+	private static final ObjectArrayList<Function<Map<ResourceLocation, BlockModel>, ModelProvider<ResourceLocation>>> resourceProviderFunctions = new ObjectArrayList<>();
+	private static final ObjectArrayList<Pair<Function<Map<ResourceLocation, BlockModel>, ModelProvider<ModelResourceLocation>>, ResourceLocation[]>> blockItemProviderFunctions = new ObjectArrayList<>();
 	private static final ObjectArrayList<ModelLocationProvider> locationProviders = new ObjectArrayList<>();
 
 	public static void registerLocationProvider(ModelLocationProvider provider) {
 		locationProviders.add(provider);
 	}
 
-	public static void registerResourceProvider(Function<ResourceManager, ModelProvider<ResourceLocation>> providerFunction) {
+	public static void registerResourceProvider(Function<Map<ResourceLocation, BlockModel>, ModelProvider<ResourceLocation>> providerFunction) {
 		resourceProviderFunctions.add(providerFunction);
 	}
 
-	public static void registerVariantProvider(Function<ResourceManager, ModelProvider<ModelResourceLocation>> providerFunction) {
+	public static void registerVariantProvider(Function<Map<ResourceLocation, BlockModel>, ModelProvider<ModelResourceLocation>> providerFunction) {
 		variantProviderFunctions.add(providerFunction);
 	}
 
-	public static LoaderInstance begin(ModelBakery loader, ResourceManager manager) {
+	public static LoaderInstance begin(ModelBakery loader, Map<ResourceLocation, BlockModel> manager) {
 		return new LoaderInstance(loader, manager);
 	}
 
-	public static void onModelPopulation(ResourceManager resourceManager, Consumer<ResourceLocation> target) {
+	public static void onModelPopulation(Map<ResourceLocation, BlockModel> resourceManager, Consumer<ResourceLocation> target) {
 		for (final ModelLocationProvider appender : locationProviders) {
 			appender.provideLocations(resourceManager, target);
 		}
 	}
 
-	public static void registerBlockItemProvider(Function<ResourceManager, ModelProvider<ModelResourceLocation>> providerFunction, ResourceLocation... paths) {
+	public static void registerBlockItemProvider(Function<Map<ResourceLocation, BlockModel>, ModelProvider<ModelResourceLocation>> providerFunction, ResourceLocation... paths) {
 		blockItemProviderFunctions.add(Pair.of(providerFunction, paths));
 	}
 

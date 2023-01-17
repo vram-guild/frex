@@ -22,6 +22,7 @@ package io.vram.frex.base.client.model;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -32,12 +33,11 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -115,12 +115,12 @@ public class ProceduralModel extends BaseModel {
 		}
 
 		@Override
-		public BakedModel bakeOnce(ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteFunc, ModelState modelState, ResourceLocation modelLocation) {
+		public BakedModel bakeOnce(ModelBaker baker, Function<Material, TextureAtlasSprite> spriteFunc, ModelState modelState, ResourceLocation modelLocation) {
 			return new ProceduralModel(this, spriteFunc);
 		}
 	}
 
-	public static Function<ResourceManager, ModelProvider<ModelResourceLocation>> createProvider(Consumer<Builder> setupFunc) {
+	public static Function<Map<ResourceLocation, net.minecraft.client.renderer.block.model.BlockModel>, ModelProvider<ModelResourceLocation>> createProvider(Consumer<Builder> setupFunc) {
 		return (rm) -> {
 			final var builder = new Builder();
 			setupFunc.accept(builder);

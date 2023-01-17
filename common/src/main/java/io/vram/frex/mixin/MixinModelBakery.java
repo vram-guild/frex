@@ -51,18 +51,18 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
 
 import io.vram.frex.impl.model.ModelProviderRegistryImpl;
 import io.vram.frex.mixinterface.ModelBakeryExt;
 
 @Mixin(ModelBakery.class)
 public abstract class MixinModelBakery implements ModelBakeryExt {
-	@Shadow @Final private ResourceManager resourceManager;
+	@Shadow @Final private Map<ResourceLocation, BlockModel> modelResources;
 	@Shadow @Final private Set<ResourceLocation> loadingStack;
 	@Shadow @Final private Map<ResourceLocation, UnbakedModel> unbakedCache;
 	@Shadow @Final private Map<ResourceLocation, UnbakedModel> topLevelModels;
@@ -78,9 +78,9 @@ public abstract class MixinModelBakery implements ModelBakeryExt {
 		var result = frexHandler;
 
 		if (result == null) {
-			result = ModelProviderRegistryImpl.begin((ModelBakery) (Object) this, resourceManager);
+			result = ModelProviderRegistryImpl.begin((ModelBakery) (Object) this, modelResources);
 			frexHandler = result;
-			ModelProviderRegistryImpl.onModelPopulation(resourceManager, this::frx_addModel);
+			ModelProviderRegistryImpl.onModelPopulation(modelResources, this::frx_addModel);
 		}
 
 		return result;

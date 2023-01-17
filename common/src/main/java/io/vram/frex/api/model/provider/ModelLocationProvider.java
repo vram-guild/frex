@@ -20,11 +20,12 @@
 
 package io.vram.frex.api.model.provider;
 
+import java.util.Map;
 import java.util.function.Consumer;
 
+import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
 
 @FunctionalInterface
 public interface ModelLocationProvider {
@@ -39,5 +40,5 @@ public interface ModelLocationProvider {
 	 *            For example, <pre>new ResourceLocation("mymod", "foo/bar")</pre> will request loading
 	 *            of the file <pre>/assets/mymod/models/foo/bar.json</pre>
 	 */
-	void provideLocations(ResourceManager manager, Consumer<ResourceLocation> target);
+	void provideLocations(Map<ResourceLocation, BlockModel> manager, Consumer<ResourceLocation> target);
 }

@@ -22,19 +22,16 @@ package io.vram.frex.base.client.model;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
 import java.util.function.Function;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-
-import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
@@ -127,18 +124,18 @@ public abstract class BaseModelBuilder<T extends BaseModelBuilder<T>> implements
 	}
 
 	@Override
-	public Collection<Material> getMaterials(Function<ResourceLocation, UnbakedModel> modelFunction, Set<Pair<String, String>> errors) {
-		return materials == null ? Collections.emptyList() : materials;
+	public void resolveParents(Function<ResourceLocation, UnbakedModel> function) {
+		// unsure if we need this
 	}
 
-	protected abstract BakedModel bakeOnce(ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteFunc, ModelState modelState, ResourceLocation modelLocation);
+	protected abstract BakedModel bakeOnce(ModelBaker baker, Function<Material, TextureAtlasSprite> spriteFunc, ModelState modelState, ResourceLocation modelLocation);
 
 	@Override
-	public final BakedModel bake(ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteFunc, ModelState modelState, ResourceLocation modelLocation) {
+	public final BakedModel bake(ModelBaker baker, Function<Material, TextureAtlasSprite> spriteFunc, ModelState modelState, ResourceLocation modelLocation) {
 		var result = this.result;
 
 		if (result == null) {
-			result = bakeOnce(bakery, spriteFunc, modelState, modelLocation);
+			result = bakeOnce(baker, spriteFunc, modelState, modelLocation);
 			this.result = result;
 		}
 

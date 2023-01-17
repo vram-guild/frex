@@ -23,14 +23,13 @@ package io.vram.frex.impl.material.map;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.IdentityHashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.client.particle.Particle;
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -81,51 +80,45 @@ public class MaterialMapLoader {
 		MaterialLoaderImpl.reset();
 
 		BLOCK_MAP.clear();
-		final Iterator<Block> blocks = Registry.BLOCK.iterator();
 
-		while (blocks.hasNext()) {
-			loadBlock(manager, blocks.next());
+		for (Block block : BuiltInRegistries.BLOCK) {
+			loadBlock(manager, block);
 		}
 
 		FLUID_MAP.clear();
-		final Iterator<Fluid> fluids = Registry.FLUID.iterator();
 
-		while (fluids.hasNext()) {
-			loadFluid(manager, fluids.next());
+		for (Fluid fluid : BuiltInRegistries.FLUID) {
+			loadFluid(manager, fluid);
 		}
 
 		// NB: must come after block because uses block maps for block items
 		ITEM_MAP.clear();
-		final Iterator<Item> items = Registry.ITEM.iterator();
 
-		while (items.hasNext()) {
-			loadItem(manager, items.next());
+		for (Item item : BuiltInRegistries.ITEM) {
+			loadItem(manager, item);
 		}
 
 		PARTICLE_MAP.clear();
-		final Iterator<ParticleType<?>> particles = Registry.PARTICLE_TYPE.iterator();
 
-		while (particles.hasNext()) {
-			loadParticle(manager, particles.next());
+		for (ParticleType<?> particleType : BuiltInRegistries.PARTICLE_TYPE) {
+			loadParticle(manager, particleType);
 		}
 
 		BLOCK_ENTITY_MAP.clear();
-		final Iterator<BlockEntityType<?>> blockEntities = Registry.BLOCK_ENTITY_TYPE.iterator();
 
-		while (blockEntities.hasNext()) {
-			loadBlockEntity(manager, blockEntities.next());
+		for (BlockEntityType<?> blockEntityType : BuiltInRegistries.BLOCK_ENTITY_TYPE) {
+			loadBlockEntity(manager, blockEntityType);
 		}
 
 		ENTITY_MAP.clear();
-		final Iterator<EntityType<?>> entities = Registry.ENTITY_TYPE.iterator();
 
-		while (entities.hasNext()) {
-			loadEntity(manager, entities.next());
+		for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
+			loadEntity(manager, entityType);
 		}
 	}
 
 	private void loadBlock(ResourceManager manager, Block block) {
-		final ResourceLocation blockId = Registry.BLOCK.getKey(block);
+		final ResourceLocation blockId = BuiltInRegistries.BLOCK.getKey(block);
 
 		final ResourceLocation id = new ResourceLocation(blockId.getNamespace(), "materialmaps/block/" + blockId.getPath() + ".json");
 
@@ -141,7 +134,7 @@ public class MaterialMapLoader {
 	}
 
 	private void loadFluid(ResourceManager manager, Fluid fluid) {
-		final ResourceLocation blockId = Registry.FLUID.getKey(fluid);
+		final ResourceLocation blockId = BuiltInRegistries.FLUID.getKey(fluid);
 
 		final ResourceLocation id = new ResourceLocation(blockId.getNamespace(), "materialmaps/fluid/" + blockId.getPath() + ".json");
 
@@ -157,7 +150,7 @@ public class MaterialMapLoader {
 	}
 
 	private void loadItem(ResourceManager manager, Item item) {
-		final ResourceLocation itemId = Registry.ITEM.getKey(item);
+		final ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(item);
 
 		final ResourceLocation id = new ResourceLocation(itemId.getNamespace(), "materialmaps/item/" + itemId.getPath() + ".json");
 
@@ -184,7 +177,9 @@ public class MaterialMapLoader {
 	}
 
 	private void loadParticle(ResourceManager manager, ParticleType<?> particleType) {
-		final ResourceLocation particleId = Registry.PARTICLE_TYPE.getKey(particleType);
+		final ResourceLocation particleId = BuiltInRegistries.PARTICLE_TYPE.getKey(particleType);
+
+		if (particleId == null) return;
 
 		final ResourceLocation id = new ResourceLocation(particleId.getNamespace(), "materialmaps/particle/" + particleId.getPath() + ".json");
 
@@ -200,7 +195,10 @@ public class MaterialMapLoader {
 	}
 
 	private void loadBlockEntity(ResourceManager manager, BlockEntityType<?> blockEntityType) {
-		final ResourceLocation blockEntityId = Registry.BLOCK_ENTITY_TYPE.getKey(blockEntityType);
+		final ResourceLocation blockEntityId = BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(blockEntityType);
+
+		if (blockEntityId == null) return;
+
 		final ResourceLocation id = new ResourceLocation(blockEntityId.getNamespace(), "materialmaps/block_entity/" + blockEntityId.getPath() + ".json");
 
 		try {
@@ -215,7 +213,7 @@ public class MaterialMapLoader {
 	}
 
 	private void loadEntity(ResourceManager manager, EntityType<?> entityType) {
-		final ResourceLocation entityId = Registry.ENTITY_TYPE.getKey(entityType);
+		final ResourceLocation entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
 		final ResourceLocation id = new ResourceLocation(entityId.getNamespace(), "materialmaps/entity/" + entityId.getPath() + ".json");
 
 		try {

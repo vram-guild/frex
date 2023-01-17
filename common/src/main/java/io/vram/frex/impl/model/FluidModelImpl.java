@@ -26,7 +26,7 @@ import java.util.function.Function;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
@@ -47,8 +47,8 @@ public class FluidModelImpl {
 	public static void reload() {
 		SUPPLIERS.clear();
 
-		Registry.FLUID.forEach(fluid -> {
-			final Function<Fluid, FluidModel> factory = FACTORIES.get(Registry.FLUID.getKey(fluid));
+		BuiltInRegistries.FLUID.forEach(fluid -> {
+			final Function<Fluid, FluidModel> factory = FACTORIES.get(BuiltInRegistries.FLUID.getKey(fluid));
 			SUPPLIERS.put(fluid, factory == null ? defaultModel(fluid) : factory.apply(fluid));
 		});
 	}

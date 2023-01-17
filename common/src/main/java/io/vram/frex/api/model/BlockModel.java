@@ -26,8 +26,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.biome.Biome;
@@ -37,6 +35,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.model.InputContext.Type;
 import io.vram.frex.api.world.BlockEntityRenderData;
+import io.vram.frex.impl.model.BiomeLookupHelper;
 import io.vram.frex.impl.model.ModelLookups;
 
 @FunctionalInterface
@@ -73,7 +72,7 @@ public interface BlockModel extends DynamicModel {
 		 * @return Biome at given position, or plains biome if biome information is unavailable.
 		 */
 		default Biome getBiome(BlockPos pos) {
-			return RegistryAccess.BUILTIN.get().registryOrThrow(Registry.BIOME_REGISTRY).getOrThrow(Biomes.PLAINS);
+			return BiomeLookupHelper.getOrThrow(Biomes.PLAINS);
 		}
 
 		/**

@@ -168,7 +168,7 @@ public class MixinLevelRendererEvents {
 			method = "renderLevel",
 			at = @At(
 				value = "INVOKE",
-				target = "Lnet/minecraft/client/renderer/LevelRenderer;renderDebug(Lnet/minecraft/client/Camera;)V"
+				target = "Lnet/minecraft/client/renderer/LevelRenderer;renderDebug(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/Camera;)V"
 			)
 	)
 	private void onChunkDebugRender(CallbackInfo ci) {

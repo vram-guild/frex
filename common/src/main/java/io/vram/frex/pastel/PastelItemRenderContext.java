@@ -32,6 +32,7 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.ItemDisplayContext;
 
 import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.base.renderer.context.render.ItemRenderContext;
@@ -69,7 +70,7 @@ public class PastelItemRenderContext extends ItemRenderContext {
 			final var matrixStack = inputContext.matrixStack();
 			matrixStack.push();
 
-			if (inputContext.mode() == ItemTransforms.TransformType.GUI) {
+			if (inputContext.mode() == ItemDisplayContext.GUI) {
 				matrixStack.modelMatrix().scale(0.5f);
 			} else if (inputContext.mode().firstPerson()) {
 				matrixStack.modelMatrix().scale(0.75F);

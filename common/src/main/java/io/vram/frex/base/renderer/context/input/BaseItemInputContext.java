@@ -23,9 +23,9 @@ package io.vram.frex.base.renderer.context.input;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 import io.vram.frex.api.math.MatrixStack;
@@ -37,7 +37,7 @@ import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 public class BaseItemInputContext extends BaseBakedInputContext implements ItemInputContext {
 	protected final ItemColors colorMap = ItemColorRegistry.get();
 	protected ItemStack itemStack;
-	protected TransformType renderMode;
+	protected ItemDisplayContext renderMode;
 	protected boolean isBlockItem;
 	protected boolean drawTranslucencyToMainTarget;
 	protected int lightmap;
@@ -47,7 +47,7 @@ public class BaseItemInputContext extends BaseBakedInputContext implements ItemI
 		super(Type.ITEM);
 	}
 
-	public void prepareForItem(BakedModel bakedModel, ItemStack itemStack, TransformType renderMode, int lightmap, int overlay, boolean isLeftHand, MatrixStack matrixStack) {
+	public void prepareForItem(BakedModel bakedModel, ItemStack itemStack, ItemDisplayContext renderMode, int lightmap, int overlay, boolean isLeftHand, MatrixStack matrixStack) {
 		super.prepare(overlay, matrixStack);
 		this.bakedModel = bakedModel;
 		this.itemStack = itemStack;
@@ -70,13 +70,13 @@ public class BaseItemInputContext extends BaseBakedInputContext implements ItemI
 	}
 
 	@Override
-	public TransformType mode() {
+	public ItemDisplayContext mode() {
 		return renderMode;
 	}
 
 	@Override
 	public boolean isGui() {
-		return renderMode == ItemTransforms.TransformType.GUI;
+		return renderMode == ItemDisplayContext.GUI;
 	}
 
 	@Override

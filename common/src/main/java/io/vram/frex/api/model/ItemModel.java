@@ -24,6 +24,7 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 import io.vram.frex.api.buffer.QuadSink;
@@ -49,7 +50,7 @@ public interface ItemModel extends DynamicModel {
 
 		ItemStack itemStack();
 
-		ItemTransforms.TransformType mode();
+		ItemDisplayContext mode();
 
 		@Override
 		RandomSource random();

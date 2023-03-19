@@ -27,9 +27,9 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.ItemModelShaper;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -48,9 +48,9 @@ public abstract class ItemRenderContext extends BakedRenderContext<BaseItemInput
 	protected abstract void prepareEncoding(MultiBufferSource vertexConsumers);
 
 	@SuppressWarnings("resource")
-	public void renderItem(ItemModelShaper models, ItemStack stack, TransformType renderMode, boolean isLeftHand, PoseStack poseStack, MultiBufferSource vertexConsumers, int light, int overlay, BakedModel model) {
+	public void renderItem(ItemModelShaper models, ItemStack stack, ItemDisplayContext renderMode, boolean isLeftHand, PoseStack poseStack, MultiBufferSource vertexConsumers, int light, int overlay, BakedModel model) {
 		if (stack.isEmpty()) return;
-		final boolean detachedPerspective = renderMode == ItemTransforms.TransformType.GUI || renderMode == ItemTransforms.TransformType.GROUND || renderMode == ItemTransforms.TransformType.FIXED;
+		final boolean detachedPerspective = renderMode == ItemDisplayContext.GUI || renderMode == ItemDisplayContext.GROUND || renderMode == ItemDisplayContext.FIXED;
 
 		if (detachedPerspective) {
 			if (stack.is(Items.TRIDENT)) {

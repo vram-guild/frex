@@ -110,9 +110,9 @@ public interface FrexMathUtil {
 		final float z = PackedVector3f.unpackZ(packedVector3f);
 
 		// PERF: not certain FMA is helping here because may be preventing parallel/out-of-order execution
-		final float nx = Math.fma(mat.m00, x, Math.fma(mat.m01, y, mat.m02 * z));
-		final float ny = Math.fma(mat.m10, x, Math.fma(mat.m11, y, mat.m12 * z));
-		final float nz = Math.fma(mat.m20, x, Math.fma(mat.m21, y, mat.m22 * z));
+		final float nx = Math.fma(mat.m00, x, Math.fma(mat.m10, y, mat.m20 * z));
+		final float ny = Math.fma(mat.m01, x, Math.fma(mat.m11, y, mat.m21 * z));
+		final float nz = Math.fma(mat.m02, x, Math.fma(mat.m12, y, mat.m22 * z));
 
 		return PackedVector3f.pack(nx, ny, nz);
 	}

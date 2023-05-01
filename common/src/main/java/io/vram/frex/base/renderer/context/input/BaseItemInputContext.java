@@ -65,11 +65,6 @@ public class BaseItemInputContext extends BaseBakedInputContext implements ItemI
 	}
 
 	@Override
-	public boolean cullTest(int faceId) {
-		return true;
-	}
-
-	@Override
 	public ItemStack itemStack() {
 		return itemStack;
 	}

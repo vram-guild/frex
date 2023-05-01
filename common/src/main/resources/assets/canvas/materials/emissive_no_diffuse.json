@@ -1,5 +1,0 @@
-{
-   "_DEPRECATED_": "Here for compatibility with packs that predate FREX 6.0.  Use frex:emissive_no_diffuse instead. Will be removed for 1.18.",
-   "disableDiffuse": true,
-  "emissive": true
-}

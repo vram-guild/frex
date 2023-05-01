@@ -26,7 +26,18 @@ import net.minecraft.resources.ResourceLocation;
 
 import io.vram.frex.api.renderer.Renderer;
 
-public interface RenderMaterial extends MaterialView {
+/**
+ * Immutable material specification, governs practically all aspects of
+ * how a given polygon will render.  Render state management,
+ * vertex encoding, buffering and draw management are all abstracted and
+ * controlled by implementations.
+ *
+ * <p>Implements {@link MaterialTransform} so that material maps can
+ * return either a fully-specified material or a material transform and
+ * but implementations can be simpler by always treating them as transforms.
+ *
+ */
+public interface RenderMaterial extends MaterialView, MaterialTransform {
 	ResourceLocation STANDARD_MATERIAL_KEY = new ResourceLocation("frex", "standard");
 	ResourceLocation MISSING_MATERIAL_KEY = new ResourceLocation("frex", "missing");
 
@@ -54,6 +65,11 @@ public interface RenderMaterial extends MaterialView {
 
 	default RenderMaterial withOverlay(int uv) {
 		return MaterialFinder.threadLocal().copyFrom(this).overlay(uv).find();
+	}
+
+	@Override
+	default void apply(MaterialFinder finder) {
+		finder.copyFrom(this);
 	}
 
 	static @Nullable RenderMaterial fromId(ResourceLocation id) {

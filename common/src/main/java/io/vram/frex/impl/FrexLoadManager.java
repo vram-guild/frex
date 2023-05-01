@@ -25,7 +25,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import io.vram.frex.api.renderloop.RenderReloadListener;
 import io.vram.frex.base.renderer.util.ResourceCache;
 import io.vram.frex.impl.light.ItemLightLoader;
-import io.vram.frex.impl.material.MaterialMapLoader;
+import io.vram.frex.impl.material.map.MaterialMapLoader;
 import io.vram.frex.impl.model.FluidModelImpl;
 import io.vram.frex.impl.model.SimpleFluidSpriteProvider;
 import io.vram.frex.pastel.PastelBlockRenderContext;

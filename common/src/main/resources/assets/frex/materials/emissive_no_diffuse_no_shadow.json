@@ -1,5 +1,6 @@
 {
   "transform": true,
   "disableDiffuse": true,
-  "emissive": true
+  "emissive": true,
+  "castShadows": false
 }

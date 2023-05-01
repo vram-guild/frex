@@ -29,7 +29,6 @@ import java.util.function.Function;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
@@ -39,6 +38,7 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.api.buffer.QuadSink;
@@ -55,7 +55,7 @@ public class StaticMeshModel extends BaseModel {
 
 	protected StaticMeshModel(Builder builder, Function<Material, TextureAtlasSprite> spriteFunc) {
 		super(builder, spriteFunc);
-		mesh = builder.meshFactory.createMesh(n -> spriteFunc.apply(new Material(TextureAtlas.LOCATION_BLOCKS, n)));
+		mesh = builder.meshFactory.createMesh(n -> spriteFunc.apply(new Material(InventoryMenu.BLOCK_ATLAS, n)));
 	}
 
 	@Override

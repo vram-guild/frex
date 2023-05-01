@@ -22,13 +22,14 @@ package io.vram.frex.base.renderer.context.input;
 
 import java.util.Random;
 
+
 import io.vram.frex.api.math.MatrixStack;
 import io.vram.frex.api.model.InputContext;
 import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 
 public abstract class BaseInputContext implements InputContext {
 	protected final Type type;
-	protected final Random random = new Random();
+	protected final Random random = Random.create();
 	protected boolean needsRandomReseed = true;
 	protected int overlay;
 	protected MatrixStack matrixStack;

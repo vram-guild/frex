@@ -31,7 +31,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.world.item.Items;
+import net.minecraft.tags.ItemTags;
 
 import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.base.renderer.context.render.ItemRenderContext;
@@ -64,10 +64,7 @@ public class PastelItemRenderContext extends ItemRenderContext {
 		final var mat = emitter.material();
 		final VertexConsumer consumer;
 
-		// NB: by the time we get here material should be fully specified - no default preset
-		assert mat.preset() != MaterialConstants.PRESET_DEFAULT;
-
-		if (mat.foilOverlay() && inputContext.itemStack().is(Items.COMPASS)) {
+		if (mat.foilOverlay() && inputContext.itemStack().is(ItemTags.COMPASSES)) {
 			// C'mon Mojang...
 			final var matrixStack = inputContext.matrixStack();
 			matrixStack.push();

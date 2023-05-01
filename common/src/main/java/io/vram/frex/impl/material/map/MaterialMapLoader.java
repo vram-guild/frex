@@ -18,9 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.vram.frex.impl.material;
+package io.vram.frex.impl.material.map;
 
-import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.IdentityHashMap;
@@ -29,11 +28,13 @@ import java.util.List;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
 
+import net.minecraft.client.particle.Particle;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -44,37 +45,36 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 
-import io.vram.frex.api.material.BlockEntityMaterialMap;
-import io.vram.frex.api.material.EntityMaterialMap;
 import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.impl.FrexLog;
+import io.vram.frex.impl.material.MaterialLoaderImpl;
 
 @Internal
 public class MaterialMapLoader {
 	private MaterialMapLoader() { }
 
-	public MaterialMap get(BlockState state) {
-		return BLOCK_MAP.getOrDefault(state, DEFAULT_MAP);
+	public MaterialMap<BlockState> get(BlockState state) {
+		return BLOCK_MAP.getOrDefault(state, MaterialMap.identity());
 	}
 
-	public MaterialMap get(FluidState fluidState) {
-		return FLUID_MAP.getOrDefault(fluidState, DEFAULT_MAP);
+	public MaterialMap<FluidState> get(FluidState fluidState) {
+		return FLUID_MAP.getOrDefault(fluidState, MaterialMap.identity());
 	}
 
-	public MaterialMap get(ItemStack itemStack) {
-		return ITEM_MAP.getOrDefault(itemStack.getItem(), DEFAULT_MAP);
+	public MaterialMap<ItemStack> get(ItemStack itemStack) {
+		return ITEM_MAP.getOrDefault(itemStack.getItem(), MaterialMap.identity());
 	}
 
-	public MaterialMap get(ParticleType<?> particleType) {
-		return PARTICLE_MAP.getOrDefault(particleType, DEFAULT_MAP);
+	public MaterialMap<Particle> get(ParticleType<?> particleType) {
+		return PARTICLE_MAP.getOrDefault(particleType, MaterialMap.identity());
 	}
 
-	public BlockEntityMaterialMap get(BlockEntityType<?> blockEntityType) {
-		return BLOCK_ENTITY_MAP.getOrDefault(blockEntityType, BlockEntityMaterialMap.IDENTITY);
+	public MaterialMap<BlockState> get(BlockEntityType<?> blockEntityType) {
+		return BLOCK_ENTITY_MAP.getOrDefault(blockEntityType, MaterialMap.identity());
 	}
 
-	public EntityMaterialMap get(EntityType<?> entityType) {
-		return ENTITY_MAP.getOrDefault(entityType, EntityMaterialMap.IDENTITY);
+	public MaterialMap<Entity> get(EntityType<?> entityType) {
+		return ENTITY_MAP.getOrDefault(entityType, MaterialMap.identity());
 	}
 
 	public void reload(ResourceManager manager) {
@@ -129,10 +129,12 @@ public class MaterialMapLoader {
 
 		final ResourceLocation id = new ResourceLocation(blockId.getNamespace(), "materialmaps/block/" + blockId.getPath() + ".json");
 
-		try (Resource res = manager.getResource(id)) {
-			MaterialMapDeserializer.deserialize(block.getStateDefinition().getPossibleStates(), id, new InputStreamReader(res.getInputStream(), StandardCharsets.UTF_8), BLOCK_MAP);
-		} catch (final FileNotFoundException e) {
-			// eat these, material maps are not required
+		try {
+			final var res = manager.getResource(id);
+
+			if (res.isPresent()) {
+				MaterialMapDeserializer.deserialize(block.getStateDefinition().getPossibleStates(), id, new InputStreamReader(res.get().open(), StandardCharsets.UTF_8), BLOCK_MAP);
+			}
 		} catch (final Exception e) {
 			FrexLog.info("Unable to load block material map " + id.toString() + " due to exception " + e.toString());
 		}
@@ -143,10 +145,12 @@ public class MaterialMapLoader {
 
 		final ResourceLocation id = new ResourceLocation(blockId.getNamespace(), "materialmaps/fluid/" + blockId.getPath() + ".json");
 
-		try (Resource res = manager.getResource(id)) {
-			MaterialMapDeserializer.deserialize(fluid.getStateDefinition().getPossibleStates(), id, new InputStreamReader(res.getInputStream(), StandardCharsets.UTF_8), FLUID_MAP);
-		} catch (final FileNotFoundException e) {
-			// eat these, material maps are not required
+		try {
+			final var res = manager.getResource(id);
+
+			if (res.isPresent()) {
+				MaterialMapDeserializer.deserialize(fluid.getStateDefinition().getPossibleStates(), id, new InputStreamReader(res.get().open(), StandardCharsets.UTF_8), FLUID_MAP);
+			}
 		} catch (final Exception e) {
 			FrexLog.info("Unable to load fluid material map " + id.toString() + " due to exception " + e.toString());
 		}
@@ -157,17 +161,21 @@ public class MaterialMapLoader {
 
 		final ResourceLocation id = new ResourceLocation(itemId.getNamespace(), "materialmaps/item/" + itemId.getPath() + ".json");
 
-		try (Resource res = manager.getResource(id)) {
-			ItemMaterialMapDeserializer.deserialize(item, id, new InputStreamReader(res.getInputStream(), StandardCharsets.UTF_8), ITEM_MAP);
-		} catch (final FileNotFoundException e) {
-			// fall back to block map for block items
-			// otherwise eat these, material maps are not required
+		try {
+			final var res = manager.getResource(id);
 
-			if (item instanceof BlockItem) {
-				final MaterialMap map = BLOCK_MAP.get(((BlockItem) item).getBlock().defaultBlockState());
+			if (res.isPresent()) {
+				ItemMaterialMapDeserializer.deserialize(item, id, new InputStreamReader(res.get().open(), StandardCharsets.UTF_8), ITEM_MAP);
+			} else {
+				// fall back to block map for block items
+				// otherwise material maps are not required
+				if (item instanceof BlockItem) {
+					final var defaultBlockState = ((BlockItem) item).getBlock().defaultBlockState();
+					final MaterialMap<BlockState> blockMap = BLOCK_MAP.get(defaultBlockState);
 
-				if (map != null) {
-					ITEM_MAP.put(item, map);
+					if (blockMap != null) {
+						ITEM_MAP.put(item, (f, i, s) -> blockMap.map(f, defaultBlockState, s));
+					}
 				}
 			}
 		} catch (final Exception e) {
@@ -180,10 +188,12 @@ public class MaterialMapLoader {
 
 		final ResourceLocation id = new ResourceLocation(particleId.getNamespace(), "materialmaps/particle/" + particleId.getPath() + ".json");
 
-		try (Resource res = manager.getResource(id)) {
-			ParticleMaterialMapDeserializer.deserialize(particleType, id, new InputStreamReader(res.getInputStream(), StandardCharsets.UTF_8), PARTICLE_MAP);
-		} catch (final FileNotFoundException e) {
-			// eat these, material maps are not required
+		try {
+			final var res = manager.getResource(id);
+
+			if (res.isPresent()) {
+				ParticleMaterialMapDeserializer.deserialize(particleType, id, new InputStreamReader(res.get().open(), StandardCharsets.UTF_8), PARTICLE_MAP);
+			}
 		} catch (final Exception e) {
 			FrexLog.info("Unable to load particle material map " + id.toString() + " due to exception " + e.toString());
 		}
@@ -194,13 +204,11 @@ public class MaterialMapLoader {
 		final ResourceLocation id = new ResourceLocation(blockEntityId.getNamespace(), "materialmaps/block_entity/" + blockEntityId.getPath() + ".json");
 
 		try {
-			final List<Resource> resources = manager.getResources(id);
+			final List<Resource> resources = manager.getResourceStack(id);
 
 			if (resources.size() > 0) {
 				BlockEntityMaterialMapDeserializer.deserialize(blockEntityType, id, resources, BLOCK_ENTITY_MAP);
 			}
-		} catch (final FileNotFoundException e) {
-			// eat these, material maps are not required
 		} catch (final Exception e) {
 			FrexLog.info("Unable to load block entity material map " + id.toString() + " due to exception " + e.toString());
 		}
@@ -211,26 +219,22 @@ public class MaterialMapLoader {
 		final ResourceLocation id = new ResourceLocation(entityId.getNamespace(), "materialmaps/entity/" + entityId.getPath() + ".json");
 
 		try {
-			final List<Resource> resources = manager.getResources(id);
+			final List<Resource> resources = manager.getResourceStack(id);
 
 			if (resources.size() > 0) {
 				EntityMaterialMapDeserializer.deserialize(entityType, id, resources, ENTITY_MAP);
 			}
-		} catch (final FileNotFoundException e) {
-			// eat these, material maps are not required
 		} catch (final Exception e) {
 			FrexLog.info("Unable to load block entity material map " + id.toString() + " due to exception " + e.toString());
 		}
 	}
 
-	public static final MaterialMap DEFAULT_MAP = new SingleMaterialMap(null);
-
-	private static final IdentityHashMap<BlockState, MaterialMap> BLOCK_MAP = new IdentityHashMap<>();
-	private static final IdentityHashMap<FluidState, MaterialMap> FLUID_MAP = new IdentityHashMap<>();
-	private static final IdentityHashMap<Item, MaterialMap> ITEM_MAP = new IdentityHashMap<>();
-	private static final IdentityHashMap<ParticleType<?>, MaterialMap> PARTICLE_MAP = new IdentityHashMap<>();
-	private static final IdentityHashMap<BlockEntityType<?>, BlockEntityMaterialMap> BLOCK_ENTITY_MAP = new IdentityHashMap<>();
-	private static final IdentityHashMap<EntityType<?>, EntityMaterialMap> ENTITY_MAP = new IdentityHashMap<>();
+	private static final IdentityHashMap<BlockState, MaterialMap<BlockState>> BLOCK_MAP = new IdentityHashMap<>();
+	private static final IdentityHashMap<FluidState, MaterialMap<FluidState>> FLUID_MAP = new IdentityHashMap<>();
+	private static final IdentityHashMap<Item, MaterialMap<ItemStack>> ITEM_MAP = new IdentityHashMap<>();
+	private static final IdentityHashMap<ParticleType<?>, MaterialMap<Particle>> PARTICLE_MAP = new IdentityHashMap<>();
+	private static final IdentityHashMap<BlockEntityType<?>, MaterialMap<BlockState>> BLOCK_ENTITY_MAP = new IdentityHashMap<>();
+	private static final IdentityHashMap<EntityType<?>, MaterialMap<Entity>> ENTITY_MAP = new IdentityHashMap<>();
 
 	public static final MaterialMapLoader INSTANCE = new MaterialMapLoader();
 }

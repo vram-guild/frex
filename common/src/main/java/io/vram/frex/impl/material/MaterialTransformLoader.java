@@ -29,6 +29,7 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 import io.vram.frex.api.config.FrexConfig;
+import io.vram.frex.api.material.MaterialTransform;
 import io.vram.frex.impl.FrexLog;
 
 @Internal
@@ -37,7 +38,7 @@ public final class MaterialTransformLoader {
 
 	private static final ObjectOpenHashSet<ResourceLocation> CAUGHT = new ObjectOpenHashSet<>();
 
-	static MaterialTransform loadTransform(String idForLog, String materialString, MaterialTransform defaultValue) {
+	public static MaterialTransform loadTransform(String idForLog, String materialString, MaterialTransform defaultValue) {
 		try {
 			final MaterialTransform result = loadTransformInner(new ResourceLocation(materialString));
 			return result == null ? defaultValue : result;
@@ -53,7 +54,8 @@ public final class MaterialTransformLoader {
 		MaterialTransform result = null;
 		final ResourceManager rm = Minecraft.getInstance().getResourceManager();
 
-		try (Resource res = rm.getResource(id)) {
+		try {
+			final Resource res = rm.getResource(id).get();
 			result = MaterialTransformDeserializer.deserialize(MaterialLoaderImpl.readJsonObject(res));
 		} catch (final Exception e) {
 			if (!FrexConfig.suppressMaterialLoadingSpam || CAUGHT.add(idIn)) {

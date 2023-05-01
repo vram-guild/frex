@@ -18,32 +18,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.vram.frex.impl.material;
+package io.vram.frex.impl.material.map;
 
-import java.util.IdentityHashMap;
+import java.util.function.BiPredicate;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
+import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.MaterialMap;
-import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.material.MaterialTransform;
+import io.vram.frex.api.material.MaterialView;
 
 @Internal
-class MultiMaterialMap implements MaterialMap {
-	private final IdentityHashMap<TextureAtlasSprite, RenderMaterial> spriteMap;
+class MultiMaterialMap<T> implements MaterialMap<T> {
+	private final BiPredicate<T, MaterialView>[] predicates;
+	private final MaterialTransform[] transforms;
 
-	MultiMaterialMap(IdentityHashMap<TextureAtlasSprite, RenderMaterial> spriteMap) {
-		this.spriteMap = spriteMap;
+	MultiMaterialMap(BiPredicate<T, MaterialView>[] predicates, MaterialTransform[] transforms) {
+		assert predicates != null;
+		assert transforms != null;
+
+		this.predicates = predicates;
+		this.transforms = transforms;
 	}
 
 	@Override
-	public boolean needsSprite() {
-		return true;
+	public void map(MaterialFinder finder, T gameObject, @Nullable TextureAtlasSprite sprite) {
+		map(finder, gameObject, null);
 	}
 
 	@Override
-	public RenderMaterial getMapped(TextureAtlasSprite sprite) {
-		return spriteMap.get(sprite);
+	public void map(MaterialFinder finder, T gameObject) {
+		final int limit = predicates.length;
+
+		for (int i = 0; i < limit; ++i) {
+			if (predicates[i].test(gameObject, finder)) {
+				transforms[i].apply(finder);
+				return;
+			}
+		}
 	}
 }

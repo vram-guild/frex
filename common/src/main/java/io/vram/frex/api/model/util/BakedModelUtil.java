@@ -30,8 +30,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.Direction;
+import net.minecraft.world.inventory.InventoryMenu;
 
 import io.vram.frex.api.mesh.Mesh;
 import io.vram.frex.api.texture.SpriteFinder;
@@ -72,7 +72,7 @@ public class BakedModelUtil {
 	 * <p>Retrieves sprites from the block texture atlas via {@link SpriteFinder}.
 	 */
 	public static List<BakedQuad>[] toQuadLists(Mesh mesh) {
-		final SpriteFinder finder = SpriteFinder.get(Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS));
+		final SpriteFinder finder = SpriteFinder.get(Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS));
 
 		@SuppressWarnings("unchecked")
 		final ImmutableList.Builder<BakedQuad>[] builders = new ImmutableList.Builder[7];

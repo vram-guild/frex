@@ -20,6 +20,8 @@
 
 package io.vram.frex.pastel;
 
+import java.util.Set;
+
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +36,6 @@ import net.minecraft.ReportedException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ChunkBufferBuilderPack;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.chunk.ChunkRenderDispatcher.CompiledChunk;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
@@ -53,13 +54,13 @@ import io.vram.frex.base.renderer.ao.AoCalculator;
 import io.vram.frex.base.renderer.context.input.BaseBlockInputContext;
 import io.vram.frex.base.renderer.context.render.BlockRenderContext;
 import io.vram.frex.base.renderer.util.EncoderUtil;
-import io.vram.frex.pastel.mixinterface.CompiledChunkExt;
 import io.vram.frex.pastel.mixinterface.RenderChunkRegionExt;
 
 public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintGetter> {
 	protected RenderChunkRegionExt regionExt;
 	protected ChunkBufferBuilderPack buffers;
-	protected CompiledChunkExt compiledChunkExt;
+	@SuppressWarnings("rawtypes")
+	protected Set initializedBuffers;
 	protected final Object2ObjectOpenHashMap<RenderType, BufferBuilder> usedBuffers = new Object2ObjectOpenHashMap<>();
 
 	private final AoCalculator aoCalc = new AoCalculator() {
@@ -109,11 +110,11 @@ public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintG
 		};
 	}
 
-	public PastelTerrainRenderContext prepareForRegion(RenderChunkRegion region, CompiledChunk compiledChunk, PoseStack poseStack, BlockPos origin, ChunkBufferBuilderPack buffers) {
+	public PastelTerrainRenderContext prepareForRegion(RenderChunkRegion region, PoseStack poseStack, BlockPos origin, ChunkBufferBuilderPack buffers, @SuppressWarnings("rawtypes") Set set) {
 		inputContext.prepareForWorld(region, true, MatrixStack.fromVanilla(poseStack));
 		regionExt = (RenderChunkRegionExt) region;
-		compiledChunkExt = (CompiledChunkExt) compiledChunk;
 		usedBuffers.clear();
+		this.initializedBuffers = set;
 		regionExt.frx_setContext(this, origin);
 		this.buffers = buffers;
 		return this;
@@ -123,13 +124,13 @@ public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintG
 		inputContext.setWorld(blockView);
 	}
 
-	public void renderFluid(BlockState blockState, BlockPos blockPos, boolean defaultAo, final BlockModel model) {
+	public void renderFluid(BlockState blockState, BlockPos blockPos, final BlockModel model) {
 		aoCalc.prepare(PackedSectionPos.packWithSectionMask(blockPos));
 		// for whatever reason, Mojang doesn't do section position transformation before invoking fluid render so we do it here
 		final var matrixStack = inputContext.matrixStack();
 		matrixStack.push();
 		matrixStack.translate(blockPos.getX() & 15, blockPos.getY() & 15, blockPos.getZ() & 15);
-		prepareForFluid(blockState, blockPos, defaultAo);
+		prepareForFluid(blockState, blockPos);
 		renderInner(model);
 		matrixStack.pop();
 	}
@@ -192,53 +193,28 @@ public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintG
 					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), shade * emitter.ao[3] * FixedMath255.FLOAT_CONVERSION_FACTOR));
 				}
 			}
-		} else if (PastelRenderer.semiFlatLighting) {
-			aoCalc.computeFlat(emitter);
-			final var blockView = inputContext.blockView();
-
-			if (emitter.material().disableDiffuse()) {
-				// if diffuse is disabled, some dimensions can still have an ambient shading value.
-				final float shade = blockView.getShade(Direction.UP, false);
-
-				if (shade != 1.0f) {
-					emitter.vertexColor(0, ColorUtil.multiplyRGB(emitter.vertexColor(0), shade));
-					emitter.vertexColor(1, ColorUtil.multiplyRGB(emitter.vertexColor(1), shade));
-					emitter.vertexColor(2, ColorUtil.multiplyRGB(emitter.vertexColor(2), shade));
-					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), shade));
-				}
-			} else {
-				if (emitter.hasVertexNormals()) {
-					// different shade value per vertex
-					emitter.vertexColor(0, ColorUtil.multiplyRGB(emitter.vertexColor(0), EncoderUtil.normalShade(emitter.packedNormal(0), blockView, true)));
-					emitter.vertexColor(1, ColorUtil.multiplyRGB(emitter.vertexColor(1), EncoderUtil.normalShade(emitter.packedNormal(1), blockView, true)));
-					emitter.vertexColor(2, ColorUtil.multiplyRGB(emitter.vertexColor(2), EncoderUtil.normalShade(emitter.packedNormal(2), blockView, true)));
-					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), EncoderUtil.normalShade(emitter.packedNormal(3), blockView, true)));
-				} else {
-					// same shade value for all vertices
-					final float shade = blockView.getShade(emitter.lightFace(), true);
-
-					emitter.vertexColor(0, ColorUtil.multiplyRGB(emitter.vertexColor(0), shade));
-					emitter.vertexColor(1, ColorUtil.multiplyRGB(emitter.vertexColor(1), shade));
-					emitter.vertexColor(2, ColorUtil.multiplyRGB(emitter.vertexColor(2), shade));
-					emitter.vertexColor(3, ColorUtil.multiplyRGB(emitter.vertexColor(3), shade));
-				}
-			}
 		} else {
-			emitter.applyFlatLighting(inputContext.flatBrightness(emitter));
+			if (PastelRenderer.semiFlatLighting) {
+				aoCalc.computeFlat(emitter);
+			} else {
+				emitter.applyFlatLighting(inputContext.flatBrightness(emitter));
+			}
+
+			applySimpleDiffuseShade();
 		}
 	}
 
 	/** Lazily retrieves output buffer for given layer, initializing as needed. */
+	@SuppressWarnings("unchecked")
 	protected BufferBuilder getInitializedBuffer(RenderType renderLayer) {
 		BufferBuilder result = usedBuffers.get(renderLayer);
 
 		if (result == null) {
 			final BufferBuilder builder = buffers.builder(renderLayer);
 			result = builder;
-			compiledChunkExt.frx_markPopulated(renderLayer);
 			usedBuffers.put(renderLayer, result);
 
-			if (compiledChunkExt.frx_markInitialized(renderLayer)) {
+			if (initializedBuffers.add(renderLayer)) {
 				result.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
 			}
 		}

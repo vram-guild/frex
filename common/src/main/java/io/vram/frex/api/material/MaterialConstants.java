@@ -100,9 +100,15 @@ public interface MaterialConstants {
 	int DEPTH_TEST_COUNT = 4;
 
 	/**
-	 * Parameters to {@link #target(int)}.
+	 * @deprecated Use {@link #TARGET_SOLID}.
 	 */
+	@Deprecated
 	int TARGET_MAIN = 0;
+
+	/**
+	 * Parameter to {@link #target(int)}.
+	 */
+	int TARGET_SOLID = 0;
 
 	int TARGET_OUTLINE = 1;
 

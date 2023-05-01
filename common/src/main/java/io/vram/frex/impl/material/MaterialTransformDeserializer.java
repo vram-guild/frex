@@ -28,6 +28,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 
 import io.vram.frex.api.material.MaterialFinder;
+import io.vram.frex.api.material.MaterialTransform;
 
 @Internal
 public class MaterialTransformDeserializer {
@@ -35,7 +36,7 @@ public class MaterialTransformDeserializer {
 
 	public static MaterialTransform deserialize(JsonObject json) {
 		if (!GsonHelper.getAsBoolean(json, "transform", false)) {
-			return MaterialTransform.constant(MaterialDeserializer.deserialize(json));
+			return MaterialDeserializer.deserialize(json);
 		}
 
 		final ObjectArrayList<MaterialTransform> transforms = new ObjectArrayList<>();

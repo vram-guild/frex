@@ -40,7 +40,6 @@ import io.vram.frex.api.model.util.FaceUtil;
 import io.vram.frex.api.model.util.GeometryUtil;
 import io.vram.frex.api.rendertype.RenderTypeUtil;
 import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
-import io.vram.frex.base.renderer.mesh.MeshEncodingHelper;
 
 public class BaseBlockInputContext<T extends BlockAndTintGetter> extends BaseBakedInputContext implements BlockInputContext {
 	protected final BlockColors blockColorMap = Minecraft.getInstance().getBlockColors();
@@ -158,7 +157,7 @@ public class BaseBlockInputContext<T extends BlockAndTintGetter> extends BaseBak
 			cullCompletionFlags |= mask;
 			final Direction face = FaceUtil.faceFromIndex(faceIndex);
 
-			if (Block.shouldRenderFace(blockState, blockView, blockPos, face, internalSearchPos.setWithOffset(blockPos, face))) {
+			if (shouldRenderFace(face, internalSearchPos.setWithOffset(blockPos, face))) {
 				cullResultFlags |= mask;
 				return true;
 			} else {
@@ -167,6 +166,13 @@ public class BaseBlockInputContext<T extends BlockAndTintGetter> extends BaseBak
 		} else {
 			return (cullResultFlags & mask) != 0;
 		}
+	}
+
+	/**
+	 * Override if renderer has additional optimizations or checks.
+	 */
+	protected boolean shouldRenderFace(Direction face, BlockPos offsetPos) {
+		return Block.shouldRenderFace(blockState, blockView, blockPos, face, offsetPos);
 	}
 
 	@Override
@@ -196,16 +202,17 @@ public class BaseBlockInputContext<T extends BlockAndTintGetter> extends BaseBak
 		return fullCubeCache == 1;
 	}
 
+	/**
+	 * Handles check for using self brightness or neighbor brightness.
+	 * In vanilla, that logic only applies in flat (non-AO) lighting.
+	 */
+
+	public boolean isEmissiveRendering() {
+		return blockState.emissiveRendering(blockView, blockPos);
+	}
+
 	@Override
 	public int flatBrightness(BaseQuadEmitter quad) {
-		/**
-		 * Handles geometry-based check for using self brightness or neighbor brightness.
-		 * That logic only applies in flat lighting.
-		 */
-		if (blockState.emissiveRendering(blockView, blockPos)) {
-			return MeshEncodingHelper.FULL_BRIGHTNESS;
-		}
-
 		internalSearchPos.set(blockPos);
 
 		// To mirror Vanilla's behavior, if the face has a cull-face, always sample the light value

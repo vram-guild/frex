@@ -27,7 +27,16 @@ import net.minecraft.resources.ResourceLocation;
 import io.vram.frex.api.material.MaterialCondition;
 
 public interface ConditionManager {
-	MaterialCondition createCondition(BooleanSupplier supplier, boolean affectBlocks, boolean affectItems);
+	@Deprecated
+	/**
+	 * @deprecated Not practical for implementations to segregate item/block usage.
+	 * If this is really needed can use separate conditions.
+	 */
+	default MaterialCondition createCondition(BooleanSupplier supplier, boolean affectBlocks, boolean affectItems) {
+		return createCondition(supplier);
+	}
+
+	MaterialCondition createCondition(BooleanSupplier supplier);
 
 	int indexOf(MaterialCondition condition);
 

@@ -26,20 +26,22 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.advancements.critereon.EntityEquipmentPredicate;
 import net.minecraft.advancements.critereon.EntityFlagsPredicate;
-import net.minecraft.advancements.critereon.FishingHookPredicate;
 import net.minecraft.advancements.critereon.MobEffectsPredicate;
 import net.minecraft.advancements.critereon.NbtPredicate;
-import net.minecraft.advancements.critereon.PlayerPredicate;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.scores.Team;
 
-import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.material.MaterialView;
 
 /**
  * Stripped-down adaptation of vanilla class used for entity loot predicates.
+ *
+ * <p>Note that prior to 1.19 this had predicates for player and fish hook, but in 1.19
+ * those predicate types require server level instances which is not possible for FREX.
+ * As a result, they were stripped.
  */
 public class EntityOnly extends EntityBiPredicate {
 	public static final EntityOnly ANY;
@@ -48,18 +50,14 @@ public class EntityOnly extends EntityBiPredicate {
 	private final NbtPredicate nbt;
 	private final EntityFlagsPredicate flags;
 	private final EntityEquipmentPredicate equipment;
-	private final PlayerPredicate player;
-	private final FishingHookPredicate fishingHook;
 	@Nullable private final String team;
 	@Nullable private final ResourceLocation catType;
 
-	private EntityOnly(MobEffectsPredicate effects, NbtPredicate nbt, EntityFlagsPredicate flags, EntityEquipmentPredicate equipment, PlayerPredicate player, FishingHookPredicate fishingHook, @Nullable String team, @Nullable ResourceLocation catType) {
+	private EntityOnly(MobEffectsPredicate effects, NbtPredicate nbt, EntityFlagsPredicate flags, EntityEquipmentPredicate equipment, @Nullable String team, @Nullable ResourceLocation catType) {
 		this.effects = effects;
 		this.nbt = nbt;
 		this.flags = flags;
 		this.equipment = equipment;
-		this.player = player;
-		this.fishingHook = fishingHook;
 		this.team = team;
 		this.catType = catType;
 	}
@@ -69,7 +67,7 @@ public class EntityOnly extends EntityBiPredicate {
 	}
 
 	@Override
-	public boolean test(Entity entity, RenderMaterial ignored) {
+	public boolean test(Entity entity, MaterialView ignored) {
 		if (this == ANY) {
 			return true;
 		} else if (entity == null) {
@@ -82,10 +80,6 @@ public class EntityOnly extends EntityBiPredicate {
 			} else if (!flags.matches(entity)) {
 				return false;
 			} else if (!equipment.matches(entity)) {
-				return false;
-			} else if (!player.matches(entity)) {
-				return false;
-			} else if (!fishingHook.matches(entity)) {
 				return false;
 			} else {
 				if (team != null) {
@@ -108,19 +102,19 @@ public class EntityOnly extends EntityBiPredicate {
 			final NbtPredicate nbt = NbtPredicate.fromJson(jsonObject.get("nbt"));
 			final EntityFlagsPredicate flags = EntityFlagsPredicate.fromJson(jsonObject.get("flags"));
 			final EntityEquipmentPredicate equipment = EntityEquipmentPredicate.fromJson(jsonObject.get("equipment"));
-			final PlayerPredicate player = PlayerPredicate.fromJson(jsonObject.get("player"));
-			final FishingHookPredicate fishHook = FishingHookPredicate.fromJson(jsonObject.get("fishing_hook"));
+			//final PlayerPredicate player = PlayerPredicate.fromJson(jsonObject.get("player"));
+			//final FishingHookPredicate fishHook = FishingHookPredicate.fromJson(jsonObject.get("fishing_hook"));
 			final String team = GsonHelper.getAsString(jsonObject, "team", (String) null);
 			final ResourceLocation catType = jsonObject.has("catType") ? new ResourceLocation(GsonHelper.getAsString(jsonObject, "catType")) : null;
 
-			return new EntityOnly(effects, nbt, flags, equipment, player, fishHook, team, catType);
+			return new EntityOnly(effects, nbt, flags, equipment, team, catType);
 		} else {
 			return ANY;
 		}
 	}
 
 	static {
-		ANY = new EntityOnly(MobEffectsPredicate.ANY, NbtPredicate.ANY, EntityFlagsPredicate.ANY, EntityEquipmentPredicate.ANY, PlayerPredicate.ANY, FishingHookPredicate.ANY, (String) null, (ResourceLocation) null);
+		ANY = new EntityOnly(MobEffectsPredicate.ANY, NbtPredicate.ANY, EntityFlagsPredicate.ANY, EntityEquipmentPredicate.ANY, (String) null, (ResourceLocation) null);
 	}
 
 	@Override

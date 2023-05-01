@@ -49,6 +49,13 @@ public class PastelBlockRenderContext extends SimpleBlockRenderContext {
 	}
 
 	@Override
+	protected void shadeQuad() {
+		emitter.applyFlatLighting(inputContext.flatBrightness(emitter));
+		emitter.colorize(inputContext);
+		applySimpleDiffuseShade();
+	}
+
+	@Override
 	protected void encodeQuad() {
 		EncoderUtil.encodeQuad(emitter, inputContext, defaultConsumer);
 	}

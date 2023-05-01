@@ -18,24 +18,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.vram.frex.api.material;
+package io.vram.frex.impl.material.map;
 
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
+import org.jetbrains.annotations.ApiStatus.Internal;
+import org.jetbrains.annotations.Nullable;
 
-import io.vram.frex.impl.material.MaterialMapLoader;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
-/**
- * Transforms materials for entities.
- * Requires FREX material extensions.
- */
-@FunctionalInterface
-public interface EntityMaterialMap {
-	RenderMaterial getMapped(RenderMaterial material, Entity entity, MaterialFinder finder);
+import io.vram.frex.api.material.MaterialFinder;
+import io.vram.frex.api.material.MaterialMap;
+import io.vram.frex.api.material.MaterialTransform;
 
-	static EntityMaterialMap get(EntityType<?> entityType) {
-		return MaterialMapLoader.INSTANCE.get(entityType);
+@Internal
+class SingleInvariantMaterialMap<T> implements MaterialMap<T> {
+	protected final MaterialTransform transform;
+
+	SingleInvariantMaterialMap(MaterialTransform transform) {
+		assert transform != null;
+		this.transform = transform;
 	}
 
-	EntityMaterialMap IDENTITY = (m, e, f) -> m;
+	@Override
+	public void map(MaterialFinder finder, T gameObject, @Nullable TextureAtlasSprite sprite) {
+		transform.apply(finder);
+	}
 }

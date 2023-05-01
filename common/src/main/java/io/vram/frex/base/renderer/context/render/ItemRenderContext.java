@@ -34,7 +34,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 import io.vram.frex.api.material.MaterialConstants;
-import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.api.math.MatrixStack;
 import io.vram.frex.api.model.ItemModel;
@@ -88,30 +87,31 @@ public abstract class ItemRenderContext extends BakedRenderContext<BaseItemInput
 	protected abstract void renderCustomModel(BlockEntityWithoutLevelRenderer builtInRenderer, MultiBufferSource vertexConsumers);
 
 	@Override
-	protected void adjustMaterial() {
-		final MaterialFinder finder = this.finder;
-
-		// NB: if material has foil enabled we leave it so, even if not enchanted
+	protected void applyMaterialDefaults() {
+		// TODO: use tri-state value from material when available
 		if (inputContext.itemStack().hasFoil()) {
 			finder.foilOverlay(true);
 		}
 
+		// TODO: use tri-state value from material when available
+		if (inputContext.isFrontLit()) {
+			finder.disableDiffuse(true);
+		}
+
+		// TODO: use tri-state value from material when available
 		if (inputContext.overlay() != OverlayTexture.NO_OVERLAY) {
 			finder.overlay(inputContext.overlay());
 		}
+	}
 
-		if (inputContext.isGui()) {
-			finder.fog(false);
-		}
-
+	@Override
+	protected void resolvePreset() {
 		int preset = finder.preset();
 
-		// fully specific renderable material
 		if (preset == MaterialConstants.PRESET_NONE) return;
 
 		if (preset == MaterialConstants.PRESET_DEFAULT) {
 			preset = inputContext.defaultPreset();
-			finder.preset(MaterialConstants.PRESET_NONE);
 		}
 
 		switch (preset) {
@@ -144,11 +144,22 @@ public abstract class ItemRenderContext extends BakedRenderContext<BaseItemInput
 					.sorted(false);
 				break;
 			default:
-				assert false : "Unhandled blend mode";
+				assert false : "Unhandled preset";
 		}
 
-		if (inputContext.isFrontLit()) {
-			finder.disableDiffuse(true);
+		finder.preset(MaterialConstants.PRESET_NONE);
+	}
+
+	@Override
+	protected void shadeQuad() {
+		emitter.applyFlatLighting(inputContext.flatBrightness(emitter));
+		emitter.colorize(inputContext);
+	}
+
+	@Override
+	protected void adjustMaterialForEncoding() {
+		if (inputContext.isGui()) {
+			finder.fog(false);
 		}
 
 		finder.disableAo(true);

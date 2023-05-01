@@ -145,7 +145,7 @@ const vec3 frx_skyLightAtmosphericColor;
  */
 const float frx_skyLightTransitionFactor;
 
-/**
+/*
  * Strength of sky flashing during a lightning strike.
  *
  * Forms a reverse sawtooth pattern with random peaks over time.

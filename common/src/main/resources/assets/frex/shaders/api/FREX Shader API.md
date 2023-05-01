@@ -23,7 +23,7 @@ viewed with c-style syntax highlighting in almost any code editor.
 OpenGL shaders do not use header files and FREX API header files are not 
 distributed as part of built jars. (Obtain them from the git repo directly.)
 
-Declarations in header files convey data type, mutability and sybolic token.
+Declarations in header files convey data type, mutability and symbolic token.
 They do NOT convey implementation.  The implementation of a token may vary
 between renderer implementations.  For example, a float variable in a header
 specification could be implemented as a uniform, input variable or global variable
@@ -49,7 +49,7 @@ calls.
 then attached to surfaces using the FREX API or JSON loaders. 
 
 3) Pipeline shaders that consume vertex and fragment output to implement
-lighting and visual effects and ultimately write to framebuffer attachements.
+lighting and visual effects and ultimately write to framebuffer attachments.
 The "look" of the game is largely controlled by the pipeline and it's 
 configuration.  Players choose which pipeline is active and how it is 
 configured.

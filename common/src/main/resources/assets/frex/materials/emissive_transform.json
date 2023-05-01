@@ -1,4 +1,5 @@
 {
+	"_DEPRECATED_": "use emissive.json instead",
 	"transform": true,
 	"emissive": true
 }

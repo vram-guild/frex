@@ -23,7 +23,7 @@ package io.vram.frex.impl.material.predicate;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.world.level.block.state.BlockState;
 
-import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.material.MaterialView;
 
 public class StateOnly extends StateBiPredicate {
 	private final StatePropertiesPredicate statePredicate;
@@ -33,7 +33,7 @@ public class StateOnly extends StateBiPredicate {
 	}
 
 	@Override
-	public boolean test(BlockState blockState, RenderMaterial renderMaterial) {
+	public boolean test(BlockState blockState, MaterialView renderMaterial) {
 		return statePredicate.matches(blockState);
 	}
 

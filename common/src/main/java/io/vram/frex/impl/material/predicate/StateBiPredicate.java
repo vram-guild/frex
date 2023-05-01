@@ -24,12 +24,12 @@ import java.util.function.BiPredicate;
 
 import net.minecraft.world.level.block.state.BlockState;
 
-import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.material.MaterialView;
 
-public abstract class StateBiPredicate implements BiPredicate<BlockState, RenderMaterial> {
+public abstract class StateBiPredicate implements BiPredicate<BlockState, MaterialView> {
 	public static StateBiPredicate BLOCK_ALWAYS_TRUE = new StateBiPredicate() {
 		@Override
-		public boolean test(BlockState blockState, RenderMaterial renderMaterial) {
+		public boolean test(BlockState blockState, MaterialView renderMaterial) {
 			return true;
 		}
 
@@ -41,4 +41,9 @@ public abstract class StateBiPredicate implements BiPredicate<BlockState, Render
 
 	@Override
 	public abstract boolean equals(Object obj);
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
 }

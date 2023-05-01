@@ -27,7 +27,7 @@ import net.minecraft.client.renderer.RenderStateShard.EmptyTextureStateShard;
 import net.minecraft.client.renderer.RenderStateShard.TextureStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderType.CompositeRenderType;
-import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.world.inventory.InventoryMenu;
 
 import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.material.MaterialFinder;
@@ -55,7 +55,7 @@ public final class RenderTypeUtilImpl {
 
 		final VanillaShaderInfo sd = VanillaShaderInfoImpl.get(compositeState.shaderState);
 
-		if (texBase != null && texBase instanceof TextureStateShard tex) {
+		if (texBase != null && texBase instanceof final TextureStateShard tex) {
 			finder.texture(tex.texture.orElse(null));
 			finder.unmipped(!tex.mipmap);
 			finder.blur(tex.blur);
@@ -80,7 +80,7 @@ public final class RenderTypeUtilImpl {
 		// vanilla sets these as part of draw process but we don't want special casing
 		if (renderType == RenderType.solid() || renderType == RenderType.cutoutMipped() || renderType == RenderType.cutout() || renderType == RenderType.translucent()) {
 			finder.cull(true);
-			finder.texture(TextureAtlas.LOCATION_BLOCKS);
+			finder.texture(InventoryMenu.BLOCK_ATLAS);
 			finder.writeMask(MaterialConstants.WRITE_MASK_COLOR_DEPTH);
 			finder.disableAo(false);
 		} else {

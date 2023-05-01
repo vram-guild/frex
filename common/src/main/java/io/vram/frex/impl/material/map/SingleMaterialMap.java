@@ -18,30 +18,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.vram.frex.impl.material;
+package io.vram.frex.impl.material.map;
 
 import java.util.function.BiPredicate;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
+import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.world.entity.Entity;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
-import io.vram.frex.api.material.EntityMaterialMap;
 import io.vram.frex.api.material.MaterialFinder;
-import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.material.MaterialTransform;
+import io.vram.frex.api.material.MaterialView;
 
 @Internal
-class EntitySingleMaterialMap implements EntityMaterialMap {
-	private final MaterialTransform transform;
-	private final BiPredicate<Entity, RenderMaterial> predicate;
+class SingleMaterialMap<T> extends SingleInvariantMaterialMap<T> {
+	protected final BiPredicate<T, MaterialView> predicate;
 
-	EntitySingleMaterialMap(BiPredicate<Entity, RenderMaterial> predicate, MaterialTransform transform) {
+	SingleMaterialMap(BiPredicate<T, MaterialView> predicate, MaterialTransform transform) {
+		super(transform);
 		this.predicate = predicate;
-		this.transform = transform;
 	}
 
 	@Override
-	public RenderMaterial getMapped(RenderMaterial material, Entity entity, MaterialFinder finder) {
-		return predicate.test(entity, material) ? transform.transform(material, finder) : material;
+	public void map(MaterialFinder finder, T gameObject, @Nullable TextureAtlasSprite sprite) {
+		map(finder, gameObject, null);
+	}
+
+	@Override
+	public void map(MaterialFinder finder, T gameObject) {
+		if (predicate.test(gameObject, finder)) {
+			transform.apply(finder);
+		}
 	}
 }

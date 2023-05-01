@@ -52,7 +52,7 @@ public interface RenderRegionBakeListener {
 		RenderRegionBakeListenerImpl.prepareInvocations(context, listeners);
 	}
 
-	public interface RenderRegionContext<T extends BlockAndTintGetter> {
+	interface RenderRegionContext<T extends BlockAndTintGetter> {
 		/**
 		 * Is Level during predicate test, and BlockAndTintGetter during render.
 		 */
@@ -106,7 +106,7 @@ public interface RenderRegionBakeListener {
 	}
 
 	@FunctionalInterface
-	public interface BlockStateRenderer {
+	interface BlockStateRenderer {
 		void bake(BlockPos pos, BlockState state);
 	}
 }

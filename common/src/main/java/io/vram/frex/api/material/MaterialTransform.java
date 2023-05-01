@@ -18,31 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.vram.frex.impl.material;
+package io.vram.frex.api.material;
 
-import org.jetbrains.annotations.ApiStatus.Internal;
-import org.jetbrains.annotations.Nullable;
+@FunctionalInterface
+public interface MaterialTransform {
+	void apply(MaterialFinder finder);
 
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-
-import io.vram.frex.api.material.MaterialMap;
-import io.vram.frex.api.material.RenderMaterial;
-
-@Internal
-class SingleMaterialMap implements MaterialMap {
-	private final RenderMaterial material;
-
-	SingleMaterialMap(RenderMaterial material) {
-		this.material = material;
-	}
-
-	@Override
-	public boolean needsSprite() {
-		return false;
-	}
-
-	@Override
-	public @Nullable RenderMaterial getMapped(TextureAtlasSprite sprite) {
-		return material;
-	}
+	MaterialTransform IDENTITY = (f) -> { };
 }

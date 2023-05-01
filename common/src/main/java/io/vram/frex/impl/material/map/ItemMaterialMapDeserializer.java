@@ -18,33 +18,50 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.vram.frex.impl.material;
+package io.vram.frex.impl.material.map;
 
 import java.io.InputStreamReader;
 import java.util.IdentityHashMap;
 
 import com.google.gson.JsonObject;
 import org.jetbrains.annotations.ApiStatus.Internal;
+import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import io.vram.frex.api.material.MaterialMap;
+import io.vram.frex.api.material.MaterialTransform;
 import io.vram.frex.impl.FrexLog;
+import io.vram.frex.impl.material.MaterialTransformLoader;
 
 @Internal
-public class ParticleMaterialMapDeserializer {
-	public static void deserialize(ParticleType<?> particleType, ResourceLocation idForLog, InputStreamReader reader, IdentityHashMap<ParticleType<?>, MaterialMap> map) {
+public class ItemMaterialMapDeserializer {
+	public static void deserialize(Item item, ResourceLocation idForLog, InputStreamReader reader, IdentityHashMap<Item, MaterialMap<ItemStack>> itemMap) {
 		try {
 			final JsonObject json = GsonHelper.parse(reader);
+			final String idString = idForLog.toString();
 
-			if (json.has("material")) {
-				final MaterialMap result = new SingleMaterialMap(MaterialLoaderImpl.loadMaterial(json.get("material").getAsString(), null));
-				map.put(particleType, result);
+			final MaterialMap<ItemStack> globalDefaultMap = MaterialMap.identity();
+			@Nullable MaterialTransform defaultTransform = null;
+			MaterialMap<ItemStack> result = globalDefaultMap;
+
+			if (json.has("defaultMaterial")) {
+				defaultTransform = MaterialTransformLoader.loadTransform(idString, json.get("defaultMaterial").getAsString(), defaultTransform);
+				result = new SingleInvariantMaterialMap<>(defaultTransform);
+			}
+
+			if (json.has("defaultMap")) {
+				result = MaterialMapDeserializer.loadMaterialMap(idString + "#default", json.getAsJsonObject("defaultMap"), result, defaultTransform);
+			}
+
+			if (result != globalDefaultMap) {
+				itemMap.put(item, result);
 			}
 		} catch (final Exception e) {
-			FrexLog.warn("Unable to load particle material map for " + idForLog.toString() + " due to unhandled exception:", e);
+			FrexLog.warn("Unable to load block material map for " + idForLog.toString() + " due to unhandled exception:", e);
 		}
 	}
 }

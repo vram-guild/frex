@@ -25,6 +25,7 @@ import java.util.Random;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -42,8 +43,8 @@ import io.vram.frex.pastel.mixinterface.ModelBlockRendererExt;
 @Mixin(ModelBlockRenderer.class)
 public abstract class MixinModelBlockRenderer implements ModelBlockRendererExt {
 	@Inject(at = @At("HEAD"), method = "tesselateBlock", cancellable = true)
-	private void onTesselate(BlockAndTintGetter blockView, BakedModel model, BlockState state, BlockPos pos, PoseStack poseStack, VertexConsumer buffer, boolean checkSides, Random rand, long seed, int overlay, CallbackInfoReturnable<Boolean> ci) {
+	private void onTesselate(BlockAndTintGetter blockView, BakedModel model, BlockState state, BlockPos pos, PoseStack poseStack, VertexConsumer buffer, boolean checkSides, Random rand, long seed, int overlay, CallbackInfoReturnable<Boolean> cir) {
 		PastelBlockRenderContext.get().render((ModelBlockRenderer) (Object) this, blockView, model, state, pos, poseStack, buffer, checkSides, seed, overlay);
-		ci.setReturnValue(true);
+		cir.cancel();
 	}
 }

@@ -24,7 +24,7 @@ import java.util.function.BiPredicate;
 
 import com.google.gson.JsonElement;
 
-import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.material.MaterialView;
 import io.vram.frex.impl.material.MaterialDeserializer;
 
 public class MaterialTester<T> extends MaterialPredicate {
@@ -148,7 +148,7 @@ public class MaterialTester<T> extends MaterialPredicate {
 	}
 
 	@Override
-	public boolean test(RenderMaterial renderMaterial) {
+	public boolean test(MaterialView renderMaterial) {
 		return test.test(renderMaterial, toTest);
 	}
 
@@ -169,6 +169,6 @@ public class MaterialTester<T> extends MaterialPredicate {
 	}
 
 	// prevent creating arbitrary BiPredicate as part of equals() logic
-	private interface Test<T> extends BiPredicate<RenderMaterial, T> {
+	private interface Test<T> extends BiPredicate<MaterialView, T> {
 	}
 }

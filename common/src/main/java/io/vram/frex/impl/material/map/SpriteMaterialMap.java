@@ -18,41 +18,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.vram.frex.impl.material;
+package io.vram.frex.impl.material.map;
 
-import java.util.function.BiPredicate;
+import java.util.IdentityHashMap;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
+import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.world.entity.Entity;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
-import io.vram.frex.api.material.EntityMaterialMap;
 import io.vram.frex.api.material.MaterialFinder;
-import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.material.MaterialMap;
+import io.vram.frex.api.material.MaterialTransform;
 
 @Internal
-class EntityMultiMaterialMap implements EntityMaterialMap {
-	private final BiPredicate<Entity, RenderMaterial>[] predicates;
-	private final MaterialTransform[] transforms;
+class SpriteMaterialMap<T> implements MaterialMap<T> {
+	protected final IdentityHashMap<TextureAtlasSprite, MaterialTransform> spriteMap;
 
-	EntityMultiMaterialMap(BiPredicate<Entity, RenderMaterial>[] predicates, MaterialTransform[] transforms) {
-		assert predicates != null;
-		assert transforms != null;
-
-		this.predicates = predicates;
-		this.transforms = transforms;
+	SpriteMaterialMap(IdentityHashMap<TextureAtlasSprite, MaterialTransform> spriteMap) {
+		this.spriteMap = spriteMap;
 	}
 
 	@Override
-	public RenderMaterial getMapped(RenderMaterial material, Entity entity, MaterialFinder finder) {
-		final int limit = predicates.length;
+	public boolean needsSprite() {
+		return true;
+	}
 
-		for (int i = 0; i < limit; ++i) {
-			if (predicates[i].test(entity, material)) {
-				return transforms[i].transform(material, finder);
-			}
+	@Override
+	public void map(MaterialFinder finder, T gameObject, @Nullable TextureAtlasSprite sprite) {
+		final MaterialTransform result = spriteMap.get(sprite);
+
+		if (result != null) {
+			result.apply(finder);
 		}
-
-		return material;
 	}
 }

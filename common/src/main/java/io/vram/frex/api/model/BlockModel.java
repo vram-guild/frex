@@ -28,7 +28,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -38,7 +37,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.model.InputContext.Type;
-import io.vram.frex.api.model.util.FaceUtil;
 import io.vram.frex.api.world.BlockEntityRenderData;
 import io.vram.frex.impl.model.ModelLookups;
 
@@ -54,7 +52,7 @@ public interface BlockModel extends DynamicModel {
 	}
 
 	// WIP: How do models override block state for sub-models in a way that don't require the renderer to do anything?
-	public interface BlockInputContext extends BakedInputContext {
+	interface BlockInputContext extends BakedInputContext {
 		@Override
 		default Type type() {
 			return Type.BLOCK;
@@ -97,14 +95,6 @@ public interface BlockModel extends DynamicModel {
 		@Override
 		Random random();
 
-		@Override
-		boolean cullTest(int faceId);
-
-		@Override
-		default boolean cullTest(Direction face) {
-			return cullTest(FaceUtil.toFaceIndex(face));
-		}
-
 		/**
 		 * In terrain rendering this will hold the result of functions
 		 * registered via {@link BlockEntityRenderData#registerProvider(net.minecraft.world.level.block.entity.BlockEntityType, java.util.function.Function)}
@@ -136,7 +126,7 @@ public interface BlockModel extends DynamicModel {
 	}
 
 	// NB: names are long to reduce risk of conflict with mapped named
-	public interface TerrainParticleDelegate {
+	interface TerrainParticleDelegate {
 		void setModelParticleSprite(TextureAtlasSprite sprite);
 
 		void setModelParticleColor(int color);

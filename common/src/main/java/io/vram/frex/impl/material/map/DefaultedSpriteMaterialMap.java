@@ -18,41 +18,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.vram.frex.impl.material;
+package io.vram.frex.impl.material.map;
 
-import java.util.function.BiPredicate;
+import java.util.IdentityHashMap;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
+import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
-import io.vram.frex.api.material.BlockEntityMaterialMap;
 import io.vram.frex.api.material.MaterialFinder;
-import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.material.MaterialMap;
+import io.vram.frex.api.material.MaterialTransform;
 
 @Internal
-class BlockEntityMultiMaterialMap implements BlockEntityMaterialMap {
-	private final BiPredicate<BlockState, RenderMaterial>[] predicates;
-	private final MaterialTransform[] transforms;
+class DefaultedSpriteMaterialMap<T> extends SpriteMaterialMap<T> implements MaterialMap<T> {
+	protected final MaterialTransform defaultTransform;
 
-	BlockEntityMultiMaterialMap(BiPredicate<BlockState, RenderMaterial>[] predicates, MaterialTransform[] transforms) {
-		assert predicates != null;
-		assert transforms != null;
-
-		this.predicates = predicates;
-		this.transforms = transforms;
+	DefaultedSpriteMaterialMap(MaterialTransform defaultTransform, IdentityHashMap<TextureAtlasSprite, MaterialTransform> spriteMap) {
+		super(spriteMap);
+		this.defaultTransform = defaultTransform;
 	}
 
 	@Override
-	public RenderMaterial getMapped(RenderMaterial material, BlockState blockState, MaterialFinder finder) {
-		final int limit = predicates.length;
+	public void map(MaterialFinder finder, T gameObject, @Nullable TextureAtlasSprite sprite) {
+		final MaterialTransform result = spriteMap.getOrDefault(sprite, defaultTransform);
 
-		for (int i = 0; i < limit; ++i) {
-			if (predicates[i].test(blockState, material)) {
-				return transforms[i].transform(material, finder);
-			}
+		if (result != null) {
+			result.apply(finder);
 		}
-
-		return material;
 	}
 }

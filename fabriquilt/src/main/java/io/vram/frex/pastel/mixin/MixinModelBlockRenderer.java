@@ -45,6 +45,6 @@ public abstract class MixinModelBlockRenderer implements ModelBlockRendererExt {
 	@Inject(at = @At("HEAD"), method = "tesselateBlock", cancellable = true)
 	private void onTesselate(BlockAndTintGetter blockView, BakedModel model, BlockState state, BlockPos pos, PoseStack poseStack, VertexConsumer buffer, boolean checkSides, Random rand, long seed, int overlay, CallbackInfoReturnable<Boolean> cir) {
 		PastelBlockRenderContext.get().render((ModelBlockRenderer) (Object) this, blockView, model, state, pos, poseStack, buffer, checkSides, seed, overlay);
-		cir.cancel();
+		cir.setReturnValue(true);
 	}
 }

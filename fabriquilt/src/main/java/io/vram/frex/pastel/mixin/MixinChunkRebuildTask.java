@@ -82,7 +82,7 @@ public abstract class MixinChunkRebuildTask implements RenderRegionContext<Block
 		if (renderChunkRegion != null) {
 			final PastelTerrainRenderContext context = PastelTerrainRenderContext.POOL.get();
 			((RenderChunkRegionExt) renderChunkRegion).frx_setContext(context, this$1.getOrigin());
-			context.prepareForRegion(renderChunkRegion, arg3, poseStack, blockPos, arg4);
+			context.prepareForRegion(renderChunkRegion, poseStack, arg3, blockPos, arg4);
 
 			final RenderRegionBakeListener[] listeners = ((RenderChunkRegionExt) renderChunkRegion).frx_getRenderRegionListeners();
 
@@ -126,7 +126,7 @@ public abstract class MixinChunkRebuildTask implements RenderRegionContext<Block
 			require = 1, at = @At(value = "INVOKE",
 			target = "Lnet/minecraft/client/renderer/block/BlockRenderDispatcher;renderLiquid(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/BlockAndTintGetter;Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/material/FluidState;)Z"))
 	private boolean fluidRenderHook(BlockRenderDispatcher renderManager, BlockPos blockPos, BlockAndTintGetter blockView, VertexConsumer vertexConsumer, BlockState currentBlockState, FluidState fluidState) {
-		((RenderChunkRegionExt) blockView).frx_getContext().renderFluid(currentBlockState, blockPos, false, FluidModel.get(fluidState.getType()));
+		((RenderChunkRegionExt) blockView).frx_getContext().renderFluid(currentBlockState, blockPos, FluidModel.get(fluidState.getType()));
 		// we handle all initialization/tracking in render context
 		return false;
 	}

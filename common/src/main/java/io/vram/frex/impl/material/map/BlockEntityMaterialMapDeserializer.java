@@ -68,11 +68,11 @@ public class BlockEntityMaterialMapDeserializer {
 			int j = 0;
 
 			for (int i = orderedResourceList.size(); i-- > 0; ) {
-				final InputStreamReader reader = new InputStreamReader(orderedResourceList.get(i).open(), StandardCharsets.UTF_8);
+				final InputStreamReader reader = new InputStreamReader(orderedResourceList.get(i).getInputStream(), StandardCharsets.UTF_8);
 				final JsonObject json = GsonHelper.parse(reader);
 
 				reversedJsonList[j] = json;
-				packIds[j] = orderedResourceList.get(i).sourcePackId();
+				packIds[j] = orderedResourceList.get(i).getSourceName();
 
 				// Only read top-most resource for defaultMaterial
 				if (json.has("defaultMaterial") && defaultTransform == MaterialTransform.IDENTITY) {

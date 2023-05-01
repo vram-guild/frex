@@ -54,8 +54,7 @@ public final class MaterialTransformLoader {
 		MaterialTransform result = null;
 		final ResourceManager rm = Minecraft.getInstance().getResourceManager();
 
-		try {
-			final Resource res = rm.getResource(id).get();
+		try (final Resource res = rm.getResource(id)) {
 			result = MaterialTransformDeserializer.deserialize(MaterialLoaderImpl.readJsonObject(res));
 		} catch (final Exception e) {
 			if (!FrexConfig.suppressMaterialLoadingSpam || CAUGHT.add(idIn)) {

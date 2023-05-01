@@ -20,6 +20,7 @@
 
 package io.vram.frex.impl.light;
 
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.IdentityHashMap;
@@ -52,14 +53,13 @@ public class ItemLightLoader {
 
 		try {
 			final var res = manager.getResource(id);
+			final ItemLight light = ItemLightDeserializer.deserialize(new InputStreamReader(res.getInputStream(), StandardCharsets.UTF_8));
 
-			if (res.isPresent()) {
-				final ItemLight light = ItemLightDeserializer.deserialize(new InputStreamReader(res.get().open(), StandardCharsets.UTF_8));
-
-				if (light != ItemLight.NONE) {
-					MAP.put(item, light);
-				}
+			if (light != ItemLight.NONE) {
+				MAP.put(item, light);
 			}
+		} catch (final FileNotFoundException e) {
+			// eat these, lights are not required
 		} catch (final Exception e) {
 			FrexLog.info("Unable to load item light data for " + id.toString() + " due to exception " + e.toString());
 		}

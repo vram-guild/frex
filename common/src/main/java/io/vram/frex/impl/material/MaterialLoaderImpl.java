@@ -103,8 +103,7 @@ public final class MaterialLoaderImpl {
 		RenderMaterial result = null;
 		final ResourceManager rm = Minecraft.getInstance().getResourceManager();
 
-		try {
-			final Resource res = rm.getResource(id).get();
+		try (final Resource res = rm.getResource(id)) {
 			result = MaterialDeserializer.deserialize(readJsonObject(res));
 		} catch (final Exception e) {
 			if (!FrexConfig.suppressMaterialLoadingSpam || CAUGHT.add(idIn)) {
@@ -134,7 +133,7 @@ public final class MaterialLoaderImpl {
 		JsonObject result = null;
 
 		try {
-			stream = res.open();
+			stream = res.getInputStream();
 			reader = new InputStreamReader(stream, StandardCharsets.UTF_8);
 			result = GsonHelper.parse(reader);
 		} catch (final Exception e) {

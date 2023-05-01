@@ -1,4 +1,4 @@
-// VRAM STANDARD GRADLE BUILD FOR FABRIC 1.19
+// VRAM STANDARD GRADLE BUILD FOR FABRIC 1.18
 // DO NOT MAKE CHANGES HERE - THEY WILL BE OVERWRITTEN BY AUTOMATED UPDATE
 
 buildscript {
@@ -19,7 +19,7 @@ plugins {
 
 ext.platform_name = 'fabric'
 ext.loader_version = '0.14.11'
-ext.fabric_version = '0.68.0+1.19.2'
+ext.fabric_version = '0.53.4+1.18.2'
 
 apply from: '../project_common.gradle'
 apply from: 'project.gradle'

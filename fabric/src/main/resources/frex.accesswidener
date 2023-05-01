@@ -149,4 +149,3 @@ accessible field net/minecraft/client/renderer/entity/ItemRenderer blockEntityRe
 accessible class net/minecraft/client/renderer/chunk/RenderChunk
 accessible class net/minecraft/client/renderer/chunk/RenderRegionCache$ChunkInfo
 accessible class net/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask
-accessible class net/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask$CompileResults

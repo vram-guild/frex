@@ -186,7 +186,7 @@ public class MaterialMapLoader {
 
 		try {
 			final var res = manager.getResource(id);
-			ParticleMaterialMapDeserializer.deserialize(particleType, id, new InputStreamReader(res.get().open(), StandardCharsets.UTF_8), PARTICLE_MAP);
+			ParticleMaterialMapDeserializer.deserialize(particleType, id, new InputStreamReader(res.getInputStream(), StandardCharsets.UTF_8), PARTICLE_MAP);
 		} catch (final FileNotFoundException e) {
 			// eat these, material maps are not required
 		} catch (final Exception e) {

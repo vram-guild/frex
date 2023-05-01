@@ -29,7 +29,7 @@ import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 
 public abstract class BaseInputContext implements InputContext {
 	protected final Type type;
-	protected final Random random = Random.create();
+	protected final Random random = new Random();
 	protected boolean needsRandomReseed = true;
 	protected int overlay;
 	protected MatrixStack matrixStack;

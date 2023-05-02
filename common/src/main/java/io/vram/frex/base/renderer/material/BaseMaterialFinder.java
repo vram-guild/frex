@@ -151,6 +151,12 @@ public abstract class BaseMaterialFinder extends BaseMaterialView implements Mat
 	}
 
 	@Override
+	public BaseMaterialFinder glintEntity(boolean glintEntity) {
+		bits0 = GLINT_ENTITY.setValue(glintEntity, bits0);
+		return this;
+	}
+
+	@Override
 	public BaseMaterialFinder hurtOverlay(boolean hurtOverlay) {
 		bits0 = HURT_OVERLAY.setValue(hurtOverlay, bits0);
 		return this;

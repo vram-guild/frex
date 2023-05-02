@@ -53,6 +53,12 @@ const int frx_matFlash;
 const int frx_matGlint;
 
 /*
+ * Equals 1 when enchanted_glint_entity texture should be used
+ * for glint rendering, 0 otherwise.
+ */
+const int frx_matGlintEntity;
+
+/*
  * RESERVED FOR FUTURE FEATURE - not yet implemented.
  *
  * Coarse indication of where the surface is located.

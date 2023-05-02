@@ -149,6 +149,8 @@ public interface MaterialFinder extends MaterialView {
 
 	MaterialFinder foilOverlay(boolean foilOverlay);
 
+	MaterialFinder glintEntity(boolean glintEntity);
+
 	/**
 	 * Converts from vanilla coordinates.
 	 * Currently we don't support the full range of flash overlay

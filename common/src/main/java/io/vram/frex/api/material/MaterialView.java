@@ -114,4 +114,6 @@ public interface MaterialView {
 	boolean castShadows();
 
 	boolean foilOverlay();
+
+	boolean glintEntity();
 }

@@ -136,6 +136,10 @@ public abstract class BaseMaterialView implements MaterialView {
 		return ENABLE_GLINT.getValue(bits0);
 	}
 
+	public boolean glintEntity() {
+		return GLINT_ENTITY.getValue(bits0);
+	}
+
 	@Override
 	public boolean discardsTexture() {
 		return DISCARDS_TEXTURE.getValue(bits0);
@@ -227,6 +231,7 @@ public abstract class BaseMaterialView implements MaterialView {
 	public static final BitPacker64<Void>.BooleanElement FOG = PACKER_0.createBooleanElement();
 	public static final BitPacker64<Void>.BooleanElement DISABLE_SHADOWS = PACKER_0.createBooleanElement();
 	public static final BitPacker64<Void>.BooleanElement ENABLE_GLINT = PACKER_0.createBooleanElement();
+	public static final BitPacker64<Void>.BooleanElement GLINT_ENTITY = PACKER_0.createBooleanElement();
 
 	protected static final BitPacker64<Void> PACKER_1 = new BitPacker64<> (null, null);
 

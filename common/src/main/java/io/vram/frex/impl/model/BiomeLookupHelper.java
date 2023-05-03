@@ -20,6 +20,7 @@
 
 package io.vram.frex.impl.model;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.registries.VanillaRegistries;
@@ -31,5 +32,9 @@ public final class BiomeLookupHelper {
 
 	public static Biome getOrThrow(ResourceKey<Biome> biomeKey) {
 		return LOOKUP.lookupOrThrow(Registries.BIOME).getOrThrow(biomeKey).value();
+	}
+
+	public static Holder<Biome> getHolderOrThrow(ResourceKey<Biome> biomeKey) {
+		return LOOKUP.lookupOrThrow(Registries.BIOME).getOrThrow(biomeKey);
 	}
 }

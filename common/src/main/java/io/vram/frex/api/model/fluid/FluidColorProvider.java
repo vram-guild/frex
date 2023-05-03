@@ -20,6 +20,8 @@
 
 package io.vram.frex.api.model.fluid;
 
+import java.util.function.Supplier;
+
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.renderer.BiomeColors;
@@ -46,7 +48,10 @@ public interface FluidColorProvider {
 		return (v, p, s) -> color;
 	}
 
-	int DEFAULT_WATER_COLOR = BiomeLookupHelper.getOrThrow(Biomes.OCEAN).getWaterColor();
+	int DEFAULT_WATER_COLOR = ((Supplier<Integer>) () -> {
+		var ocean = BiomeLookupHelper.getHolderOrThrow(Biomes.OCEAN);
+		return ocean.value().getWaterColor(ocean);
+	}).get();
 
 	FluidColorProvider WHITE_COLOR = (v, p, s) -> -1;
 	FluidColorProvider WATER_COLOR = (v, p, s) -> v == null || p == null ? DEFAULT_WATER_COLOR : BiomeColors.getAverageWaterColor(v, p);

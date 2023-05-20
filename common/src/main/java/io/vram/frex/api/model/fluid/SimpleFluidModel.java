@@ -362,7 +362,7 @@ public class SimpleFluidModel implements FluidModel {
 					h += g;
 					++w;
 				}
-			} else if (!world.getBlockState(searchPos).getMaterial().isSolid()) {
+			} else if (!world.getBlockState(searchPos).isSolid()) {
 				++w;
 			}
 		}

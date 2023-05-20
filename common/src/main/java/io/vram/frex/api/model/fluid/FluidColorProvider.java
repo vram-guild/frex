@@ -48,10 +48,7 @@ public interface FluidColorProvider {
 		return (v, p, s) -> color;
 	}
 
-	int DEFAULT_WATER_COLOR = ((Supplier<Integer>) () -> {
-		var ocean = BiomeLookupHelper.getHolderOrThrow(Biomes.OCEAN);
-		return ocean.value().getWaterColor(ocean);
-	}).get();
+	int DEFAULT_WATER_COLOR = BiomeLookupHelper.getHolderOrThrow(Biomes.OCEAN).value().getWaterColor();
 
 	FluidColorProvider WHITE_COLOR = (v, p, s) -> -1;
 	FluidColorProvider WATER_COLOR = (v, p, s) -> v == null || p == null ? DEFAULT_WATER_COLOR : BiomeColors.getAverageWaterColor(v, p);

@@ -32,7 +32,7 @@ public class FabricMaterial implements net.fabricmc.fabric.api.renderer.v1.mater
 	}
 
 	public static BlendMode blendModeFromPreset(int preset) {
-		return switch(preset) {
+		return switch (preset) {
 			case MaterialConstants.PRESET_SOLID -> BlendMode.SOLID;
 			case MaterialConstants.PRESET_CUTOUT_MIPPED -> BlendMode.CUTOUT_MIPPED;
 			case MaterialConstants.PRESET_CUTOUT -> BlendMode.CUTOUT;

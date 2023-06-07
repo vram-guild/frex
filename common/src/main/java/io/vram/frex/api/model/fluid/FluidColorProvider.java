@@ -20,8 +20,6 @@
 
 package io.vram.frex.api.model.fluid;
 
-import java.util.function.Supplier;
-
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.renderer.BiomeColors;

@@ -20,6 +20,10 @@
 
 package io.vram.frex.fabric.compat;
 
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
+import net.fabricmc.fabric.api.util.TriState;
+
+import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.material.RenderMaterial;
 
 public class FabricMaterial implements net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial {
@@ -27,14 +31,51 @@ public class FabricMaterial implements net.fabricmc.fabric.api.renderer.v1.mater
 		return new FabricMaterial(wrapped);
 	}
 
+	public static BlendMode blendModeFromPreset(int preset) {
+		return switch(preset) {
+			case MaterialConstants.PRESET_SOLID -> BlendMode.SOLID;
+			case MaterialConstants.PRESET_CUTOUT_MIPPED -> BlendMode.CUTOUT_MIPPED;
+			case MaterialConstants.PRESET_CUTOUT -> BlendMode.CUTOUT;
+			case MaterialConstants.PRESET_TRANSLUCENT -> BlendMode.TRANSLUCENT;
+			default -> BlendMode.DEFAULT;
+		};
+	}
+
 	final RenderMaterial wrapped;
+	final BlendMode blendMode;
 
 	protected FabricMaterial(RenderMaterial wrapped) {
 		this.wrapped = wrapped;
+		blendMode = blendModeFromPreset(wrapped.preset());
 	}
 
 	@Override
-	public final int spriteDepth() {
-		return 1;
+	public BlendMode blendMode() {
+		return blendMode;
+	}
+
+	@Override
+	public boolean disableColorIndex() {
+		return wrapped.disableColorIndex();
+	}
+
+	@Override
+	public boolean emissive() {
+		return wrapped.emissive();
+	}
+
+	@Override
+	public boolean disableDiffuse() {
+		return wrapped.disableDiffuse();
+	}
+
+	@Override
+	public TriState ambientOcclusion() {
+		return wrapped.disableAo() ? TriState.FALSE : TriState.TRUE;
+	}
+
+	@Override
+	public TriState glint() {
+		return wrapped.foilOverlay() ? TriState.TRUE : TriState.FALSE;
 	}
 }

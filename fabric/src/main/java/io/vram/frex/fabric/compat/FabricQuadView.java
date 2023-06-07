@@ -22,6 +22,7 @@ package io.vram.frex.fabric.compat;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import net.minecraft.core.Direction;
@@ -48,7 +49,7 @@ public class FabricQuadView<T extends QuadView> implements net.fabricmc.fabric.a
 	}
 
 	@Override
-	public void toVanilla(int spriteIndex, int[] target, int targetIndex, boolean isItem) {
+	public void toVanilla(int[] target, int targetIndex) {
 		wrapped.toVanilla(target, targetIndex);
 	}
 
@@ -95,6 +96,15 @@ public class FabricQuadView<T extends QuadView> implements net.fabricmc.fabric.a
 	@Override
 	public Vector3f copyPos(int vertexIndex, @Nullable Vector3f target) {
 		return wrapped.copyPos(vertexIndex, target);
+	}
+
+	@Override
+	public Vector2f copyUv(int vertexIndex, @Nullable Vector2f target) {
+		if (target == null) {
+			target = new Vector2f();
+		}
+
+		return target.set(wrapped.u(vertexIndex), wrapped.v(vertexIndex));
 	}
 
 	@Override
@@ -148,17 +158,17 @@ public class FabricQuadView<T extends QuadView> implements net.fabricmc.fabric.a
 	}
 
 	@Override
-	public int spriteColor(int vertexIndex, int spriteIndex) {
+	public int color(int vertexIndex) {
 		return wrapped.vertexColor(vertexIndex);
 	}
 
 	@Override
-	public float spriteU(int vertexIndex, int spriteIndex) {
+	public float u(int vertexIndex) {
 		return wrapped.u(vertexIndex);
 	}
 
 	@Override
-	public float spriteV(int vertexIndex, int spriteIndex) {
+	public float v(int vertexIndex) {
 		return wrapped.v(vertexIndex);
 	}
 

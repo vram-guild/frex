@@ -23,7 +23,9 @@ package io.vram.frex.fabric.compat;
 import org.jetbrains.annotations.Nullable;
 
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
+import net.fabricmc.fabric.api.renderer.v1.material.MaterialView;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
+import net.fabricmc.fabric.api.util.TriState;
 
 import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.material.MaterialFinder;
@@ -57,26 +59,16 @@ public class FabricMaterialFinder implements net.fabricmc.fabric.api.renderer.v1
 	}
 
 	@Override
-	public net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder blendMode(int spriteIndex, @Nullable BlendMode blendMode) {
+	public net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder blendMode(@Nullable BlendMode blendMode) {
 		if (blendMode == null) {
 			wrapped.preset(MaterialConstants.PRESET_NONE);
 		} else {
 			switch (blendMode) {
-				case CUTOUT:
-					wrapped.preset(MaterialConstants.PRESET_CUTOUT);
-					break;
-				case CUTOUT_MIPPED:
-					wrapped.preset(MaterialConstants.PRESET_CUTOUT_MIPPED);
-					break;
-				case SOLID:
-					wrapped.preset(MaterialConstants.PRESET_SOLID);
-					break;
-				case TRANSLUCENT:
-					wrapped.preset(MaterialConstants.PRESET_TRANSLUCENT);
-					break;
-				case DEFAULT:
-				default:
-					wrapped.preset(MaterialConstants.PRESET_DEFAULT);
+				case CUTOUT -> wrapped.preset(MaterialConstants.PRESET_CUTOUT);
+				case CUTOUT_MIPPED -> wrapped.preset(MaterialConstants.PRESET_CUTOUT_MIPPED);
+				case SOLID -> wrapped.preset(MaterialConstants.PRESET_SOLID);
+				case TRANSLUCENT -> wrapped.preset(MaterialConstants.PRESET_TRANSLUCENT);
+				default -> wrapped.preset(MaterialConstants.PRESET_DEFAULT);
 			}
 		}
 
@@ -84,13 +76,13 @@ public class FabricMaterialFinder implements net.fabricmc.fabric.api.renderer.v1
 	}
 
 	@Override
-	public net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder disableColorIndex(int spriteIndex, boolean disable) {
+	public net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder disableColorIndex(boolean disable) {
 		wrapped.disableColorIndex(disable);
 		return this;
 	}
 
 	@Override
-	public net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder disableDiffuse(int spriteIndex, boolean disable) {
+	public net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder disableDiffuse(boolean disable) {
 		wrapped.disableDiffuse(disable);
 		return this;
 	}
@@ -102,8 +94,70 @@ public class FabricMaterialFinder implements net.fabricmc.fabric.api.renderer.v1
 	}
 
 	@Override
-	public net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder emissive(int spriteIndex, boolean isEmissive) {
+	public net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder ambientOcclusion(TriState mode) {
+		switch (mode) {
+			case TRUE -> wrapped.disableAo(false);
+			case FALSE -> wrapped.disableAo(true);
+			case DEFAULT -> {
+				// NOOP?
+			}
+		}
+
+		return this;
+	}
+
+	@Override
+	public net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder glint(TriState mode) {
+		switch (mode) {
+			case TRUE -> wrapped.foilOverlay(true);
+			case FALSE -> wrapped.foilOverlay(false);
+			case DEFAULT -> {
+				// NOOP?
+			}
+		}
+
+		return this;
+	}
+
+	@Override
+	public net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder copyFrom(MaterialView material) {
+		wrapped.copyFrom(((FabricMaterial) material).wrapped);
+		return this;
+	}
+
+	@Override
+	public net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder emissive(boolean isEmissive) {
 		wrapped.emissive(isEmissive);
 		return this;
+	}
+
+	@Override
+	public BlendMode blendMode() {
+		return FabricMaterial.blendModeFromPreset(wrapped.preset());
+	}
+
+	@Override
+	public boolean disableColorIndex() {
+		return wrapped.disableColorIndex();
+	}
+
+	@Override
+	public boolean emissive() {
+		return wrapped.emissive();
+	}
+
+	@Override
+	public boolean disableDiffuse() {
+		return wrapped.disableDiffuse();
+	}
+
+	@Override
+	public TriState ambientOcclusion() {
+		return wrapped.disableAo() ? TriState.FALSE : TriState.TRUE;
+	}
+
+	@Override
+	public TriState glint() {
+		return wrapped.foilOverlay() ? TriState.TRUE : TriState.FALSE;
 	}
 }

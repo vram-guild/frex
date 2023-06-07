@@ -23,8 +23,10 @@ package io.vram.frex.fabric.compat;
 import java.util.function.Consumer;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.level.block.state.BlockState;
 
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
@@ -63,13 +65,26 @@ public class FabricContextWrapper implements RenderContext {
 		(((FabricMesh) m).wrapped).outputTo(output.sink.asQuadEmitter());
 	};
 
-	private final Consumer<BakedModel> fallbackConsumer = bm -> {
-		BakedModelTranscoder.accept(bm, input, output.sink.asQuadEmitter());
+	private final BakedModelConsumer fallbackConsumer = new BakedModelConsumer() {
+		@Override
+		public void accept(BakedModel model) {
+			BakedModelTranscoder.accept(model, input, output.sink.asQuadEmitter());
+		}
+
+		@Override
+		public void accept(BakedModel model, @Nullable BlockState state) {
+			BakedModelTranscoder.accept(model, input, output.sink.asQuadEmitter());
+		}
 	};
 
 	@Override
 	public Consumer<Mesh> meshConsumer() {
 		return meshConsumer;
+	}
+
+	@Override
+	public BakedModelConsumer bakedModelConsumer() {
+		return fallbackConsumer;
 	}
 
 	@Override

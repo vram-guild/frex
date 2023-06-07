@@ -26,6 +26,8 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadView;
+
 import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.material.RenderMaterial;
 
@@ -73,7 +75,7 @@ public class FabricQuadEmitter extends FabricQuadView<QuadEmitter> implements ne
 	}
 
 	@Override
-	public net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter fromVanilla(int[] quadData, int startIndex, boolean isItem) {
+	public net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter fromVanilla(int[] quadData, int startIndex) {
 		wrapped.fromVanilla(quadData, startIndex);
 		return this;
 	}
@@ -91,6 +93,12 @@ public class FabricQuadEmitter extends FabricQuadView<QuadEmitter> implements ne
 	@Override
 	public net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter tag(int tag) {
 		wrapped.tag(tag);
+		return this;
+	}
+
+	@Override
+	public net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter copyFrom(QuadView quad) {
+		((FabricQuadView<?>) quad).wrapped.copyTo(wrapped);
 		return this;
 	}
 
@@ -113,19 +121,19 @@ public class FabricQuadEmitter extends FabricQuadView<QuadEmitter> implements ne
 	}
 
 	@Override
-	public net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter spriteColor(int vertexIndex, int spriteIndex, int color) {
+	public net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter color(int vertexIndex, int color) {
 		wrapped.vertexColor(vertexIndex, color);
 		return this;
 	}
 
 	@Override
-	public net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter sprite(int vertexIndex, int spriteIndex, float u, float v) {
+	public net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter uv(int vertexIndex, float u, float v) {
 		wrapped.uv(vertexIndex, u, v);
 		return this;
 	}
 
 	@Override
-	public net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter spriteBake(int spriteIndex, TextureAtlasSprite sprite, int bakeFlags) {
+	public net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter spriteBake(TextureAtlasSprite sprite, int bakeFlags) {
 		wrapped.spriteBake(sprite, bakeFlags);
 		return this;
 	}

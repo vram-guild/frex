@@ -133,7 +133,11 @@ public class FabricMaterialFinder implements net.fabricmc.fabric.api.renderer.v1
 
 	@Override
 	public BlendMode blendMode() {
-		return FabricMaterial.blendModeFromPreset(wrapped.preset());
+		if (wrapped.preset() == MaterialConstants.PRESET_NONE) {
+			return FabricMaterial.blendModeFromMaterial(wrapped);
+		} else {
+			return FabricMaterial.blendModeFromPreset(wrapped.preset());
+		}
 	}
 
 	@Override
@@ -158,6 +162,6 @@ public class FabricMaterialFinder implements net.fabricmc.fabric.api.renderer.v1
 
 	@Override
 	public TriState glint() {
-		return wrapped.foilOverlay() ? TriState.TRUE : TriState.FALSE;
+		return wrapped.foilOverlay() ? TriState.TRUE : TriState.DEFAULT;
 	}
 }

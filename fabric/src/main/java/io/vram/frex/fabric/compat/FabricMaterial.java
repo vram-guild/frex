@@ -24,6 +24,7 @@ import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.fabricmc.fabric.api.util.TriState;
 
 import io.vram.frex.api.material.MaterialConstants;
+import io.vram.frex.api.material.MaterialView;
 import io.vram.frex.api.material.RenderMaterial;
 
 public class FabricMaterial implements net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial {
@@ -41,12 +42,27 @@ public class FabricMaterial implements net.fabricmc.fabric.api.renderer.v1.mater
 		};
 	}
 
+	public static BlendMode blendModeFromMaterial(MaterialView mat) {
+		if (mat.transparency() != MaterialConstants.TRANSPARENCY_NONE) {
+			return BlendMode.TRANSLUCENT;
+		} else if (mat.cutout() == MaterialConstants.CUTOUT_NONE) {
+			return BlendMode.SOLID;
+		} else {
+			return mat.unmipped() ? BlendMode.CUTOUT : BlendMode.CUTOUT_MIPPED;
+		}
+	}
+
 	final RenderMaterial wrapped;
 	final BlendMode blendMode;
 
 	protected FabricMaterial(RenderMaterial wrapped) {
 		this.wrapped = wrapped;
-		blendMode = blendModeFromPreset(wrapped.preset());
+
+		if (wrapped.preset() == MaterialConstants.PRESET_NONE) {
+			blendMode = blendModeFromMaterial(wrapped);
+		} else {
+			blendMode = blendModeFromPreset(wrapped.preset());
+		}
 	}
 
 	@Override
@@ -76,6 +92,6 @@ public class FabricMaterial implements net.fabricmc.fabric.api.renderer.v1.mater
 
 	@Override
 	public TriState glint() {
-		return wrapped.foilOverlay() ? TriState.TRUE : TriState.FALSE;
+		return wrapped.foilOverlay() ? TriState.TRUE : TriState.DEFAULT;
 	}
 }

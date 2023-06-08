@@ -42,17 +42,18 @@ public class FabricQuadEmitter extends FabricQuadView<QuadEmitter> implements ne
 
 	@Override
 	public FabricQuadEmitter wrap(QuadEmitter wrapped) {
-		this.wrapped = wrapped;
+		super.wrap(wrapped);
 		return this;
 	}
 
 	@Override
 	public net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter material(net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial material) {
 		if (material == null) {
-			material = FabricMaterial.of(io.vram.frex.api.material.RenderMaterial.defaultMaterial());
+			wrapped.material(RenderMaterial.defaultMaterial());
+		} else {
+			wrapped.material(((FabricMaterial) material).wrapped);
 		}
 
-		wrapped.material(((FabricMaterial) material).wrapped);
 		return this;
 	}
 
@@ -83,10 +84,11 @@ public class FabricQuadEmitter extends FabricQuadView<QuadEmitter> implements ne
 	@Override
 	public net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter fromVanilla(BakedQuad quad, net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial material, Direction cullFace) {
 		if (material == null) {
-			material = FabricMaterial.of(RenderMaterial.defaultMaterial());
+			wrapped.fromVanilla(quad, RenderMaterial.defaultMaterial(), cullFace);
+		} else {
+			wrapped.fromVanilla(quad, ((FabricMaterial) material).wrapped, cullFace);
 		}
 
-		wrapped.fromVanilla(quad, ((FabricMaterial) material).wrapped, cullFace);
 		return this;
 	}
 

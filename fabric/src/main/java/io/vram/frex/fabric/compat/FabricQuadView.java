@@ -38,14 +38,16 @@ public class FabricQuadView<T extends QuadView> implements net.fabricmc.fabric.a
 	}
 
 	protected T wrapped;
+	protected FabricMaterial cachedMaterial;
 
 	public FabricQuadView<T> wrap(T wrapped) {
 		this.wrapped = wrapped;
+		this.cachedMaterial = null;
 		return this;
 	}
 
 	protected FabricQuadView(T wrapped) {
-		this.wrapped = wrapped;
+		wrap(wrapped);
 	}
 
 	@Override
@@ -60,7 +62,11 @@ public class FabricQuadView<T extends QuadView> implements net.fabricmc.fabric.a
 
 	@Override
 	public net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial material() {
-		return FabricMaterial.of(wrapped.material());
+		if (cachedMaterial == null) {
+			cachedMaterial = FabricMaterial.of(wrapped.material());
+		}
+
+		return cachedMaterial;
 	}
 
 	@Override

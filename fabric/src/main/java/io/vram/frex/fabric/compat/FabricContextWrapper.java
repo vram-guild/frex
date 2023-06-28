@@ -73,7 +73,7 @@ public class FabricContextWrapper implements RenderContext {
 
 		@Override
 		public void accept(BakedModel model, @Nullable BlockState state) {
-			BakedModelTranscoder.accept(model, input, output.sink.asQuadEmitter());
+			BakedModelTranscoder.accept(model, input, state, output.sink.asQuadEmitter());
 		}
 	};
 

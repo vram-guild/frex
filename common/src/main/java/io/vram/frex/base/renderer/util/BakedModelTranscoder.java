@@ -22,10 +22,13 @@ package io.vram.frex.base.renderer.util;
 
 import java.util.List;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 
 import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.material.MaterialConstants;
@@ -68,6 +71,13 @@ public class BakedModelTranscoder {
 	}
 
 	public static void accept(BakedModel model, BakedInputContext input, QuadEmitter output) {
+		accept(model, input, input.blockState(), output);
+	}
+
+	/**
+	 * Override which allows choosing a different block state for the calls to getQuads than the one in the input context.
+	 */
+	public static void accept(BakedModel model, BakedInputContext input, @Nullable BlockState quadsBlockState, QuadEmitter output) {
 		final var blockState = input.blockState();
 		final var random = input.random();
 		final boolean useAo = blockState != null && model.useAmbientOcclusion() && blockState.getLightEmission() == 0 && Minecraft.useAmbientOcclusion();
@@ -75,25 +85,25 @@ public class BakedModelTranscoder {
 		// Note that we can't check for culling here if any transforms are active because facing could change
 		final boolean activeTransform = output.isTransformer();
 
-		var quads = model.getQuads(blockState, Direction.DOWN, random);
+		var quads = model.getQuads(quadsBlockState, Direction.DOWN, random);
 		if (!quads.isEmpty() && (activeTransform || input.cullTest(FaceUtil.DOWN_INDEX))) acceptFaceQuads(FaceUtil.DOWN_INDEX, useAo, quads, output);
 
-		quads = model.getQuads(blockState, Direction.UP, random);
+		quads = model.getQuads(quadsBlockState, Direction.UP, random);
 		if (!quads.isEmpty() && (activeTransform || input.cullTest(FaceUtil.UP_INDEX))) acceptFaceQuads(FaceUtil.UP_INDEX, useAo, quads, output);
 
-		quads = model.getQuads(blockState, Direction.NORTH, random);
+		quads = model.getQuads(quadsBlockState, Direction.NORTH, random);
 		if (!quads.isEmpty() && (activeTransform || input.cullTest(FaceUtil.NORTH_INDEX))) acceptFaceQuads(FaceUtil.NORTH_INDEX, useAo, quads, output);
 
-		quads = model.getQuads(blockState, Direction.SOUTH, random);
+		quads = model.getQuads(quadsBlockState, Direction.SOUTH, random);
 		if (!quads.isEmpty() && (activeTransform || input.cullTest(FaceUtil.SOUTH_INDEX))) acceptFaceQuads(FaceUtil.SOUTH_INDEX, useAo, quads, output);
 
-		quads = model.getQuads(blockState, Direction.WEST, random);
+		quads = model.getQuads(quadsBlockState, Direction.WEST, random);
 		if (!quads.isEmpty() && (activeTransform || input.cullTest(FaceUtil.WEST_INDEX))) acceptFaceQuads(FaceUtil.WEST_INDEX, useAo, quads, output);
 
-		quads = model.getQuads(blockState, Direction.EAST, random);
+		quads = model.getQuads(quadsBlockState, Direction.EAST, random);
 		if (!quads.isEmpty() && (activeTransform || input.cullTest(FaceUtil.EAST_INDEX))) acceptFaceQuads(FaceUtil.EAST_INDEX, useAo, quads, output);
 
-		acceptInsideQuads(useAo, model.getQuads(blockState, null, random), output);
+		acceptInsideQuads(useAo, model.getQuads(quadsBlockState, null, random), output);
 	}
 
 	protected static void acceptFaceQuads(int faceIndex, boolean useAo, List<BakedQuad> quads, QuadEmitter qe) {

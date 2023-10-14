@@ -141,7 +141,16 @@ public final class VanillaShaderInfoImpl implements VanillaShaderInfo {
 
 	public static VanillaShaderInfoImpl get(Object shaderStateShard) {
 		final var shader = ((ShaderStateShard) shaderStateShard).shader;
-		return shader.isPresent() ? get(shader.get().get().name) : MISSING;
+
+		if (shader.isPresent()) {
+			var instance = shader.get().get();
+
+			if (instance != null) {
+				return get(instance.name);
+			}
+		}
+
+		return MISSING;
 	}
 
 	public static VanillaShaderInfoImpl get(String shaderName) {

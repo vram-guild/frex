@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiPredicate;
 
 import com.google.gson.JsonArray;
@@ -155,10 +156,11 @@ public class BlockEntityMaterialMapDeserializer {
 	}
 
 	private static StateBiPredicate loadPredicate(JsonObject obj) {
-		final StatePropertiesPredicate statePredicate = StatePropertiesPredicate.fromJson(obj.get("statePredicate"));
+		final Optional<StatePropertiesPredicate> statePredicate = StatePropertiesPredicate.fromJson(obj.get("statePredicate"));
 		final MaterialPredicate materialPredicate = MaterialPredicateDeserializer.deserialize(obj.get("materialPredicate").getAsJsonObject());
 
-		if (statePredicate == StatePropertiesPredicate.ANY) {
+		// TODO: verify
+		if (statePredicate.isEmpty()) {
 			if (materialPredicate == MATERIAL_ALWAYS_TRUE) {
 				return BLOCK_ALWAYS_TRUE;
 			} else {
@@ -166,9 +168,9 @@ public class BlockEntityMaterialMapDeserializer {
 			}
 		} else {
 			if (materialPredicate == MATERIAL_ALWAYS_TRUE) {
-				return new StateOnly(statePredicate);
+				return new StateOnly(statePredicate.get());
 			} else {
-				return new StateMaterialBoth(statePredicate, materialPredicate);
+				return new StateMaterialBoth(statePredicate.get(), materialPredicate);
 			}
 		}
 	}

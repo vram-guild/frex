@@ -86,7 +86,7 @@ public class MixinLevelRendererEvents {
 			method = "renderLevel",
 			at = @At(
 				value = "INVOKE",
-				target = "Lnet/minecraft/client/renderer/LevelRenderer;renderChunkLayer(Lnet/minecraft/client/renderer/RenderType;Lcom/mojang/blaze3d/vertex/PoseStack;DDDLorg/joml/Matrix4f;)V",
+				target = "Lnet/minecraft/client/renderer/LevelRenderer;renderSectionLayer(Lnet/minecraft/client/renderer/RenderType;Lcom/mojang/blaze3d/vertex/PoseStack;DDDLorg/joml/Matrix4f;)V",
 				ordinal = 2,
 				shift = Shift.AFTER
 			)

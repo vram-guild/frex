@@ -22,8 +22,13 @@ package io.vram.frex.impl.material.predicate;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import org.jetbrains.annotations.Nullable;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
+
+import net.minecraft.Util;
 import net.minecraft.advancements.critereon.EntityEquipmentPredicate;
 import net.minecraft.advancements.critereon.EntityFlagsPredicate;
 import net.minecraft.advancements.critereon.MobEffectsPredicate;
@@ -46,14 +51,14 @@ import io.vram.frex.api.material.MaterialView;
 public class EntityOnly extends EntityBiPredicate {
 	public static final EntityOnly ANY;
 
-	private final MobEffectsPredicate effects;
-	private final NbtPredicate nbt;
-	private final EntityFlagsPredicate flags;
-	private final EntityEquipmentPredicate equipment;
+	@Nullable private final MobEffectsPredicate effects;
+	@Nullable private final NbtPredicate nbt;
+	@Nullable private final EntityFlagsPredicate flags;
+	@Nullable private final EntityEquipmentPredicate equipment;
 	@Nullable private final String team;
 	@Nullable private final ResourceLocation catType;
 
-	private EntityOnly(MobEffectsPredicate effects, NbtPredicate nbt, EntityFlagsPredicate flags, EntityEquipmentPredicate equipment, @Nullable String team, @Nullable ResourceLocation catType) {
+	private EntityOnly(@Nullable MobEffectsPredicate effects, NbtPredicate nbt, EntityFlagsPredicate flags, EntityEquipmentPredicate equipment, @Nullable String team, @Nullable ResourceLocation catType) {
 		this.effects = effects;
 		this.nbt = nbt;
 		this.flags = flags;
@@ -73,13 +78,13 @@ public class EntityOnly extends EntityBiPredicate {
 		} else if (entity == null) {
 			return false;
 		} else {
-			if (!effects.matches(entity)) {
+			if (effects != null && !effects.matches(entity)) {
 				return false;
-			} else if (!nbt.matches(entity)) {
+			} else if (nbt != null && !nbt.matches(entity)) {
 				return false;
-			} else if (!flags.matches(entity)) {
+			} else if (flags != null && !flags.matches(entity)) {
 				return false;
-			} else if (!equipment.matches(entity)) {
+			} else if (equipment != null && !equipment.matches(entity)) {
 				return false;
 			} else {
 				if (team != null) {
@@ -98,10 +103,10 @@ public class EntityOnly extends EntityBiPredicate {
 	public static EntityOnly fromJson(@Nullable JsonElement json) {
 		if (json != null && !json.isJsonNull()) {
 			final JsonObject jsonObject = GsonHelper.convertToJsonObject(json, "entity");
-			final MobEffectsPredicate effects = MobEffectsPredicate.fromJson(jsonObject.get("effects"));
-			final NbtPredicate nbt = NbtPredicate.fromJson(jsonObject.get("nbt"));
-			final EntityFlagsPredicate flags = EntityFlagsPredicate.fromJson(jsonObject.get("flags"));
-			final EntityEquipmentPredicate equipment = EntityEquipmentPredicate.fromJson(jsonObject.get("equipment"));
+			final MobEffectsPredicate effects = predicateFromJson(jsonObject.get("effects"), MobEffectsPredicate.CODEC);
+			final NbtPredicate nbt = predicateFromJson(jsonObject.get("nbt"), NbtPredicate.CODEC);
+			final EntityFlagsPredicate flags = predicateFromJson(jsonObject.get("flags"), EntityFlagsPredicate.CODEC);
+			final EntityEquipmentPredicate equipment = predicateFromJson(jsonObject.get("equipment"), EntityEquipmentPredicate.CODEC);
 			//final PlayerPredicate player = PlayerPredicate.fromJson(jsonObject.get("player"));
 			//final FishingHookPredicate fishHook = FishingHookPredicate.fromJson(jsonObject.get("fishing_hook"));
 			final String team = GsonHelper.getAsString(jsonObject, "team", (String) null);
@@ -113,8 +118,12 @@ public class EntityOnly extends EntityBiPredicate {
 		}
 	}
 
+	public static <T> T predicateFromJson(@Nullable JsonElement jsonElement, Codec<T> codec) {
+		return jsonElement != null && !jsonElement.isJsonNull() ? Util.getOrThrow(codec.parse(JsonOps.INSTANCE, jsonElement), JsonParseException::new) : null;
+	}
+
 	static {
-		ANY = new EntityOnly(MobEffectsPredicate.ANY, NbtPredicate.ANY, EntityFlagsPredicate.ANY, EntityEquipmentPredicate.ANY, (String) null, (ResourceLocation) null);
+		ANY = new EntityOnly(null, null, null, null, (String) null, (ResourceLocation) null);
 	}
 
 	@Override

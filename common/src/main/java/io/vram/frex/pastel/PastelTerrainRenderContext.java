@@ -34,7 +34,7 @@ import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ChunkBufferBuilderPack;
+import net.minecraft.client.renderer.SectionBufferBuilderPack;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.client.resources.model.BakedModel;
@@ -58,7 +58,7 @@ import io.vram.frex.pastel.mixinterface.RenderChunkRegionExt;
 
 public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintGetter> {
 	protected RenderChunkRegionExt regionExt;
-	protected ChunkBufferBuilderPack buffers;
+	protected SectionBufferBuilderPack buffers;
 	@SuppressWarnings("rawtypes")
 	protected Set initializedBuffers;
 	protected final Object2ObjectOpenHashMap<RenderType, BufferBuilder> usedBuffers = new Object2ObjectOpenHashMap<>();
@@ -110,7 +110,7 @@ public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintG
 		};
 	}
 
-	public PastelTerrainRenderContext prepareForRegion(RenderChunkRegion region, PoseStack poseStack, BlockPos origin, ChunkBufferBuilderPack buffers, @SuppressWarnings("rawtypes") Set set) {
+	public PastelTerrainRenderContext prepareForRegion(RenderChunkRegion region, PoseStack poseStack, BlockPos origin, SectionBufferBuilderPack buffers, @SuppressWarnings("rawtypes") Set set) {
 		inputContext.prepareForWorld(region, true, MatrixStack.fromVanilla(poseStack));
 		regionExt = (RenderChunkRegionExt) region;
 		usedBuffers.clear();

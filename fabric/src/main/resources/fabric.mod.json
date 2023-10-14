@@ -25,8 +25,8 @@
     "client": [ "io.vram.frex.fabric.FrexMod" ]
   },
   "depends": {
-    "fabricloader": ">=0.14.21",
-    "minecraft": ">=1.20",
+    "fabricloader": ">=0.14.23",
+    "minecraft": ">=1.20.2",
     "java": ">=17"
   },
   "custom": {

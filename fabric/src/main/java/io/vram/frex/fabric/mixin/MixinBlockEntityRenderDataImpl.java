@@ -27,13 +27,13 @@ import org.spongepowered.asm.mixin.Overwrite;
 
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
+import net.fabricmc.fabric.api.blockview.v2.RenderDataBlockEntity;
 
 import io.vram.frex.impl.world.BlockEntityRenderDataImpl;
 
 @Mixin(BlockEntityRenderDataImpl.class)
 public class MixinBlockEntityRenderDataImpl {
-	private static final Function<BlockEntity, Object> FABRIC_PROVIDER = be -> ((RenderAttachmentBlockEntity) be).getRenderAttachmentData();
+	private static final Function<BlockEntity, Object> FABRIC_PROVIDER = be -> ((RenderDataBlockEntity) be).getRenderData();
 
 	/**
 	 * @author Grondag

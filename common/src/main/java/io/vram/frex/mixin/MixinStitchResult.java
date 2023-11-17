@@ -21,33 +21,26 @@
 package io.vram.frex.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.renderer.texture.SpriteLoader;
 import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.AtlasSet;
 
 import io.vram.frex.mixinterface.TextureAtlasExt;
 
-@Mixin(TextureAtlas.class)
-public class MixinTextureAltasCommon implements TextureAtlasExt {
-	@Unique
-	private boolean frx_didReset = false;
+@Mixin(AtlasSet.StitchResult.class)
+public class MixinStitchResult {
 
-	@Inject(at = @At("RETURN"), method = "upload")
-	private void afterUpload(SpriteLoader.Preparations input, CallbackInfo ci) {
-		// this is always true for AtlasSet uploads, no need to clear the signal
-		if (frx_didReset) {
-			return;
-		}
-
-		TextureAtlasExt.resetSpriteIndex((TextureAtlas) (Object) this, input);
-	}
-
-	@Override
-	public void frx_signalDidReset() {
-		frx_didReset = true;
+	/**
+	 * Perform sprite indexing before model baking.
+	 */
+	@Inject(at = @At("RETURN"), method = "<init>")
+	void onInit(TextureAtlas textureAtlas, SpriteLoader.Preparations preparations, CallbackInfo ci) {
+		TextureAtlasExt.resetSpriteIndex(textureAtlas, preparations);
+		// Prevent another reset during upload
+		((TextureAtlasExt) textureAtlas).frx_signalDidReset();
 	}
 }

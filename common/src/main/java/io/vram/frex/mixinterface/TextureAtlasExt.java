@@ -18,36 +18,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.vram.frex.mixin;
+package io.vram.frex.mixinterface;
 
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import net.minecraft.client.renderer.texture.SpriteLoader;
 import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
-import io.vram.frex.mixinterface.TextureAtlasExt;
+import io.vram.frex.impl.texture.IndexedSprite;
+import io.vram.frex.impl.texture.SpriteIndexImpl;
 
-@Mixin(TextureAtlas.class)
-public class MixinTextureAltasCommon implements TextureAtlasExt {
-	@Unique
-	private boolean frx_didReset = false;
+public interface TextureAtlasExt {
+	void frx_signalDidReset();
 
-	@Inject(at = @At("RETURN"), method = "upload")
-	private void afterUpload(SpriteLoader.Preparations input, CallbackInfo ci) {
-		// this is always true for AtlasSet uploads, no need to clear the signal
-		if (frx_didReset) {
-			return;
+	static void resetSpriteIndex(TextureAtlas atlas, SpriteLoader.Preparations preparations) {
+		final ObjectArrayList<TextureAtlasSprite> spriteIndexList = new ObjectArrayList<>();
+		int index = 0;
+
+		for (final TextureAtlasSprite sprite : preparations.regions().values()) {
+			spriteIndexList.add(sprite);
+			final var spriteExt = (IndexedSprite) sprite;
+			spriteExt.frex_index(index++);
 		}
 
-		TextureAtlasExt.resetSpriteIndex((TextureAtlas) (Object) this, input);
-	}
-
-	@Override
-	public void frx_signalDidReset() {
-		frx_didReset = true;
+		SpriteIndexImpl.getOrCreate(atlas.location()).reset(preparations, spriteIndexList, atlas);
 	}
 }

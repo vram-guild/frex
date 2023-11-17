@@ -15,6 +15,7 @@
 		"MixinMultipartBakedModel",
 		"MixinPoseStack",
 		"MixinSpriteResourceLoader",
+		"MixinStitchResult",
 		"MixinTerrainParticle",
 		"MixinTextureAltasCommon",
 		"MixinTextureAltasNoFabric",

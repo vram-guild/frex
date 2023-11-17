@@ -181,7 +181,7 @@ public abstract class BaseRenderMaterial extends BaseMaterialView implements Ren
 
 	@Override
 	public boolean foilOverlay() {
-		return foilOverlay.isDefault;
+		return foilOverlay.value;
 	}
 
 	@Override

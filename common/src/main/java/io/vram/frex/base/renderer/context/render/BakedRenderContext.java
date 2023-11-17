@@ -20,6 +20,10 @@
 
 package io.vram.frex.base.renderer.context.render;
 
+import net.minecraft.client.renderer.texture.OverlayTexture;
+
+import io.vram.frex.api.material.MaterialConstants;
+import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.base.renderer.context.input.BaseBakedInputContext;
 import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 
@@ -63,14 +67,76 @@ public abstract class BakedRenderContext<C extends BaseBakedInputContext> extend
 	 * appear without glint.  If that improvement is made, this routine will have
 	 * to be updated to honor those new values.
 	 */
-	protected abstract void applyMaterialDefaults();
+	protected void applyMaterialDefaults() {
+		// See io.vram.frex.api.material.MaterialFinder#overlay(int, int) javadoc
+		if (inputContext.overlay() != OverlayTexture.NO_OVERLAY) {
+			final int uv = inputContext.overlay();
+			final int v = uv >> 16 & '\uffff';
+
+			if (finder.hurtOverlayIsDefault()) {
+				finder.hurtOverlay(v == 3);
+			}
+
+			if (finder.flashOverlayIsDefault()) {
+				final int u = uv & '\uffff';
+				finder.flashOverlay(v == 10 && u > 7);
+			}
+		}
+	}
 
 	/**
 	 * Applies preset if present.  Preset resolution is context-sensitive.
 	 * This makes material attributes related to presets fully specified.
 	 * Should be applied both before and after material transforms.
 	 */
-	protected abstract void resolvePreset();
+	protected void resolvePreset() {
+		int preset = finder.preset();
+
+		if (preset == MaterialConstants.PRESET_NONE) {
+			return;
+		}
+
+		if (preset == MaterialConstants.PRESET_DEFAULT) {
+			preset = inputContext.defaultPreset();
+		}
+
+		switch (preset) {
+			case MaterialConstants.PRESET_CUTOUT: {
+				finder.transparency(MaterialConstants.TRANSPARENCY_NONE)
+						.cutout(MaterialConstants.CUTOUT_HALF)
+						.unmipped(true)
+						.target(MaterialConstants.TARGET_SOLID)
+						.sorted(false);
+				break;
+			}
+			case MaterialConstants.PRESET_CUTOUT_MIPPED:
+				finder
+						.transparency(MaterialConstants.TRANSPARENCY_NONE)
+						.cutout(MaterialConstants.CUTOUT_HALF)
+						.unmipped(false)
+						.target(MaterialConstants.TARGET_SOLID)
+						.sorted(false);
+				break;
+			case MaterialConstants.PRESET_TRANSLUCENT:
+				finder.transparency(MaterialConstants.TRANSPARENCY_TRANSLUCENT)
+						.cutout(MaterialConstants.CUTOUT_NONE)
+						.unmipped(false)
+						.target(MaterialConstants.TARGET_TRANSLUCENT)
+						.sorted(true);
+				break;
+			case MaterialConstants.PRESET_SOLID:
+				finder.transparency(MaterialConstants.TRANSPARENCY_NONE)
+						.cutout(MaterialConstants.CUTOUT_NONE)
+						.unmipped(false)
+						.target(MaterialConstants.TARGET_SOLID)
+						.sorted(false);
+				break;
+			default:
+				assert false : "Unhandled preset";
+		}
+
+		finder.preset(MaterialConstants.PRESET_NONE);
+	}
 
 	/**
 	 * Adjustments made for the renderer implementation. For example, to disable

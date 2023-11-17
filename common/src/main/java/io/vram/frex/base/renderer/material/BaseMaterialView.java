@@ -88,7 +88,12 @@ public abstract class BaseMaterialView implements MaterialView {
 
 	@Override
 	public boolean emissive() {
-		return EMISSIVE.getValue(bits0);
+		return EMISSIVE.getValue(bits0).value;
+	}
+
+	@Override
+	public boolean emissiveIsDefault() {
+		return EMISSIVE.getValue(bits0).isDefault;
 	}
 
 	@Override
@@ -98,12 +103,22 @@ public abstract class BaseMaterialView implements MaterialView {
 
 	@Override
 	public boolean disableDiffuse() {
-		return DISABLE_DIFFUSE.getValue(bits0);
+		return DISABLE_DIFFUSE.getValue(bits0).value;
+	}
+
+	@Override
+	public boolean disableDiffuseIsDefault() {
+		return DISABLE_DIFFUSE.getValue(bits0).isDefault;
 	}
 
 	@Override
 	public boolean disableAo() {
-		return DISABLE_AO.getValue(bits0);
+		return DISABLE_AO.getValue(bits0).value;
+	}
+
+	@Override
+	public boolean disableAoIsDefault() {
+		return DISABLE_AO.getValue(bits0).isDefault;
 	}
 
 	@Override
@@ -133,7 +148,12 @@ public abstract class BaseMaterialView implements MaterialView {
 
 	@Override
 	public boolean foilOverlay() {
-		return ENABLE_GLINT.getValue(bits0);
+		return FOIL_OVERLAY.getValue(bits0).value;
+	}
+
+	@Override
+	public boolean foilOverlayIsDefault() {
+		return FOIL_OVERLAY.getValue(bits0).isDefault;
 	}
 
 	public boolean glintEntity() {
@@ -192,12 +212,22 @@ public abstract class BaseMaterialView implements MaterialView {
 
 	@Override
 	public boolean hurtOverlay() {
-		return HURT_OVERLAY.getValue(bits0);
+		return HURT_OVERLAY.getValue(bits0).value;
+	}
+
+	@Override
+	public boolean hurtOverlayIsDefault() {
+		return HURT_OVERLAY.getValue(bits0).isDefault;
 	}
 
 	@Override
 	public boolean flashOverlay() {
-		return FLASH_OVERLAY.getValue(bits0);
+		return FLASH_OVERLAY.getValue(bits0).value;
+	}
+
+	@Override
+	public boolean flashOverlayIsDefault() {
+		return FLASH_OVERLAY.getValue(bits0).isDefault;
 	}
 
 	@Override
@@ -221,16 +251,16 @@ public abstract class BaseMaterialView implements MaterialView {
 	public static final BitPacker64<Void>.BooleanElement SORTED = PACKER_0.createBooleanElement();
 	public static final BitPacker64<Void>.BooleanElement DISABLE_COLOR_INDEX = PACKER_0.createBooleanElement();
 	public static final BitPacker64<Void>.BooleanElement DISCARDS_TEXTURE = PACKER_0.createBooleanElement();
-	public static final BitPacker64<Void>.BooleanElement EMISSIVE = PACKER_0.createBooleanElement();
+	public static final BitPacker64<Void>.EnumElement<MaterialTriState> EMISSIVE = PACKER_0.createEnumElement(MaterialTriState.class);
 	public static final BitPacker64<Void>.BooleanElement UNLIT = PACKER_0.createBooleanElement();
-	public static final BitPacker64<Void>.BooleanElement DISABLE_DIFFUSE = PACKER_0.createBooleanElement();
-	public static final BitPacker64<Void>.BooleanElement DISABLE_AO = PACKER_0.createBooleanElement();
+	public static final BitPacker64<Void>.EnumElement<MaterialTriState> DISABLE_DIFFUSE = PACKER_0.createEnumElement(MaterialTriState.class);
+	public static final BitPacker64<Void>.EnumElement<MaterialTriState> DISABLE_AO = PACKER_0.createEnumElement(MaterialTriState.class);
 	public static final BitPacker64<Void>.BooleanElement UNMIPPED = PACKER_0.createBooleanElement();
-	public static final BitPacker64<Void>.BooleanElement HURT_OVERLAY = PACKER_0.createBooleanElement();
-	public static final BitPacker64<Void>.BooleanElement FLASH_OVERLAY = PACKER_0.createBooleanElement();
+	public static final BitPacker64<Void>.EnumElement<MaterialTriState> HURT_OVERLAY = PACKER_0.createEnumElement(MaterialTriState.class);
+	public static final BitPacker64<Void>.EnumElement<MaterialTriState> FLASH_OVERLAY = PACKER_0.createEnumElement(MaterialTriState.class);
 	public static final BitPacker64<Void>.BooleanElement FOG = PACKER_0.createBooleanElement();
 	public static final BitPacker64<Void>.BooleanElement DISABLE_SHADOWS = PACKER_0.createBooleanElement();
-	public static final BitPacker64<Void>.BooleanElement ENABLE_GLINT = PACKER_0.createBooleanElement();
+	public static final BitPacker64<Void>.EnumElement<MaterialTriState> FOIL_OVERLAY = PACKER_0.createEnumElement(MaterialTriState.class);
 	public static final BitPacker64<Void>.BooleanElement GLINT_ENTITY = PACKER_0.createBooleanElement();
 
 	protected static final BitPacker64<Void> PACKER_1 = new BitPacker64<> (null, null);

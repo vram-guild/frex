@@ -98,7 +98,13 @@ public abstract class BaseMaterialFinder extends BaseMaterialView implements Mat
 
 	@Override
 	public BaseMaterialFinder disableAo(boolean disableAo) {
-		bits0 = DISABLE_AO.setValue(disableAo, bits0);
+		bits0 = DISABLE_AO.setValue(MaterialTriState.of(disableAo), bits0);
+		return this;
+	}
+
+	@Override
+	public MaterialFinder resetDisableAo() {
+		bits0 = DISABLE_AO.setValue(MaterialTriState.DEFAULT, bits0);
 		return this;
 	}
 
@@ -110,7 +116,13 @@ public abstract class BaseMaterialFinder extends BaseMaterialView implements Mat
 
 	@Override
 	public BaseMaterialFinder disableDiffuse(boolean disableDiffuse) {
-		bits0 = DISABLE_DIFFUSE.setValue(disableDiffuse, bits0);
+		bits0 = DISABLE_DIFFUSE.setValue(MaterialTriState.of(disableDiffuse), bits0);
+		return this;
+	}
+
+	@Override
+	public BaseMaterialFinder resetDisableDiffuse() {
+		bits0 = DISABLE_DIFFUSE.setValue(MaterialTriState.DEFAULT, bits0);
 		return this;
 	}
 
@@ -122,7 +134,13 @@ public abstract class BaseMaterialFinder extends BaseMaterialView implements Mat
 
 	@Override
 	public BaseMaterialFinder emissive(boolean emissive) {
-		bits0 = EMISSIVE.setValue(emissive, bits0);
+		bits0 = EMISSIVE.setValue(MaterialTriState.of(emissive), bits0);
+		return this;
+	}
+
+	@Override
+	public BaseMaterialFinder resetEmissive() {
+		bits0 = EMISSIVE.setValue(MaterialTriState.DEFAULT, bits0);
 		return this;
 	}
 
@@ -134,7 +152,13 @@ public abstract class BaseMaterialFinder extends BaseMaterialView implements Mat
 
 	@Override
 	public BaseMaterialFinder flashOverlay(boolean flashOverlay) {
-		bits0 = FLASH_OVERLAY.setValue(flashOverlay, bits0);
+		bits0 = FLASH_OVERLAY.setValue(MaterialTriState.of(flashOverlay), bits0);
+		return this;
+	}
+
+	@Override
+	public BaseMaterialFinder resetFlashOverlay() {
+		bits0 = FLASH_OVERLAY.setValue(MaterialTriState.DEFAULT, bits0);
 		return this;
 	}
 
@@ -146,7 +170,13 @@ public abstract class BaseMaterialFinder extends BaseMaterialView implements Mat
 
 	@Override
 	public BaseMaterialFinder foilOverlay(boolean enableGlint) {
-		bits0 = ENABLE_GLINT.setValue(enableGlint, bits0);
+		bits0 = FOIL_OVERLAY.setValue(MaterialTriState.of(enableGlint), bits0);
+		return this;
+	}
+
+	@Override
+	public BaseMaterialFinder resetFoilOverlay() {
+		bits0 = FOIL_OVERLAY.setValue(MaterialTriState.DEFAULT, bits0);
 		return this;
 	}
 
@@ -158,7 +188,13 @@ public abstract class BaseMaterialFinder extends BaseMaterialView implements Mat
 
 	@Override
 	public BaseMaterialFinder hurtOverlay(boolean hurtOverlay) {
-		bits0 = HURT_OVERLAY.setValue(hurtOverlay, bits0);
+		bits0 = HURT_OVERLAY.setValue(MaterialTriState.of(hurtOverlay), bits0);
+		return this;
+	}
+
+	@Override
+	public BaseMaterialFinder resetHurtOverlay() {
+		bits0 = HURT_OVERLAY.setValue(MaterialTriState.DEFAULT, bits0);
 		return this;
 	}
 

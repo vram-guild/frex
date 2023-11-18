@@ -20,28 +20,8 @@
 
 package io.vram.frex.mixinterface;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-
-import net.minecraft.client.renderer.texture.SpriteLoader;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
-import io.vram.frex.impl.texture.IndexedSprite;
-import io.vram.frex.impl.texture.SpriteIndexImpl;
-
-public interface TextureAtlasExt {
-	void frx_signalDidReset();
-
-	static void resetSpriteIndex(TextureAtlas atlas, SpriteLoader.Preparations preparations) {
-		final ObjectArrayList<TextureAtlasSprite> spriteIndexList = new ObjectArrayList<>();
-		int index = 0;
-
-		for (final TextureAtlasSprite sprite : preparations.regions().values()) {
-			spriteIndexList.add(sprite);
-			final var spriteExt = (IndexedSprite) sprite;
-			spriteExt.frex_index(index++);
-		}
-
-		SpriteIndexImpl.getOrCreate(atlas.location()).reset(preparations, spriteIndexList, atlas);
-	}
+public interface SpriteLoaderExt {
+	void frx_acceptAtlas(TextureAtlas atlas);
 }

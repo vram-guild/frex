@@ -14,9 +14,9 @@
 		"MixinModelBakery",
 		"MixinMultipartBakedModel",
 		"MixinPoseStack",
+		"MixinSpriteLoader",
 		"MixinSpriteResourceLoader",
 		"MixinTerrainParticle",
-		"MixinTextureAltasCommon",
 		"MixinTextureAltasNoFabric",
 		"MixinTextureAtlasSprite",
 		"MixinWeightedBakedModel"

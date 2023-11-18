@@ -26,6 +26,8 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
@@ -34,6 +36,7 @@ import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 
 import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.model.BakedInputContext;
+import io.vram.frex.api.model.ItemModel;
 import io.vram.frex.base.renderer.util.BakedModelTranscoder;
 
 public class FabricContextWrapper implements RenderContext {
@@ -95,6 +98,31 @@ public class FabricContextWrapper implements RenderContext {
 	@Override
 	public QuadEmitter getEmitter() {
 		return output.emitter;
+	}
+
+	@Override
+	public boolean hasTransform() {
+		return !outputStack.isEmpty();
+	}
+
+	@Override
+	public boolean isFaceCulled(@Nullable Direction face) {
+		if (input instanceof ItemModel.ItemInputContext) {
+			// FRAPI contract
+			throw new IllegalStateException("isFaceCulled can only be called on a block render context.");
+		} else {
+			return !input.cullTest(face);
+		}
+	}
+
+	@Override
+	public ItemDisplayContext itemTransformationMode() {
+		if (input instanceof ItemModel.ItemInputContext itemInputContext) {
+			return itemInputContext.mode();
+		} else {
+			// FRAPI contract
+			throw new IllegalStateException("itemTransformationMode can only be called on an item render context.");
+		}
 	}
 
 	@Override

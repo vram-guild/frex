@@ -39,7 +39,7 @@ public class BlockEntityRenderDataImpl {
 
 	private static final Function<BlockEntity, Object> DEFAULT_PROVIDER = be -> null;
 
-	/** Overwritten via mixin on Fabric to usse Fabric interface. */
+	/** Overwritten via mixin on Fabric to use Fabric interface. */
 	public static Function<BlockEntity, Object> defaultProvider() {
 		return DEFAULT_PROVIDER;
 	}

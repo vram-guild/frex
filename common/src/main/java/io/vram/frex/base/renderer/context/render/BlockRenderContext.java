@@ -20,15 +20,12 @@
 
 package io.vram.frex.base.renderer.context.render;
 
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-import io.vram.frex.api.material.MaterialConstants;
-import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.api.model.util.ColorUtil;
 import io.vram.frex.base.renderer.context.input.BaseBlockInputContext;
@@ -46,10 +43,7 @@ public abstract class BlockRenderContext<T extends BlockAndTintGetter> extends B
 	}
 
 	/**
-	 * @param blockState
-	 * @param blockPos
-	 * @param modelAO
-	 * @param seed       pass -1 for default behavior
+	 * @param seed  pass -1 for default behavior
 	 */
 	public void prepareForBlock(BakedModel model, BlockState blockState, BlockPos blockPos, long seed, int overlay) {
 		inputContext.prepareForBlock(model, blockState, blockPos, seed, overlay);
@@ -75,75 +69,11 @@ public abstract class BlockRenderContext<T extends BlockAndTintGetter> extends B
 
 	@Override
 	protected void applyMaterialDefaults() {
-		// TODO: honor tri-state from material when implemented
-		if (inputContext.overlay() != OverlayTexture.NO_OVERLAY) {
-			finder.overlay(inputContext.overlay());
+		super.applyMaterialDefaults();
+
+		if (finder.emissiveIsDefault()) {
+			finder.emissive(inputContext.isEmissiveRendering());
 		}
-
-		// If we have not disabled AO by now, then ignore the block value for emissive rendering
-		// If we are rendering a vanilla model with an emissive block, then AO should have been disabled by the quad
-		// transcoder.  This implies that if we get a quad for this block with AO enabled, it was
-		// sent by a mod that presumably wants us to follow the material as specified.
-
-		// This is very brittle but may help mods like Continuity that decorate blocks with overlays.
-		// If a better way to handle this use case (like tri-state value) is added to the API, this hack should be revisited.
-
-		// TODO: honor tri-state from material when implemented
-		if (inputContext.isEmissiveRendering() && finder.disableAo()) {
-			finder.emissive(true);
-		}
-	}
-
-	@Override
-	protected void resolvePreset() {
-		final MaterialFinder finder = this.finder;
-
-		int preset = finder.preset();
-
-		if (preset == MaterialConstants.PRESET_NONE) {
-			return;
-		}
-
-		if (preset == MaterialConstants.PRESET_DEFAULT) {
-			preset = inputContext.defaultPreset();
-		}
-
-		switch (preset) {
-			case MaterialConstants.PRESET_CUTOUT: {
-				finder.transparency(MaterialConstants.TRANSPARENCY_NONE)
-					.cutout(MaterialConstants.CUTOUT_HALF)
-					.unmipped(true)
-					.target(MaterialConstants.TARGET_MAIN)
-					.sorted(false);
-				break;
-			}
-			case MaterialConstants.PRESET_CUTOUT_MIPPED:
-				finder
-					.transparency(MaterialConstants.TRANSPARENCY_NONE)
-					.cutout(MaterialConstants.CUTOUT_HALF)
-					.unmipped(false)
-					.target(MaterialConstants.TARGET_MAIN)
-					.sorted(false);
-				break;
-			case MaterialConstants.PRESET_TRANSLUCENT:
-				finder.transparency(MaterialConstants.TRANSPARENCY_TRANSLUCENT)
-					.cutout(MaterialConstants.CUTOUT_NONE)
-					.unmipped(false)
-					.target(MaterialConstants.TARGET_TRANSLUCENT)
-					.sorted(true);
-				break;
-			case MaterialConstants.PRESET_SOLID:
-				finder.transparency(MaterialConstants.TRANSPARENCY_NONE)
-					.cutout(MaterialConstants.CUTOUT_NONE)
-					.unmipped(false)
-					.target(MaterialConstants.TARGET_MAIN)
-					.sorted(false);
-				break;
-			default:
-				assert false : "Unhandled preset";
-		}
-
-		finder.preset(MaterialConstants.PRESET_NONE);
 	}
 
 	/**

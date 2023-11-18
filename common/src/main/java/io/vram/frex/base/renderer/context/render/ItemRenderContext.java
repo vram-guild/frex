@@ -26,13 +26,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.ItemModelShaper;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.api.math.MatrixStack;
 import io.vram.frex.api.model.ItemModel;
@@ -87,66 +85,15 @@ public abstract class ItemRenderContext extends BakedRenderContext<BaseItemInput
 
 	@Override
 	protected void applyMaterialDefaults() {
-		// TODO: use tri-state value from material when available
-		if (inputContext.itemStack().hasFoil()) {
-			finder.foilOverlay(true);
+		super.applyMaterialDefaults();
+
+		if (finder.foilOverlayIsDefault()) {
+			finder.foilOverlay(inputContext.itemStack().hasFoil());
 		}
 
-		// TODO: use tri-state value from material when available
-		if (inputContext.isFrontLit()) {
-			finder.disableDiffuse(true);
+		if (finder.disableDiffuseIsDefault()) {
+			finder.disableDiffuse(inputContext.isFrontLit());
 		}
-
-		// TODO: use tri-state value from material when available
-		if (inputContext.overlay() != OverlayTexture.NO_OVERLAY) {
-			finder.overlay(inputContext.overlay());
-		}
-	}
-
-	@Override
-	protected void resolvePreset() {
-		int preset = finder.preset();
-
-		if (preset == MaterialConstants.PRESET_NONE) return;
-
-		if (preset == MaterialConstants.PRESET_DEFAULT) {
-			preset = inputContext.defaultPreset();
-		}
-
-		switch (preset) {
-			case MaterialConstants.PRESET_CUTOUT:
-				finder.transparency(MaterialConstants.TRANSPARENCY_NONE)
-					.cutout(MaterialConstants.CUTOUT_HALF)
-					.unmipped(true)
-					.target(MaterialConstants.TARGET_MAIN)
-					.sorted(false);
-				break;
-			case MaterialConstants.PRESET_CUTOUT_MIPPED:
-				finder.transparency(MaterialConstants.TRANSPARENCY_NONE)
-					.cutout(MaterialConstants.CUTOUT_HALF)
-					.unmipped(false)
-					.target(MaterialConstants.TARGET_MAIN)
-					.sorted(false);
-				break;
-			case MaterialConstants.PRESET_TRANSLUCENT:
-				finder.transparency(MaterialConstants.TRANSPARENCY_TRANSLUCENT)
-					.cutout(inputContext.isBlockItem() ? MaterialConstants.CUTOUT_NONE : MaterialConstants.CUTOUT_TENTH)
-					.unmipped(false)
-					.target(inputContext.drawTranslucencyToMainTarget() ? MaterialConstants.TARGET_MAIN : MaterialConstants.TARGET_ENTITIES)
-					.sorted(!inputContext.drawTranslucencyToMainTarget());
-				break;
-			case MaterialConstants.PRESET_SOLID:
-				finder.transparency(MaterialConstants.TRANSPARENCY_NONE)
-					.cutout(MaterialConstants.CUTOUT_NONE)
-					.unmipped(false)
-					.target(MaterialConstants.TARGET_MAIN)
-					.sorted(false);
-				break;
-			default:
-				assert false : "Unhandled preset";
-		}
-
-		finder.preset(MaterialConstants.PRESET_NONE);
 	}
 
 	@Override
@@ -161,6 +108,8 @@ public abstract class ItemRenderContext extends BakedRenderContext<BaseItemInput
 			finder.fog(false);
 		}
 
-		finder.disableAo(true);
+		if (finder.disableAoIsDefault()) {
+			finder.disableAo(true);
+		}
 	}
 }

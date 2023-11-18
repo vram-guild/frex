@@ -32,7 +32,7 @@ import io.vram.frex.impl.material.MaterialFinderPool;
  * Finds standard {@link RenderMaterial} instances used to communicate
  * quad rendering characteristics to a renderer.
  *
- * <p>Must be obtained via {@link Renderer#materialFinder()}.
+ * <p>Must be obtained via {@link Renderer#materials()}.
  */
 public interface MaterialFinder extends MaterialView {
 	MaterialFinder clear();
@@ -41,7 +41,7 @@ public interface MaterialFinder extends MaterialView {
 	 * Defines how sprite pixels will be blended with the scene.
 	 *
 	 * <p>The application of blend mode is context-dependent, especially
-	 * for {@link MaterialConstants#TRANSLUCENT}.  Various material properties
+	 * for {@link MaterialConstants#PRESET_TRANSLUCENT}.  Various material properties
 	 * will be set differently when the model is rendered as a block, vs.
 	 * a moving entity block, vs. item in GUI and item floating in the world,
 	 * as examples.
@@ -58,9 +58,15 @@ public interface MaterialFinder extends MaterialView {
 
 	MaterialFinder disableDiffuse(boolean disable);
 
+	MaterialFinder resetDisableDiffuse();
+
 	MaterialFinder disableAo(boolean disable);
 
+	MaterialFinder resetDisableAo();
+
 	MaterialFinder emissive(boolean isEmissive);
+
+	MaterialFinder resetEmissive();
 
 	/**
 	 * Unlit means the material is rendered without lighting - using only texture and vertex color.
@@ -147,7 +153,11 @@ public interface MaterialFinder extends MaterialView {
 	 */
 	MaterialFinder flashOverlay(boolean flashOverlay);
 
+	MaterialFinder resetFlashOverlay();
+
 	MaterialFinder foilOverlay(boolean foilOverlay);
+
+	MaterialFinder resetFoilOverlay();
 
 	MaterialFinder glintEntity(boolean glintEntity);
 
@@ -181,6 +191,8 @@ public interface MaterialFinder extends MaterialView {
 	 * @return finder instance for ease of chaining calls
 	 */
 	MaterialFinder hurtOverlay(boolean hurtOverlay);
+
+	MaterialFinder resetHurtOverlay();
 
 	/**
 	 * Set the line width to the full-width default used by Minecraft.

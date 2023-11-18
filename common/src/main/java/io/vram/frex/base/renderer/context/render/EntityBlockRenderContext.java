@@ -114,7 +114,8 @@ public abstract class EntityBlockRenderContext extends BlockRenderContext<BlockA
 
 	@Override
 	protected void adjustMaterialForEncoding() {
-		super.adjustMaterialForEncoding();
-		finder.disableAo(true);
+		if (finder.disableAoIsDefault()) {
+			finder.disableAo(true);
+		}
 	}
 }

@@ -87,11 +87,19 @@ public class FabricMaterial implements net.fabricmc.fabric.api.renderer.v1.mater
 
 	@Override
 	public TriState ambientOcclusion() {
-		return wrapped.disableAo() ? TriState.FALSE : TriState.TRUE;
+		if (wrapped.disableAoIsDefault()) {
+			return TriState.DEFAULT;
+		}
+
+		return TriState.of(!wrapped.disableAo());
 	}
 
 	@Override
 	public TriState glint() {
-		return wrapped.foilOverlay() ? TriState.TRUE : TriState.DEFAULT;
+		if (wrapped.foilOverlayIsDefault()) {
+			return TriState.DEFAULT;
+		}
+
+		return TriState.of(wrapped.foilOverlay());
 	}
 }

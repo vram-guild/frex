@@ -49,7 +49,8 @@ public abstract class SimpleBlockRenderContext extends BlockRenderContext<BlockA
 
 	@Override
 	protected void adjustMaterialForEncoding() {
-		super.adjustMaterialForEncoding();
-		finder.disableAo(true);
+		if (finder.disableAoIsDefault()) {
+			finder.disableAo(true);
+		}
 	}
 }

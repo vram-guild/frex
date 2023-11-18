@@ -29,6 +29,7 @@ import net.fabricmc.fabric.api.util.TriState;
 
 import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.material.MaterialFinder;
+import io.vram.frex.base.renderer.material.BaseMaterialFinder;
 
 public class FabricMaterialFinder implements net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder {
 	public static FabricMaterialFinder of(MaterialFinder wrapped) {
@@ -96,11 +97,8 @@ public class FabricMaterialFinder implements net.fabricmc.fabric.api.renderer.v1
 	@Override
 	public net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder ambientOcclusion(TriState mode) {
 		switch (mode) {
-			case TRUE -> wrapped.disableAo(false);
-			case FALSE -> wrapped.disableAo(true);
-			case DEFAULT -> {
-				// NOOP?
-			}
+			case TRUE, FALSE -> wrapped.disableAo(!mode.get());
+			case DEFAULT -> wrapped.resetDisableAo();
 		}
 
 		return this;
@@ -109,11 +107,8 @@ public class FabricMaterialFinder implements net.fabricmc.fabric.api.renderer.v1
 	@Override
 	public net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder glint(TriState mode) {
 		switch (mode) {
-			case TRUE -> wrapped.foilOverlay(true);
-			case FALSE -> wrapped.foilOverlay(false);
-			case DEFAULT -> {
-				// NOOP?
-			}
+			case TRUE, FALSE -> wrapped.foilOverlay(mode.get());
+			case DEFAULT -> wrapped.resetFoilOverlay();
 		}
 
 		return this;
@@ -157,11 +152,19 @@ public class FabricMaterialFinder implements net.fabricmc.fabric.api.renderer.v1
 
 	@Override
 	public TriState ambientOcclusion() {
-		return wrapped.disableAo() ? TriState.FALSE : TriState.TRUE;
+		if (wrapped.disableAoIsDefault()) {
+			return TriState.DEFAULT;
+		}
+
+		return TriState.of(!wrapped.disableAo());
 	}
 
 	@Override
 	public TriState glint() {
-		return wrapped.foilOverlay() ? TriState.TRUE : TriState.DEFAULT;
+		if (wrapped.foilOverlayIsDefault()) {
+			return TriState.DEFAULT;
+		}
+
+		return TriState.of(wrapped.foilOverlay());
 	}
 }

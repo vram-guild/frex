@@ -30,15 +30,15 @@ public abstract class BaseRenderMaterial extends BaseMaterialView implements Ren
 	protected final int cutout;
 	protected final int decal;
 	protected final int depthTest;
-	protected final boolean disableAo;
+	protected final MaterialTriState disableAo;
 	protected final boolean disableColorIndex;
-	protected final boolean disableDiffuse;
+	protected final MaterialTriState disableDiffuse;
 	protected final boolean discardsTexture;
-	protected final boolean emissive;
-	protected final boolean flashOverlay;
+	protected final MaterialTriState emissive;
+	protected final MaterialTriState flashOverlay;
 	protected final boolean fog;
-	protected final boolean foilOverlay;
-	protected final boolean hurtOverlay;
+	protected final MaterialTriState foilOverlay;
+	protected final MaterialTriState hurtOverlay;
 	protected final int index;
 	protected final boolean lines;
 	protected final int preset;
@@ -64,15 +64,15 @@ public abstract class BaseRenderMaterial extends BaseMaterialView implements Ren
 		cutout = super.cutout();
 		decal = super.decal();
 		depthTest = super.depthTest();
-		disableAo = super.disableAo();
+		disableAo = MaterialTriState.of(super.disableAo(), super.disableAoIsDefault());
 		disableColorIndex = super.disableColorIndex();
-		disableDiffuse = super.disableDiffuse();
+		disableDiffuse = MaterialTriState.of(super.disableDiffuse(), super.disableDiffuseIsDefault());
 		discardsTexture = super.discardsTexture();
-		emissive = super.emissive();
-		flashOverlay = super.flashOverlay();
+		emissive = MaterialTriState.of(super.emissive(), super.emissiveIsDefault());
+		flashOverlay = MaterialTriState.of(super.flashOverlay(), super.flashOverlayIsDefault());
 		fog = super.fog();
-		foilOverlay = super.foilOverlay();
-		hurtOverlay = super.hurtOverlay();
+		foilOverlay = MaterialTriState.of(super.foilOverlay(), super.foilOverlayIsDefault());
+		hurtOverlay = MaterialTriState.of(super.hurtOverlay(), super.hurtOverlayIsDefault());
 		lines = super.lines();
 		preset = super.preset();
 		shaderIndex = super.shaderIndex();
@@ -126,7 +126,12 @@ public abstract class BaseRenderMaterial extends BaseMaterialView implements Ren
 
 	@Override
 	public boolean disableAo() {
-		return disableAo;
+		return disableAo.value;
+	}
+
+	@Override
+	public boolean disableAoIsDefault() {
+		return disableAo.isDefault;
 	}
 
 	@Override
@@ -136,7 +141,12 @@ public abstract class BaseRenderMaterial extends BaseMaterialView implements Ren
 
 	@Override
 	public boolean disableDiffuse() {
-		return disableDiffuse;
+		return disableDiffuse.value;
+	}
+
+	@Override
+	public boolean disableDiffuseIsDefault() {
+		return disableDiffuse.isDefault;
 	}
 
 	@Override
@@ -146,12 +156,22 @@ public abstract class BaseRenderMaterial extends BaseMaterialView implements Ren
 
 	@Override
 	public boolean emissive() {
-		return emissive;
+		return emissive.value;
+	}
+
+	@Override
+	public boolean emissiveIsDefault() {
+		return emissive.isDefault;
 	}
 
 	@Override
 	public boolean flashOverlay() {
-		return flashOverlay;
+		return flashOverlay.value;
+	}
+
+	@Override
+	public boolean flashOverlayIsDefault() {
+		return flashOverlay.isDefault;
 	}
 
 	@Override
@@ -161,12 +181,22 @@ public abstract class BaseRenderMaterial extends BaseMaterialView implements Ren
 
 	@Override
 	public boolean foilOverlay() {
-		return foilOverlay;
+		return foilOverlay.value;
+	}
+
+	@Override
+	public boolean foilOverlayIsDefault() {
+		return foilOverlay.isDefault;
 	}
 
 	@Override
 	public boolean hurtOverlay() {
-		return hurtOverlay;
+		return hurtOverlay.value;
+	}
+
+	@Override
+	public boolean hurtOverlayIsDefault() {
+		return hurtOverlay.isDefault;
 	}
 
 	@Override

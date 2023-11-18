@@ -46,21 +46,31 @@ public interface MaterialView {
 
 	boolean disableAo();
 
+	boolean disableAoIsDefault();
+
 	boolean disableColorIndex();
 
 	boolean disableDiffuse();
+
+	boolean disableDiffuseIsDefault();
 
 	boolean discardsTexture();
 
 	boolean emissive();
 
+	boolean emissiveIsDefault();
+
 	boolean unlit();
 
 	boolean flashOverlay();
 
+	boolean flashOverlayIsDefault();
+
 	boolean fog();
 
 	boolean hurtOverlay();
+
+	boolean hurtOverlayIsDefault();
 
 	boolean lines();
 
@@ -114,6 +124,8 @@ public interface MaterialView {
 	boolean castShadows();
 
 	boolean foilOverlay();
+
+	boolean foilOverlayIsDefault();
 
 	boolean glintEntity();
 }

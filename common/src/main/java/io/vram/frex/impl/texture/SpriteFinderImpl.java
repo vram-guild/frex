@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
+import net.minecraft.client.renderer.texture.SpriteLoader;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
@@ -136,5 +137,6 @@ public class SpriteFinderImpl implements SpriteFinder {
 
 	public interface SpriteFinderAccess {
 		SpriteFinderImpl frex_spriteFinder();
+		void frex_createSpriteFinder(SpriteLoader.Preparations preparations);
 	}
 }

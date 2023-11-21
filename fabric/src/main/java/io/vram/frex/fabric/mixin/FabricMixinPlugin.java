@@ -30,7 +30,7 @@ public class FabricMixinPlugin extends SimpleMixinConfig {
 			if (!FabricLoader.getInstance().isModLoaded("fabric-renderer-api-v1")) {
 				c.accept("MixinFabricSpriteFinder");
 				c.accept("MixinFabricBakedModel");
-				c.accept("MixinSpriteFinderHolder");
+				c.accept("MixinSpriteFinderImpl");
 				c.accept("MixinFrex");
 			}
 

@@ -21,26 +21,21 @@
 package io.vram.frex.fabric.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 
-import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
-import net.fabricmc.fabric.impl.renderer.SpriteFinderImpl;
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadView;
+import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
 
-import io.vram.frex.api.texture.SpriteFinder;
-import io.vram.frex.impl.texture.SpriteFinderHolder;
+import io.vram.frex.impl.texture.SpriteFinderImpl;
 
-@Mixin(SpriteFinderHolder.class)
-public abstract class MixinSpriteFinderHolder {
-	/**
-	 * We use the Fabric implementation when it is available.
-	 * It's the same code either way - I wrote it. (Grondag)
-	 *
-	 * @author grondag
-	 * @reason Fabric API compatibility
-	 */
-	@Overwrite(remap = false)
-	public static SpriteFinder get(TextureAtlas atlas) {
-		return (SpriteFinder) SpriteFinderImpl.get(atlas);
+@SuppressWarnings("NonExtendableApiUsage")
+@Mixin(SpriteFinderImpl.class)
+public abstract class MixinSpriteFinderImpl implements SpriteFinder {
+	@Override
+	public TextureAtlasSprite find(QuadView quad) {
+		final float u = quad.u(0) + quad.u(1) + quad.u(2) + quad.u(3);
+		final float v = quad.v(0) + quad.v(1) + quad.v(2) + quad.v(3);
+		return find(u * 0.25f, v * 0.25f);
 	}
 }

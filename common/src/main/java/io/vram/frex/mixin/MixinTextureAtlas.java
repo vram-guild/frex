@@ -20,42 +20,26 @@
 
 package io.vram.frex.mixin;
 
-import java.util.Map;
-
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.Unique;
 
 import net.minecraft.client.renderer.texture.SpriteLoader;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
 
 import io.vram.frex.impl.texture.SpriteFinderImpl;
 
 @Mixin(TextureAtlas.class)
-public class MixinTextureAltasNoFabric implements SpriteFinderImpl.SpriteFinderAccess {
-	@Shadow @Final private Map<ResourceLocation, TextureAtlasSprite> texturesByName;
-
+public class MixinTextureAtlas implements SpriteFinderImpl.SpriteFinderAccess {
+	@Unique
 	private SpriteFinderImpl frex_spriteFinder = null;
 
 	@Override
 	public SpriteFinderImpl frex_spriteFinder() {
-		SpriteFinderImpl result = frex_spriteFinder;
-
-		if (result == null) {
-			result = new SpriteFinderImpl(texturesByName, (TextureAtlas) (Object) this);
-			frex_spriteFinder = result;
-		}
-
-		return result;
+		return frex_spriteFinder;
 	}
 
-	@Inject(at = @At("RETURN"), method = "upload")
-	private void uploadHook(SpriteLoader.Preparations preparations, CallbackInfo ci) {
-		frex_spriteFinder = null;
+	@Override
+	public void frex_createSpriteFinder(SpriteLoader.Preparations preparations) {
+		frex_spriteFinder = new SpriteFinderImpl(preparations.regions(), (TextureAtlas) (Object) this);
 	}
 }

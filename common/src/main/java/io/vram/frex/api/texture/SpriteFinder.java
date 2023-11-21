@@ -25,7 +25,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.mesh.QuadView;
-import io.vram.frex.impl.texture.SpriteFinderHolder;
+import io.vram.frex.impl.texture.SpriteFinderImpl;
 
 /**
  * Indexes a texture atlas to allow fast lookup of Sprites from
@@ -43,7 +43,7 @@ public interface SpriteFinder {
 	 * that causes atlas textures to be re-stitched.
 	 */
 	static SpriteFinder get(TextureAtlas atlas) {
-		return SpriteFinderHolder.get(atlas);
+		return SpriteFinderImpl.get(atlas);
 	}
 
 	/**

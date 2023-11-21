@@ -17,7 +17,7 @@
 		"MixinSpriteLoader",
 		"MixinSpriteResourceLoader",
 		"MixinTerrainParticle",
-		"MixinTextureAltasNoFabric",
+		"MixinTextureAtlas",
 		"MixinTextureAtlasSprite",
 		"MixinWeightedBakedModel"
 	],

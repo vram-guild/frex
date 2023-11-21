@@ -36,6 +36,7 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 import io.vram.frex.impl.texture.IndexedSprite;
+import io.vram.frex.impl.texture.SpriteFinderImpl;
 import io.vram.frex.impl.texture.SpriteIndexImpl;
 import io.vram.frex.mixinterface.SpriteLoaderExt;
 
@@ -53,6 +54,7 @@ public class MixinSpriteLoader implements SpriteLoaderExt {
 	private void afterStitch(List<SpriteContents> list, int i, Executor executor, CallbackInfoReturnable<SpriteLoader.Preparations> cir) {
 		final var preparations = cir.getReturnValue();
 
+		// Create Sprite Index
 		final ObjectArrayList<TextureAtlasSprite> spriteIndexList = new ObjectArrayList<>();
 		int index = 0;
 
@@ -63,6 +65,9 @@ public class MixinSpriteLoader implements SpriteLoaderExt {
 		}
 
 		SpriteIndexImpl.getOrCreate(frx_textureAtlas.location()).reset(preparations, spriteIndexList, frx_textureAtlas);
+
+		// Create SpriteFinder
+		((SpriteFinderImpl.SpriteFinderAccess) frx_textureAtlas).frex_createSpriteFinder(preparations);
 
 		this.frx_textureAtlas = null;
 	}

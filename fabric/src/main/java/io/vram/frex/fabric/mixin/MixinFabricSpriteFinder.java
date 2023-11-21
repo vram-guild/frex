@@ -21,10 +21,22 @@
 package io.vram.frex.fabric.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 
-import net.fabricmc.fabric.impl.renderer.SpriteFinderImpl;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 
-import io.vram.frex.api.texture.SpriteFinder;
+import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
 
-@Mixin(SpriteFinderImpl.class)
-public abstract class MixinFabricSpriteFinder implements SpriteFinder { }
+import io.vram.frex.impl.texture.SpriteFinderImpl;
+
+@Mixin(SpriteFinder.class)
+public interface MixinFabricSpriteFinder {
+	/**
+	 * @author spiralhalo
+	 * @reason FRAPI interop
+	 */
+	@Overwrite
+	static SpriteFinder get(TextureAtlas atlas) {
+		return (SpriteFinder) SpriteFinderImpl.get(atlas);
+	}
+}

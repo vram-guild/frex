@@ -29,7 +29,6 @@ import net.fabricmc.fabric.api.util.TriState;
 
 import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.material.MaterialFinder;
-import io.vram.frex.base.renderer.material.BaseMaterialFinder;
 
 public class FabricMaterialFinder implements net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder {
 	public static FabricMaterialFinder of(MaterialFinder wrapped) {

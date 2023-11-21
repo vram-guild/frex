@@ -11,7 +11,7 @@
 		"MixinFluidAppearanceImpl",
 		"MixinFluidRenderHandler",
 		"MixinFrex",
-		"MixinSpriteFinderHolder"
+		"MixinSpriteFinderImpl"
 	],
 	"injectors": {
 		"defaultRequire": 1

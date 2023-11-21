@@ -31,7 +31,6 @@ public class FrexMixinPlugin extends SimpleMixinConfig {
 				c.accept("MixinBakedModel");
 				c.accept("MixinMultipartBakedModel");
 				c.accept("MixinWeightedBakedModel");
-				c.accept("MixinTextureAltasSpriteLoader");
 			}
 		});
 	}

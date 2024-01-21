@@ -31,6 +31,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
+import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.api.math.MatrixStack;
 import io.vram.frex.api.model.ItemModel;
@@ -94,6 +95,29 @@ public abstract class ItemRenderContext extends BakedRenderContext<BaseItemInput
 		if (finder.disableDiffuseIsDefault()) {
 			finder.disableDiffuse(inputContext.isFrontLit());
 		}
+	}
+
+	@Override
+	protected void resolvePreset() {
+		if (finder.preset() == MaterialConstants.PRESET_DEFAULT) {
+			finder.preset(inputContext.defaultPreset());
+		}
+
+		if (finder.preset() == MaterialConstants.PRESET_TRANSLUCENT) {
+			// Special case for translucent items
+			finder.transparency(MaterialConstants.TRANSPARENCY_TRANSLUCENT)
+					.cutout(inputContext.isBlockItem() ? MaterialConstants.CUTOUT_NONE : MaterialConstants.CUTOUT_TENTH)
+					.unmipped(false)
+					.target(inputContext.drawTranslucencyToMainTarget() ? MaterialConstants.TARGET_SOLID : MaterialConstants.TARGET_ENTITIES)
+					.sorted(!inputContext.drawTranslucencyToMainTarget());
+
+			// Importantly
+			finder.preset(MaterialConstants.PRESET_NONE);
+
+			return;
+		}
+
+		super.resolvePreset();
 	}
 
 	@Override

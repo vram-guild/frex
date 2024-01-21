@@ -27,14 +27,18 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.BiPredicate;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
+import com.mojang.serialization.JsonOps;
+
+import net.minecraft.Util;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -156,11 +160,15 @@ public class BlockEntityMaterialMapDeserializer {
 	}
 
 	private static StateBiPredicate loadPredicate(JsonObject obj) {
-		final Optional<StatePropertiesPredicate> statePredicate = StatePropertiesPredicate.fromJson(obj.get("statePredicate"));
-		final MaterialPredicate materialPredicate = MaterialPredicateDeserializer.deserialize(obj.get("materialPredicate").getAsJsonObject());
+		final StatePropertiesPredicate statePredicate = obj.has("statePredicate")
+				? Util.getOrThrow(StatePropertiesPredicate.CODEC.parse(JsonOps.INSTANCE, obj.get("statePredicate")), JsonParseException::new)
+				: null;
 
-		// TODO: verify
-		if (statePredicate.isEmpty()) {
+		final MaterialPredicate materialPredicate = obj.has("materialPredicate")
+				? MaterialPredicateDeserializer.deserialize(obj.get("materialPredicate").getAsJsonObject())
+				: MATERIAL_ALWAYS_TRUE;
+
+		if (statePredicate == null) {
 			if (materialPredicate == MATERIAL_ALWAYS_TRUE) {
 				return BLOCK_ALWAYS_TRUE;
 			} else {
@@ -168,9 +176,9 @@ public class BlockEntityMaterialMapDeserializer {
 			}
 		} else {
 			if (materialPredicate == MATERIAL_ALWAYS_TRUE) {
-				return new StateOnly(statePredicate.get());
+				return new StateOnly(statePredicate);
 			} else {
-				return new StateMaterialBoth(statePredicate.get(), materialPredicate);
+				return new StateMaterialBoth(statePredicate, materialPredicate);
 			}
 		}
 	}

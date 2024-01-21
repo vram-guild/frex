@@ -48,7 +48,6 @@ accessible   field   net/minecraft/client/renderer/RenderStateShard   RENDERTYPE
 accessible   field   net/minecraft/client/renderer/RenderStateShard   RENDERTYPE_CUTOUT_SHADER   Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 accessible   field   net/minecraft/client/renderer/RenderStateShard   RENDERTYPE_TRANSLUCENT_SHADER   Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 accessible   field   net/minecraft/client/renderer/RenderStateShard   RENDERTYPE_TRANSLUCENT_MOVING_BLOCK_SHADER   Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
-accessible   field   net/minecraft/client/renderer/RenderStateShard   RENDERTYPE_TRANSLUCENT_NO_CRUMBLING_SHADER   Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 accessible   field   net/minecraft/client/renderer/RenderStateShard   RENDERTYPE_ARMOR_CUTOUT_NO_CULL_SHADER   Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 accessible   field   net/minecraft/client/renderer/RenderStateShard   RENDERTYPE_ENTITY_SOLID_SHADER   Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 accessible   field   net/minecraft/client/renderer/RenderStateShard   RENDERTYPE_ENTITY_CUTOUT_SHADER   Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;

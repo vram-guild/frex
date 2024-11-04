@@ -22,10 +22,8 @@ package io.vram.frex.base.renderer.material;
 
 import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
-
 import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.renderer.MaterialTextureManager;
 import io.vram.frex.api.texture.MaterialTexture;

@@ -23,20 +23,17 @@ package io.vram.frex.api.mesh;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-
+import io.vram.frex.api.buffer.QuadEmitter;
+import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.math.PackedVector3f;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 
-import io.vram.frex.api.buffer.QuadEmitter;
-import io.vram.frex.api.material.RenderMaterial;
-import io.vram.frex.api.math.PackedVector3f;
-
 public interface QuadView {
 	/** Count of integers in a conventional (un-modded) block or item vertex. */
-	int VANILLA_VERTEX_STRIDE = DefaultVertexFormat.BLOCK.getIntegerSize();
+	int VANILLA_VERTEX_STRIDE = DefaultVertexFormat.BLOCK.getVertexSize() / 4;
 
 	/** Count of integers in a conventional (un-modded) block or item quad. */
 	int VANILLA_QUAD_STRIDE = VANILLA_VERTEX_STRIDE * 4;

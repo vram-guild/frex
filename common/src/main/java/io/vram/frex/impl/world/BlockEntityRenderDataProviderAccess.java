@@ -21,10 +21,8 @@
 package io.vram.frex.impl.world;
 
 import java.util.function.Function;
-
-import org.jetbrains.annotations.ApiStatus.Internal;
-
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 @Internal
 public interface BlockEntityRenderDataProviderAccess {

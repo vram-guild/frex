@@ -21,9 +21,6 @@
 package io.vram.frex.pastel;
 
 import java.util.function.Supplier;
-
-import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -32,8 +29,10 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemDisplayContext;
-
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import io.vram.frex.api.material.MaterialConstants;
+import io.vram.frex.api.material.RenderMaterial;
+import io.vram.frex.api.math.MatrixStack;
 import io.vram.frex.base.renderer.context.render.ItemRenderContext;
 import io.vram.frex.base.renderer.util.EncoderUtil;
 

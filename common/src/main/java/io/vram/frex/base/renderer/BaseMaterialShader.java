@@ -20,9 +20,8 @@
 
 package io.vram.frex.base.renderer;
 
-import net.minecraft.resources.ResourceLocation;
-
 import io.vram.frex.api.material.MaterialShader;
+import net.minecraft.resources.ResourceLocation;
 
 public class BaseMaterialShader implements MaterialShader {
 	public final int index;

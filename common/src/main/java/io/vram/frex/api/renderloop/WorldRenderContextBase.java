@@ -21,10 +21,9 @@
 package io.vram.frex.api.renderloop;
 
 import org.joml.Matrix4f;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
+import io.vram.frex.api.renderloop.BlockOutlineListener.BlockOutlineContext;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
@@ -37,8 +36,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
-
-import io.vram.frex.api.renderloop.BlockOutlineListener.BlockOutlineContext;
 
 /**
  * Recommended base class for renderers that need to provide context objects to world events.

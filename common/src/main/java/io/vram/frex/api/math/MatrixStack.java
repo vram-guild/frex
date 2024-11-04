@@ -22,9 +22,6 @@ package io.vram.frex.api.math;
 
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import io.vram.frex.mixinterface.PoseStackExt;
 
 public interface MatrixStack {
@@ -45,13 +42,13 @@ public interface MatrixStack {
 		normalMatrix().identity();
 	}
 
-	PoseStack toVanilla();
+	com.mojang.blaze3d.vertex.PoseStack toVanilla();
 
-	static MatrixStack fromVanilla(PoseStack poseStack) {
+	static MatrixStack fromVanilla(com.mojang.blaze3d.vertex.PoseStack poseStack) {
 		return ((PoseStackExt) poseStack).frx_asMatrixStack();
 	}
 
 	static MatrixStack create() {
-		return fromVanilla(new PoseStack());
+		return fromVanilla(new com.mojang.blaze3d.vertex.PoseStack());
 	}
 }

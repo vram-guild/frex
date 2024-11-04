@@ -22,13 +22,9 @@ package io.vram.frex.fabric.mixin.events;
 
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
-
-import com.mojang.blaze3d.vertex.PoseStack;
-
-import net.minecraft.client.renderer.LightTexture;
-
 import net.fabricmc.fabric.impl.client.rendering.WorldRenderContextImpl;
-
+import net.minecraft.client.renderer.LightTexture;
+import com.mojang.blaze3d.vertex.PoseStack;
 import io.vram.frex.api.renderloop.BlockOutlineListener.BlockOutlineContext;
 import io.vram.frex.api.renderloop.WorldRenderContext;
 

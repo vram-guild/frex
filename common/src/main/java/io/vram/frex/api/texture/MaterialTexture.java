@@ -21,12 +21,10 @@
 package io.vram.frex.api.texture;
 
 import org.jetbrains.annotations.Nullable;
-
+import io.vram.frex.api.renderer.Renderer;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
-
-import io.vram.frex.api.renderer.Renderer;
 
 public interface MaterialTexture {
 	ResourceLocation id();

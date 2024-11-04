@@ -21,12 +21,9 @@
 package io.vram.frex.api.rendertype;
 
 import java.util.function.Predicate;
-
-import org.jetbrains.annotations.ApiStatus.NonExtendable;
-
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderType.CompositeRenderType;
-
+import org.jetbrains.annotations.ApiStatus.NonExtendable;
 import io.vram.frex.impl.material.RenderTypeExclusionImpl;
 
 @NonExtendable

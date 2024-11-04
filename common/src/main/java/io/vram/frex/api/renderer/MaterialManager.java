@@ -21,11 +21,9 @@
 package io.vram.frex.api.renderer;
 
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.resources.ResourceLocation;
-
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.RenderMaterial;
+import net.minecraft.resources.ResourceLocation;
 
 public interface MaterialManager {
 	/**

@@ -20,11 +20,10 @@
 
 package io.vram.frex.api.texture;
 
+import io.vram.frex.impl.texture.SpriteIndexImpl;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
-
-import io.vram.frex.impl.texture.SpriteIndexImpl;
 
 public interface SpriteIndex {
 	TextureAtlasSprite fromIndex(int spriteId);

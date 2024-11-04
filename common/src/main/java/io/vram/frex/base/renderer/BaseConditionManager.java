@@ -21,11 +21,8 @@
 package io.vram.frex.base.renderer;
 
 import java.util.function.BooleanSupplier;
-
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-
 import net.minecraft.resources.ResourceLocation;
-
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import io.vram.frex.api.material.MaterialCondition;
 import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.renderer.ConditionManager;

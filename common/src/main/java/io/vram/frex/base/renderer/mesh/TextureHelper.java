@@ -22,11 +22,10 @@ package io.vram.frex.base.renderer.mesh;
 
 import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.UV_PRECISE_UNIT_VALUE;
 
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.Direction;
-
 import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.impl.texture.IndexedSprite;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.Direction;
 
 /**
  * Handles most texture-baking use cases for model loaders and model libraries

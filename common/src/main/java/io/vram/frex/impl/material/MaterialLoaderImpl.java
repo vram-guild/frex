@@ -23,13 +23,6 @@ package io.vram.frex.impl.material;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-
-import com.google.gson.JsonObject;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import org.jetbrains.annotations.ApiStatus.Internal;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -37,7 +30,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
-
+import com.google.gson.JsonObject;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import org.jetbrains.annotations.ApiStatus.Internal;
 import io.vram.frex.api.config.FrexConfig;
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.impl.FrexLog;
@@ -52,7 +49,7 @@ public final class MaterialLoaderImpl {
 	private static final ObjectArrayList<ResourceLocation> STANDARD_MATERIAL_IDS = new ObjectArrayList<>();
 
 	static {
-		STANDARD_MATERIAL_IDS.add(new ResourceLocation ("fabric", "standard"));
+		STANDARD_MATERIAL_IDS.add(ResourceLocation.fromNamespaceAndPath("fabric", "standard"));
 		STANDARD_MATERIAL_IDS.add(RenderMaterial.STANDARD_MATERIAL_KEY);
 	}
 
@@ -63,7 +60,7 @@ public final class MaterialLoaderImpl {
 	}
 
 	public static RenderMaterial loadMaterial(String materialString, RenderMaterial defaultValue) {
-		final ResourceLocation id = new ResourceLocation(materialString);
+		final ResourceLocation id = ResourceLocation.parse(materialString);
 
 		RenderMaterial result = loadMaterialCached(id);
 
@@ -98,7 +95,7 @@ public final class MaterialLoaderImpl {
 			return RenderMaterial.defaultMaterial();
 		}
 
-		final ResourceLocation id = new ResourceLocation(idIn.getNamespace(), "materials/" + idIn.getPath() + ".json");
+		final ResourceLocation id = ResourceLocation.fromNamespaceAndPath(idIn.getNamespace(), "materials/" + idIn.getPath() + ".json");
 
 		RenderMaterial result = null;
 		final ResourceManager rm = Minecraft.getInstance().getResourceManager();
@@ -118,7 +115,7 @@ public final class MaterialLoaderImpl {
 	}
 
 	public static TextureAtlasSprite loadSprite(String idForLog, String spriteId, TextureAtlas atlas, TextureAtlasSprite missingSprite) {
-		final TextureAtlasSprite sprite = atlas.getSprite(new ResourceLocation(spriteId));
+		final TextureAtlasSprite sprite = atlas.getSprite(ResourceLocation.parse(spriteId));
 
 		if (sprite == null || sprite == missingSprite) {
 			FrexLog.warn("Unable to find sprite " + spriteId + " for material map " + idForLog + ". Using default material.");

@@ -21,12 +21,10 @@
 package io.vram.frex.api.math;
 
 import org.joml.Vector3f;
-
-import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
-
 import io.vram.frex.api.mesh.QuadView;
 import io.vram.frex.api.model.util.GeometryUtil;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 
 /**
  * Static routines of general utility for renderer implementations.

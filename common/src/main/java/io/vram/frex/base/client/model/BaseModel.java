@@ -21,14 +21,12 @@
 package io.vram.frex.base.client.model;
 
 import java.util.function.Function;
-
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.world.inventory.InventoryMenu;
-
 import io.vram.frex.api.model.BlockItemModel;
 
 public abstract class BaseModel implements BlockItemModel, BakedModel {

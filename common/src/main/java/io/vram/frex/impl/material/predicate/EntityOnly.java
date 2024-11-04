@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
-
+import io.vram.frex.api.material.MaterialView;
 import net.minecraft.advancements.critereon.EntityEquipmentPredicate;
 import net.minecraft.advancements.critereon.EntityFlagsPredicate;
 import net.minecraft.advancements.critereon.MobEffectsPredicate;
@@ -37,8 +37,6 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.scores.Team;
-
-import io.vram.frex.api.material.MaterialView;
 
 /**
  * Stripped-down adaptation of vanilla class used for entity loot predicates.
@@ -109,7 +107,7 @@ public class EntityOnly extends EntityBiPredicate {
 			//final PlayerPredicate player = PlayerPredicate.fromJson(jsonObject.get("player"));
 			//final FishingHookPredicate fishHook = FishingHookPredicate.fromJson(jsonObject.get("fishing_hook"));
 			final String team = GsonHelper.getAsString(jsonObject, "team", (String) null);
-			final ResourceLocation catType = jsonObject.has("catType") ? new ResourceLocation(GsonHelper.getAsString(jsonObject, "catType")) : null;
+			final ResourceLocation catType = jsonObject.has("catType") ? ResourceLocation.parse(GsonHelper.getAsString(jsonObject, "catType")) : null;
 
 			return new EntityOnly(effects, nbt, flags, equipment, team, catType);
 		} else {

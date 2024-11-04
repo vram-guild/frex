@@ -21,12 +21,9 @@
 package io.vram.frex.impl.light;
 
 import java.io.InputStreamReader;
-
+import net.minecraft.util.GsonHelper;
 import com.google.gson.JsonObject;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.GsonHelper;
-
 import io.vram.frex.api.light.ItemLight;
 
 @Internal

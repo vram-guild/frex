@@ -20,11 +20,10 @@
 
 package io.vram.frex.impl.model;
 
-import org.jetbrains.annotations.ApiStatus.Internal;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelShaper;
 import net.minecraft.client.renderer.block.BlockModelShaper;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 /**
  * Avoids a few pointer chases.

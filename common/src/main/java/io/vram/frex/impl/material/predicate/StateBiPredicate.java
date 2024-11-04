@@ -21,9 +21,7 @@
 package io.vram.frex.impl.material.predicate;
 
 import java.util.function.BiPredicate;
-
 import net.minecraft.world.level.block.state.BlockState;
-
 import io.vram.frex.api.material.MaterialView;
 
 public abstract class StateBiPredicate implements BiPredicate<BlockState, MaterialView> {

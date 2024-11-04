@@ -21,13 +21,12 @@
 package io.vram.frex.pastel;
 
 import java.util.function.Supplier;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
-
 import io.vram.frex.api.material.MaterialConstants;
+import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.base.renderer.context.render.EntityBlockRenderContext;
 import io.vram.frex.base.renderer.util.EncoderUtil;
 

@@ -24,11 +24,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-
-import net.minecraft.core.Direction;
-
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
-
+import net.minecraft.core.Direction;
 import io.vram.frex.api.math.PackedVector3f;
 import io.vram.frex.api.mesh.QuadView;
 

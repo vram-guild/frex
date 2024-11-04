@@ -21,13 +21,10 @@
 package io.vram.frex.impl.config;
 
 import java.util.function.Supplier;
-
+import net.minecraft.resources.ResourceLocation;
 import com.google.common.base.Preconditions;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.resources.ResourceLocation;
-
 import io.vram.frex.impl.FrexLog;
 
 @Internal

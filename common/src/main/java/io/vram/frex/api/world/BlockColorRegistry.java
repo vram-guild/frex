@@ -22,11 +22,9 @@ package io.vram.frex.api.world;
 
 import org.jetbrains.annotations.ApiStatus.NonExtendable;
 import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.world.level.block.Block;
-
 import io.vram.frex.impl.world.ColorRegistryImpl;
 
 /**

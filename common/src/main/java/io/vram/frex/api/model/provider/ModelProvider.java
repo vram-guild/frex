@@ -20,10 +20,9 @@
 
 package io.vram.frex.api.model.provider;
 
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Interface for functions that intercept model load requests. These functions

@@ -23,9 +23,6 @@ package io.vram.frex.base.client.model;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Function;
-
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -36,7 +33,7 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
-
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import io.vram.frex.api.model.util.BakedModelUtil;
 
 /**
@@ -74,7 +71,7 @@ public abstract class BaseModelBuilder<T extends BaseModelBuilder<T>> implements
 	}
 
 	public T defaultParticleSprite(String sprite) {
-		defaultParticleSprite = new ResourceLocation(sprite);
+		defaultParticleSprite = ResourceLocation.parse(sprite);
 		return (T) this;
 	}
 
@@ -128,14 +125,14 @@ public abstract class BaseModelBuilder<T extends BaseModelBuilder<T>> implements
 		// unsure if we need this
 	}
 
-	protected abstract BakedModel bakeOnce(ModelBaker baker, Function<Material, TextureAtlasSprite> spriteFunc, ModelState modelState, ResourceLocation modelLocation);
+	protected abstract BakedModel bakeOnce(ModelBaker baker, Function<Material, TextureAtlasSprite> spriteFunc, ModelState modelState);
 
 	@Override
-	public final BakedModel bake(ModelBaker baker, Function<Material, TextureAtlasSprite> spriteFunc, ModelState modelState, ResourceLocation modelLocation) {
+	public final BakedModel bake(ModelBaker baker, Function<Material, TextureAtlasSprite> spriteFunc, ModelState modelState) {
 		var result = this.result;
 
 		if (result == null) {
-			result = bakeOnce(baker, spriteFunc, modelState, modelLocation);
+			result = bakeOnce(baker, spriteFunc, modelState);
 			this.result = result;
 		}
 

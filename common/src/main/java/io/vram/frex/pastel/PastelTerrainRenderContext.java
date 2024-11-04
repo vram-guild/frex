@@ -20,22 +20,13 @@
 
 package io.vram.frex.pastel;
 
-import java.util.Set;
-
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.jetbrains.annotations.Nullable;
-
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexFormat;
-
+import java.util.Map;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.SectionBufferBuilderPack;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SectionBufferBuilderPack;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
@@ -43,8 +34,13 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
-
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import org.jetbrains.annotations.Nullable;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import io.vram.frex.api.material.MaterialConstants;
+import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.math.FixedMath255;
 import io.vram.frex.api.math.MatrixStack;
 import io.vram.frex.api.math.PackedSectionPos;
@@ -60,8 +56,7 @@ public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintG
 	protected RenderChunkRegionExt regionExt;
 	protected SectionBufferBuilderPack buffers;
 	@SuppressWarnings("rawtypes")
-	protected Set initializedBuffers;
-	protected final Object2ObjectOpenHashMap<RenderType, BufferBuilder> usedBuffers = new Object2ObjectOpenHashMap<>();
+	protected Map initializedBuffers;
 
 	private final AoCalculator aoCalc = new AoCalculator() {
 		@Override
@@ -110,11 +105,10 @@ public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintG
 		};
 	}
 
-	public PastelTerrainRenderContext prepareForRegion(RenderChunkRegion region, PoseStack poseStack, BlockPos origin, SectionBufferBuilderPack buffers, @SuppressWarnings("rawtypes") Set set) {
+	public PastelTerrainRenderContext prepareForRegion(RenderChunkRegion region, com.mojang.blaze3d.vertex.PoseStack poseStack, BlockPos origin, SectionBufferBuilderPack buffers, @SuppressWarnings("rawtypes") Map map) {
 		inputContext.prepareForWorld(region, true, MatrixStack.fromVanilla(poseStack));
 		regionExt = (RenderChunkRegionExt) region;
-		usedBuffers.clear();
-		this.initializedBuffers = set;
+		this.initializedBuffers = map;
 		regionExt.frx_setContext(this, origin);
 		this.buffers = buffers;
 		return this;
@@ -207,16 +201,11 @@ public class PastelTerrainRenderContext extends BlockRenderContext<BlockAndTintG
 	/** Lazily retrieves output buffer for given layer, initializing as needed. */
 	@SuppressWarnings("unchecked")
 	protected BufferBuilder getInitializedBuffer(RenderType renderLayer) {
-		BufferBuilder result = usedBuffers.get(renderLayer);
+		BufferBuilder result = (BufferBuilder)initializedBuffers.get(renderLayer);
 
 		if (result == null) {
-			final BufferBuilder builder = buffers.builder(renderLayer);
-			result = builder;
-			usedBuffers.put(renderLayer, result);
-
-			if (initializedBuffers.add(renderLayer)) {
-				result.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-			}
+			result = new BufferBuilder(buffers.buffer(renderLayer), VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+			initializedBuffers.put(renderLayer, result);
 		}
 
 		return result;

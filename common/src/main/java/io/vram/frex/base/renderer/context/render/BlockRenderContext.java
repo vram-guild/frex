@@ -20,16 +20,16 @@
 
 package io.vram.frex.base.renderer.context.render;
 
+import io.vram.frex.api.material.MaterialMap;
+import io.vram.frex.api.model.util.ColorUtil;
+import io.vram.frex.base.renderer.context.input.BaseBlockInputContext;
+import io.vram.frex.base.renderer.util.EncoderUtil;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-
-import io.vram.frex.api.material.MaterialMap;
-import io.vram.frex.api.model.util.ColorUtil;
-import io.vram.frex.base.renderer.context.input.BaseBlockInputContext;
-import io.vram.frex.base.renderer.util.EncoderUtil;
+import net.minecraft.world.level.material.FluidState;
 
 public abstract class BlockRenderContext<T extends BlockAndTintGetter> extends BakedRenderContext<BaseBlockInputContext<T>> {
 	/**

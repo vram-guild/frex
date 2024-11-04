@@ -21,12 +21,9 @@
 package io.vram.frex.mixin;
 
 import java.util.function.Function;
-
-import org.spongepowered.asm.mixin.Mixin;
-
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-
+import org.spongepowered.asm.mixin.Mixin;
 import io.vram.frex.impl.world.BlockEntityRenderDataImpl;
 import io.vram.frex.impl.world.BlockEntityRenderDataProviderAccess;
 

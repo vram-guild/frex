@@ -23,13 +23,12 @@ package io.vram.frex.impl.light;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.IdentityHashMap;
-
+import java.util.Optional;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-
 import io.vram.frex.api.light.ItemLight;
 import io.vram.frex.impl.FrexLog;
 
@@ -46,7 +45,7 @@ public class ItemLightLoader {
 
 	private void loadItem(ResourceManager manager, Item item) {
 		final ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(item);
-		final ResourceLocation id = new ResourceLocation(itemId.getNamespace(), "lights/item/" + itemId.getPath() + ".json");
+		final ResourceLocation id = ResourceLocation.fromNamespaceAndPath(itemId.getNamespace(), "lights/item/" + itemId.getPath() + ".json");
 
 		try {
 			final var res = manager.getResource(id);

@@ -24,11 +24,8 @@ import java.util.function.Function;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
-
-import net.minecraft.world.level.block.entity.BlockEntity;
-
 import net.fabricmc.fabric.api.blockview.v2.RenderDataBlockEntity;
-
+import net.minecraft.world.level.block.entity.BlockEntity;
 import io.vram.frex.impl.world.BlockEntityRenderDataImpl;
 
 @Mixin(BlockEntityRenderDataImpl.class)

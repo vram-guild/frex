@@ -20,15 +20,14 @@
 
 package io.vram.frex.api.model;
 
+import io.vram.frex.api.buffer.QuadSink;
+import io.vram.frex.api.model.InputContext.Type;
+import io.vram.frex.impl.model.ModelLookups;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-
-import io.vram.frex.api.buffer.QuadSink;
-import io.vram.frex.api.model.InputContext.Type;
-import io.vram.frex.impl.model.ModelLookups;
 
 @FunctionalInterface
 public interface ItemModel extends DynamicModel {

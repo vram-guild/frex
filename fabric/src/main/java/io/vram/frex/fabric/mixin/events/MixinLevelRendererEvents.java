@@ -21,6 +21,8 @@
 package io.vram.frex.fabric.mixin.events;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -29,10 +31,17 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-
+import io.vram.frex.api.renderloop.BlockOutlineListener;
+import io.vram.frex.api.renderloop.BlockOutlinePreListener;
+import io.vram.frex.api.renderloop.DebugRenderListener;
+import io.vram.frex.api.renderloop.EntityRenderPostListener;
+import io.vram.frex.api.renderloop.EntityRenderPreListener;
+import io.vram.frex.api.renderloop.FrustumSetupListener;
+import io.vram.frex.api.renderloop.TranslucentPostListener;
+import io.vram.frex.api.renderloop.WorldRenderContextBase;
+import io.vram.frex.api.renderloop.WorldRenderLastListener;
+import io.vram.frex.api.renderloop.WorldRenderPostListener;
+import io.vram.frex.api.renderloop.WorldRenderStartListener;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -46,18 +55,6 @@ import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
-
-import io.vram.frex.api.renderloop.BlockOutlineListener;
-import io.vram.frex.api.renderloop.BlockOutlinePreListener;
-import io.vram.frex.api.renderloop.DebugRenderListener;
-import io.vram.frex.api.renderloop.EntityRenderPostListener;
-import io.vram.frex.api.renderloop.EntityRenderPreListener;
-import io.vram.frex.api.renderloop.FrustumSetupListener;
-import io.vram.frex.api.renderloop.TranslucentPostListener;
-import io.vram.frex.api.renderloop.WorldRenderContextBase;
-import io.vram.frex.api.renderloop.WorldRenderLastListener;
-import io.vram.frex.api.renderloop.WorldRenderPostListener;
-import io.vram.frex.api.renderloop.WorldRenderStartListener;
 
 // Only loaded when Fabric API is not present
 @Mixin(LevelRenderer.class)

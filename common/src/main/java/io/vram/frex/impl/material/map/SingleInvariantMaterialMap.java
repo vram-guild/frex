@@ -22,12 +22,10 @@ package io.vram.frex.impl.material.map;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.api.material.MaterialTransform;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 @Internal
 class SingleInvariantMaterialMap<T> implements MaterialMap<T> {

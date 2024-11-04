@@ -22,11 +22,9 @@ package io.vram.frex.impl.material;
 
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.jetbrains.annotations.ApiStatus.Internal;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-
+import org.jetbrains.annotations.ApiStatus.Internal;
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.MaterialTransform;
 
@@ -74,8 +72,8 @@ public class MaterialTransformDeserializer {
 		final boolean hasVertex = json.has("vertexSource");
 
 		if (hasFragment || hasVertex) {
-			final ResourceLocation vs = hasVertex ? new ResourceLocation(GsonHelper.getAsString(json, "vertexSource")) : null;
-			final ResourceLocation fs = hasFragment ? new ResourceLocation(GsonHelper.getAsString(json, "fragmentSource")) : null;
+			final ResourceLocation vs = hasVertex ? ResourceLocation.parse(GsonHelper.getAsString(json, "vertexSource")) : null;
+			final ResourceLocation fs = hasFragment ? ResourceLocation.parse(GsonHelper.getAsString(json, "fragmentSource")) : null;
 			transforms.add(finder -> finder.shader(vs, fs));
 		}
 
@@ -183,7 +181,7 @@ public class MaterialTransformDeserializer {
 		}
 
 		if (json.has("texture")) {
-			final ResourceLocation texture = new ResourceLocation(GsonHelper.getAsString(json, "texture"));
+			final ResourceLocation texture = ResourceLocation.parse(GsonHelper.getAsString(json, "texture"));
 			transforms.add(finder -> finder.texture(texture));
 		}
 

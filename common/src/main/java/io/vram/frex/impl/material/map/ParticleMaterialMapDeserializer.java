@@ -30,7 +30,6 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-
 import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.impl.FrexLog;
 import io.vram.frex.impl.material.MaterialLoaderImpl;

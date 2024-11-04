@@ -20,10 +20,9 @@
 
 package io.vram.frex.base.renderer.context.input;
 
-import net.minecraft.client.renderer.texture.OverlayTexture;
-
 import io.vram.frex.api.math.MatrixStack;
 import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 
 public class AbsentInputContext extends BaseInputContext {
 	public AbsentInputContext() {

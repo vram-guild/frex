@@ -21,12 +21,9 @@
 package io.vram.frex.impl.material.map;
 
 import java.util.function.BiPredicate;
-
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.MaterialTransform;
 import io.vram.frex.api.material.MaterialView;

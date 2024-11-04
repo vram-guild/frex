@@ -20,12 +20,11 @@
 
 package io.vram.frex.api.texture;
 
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-
 import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.mesh.QuadView;
 import io.vram.frex.impl.texture.SpriteFinderImpl;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 /**
  * Indexes a texture atlas to allow fast lookup of Sprites from

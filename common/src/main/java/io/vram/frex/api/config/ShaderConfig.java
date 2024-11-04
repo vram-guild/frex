@@ -21,10 +21,8 @@
 package io.vram.frex.api.config;
 
 import java.util.function.Supplier;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-
 import io.vram.frex.impl.config.ShaderConfigImpl;
 
 /**

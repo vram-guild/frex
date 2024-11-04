@@ -21,10 +21,11 @@
 package io.vram.frex.base.renderer.context.render;
 
 import org.jetbrains.annotations.Nullable;
-
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
+import io.vram.frex.api.material.MaterialMap;
+import io.vram.frex.api.math.MatrixStack;
+import io.vram.frex.api.model.BlockModel;
+import io.vram.frex.base.renderer.context.input.BaseBlockInputContext;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
@@ -38,11 +39,6 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-
-import io.vram.frex.api.material.MaterialMap;
-import io.vram.frex.api.math.MatrixStack;
-import io.vram.frex.api.model.BlockModel;
-import io.vram.frex.base.renderer.context.input.BaseBlockInputContext;
 
 /**
  * Context used when blocks are rendered as part of an entity.
@@ -89,7 +85,7 @@ public abstract class EntityBlockRenderContext extends BlockRenderContext<BlockA
 	/**
 	 * Assumes region and block pos set earlier via {@link #setPosAndWorldFromEntity(Entity)}.
 	 */
-	public void render(ModelBlockRenderer vanillaRenderer, BakedModel model, BlockState state, PoseStack poseStack, MultiBufferSource consumers, int overlay, int light) {
+	public void render(ModelBlockRenderer vanillaRenderer, BakedModel model, BlockState state, com.mojang.blaze3d.vertex.PoseStack poseStack, MultiBufferSource consumers, int overlay, int light) {
 		defaultConsumer = consumers.getBuffer(ItemBlockRenderTypes.getRenderType(state, false));
 		this.light = light;
 		inputContext.prepareForWorld(level, false, MatrixStack.fromVanilla(poseStack));
@@ -100,7 +96,7 @@ public abstract class EntityBlockRenderContext extends BlockRenderContext<BlockA
 	}
 
 	// item frames don't have a block state but render like a block
-	public void renderItemFrame(ModelBlockRenderer modelRenderer, BakedModel model, PoseStack poseStack, MultiBufferSource consumers, int overlay, int light, ItemFrame itemFrameEntity) {
+	public void renderItemFrame(ModelBlockRenderer modelRenderer, BakedModel model, com.mojang.blaze3d.vertex.PoseStack poseStack, MultiBufferSource consumers, int overlay, int light, ItemFrame itemFrameEntity) {
 		defaultConsumer = consumers.getBuffer(Sheets.solidBlockSheet());
 		this.light = light;
 		inputContext.prepareForWorld(level, false, MatrixStack.fromVanilla(poseStack));

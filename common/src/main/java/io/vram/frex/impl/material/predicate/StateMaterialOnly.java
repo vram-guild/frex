@@ -20,9 +20,8 @@
 
 package io.vram.frex.impl.material.predicate;
 
-import net.minecraft.world.level.block.state.BlockState;
-
 import io.vram.frex.api.material.MaterialView;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class StateMaterialOnly extends StateBiPredicate {
 	private MaterialPredicate materialPredicate;

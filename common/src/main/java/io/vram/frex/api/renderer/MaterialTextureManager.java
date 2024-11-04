@@ -20,9 +20,8 @@
 
 package io.vram.frex.api.renderer;
 
-import net.minecraft.resources.ResourceLocation;
-
 import io.vram.frex.api.texture.MaterialTexture;
+import net.minecraft.resources.ResourceLocation;
 
 public interface MaterialTextureManager {
 	MaterialTexture textureFromId(ResourceLocation id);

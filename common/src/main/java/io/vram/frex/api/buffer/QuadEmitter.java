@@ -22,14 +22,12 @@ package io.vram.frex.api.buffer;
 
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.Direction;
-
 import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.mesh.QuadView;
 import io.vram.frex.api.model.util.FaceUtil;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.Direction;
 
 public interface QuadEmitter extends QuadView, QuadSink {
 	/**

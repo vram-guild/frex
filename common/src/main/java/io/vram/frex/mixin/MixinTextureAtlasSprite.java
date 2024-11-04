@@ -21,10 +21,8 @@
 package io.vram.frex.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
-
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-
 import io.vram.frex.impl.texture.IndexedSprite;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 @Mixin(TextureAtlasSprite.class)
 public class MixinTextureAtlasSprite implements IndexedSprite {

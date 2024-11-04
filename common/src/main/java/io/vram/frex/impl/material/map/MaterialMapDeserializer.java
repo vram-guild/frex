@@ -23,12 +23,6 @@ package io.vram.frex.impl.material.map;
 import java.io.InputStreamReader;
 import java.util.IdentityHashMap;
 import java.util.List;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import org.jetbrains.annotations.ApiStatus.Internal;
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
@@ -38,7 +32,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.StateHolder;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import org.jetbrains.annotations.ApiStatus.Internal;
+import org.jetbrains.annotations.Nullable;
 import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.api.material.MaterialTransform;
 import io.vram.frex.api.material.RenderMaterial;

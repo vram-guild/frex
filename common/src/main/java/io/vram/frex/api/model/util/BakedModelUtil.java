@@ -21,18 +21,15 @@
 package io.vram.frex.api.model.util;
 
 import java.util.List;
-
-import com.google.common.collect.ImmutableList;
-import org.joml.Math;
-import org.joml.Vector3f;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.core.Direction;
 import net.minecraft.world.inventory.InventoryMenu;
-
+import com.google.common.collect.ImmutableList;
+import org.joml.Math;
+import org.joml.Vector3f;
 import io.vram.frex.api.mesh.Mesh;
 import io.vram.frex.api.texture.SpriteFinder;
 

@@ -30,21 +30,18 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import io.vram.frex.api.math.MatrixStack;
 import io.vram.frex.impl.math.MatrixStackImpl;
 import io.vram.frex.mixinterface.PoseStackExt;
 
-@Mixin(PoseStack.class)
+@Mixin(com.mojang.blaze3d.vertex.PoseStack.class)
 public class MixinPoseStack implements PoseStackExt {
-	@Shadow @Final private Deque<PoseStack.Pose> poseStack;
+	@Shadow @Final private Deque<com.mojang.blaze3d.vertex.PoseStack.Pose> poseStack;
 	private MatrixStackImpl frxStack;
 
 	@Inject(method = "<init>", at = @At("RETURN"))
 	public void onNew(CallbackInfo ci) {
-		frxStack = new MatrixStackImpl(poseStack, (PoseStack) (Object) this);
+		frxStack = new MatrixStackImpl(poseStack, (com.mojang.blaze3d.vertex.PoseStack) (Object) this);
 	}
 
 	/**

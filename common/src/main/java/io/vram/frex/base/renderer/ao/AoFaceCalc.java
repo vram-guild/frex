@@ -21,7 +21,6 @@
 package io.vram.frex.base.renderer.ao;
 
 import java.util.function.IntBinaryOperator;
-
 import io.vram.frex.api.math.FixedMath255;
 
 /**

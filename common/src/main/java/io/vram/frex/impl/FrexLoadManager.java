@@ -20,8 +20,6 @@
 
 package io.vram.frex.impl;
 
-import net.minecraft.server.packs.resources.ResourceManager;
-
 import io.vram.frex.api.renderloop.RenderReloadListener;
 import io.vram.frex.base.renderer.util.ResourceCache;
 import io.vram.frex.impl.light.ItemLightLoader;
@@ -31,6 +29,7 @@ import io.vram.frex.impl.model.SimpleFluidSpriteProvider;
 import io.vram.frex.pastel.PastelBlockRenderContext;
 import io.vram.frex.pastel.PastelEntityBlockRenderContext;
 import io.vram.frex.pastel.PastelItemRenderContext;
+import net.minecraft.server.packs.resources.ResourceManager;
 
 public class FrexLoadManager {
 	public static void firstTimeLoad() {

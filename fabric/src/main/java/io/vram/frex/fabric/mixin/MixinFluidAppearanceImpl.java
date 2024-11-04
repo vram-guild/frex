@@ -22,12 +22,9 @@ package io.vram.frex.fabric.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
-
-import net.minecraft.world.level.material.Fluid;
-
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
-
+import net.minecraft.world.level.material.Fluid;
 import io.vram.frex.api.model.fluid.FluidAppearance;
 import io.vram.frex.impl.model.FluidAppearanceImpl;
 

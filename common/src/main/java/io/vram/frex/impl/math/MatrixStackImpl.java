@@ -21,23 +21,20 @@
 package io.vram.frex.impl.math;
 
 import java.util.Deque;
-
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-
-import com.mojang.blaze3d.vertex.PoseStack;
-
+import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import io.vram.frex.api.math.MatrixStack;
 
 public class MatrixStackImpl implements MatrixStack {
-	private final Deque<PoseStack.Pose> stack;
-	private final PoseStack wrapped;
-	private final ObjectArrayList<PoseStack.Pose> pool = new ObjectArrayList<>();
+	private final Deque<com.mojang.blaze3d.vertex.PoseStack.Pose> stack;
+	private final com.mojang.blaze3d.vertex.PoseStack wrapped;
+	private final ObjectArrayList<com.mojang.blaze3d.vertex.PoseStack.Pose> pool = new ObjectArrayList<>();
 	private Matrix4f modelMatrix;
 	private Matrix3f normalMatrix;
 
-	public MatrixStackImpl(Deque<PoseStack.Pose> stack, PoseStack wrapped) {
+	public MatrixStackImpl(Deque<com.mojang.blaze3d.vertex.PoseStack.Pose> stack, com.mojang.blaze3d.vertex.PoseStack wrapped) {
 		this.stack = stack;
 		this.wrapped = wrapped;
 		refresh();
@@ -51,8 +48,8 @@ public class MatrixStackImpl implements MatrixStack {
 
 	@Override
 	public void push() {
-		final PoseStack.Pose current = stack.getLast();
-		PoseStack.Pose add;
+		final com.mojang.blaze3d.vertex.PoseStack.Pose current = stack.getLast();
+		com.mojang.blaze3d.vertex.PoseStack.Pose add;
 
 		if (pool.isEmpty()) {
 			add = MatrixStackEntryHelper.create(new Matrix4f(current.pose()), new Matrix3f(current.normal()));
@@ -83,7 +80,7 @@ public class MatrixStackImpl implements MatrixStack {
 	}
 
 	@Override
-	public PoseStack toVanilla() {
+	public com.mojang.blaze3d.vertex.PoseStack toVanilla() {
 		return wrapped;
 	}
 }

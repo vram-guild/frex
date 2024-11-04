@@ -21,7 +21,6 @@
 package io.vram.frex.api.material;
 
 import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.ParticleType;
@@ -31,7 +30,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-
 import io.vram.frex.impl.material.map.MaterialMapLoader;
 
 public interface MaterialMap<T> {

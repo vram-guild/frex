@@ -22,11 +22,11 @@ package io.vram.frex.base.renderer.context.input;
 
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-
 import io.vram.frex.api.math.MatrixStack;
 import io.vram.frex.api.model.ItemModel.ItemInputContext;
 import io.vram.frex.api.rendertype.RenderTypeUtil;

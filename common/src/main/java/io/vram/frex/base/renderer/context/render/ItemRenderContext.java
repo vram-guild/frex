@@ -20,22 +20,20 @@
 
 package io.vram.frex.base.renderer.context.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.client.renderer.ItemModelShaper;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-
 import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.api.math.MatrixStack;
 import io.vram.frex.api.model.ItemModel;
 import io.vram.frex.base.renderer.context.input.BaseItemInputContext;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.renderer.ItemModelShaper;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public abstract class ItemRenderContext extends BakedRenderContext<BaseItemInputContext> {
 	@Override
@@ -46,7 +44,7 @@ public abstract class ItemRenderContext extends BakedRenderContext<BaseItemInput
 	protected abstract void prepareEncoding(MultiBufferSource vertexConsumers);
 
 	@SuppressWarnings("resource")
-	public void renderItem(ItemModelShaper models, ItemStack stack, ItemDisplayContext renderMode, boolean isLeftHand, PoseStack poseStack, MultiBufferSource vertexConsumers, int light, int overlay, BakedModel model) {
+	public void renderItem(ItemModelShaper models, ItemStack stack, ItemDisplayContext renderMode, boolean isLeftHand, com.mojang.blaze3d.vertex.PoseStack poseStack, MultiBufferSource vertexConsumers, int light, int overlay, BakedModel model) {
 		if (stack.isEmpty()) return;
 		final boolean detachedPerspective = renderMode == ItemDisplayContext.GUI || renderMode == ItemDisplayContext.GROUND || renderMode == ItemDisplayContext.FIXED;
 

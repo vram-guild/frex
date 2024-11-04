@@ -24,9 +24,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.IdentityHashMap;
 import java.util.List;
-
+import java.util.Optional;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
 import net.minecraft.client.particle.Particle;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -43,7 +42,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-
 import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.impl.FrexLog;
 import io.vram.frex.impl.material.MaterialLoaderImpl;
@@ -120,7 +118,7 @@ public class MaterialMapLoader {
 	private void loadBlock(ResourceManager manager, Block block) {
 		final ResourceLocation blockId = BuiltInRegistries.BLOCK.getKey(block);
 
-		final ResourceLocation id = new ResourceLocation(blockId.getNamespace(), "materialmaps/block/" + blockId.getPath() + ".json");
+		final ResourceLocation id = ResourceLocation.fromNamespaceAndPath(blockId.getNamespace(), "materialmaps/block/" + blockId.getPath() + ".json");
 
 		try {
 			final var res = manager.getResource(id);
@@ -136,7 +134,7 @@ public class MaterialMapLoader {
 	private void loadFluid(ResourceManager manager, Fluid fluid) {
 		final ResourceLocation blockId = BuiltInRegistries.FLUID.getKey(fluid);
 
-		final ResourceLocation id = new ResourceLocation(blockId.getNamespace(), "materialmaps/fluid/" + blockId.getPath() + ".json");
+		final ResourceLocation id = ResourceLocation.fromNamespaceAndPath(blockId.getNamespace(), "materialmaps/fluid/" + blockId.getPath() + ".json");
 
 		try {
 			final var res = manager.getResource(id);
@@ -152,7 +150,7 @@ public class MaterialMapLoader {
 	private void loadItem(ResourceManager manager, Item item) {
 		final ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(item);
 
-		final ResourceLocation id = new ResourceLocation(itemId.getNamespace(), "materialmaps/item/" + itemId.getPath() + ".json");
+		final ResourceLocation id = ResourceLocation.fromNamespaceAndPath(itemId.getNamespace(), "materialmaps/item/" + itemId.getPath() + ".json");
 
 		try {
 			final var res = manager.getResource(id);
@@ -181,7 +179,7 @@ public class MaterialMapLoader {
 
 		if (particleId == null) return;
 
-		final ResourceLocation id = new ResourceLocation(particleId.getNamespace(), "materialmaps/particle/" + particleId.getPath() + ".json");
+		final ResourceLocation id = ResourceLocation.fromNamespaceAndPath(particleId.getNamespace(), "materialmaps/particle/" + particleId.getPath() + ".json");
 
 		try {
 			final var res = manager.getResource(id);
@@ -199,7 +197,7 @@ public class MaterialMapLoader {
 
 		if (blockEntityId == null) return;
 
-		final ResourceLocation id = new ResourceLocation(blockEntityId.getNamespace(), "materialmaps/block_entity/" + blockEntityId.getPath() + ".json");
+		final ResourceLocation id = ResourceLocation.fromNamespaceAndPath(blockEntityId.getNamespace(), "materialmaps/block_entity/" + blockEntityId.getPath() + ".json");
 
 		try {
 			final List<Resource> resources = manager.getResourceStack(id);
@@ -214,7 +212,7 @@ public class MaterialMapLoader {
 
 	private void loadEntity(ResourceManager manager, EntityType<?> entityType) {
 		final ResourceLocation entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
-		final ResourceLocation id = new ResourceLocation(entityId.getNamespace(), "materialmaps/entity/" + entityId.getPath() + ".json");
+		final ResourceLocation id = ResourceLocation.fromNamespaceAndPath(entityId.getNamespace(), "materialmaps/entity/" + entityId.getPath() + ".json");
 
 		try {
 			final List<Resource> resources = manager.getResourceStack(id);

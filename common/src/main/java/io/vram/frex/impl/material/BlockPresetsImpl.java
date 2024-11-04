@@ -21,14 +21,11 @@
 package io.vram.frex.impl.material;
 
 import java.util.function.BiConsumer;
-
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.jetbrains.annotations.ApiStatus.Internal;
-
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
-
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import org.jetbrains.annotations.ApiStatus.Internal;
 import io.vram.frex.api.material.MaterialConstants;
 
 @Internal

@@ -26,25 +26,21 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
-
-import com.google.common.collect.ImmutableList;
-import org.spongepowered.include.com.google.common.base.Preconditions;
-
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.resources.model.BlockStateModelLoader;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
-
+import com.google.common.collect.ImmutableList;
+import org.spongepowered.include.com.google.common.base.Preconditions;
 import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.buffer.QuadTransform;
@@ -111,12 +107,12 @@ public class TransformingMeshModel extends BaseModel {
 		}
 
 		@Override
-		public BakedModel bakeOnce(ModelBaker baker, Function<Material, TextureAtlasSprite> spriteFunc, ModelState modelState, ResourceLocation modelLocation) {
+		public BakedModel bakeOnce(ModelBaker baker, Function<Material, TextureAtlasSprite> spriteFunc, ModelState modelState) {
 			return new TransformingMeshModel(this, spriteFunc);
 		}
 	}
 
-	public static BiFunction<Map<ResourceLocation, BlockModel>, Map<ResourceLocation, List<ModelBakery.LoadedJson>>, ModelProvider<ModelResourceLocation>> createProvider(Consumer<Builder> setupFunc, MeshFactory meshFactory, QuadTransform transform) {
+	public static BiFunction<Map<ResourceLocation, BlockModel>, Map<ResourceLocation, List<BlockStateModelLoader.LoadedJson>>, ModelProvider<ResourceLocation>> createProvider(Consumer<Builder> setupFunc, MeshFactory meshFactory, QuadTransform transform) {
 		return (models, blockStates) -> {
 			final var builder = new Builder(meshFactory, transform);
 			setupFunc.accept(builder);
@@ -141,6 +137,6 @@ public class TransformingMeshModel extends BaseModel {
 
 	public static void createAndRegisterCube(String spritePath, int color, Function<MaterialFinder, RenderMaterial> materialFunc, QuadTransform transform, String... paths) {
 		Preconditions.checkNotNull(paths);
-		createAndRegisterCube(new ResourceLocation(spritePath), color, materialFunc, transform, ModelProviderRegistryImpl.stringsToLocations(paths));
+		createAndRegisterCube(ResourceLocation.parse(spritePath), color, materialFunc, transform, ModelProviderRegistryImpl.stringsToLocations(paths));
 	}
 }

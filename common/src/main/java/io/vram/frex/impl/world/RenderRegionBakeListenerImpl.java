@@ -22,11 +22,8 @@ package io.vram.frex.impl.world;
 
 import java.util.List;
 import java.util.function.Predicate;
-
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-
 import net.minecraft.world.level.Level;
-
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import io.vram.frex.api.world.RenderRegionBakeListener;
 import io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext;
 

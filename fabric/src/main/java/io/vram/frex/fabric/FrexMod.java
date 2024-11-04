@@ -26,17 +26,14 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
-
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.resources.ResourceManager;
-
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.fabricmc.loader.api.FabricLoader;
-
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.ResourceManager;
 import io.vram.frex.api.config.FrexConfig;
 import io.vram.frex.impl.FrexLoadManager;
 import io.vram.frex.impl.config.FlawlessFramesImpl;
@@ -68,7 +65,7 @@ public class FrexMod implements ClientModInitializer {
 
 	private final SimpleSynchronousResourceReloadListener modelTextureListener = new SimpleSynchronousResourceReloadListener() {
 		private final List<ResourceLocation> deps = ImmutableList.of(ResourceReloadListenerKeys.MODELS, ResourceReloadListenerKeys.TEXTURES);
-		private final ResourceLocation id = new ResourceLocation("frex:models_and_textures");
+		private final ResourceLocation id = ResourceLocation.parse("frex:models_and_textures");
 
 		@Override
 		public ResourceLocation getFabricId() {
@@ -88,7 +85,7 @@ public class FrexMod implements ClientModInitializer {
 
 	private final SimpleSynchronousResourceReloadListener lightListener = new SimpleSynchronousResourceReloadListener() {
 		private final List<ResourceLocation> deps = ImmutableList.of();
-		private final ResourceLocation id = new ResourceLocation("frex:general");
+		private final ResourceLocation id = ResourceLocation.parse("frex:general");
 
 		@Override
 		public ResourceLocation getFabricId() {

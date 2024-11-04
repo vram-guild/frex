@@ -21,14 +21,12 @@
 package io.vram.frex.api.model.fluid;
 
 import org.jetbrains.annotations.Nullable;
-
+import io.vram.frex.impl.model.BiomeLookupHelper;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.material.FluidState;
-
-import io.vram.frex.impl.model.BiomeLookupHelper;
 
 /**
  * Get the tint color for a fluid being rendered at a given position.

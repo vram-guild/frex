@@ -44,13 +44,9 @@ import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.VERTEX_X0;
 import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.VERTEX_Y0;
 import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.VERTEX_Z0;
 
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-
-import com.mojang.blaze3d.vertex.VertexConsumer;
-
-import net.minecraft.core.Direction;
-
 import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.config.FrexConfig;
 import io.vram.frex.api.material.RenderMaterial;
@@ -58,6 +54,7 @@ import io.vram.frex.api.math.PackedVector3f;
 import io.vram.frex.api.mesh.QuadView;
 import io.vram.frex.api.model.util.FaceUtil;
 import io.vram.frex.api.model.util.GeometryUtil;
+import net.minecraft.core.Direction;
 
 /**
  * Base class for all quads / quad makers. Handles the ugly bits
@@ -482,6 +479,6 @@ public class BaseQuadView implements QuadView {
 		final float yOut = matrix.m01() * x + matrix.m11() * y + matrix.m21() * z + matrix.m31();
 		final float zOut = matrix.m02() * x + matrix.m12() * y + matrix.m22() * z + matrix.m32();
 
-		buff.vertex(xOut, yOut, zOut);
+		buff.addVertex(xOut, yOut, zOut);
 	}
 }

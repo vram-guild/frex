@@ -23,10 +23,8 @@ package io.vram.frex.base.renderer;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.resources.ResourceLocation;
-
+import org.jetbrains.annotations.Nullable;
 import io.vram.frex.api.material.MaterialShader;
 import io.vram.frex.api.renderer.MaterialShaderManager;
 

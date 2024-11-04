@@ -20,8 +20,6 @@
 
 package io.vram.frex.base.renderer.context.render;
 
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-
 import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.material.MaterialFinder;
 import io.vram.frex.api.material.MaterialMap;
@@ -32,6 +30,7 @@ import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 import io.vram.frex.base.renderer.mesh.MeshEncodingHelper;
 import io.vram.frex.base.renderer.mesh.RootQuadEmitter;
 import io.vram.frex.pastel.PastelTerrainRenderContext;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 /**
  * Base class for all render contexts. ender contexts handle state management

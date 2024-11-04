@@ -21,13 +21,11 @@
 package io.vram.frex.impl.material;
 
 import java.util.function.Predicate;
-
+import net.minecraft.client.renderer.RenderType;
 import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.client.renderer.RenderType;
 
 @Internal
 public class RenderTypeExclusionImpl {

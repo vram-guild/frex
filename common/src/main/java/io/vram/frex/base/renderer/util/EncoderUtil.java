@@ -22,17 +22,16 @@ package io.vram.frex.base.renderer.util;
 
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.BlockAndTintGetter;
-
+import io.vram.frex.api.material.RenderMaterial;
 import io.vram.frex.api.math.FrexMathUtil;
+import io.vram.frex.api.math.MatrixStack;
 import io.vram.frex.api.math.PackedVector3f;
 import io.vram.frex.api.model.InputContext;
 import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
 import io.vram.frex.base.renderer.mesh.MeshEncodingHelper;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 
 public abstract class EncoderUtil {
 	public static void encodeQuad(BaseQuadEmitter quad, InputContext inputContext, VertexConsumer buff) {
@@ -60,11 +59,11 @@ public abstract class EncoderUtil {
 			quad.transformAndAppendVertex(i, matrix, buff);
 
 			final int color = quad.vertexColor(i);
-			buff.color(color & 0xFF, (color >> 8) & 0xFF, (color >> 16) & 0xFF, (color >> 24) & 0xFF);
+			buff.setColor(color & 0xFF, (color >> 8) & 0xFF, (color >> 16) & 0xFF, (color >> 24) & 0xFF);
 
-			buff.uv(quad.u(i), quad.v(i));
-			buff.overlayCoords(overlayU, overlayV);
-			buff.uv2(emissive ? MeshEncodingHelper.FULL_BRIGHTNESS : quad.lightmap(i));
+			buff.setUv(quad.u(i), quad.v(i));
+			buff.setUv1(overlayU, overlayV);
+			buff.setLight(emissive ? MeshEncodingHelper.FULL_BRIGHTNESS : quad.lightmap(i));
 
 			final int p = ((quadNormalFlags & 1 << i) == 0) ? faceNormal : quad.packedNormal(i);
 
@@ -76,7 +75,7 @@ public abstract class EncoderUtil {
 				nz = PackedVector3f.unpackZ(transformedNormal);
 			}
 
-			buff.normal(nx, ny, nz);
+			buff.setNormal(nx, ny, nz);
 			buff.endVertex();
 		}
 	}

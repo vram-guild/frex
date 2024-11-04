@@ -22,10 +22,8 @@ package io.vram.frex.api.buffer;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
 import org.joml.Matrix4f;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import io.vram.frex.api.material.RenderMaterial;
 
 @Experimental
@@ -39,40 +37,38 @@ public interface VertexEmitter extends VertexConsumer, QuadSink {
 	 */
 	VertexEmitter material(RenderMaterial material);
 
-	VertexEmitter vertex(float x, float y, float z);
-
 	/**
 	 * @param color rgba - alpha is high byte, red and blue pre-swapped if needed
 	 */
 	@Override
-	VertexEmitter color(int color);
+	VertexEmitter setColor(int color);
 
 	@Override
-	default VertexEmitter vertex(double x, double y, double z) {
-		vertex((float) x, (float) y, (float) z);
+	default VertexEmitter addVertex(float x, float y, float z) {
+		addVertex(x, y, z);
 		return this;
 	}
 
 	@Override
-	VertexEmitter vertex(Matrix4f matrix, float x, float y, float z);
+	VertexEmitter addVertex(Matrix4f matrix, float x, float y, float z);
 
 	@Override
-	VertexEmitter normal(PoseStack.Pose matrix, float x, float y, float z);
+	VertexEmitter setNormal(PoseStack.Pose matrix, float x, float y, float z);
 
 	@Override
-	VertexEmitter color(int red, int green, int blue, int alpha);
+	VertexEmitter setColor(int red, int green, int blue, int alpha);
 
 	@Override
-	VertexEmitter uv(float u, float v);
+	VertexEmitter setUv(float u, float v);
 
 	@Override
-	VertexEmitter overlayCoords(int u, int v);
+	VertexEmitter setUv1(int u, int v);
 
 	@Override
-	VertexEmitter uv2(int u, int v);
+	VertexEmitter setUv2(int u, int v);
 
 	@Override
-	VertexEmitter normal(float x, float y, float z);
+	VertexEmitter setNormal(float x, float y, float z);
 
 	@Override
 	default VertexEmitter asVertexEmitter() {

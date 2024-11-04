@@ -22,18 +22,15 @@ package io.vram.frex.mixin;
 
 import java.util.List;
 import java.util.Optional;
-
+import net.minecraft.client.renderer.texture.atlas.SpriteSourceList;
+import net.minecraft.client.renderer.texture.atlas.sources.SingleFile;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
-import net.minecraft.client.renderer.texture.atlas.SpriteSourceList;
-import net.minecraft.client.renderer.texture.atlas.sources.SingleFile;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-
 import io.vram.frex.impl.texture.SpriteInjectorImpl;
 
 @Mixin(SpriteSourceList.class)

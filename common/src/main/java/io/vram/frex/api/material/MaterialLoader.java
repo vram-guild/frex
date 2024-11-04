@@ -21,10 +21,8 @@
 package io.vram.frex.api.material;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.resources.ResourceLocation;
-
 import io.vram.frex.impl.material.MaterialLoaderImpl;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * For use by model loading libraries - handles deserialization of material JSON

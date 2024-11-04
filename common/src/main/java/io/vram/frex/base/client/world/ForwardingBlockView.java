@@ -23,7 +23,6 @@ package io.vram.frex.base.client.world;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;

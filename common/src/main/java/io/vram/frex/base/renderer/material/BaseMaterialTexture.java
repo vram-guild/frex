@@ -20,16 +20,15 @@
 
 package io.vram.frex.base.renderer.material;
 
+import io.vram.frex.api.texture.MaterialTexture;
+import io.vram.frex.api.texture.SpriteFinder;
+import io.vram.frex.api.texture.SpriteIndex;
+import io.vram.frex.base.renderer.util.ResourceCache;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
-
-import io.vram.frex.api.texture.MaterialTexture;
-import io.vram.frex.api.texture.SpriteFinder;
-import io.vram.frex.api.texture.SpriteIndex;
-import io.vram.frex.base.renderer.util.ResourceCache;
 
 public class BaseMaterialTexture implements MaterialTexture {
 	protected final int index;

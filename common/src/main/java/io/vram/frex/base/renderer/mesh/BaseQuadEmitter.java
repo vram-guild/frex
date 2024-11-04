@@ -44,15 +44,10 @@ import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.VERTEX_NORMAL0;
 import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.VERTEX_U0;
 import static io.vram.frex.base.renderer.mesh.MeshEncodingHelper.VERTEX_X0;
 
-import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.Direction;
-
+import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.buffer.VertexEmitter;
 import io.vram.frex.api.material.RenderMaterial;
@@ -60,7 +55,11 @@ import io.vram.frex.api.math.PackedVector3f;
 import io.vram.frex.api.model.BakedInputContext;
 import io.vram.frex.api.model.util.ColorUtil;
 import io.vram.frex.api.model.util.FaceUtil;
+import io.vram.frex.api.texture.SpriteIndex;
 import io.vram.frex.impl.texture.IndexedSprite;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.Direction;
 
 /**
  * Almost-concrete implementation of a mutable quad. The only missing part is {@link #emit()},
@@ -464,46 +463,46 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 
 	@Override
 	public void vertex(float x, float y, float z, float red, float green, float blue, float alpha, float u, float v, int overlay, int light, float normalX, float normalY, float normalZ) {
-		vertex(x, y, z);
-		color(MeshEncodingHelper.packColor(red, green, blue, alpha));
-		uv(u, v);
-		setOverlay(overlay);
-		uv2(light);
-		normal(normalX, normalY, normalZ);
+		addVertex(x, y, z);
+		setColor(MeshEncodingHelper.packColor(red, green, blue, alpha));
+		setUv(u, v);
+		setOverlayValue(overlay);
+		setLight(light);
+		setNormal(normalX, normalY, normalZ);
 		endVertex();
 	}
 
 	@Override
-	public VertexEmitter vertex(float x, float y, float z) {
+	public VertexEmitter addVertex(float x, float y, float z) {
 		pos(vertexIndex, x, y, z);
 		return this;
 	}
 
 	@Override
-	public VertexEmitter color(int color) {
+	public VertexEmitter setColor(int color) {
 		vertexColor(vertexIndex, color);
 		return this;
 	}
 
 	@Override
-	public VertexEmitter uv(float u, float v) {
+	public VertexEmitter setUv(float u, float v) {
 		uv(vertexIndex, u, v);
 		return this;
 	}
 
 	@Override
-	public VertexEmitter overlayCoords(int u, int v) {
-		setOverlay(u, v);
+	public VertexEmitter setUv1(int u, int v) {
+		setOverlayValue(u, v);
 		return this;
 	}
 
 	@Override
-	public VertexEmitter overlayCoords(int uv) {
-		setOverlay(uv);
+	public VertexEmitter setOverlay(int uv) {
+		setOverlayValue(uv);
 		return this;
 	}
 
-	protected void setOverlay(int uv) {
+	protected void setOverlayValue(int uv) {
 		final var mat = material();
 		final var oMat = mat.withOverlay(uv);
 
@@ -512,7 +511,7 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 		}
 	}
 
-	protected void setOverlay (int u, int v) {
+	protected void setOverlayValue(int u, int v) {
 		final var mat = material();
 		final var oMat = mat.withOverlay(u, v);
 
@@ -522,44 +521,44 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 	}
 
 	@Override
-	public VertexEmitter uv2(int block, int sky) {
+	public VertexEmitter setUv2(int block, int sky) {
 		this.lightmap(vertexIndex, (block & 0xFF) | ((sky & 0xFF) << 8));
 		return this;
 	}
 
 	@Override
-	public VertexEmitter uv2(int lightmap) {
+	public VertexEmitter setLight(int lightmap) {
 		this.lightmap(vertexIndex, lightmap);
 		return this;
 	}
 
 	@Override
-	public VertexEmitter normal(float x, float y, float z) {
+	public VertexEmitter setNormal(float x, float y, float z) {
 		this.normal(vertexIndex, x, y, z);
 		return this;
 	}
 
 	@Override
-	public VertexEmitter color(int red, int green, int blue, int alpha) {
-		return color(MeshEncodingHelper.packColor(red, green, blue, alpha));
+	public VertexEmitter setColor(int red, int green, int blue, int alpha) {
+		return setColor(MeshEncodingHelper.packColor(red, green, blue, alpha));
 	}
 
 	@Override
-	public VertexEmitter vertex(Matrix4f mat, float x, float y, float z) {
+	public VertexEmitter addVertex(Matrix4f mat, float x, float y, float z) {
 		final float tx = mat.m00() * x + mat.m10() * y + mat.m20() * z + mat.m30();
 		final float ty = mat.m01() * x + mat.m11() * y + mat.m21() * z + mat.m31();
 		final float tz = mat.m02() * x + mat.m12() * y + mat.m22() * z + mat.m32();
 
-		return this.vertex(tx, ty, tz);
+		return this.addVertex(tx, ty, tz);
 	}
 
 	@Override
-	public VertexEmitter normal(PoseStack.Pose pose, float x, float y, float z) {
+	public VertexEmitter setNormal(PoseStack.Pose pose, float x, float y, float z) {
 		final var mat = pose.normal();
 		final float tx = mat.m00() * x + mat.m10() * y + mat.m20() * z;
 		final float ty = mat.m01() * x + mat.m11() * y + mat.m21() * z;
 		final float tz = mat.m02() * x + mat.m12() * y + mat.m22() * z;
 
-		return this.normal(tx, ty, tz);
+		return this.setNormal(tx, ty, tz);
 	}
 }

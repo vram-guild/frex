@@ -20,10 +20,9 @@
 
 package io.vram.frex.base.renderer.context.input;
 
+import io.vram.frex.api.model.BakedInputContext;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.BakedModel;
-
-import io.vram.frex.api.model.BakedInputContext;
 
 public abstract class BaseBakedInputContext extends BaseInputContext implements BakedInputContext {
 	protected BakedModel bakedModel;

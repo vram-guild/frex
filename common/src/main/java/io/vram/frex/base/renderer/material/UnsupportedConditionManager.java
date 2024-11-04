@@ -21,9 +21,7 @@
 package io.vram.frex.base.renderer.material;
 
 import java.util.function.BooleanSupplier;
-
 import net.minecraft.resources.ResourceLocation;
-
 import io.vram.frex.api.material.MaterialCondition;
 import io.vram.frex.api.renderer.ConditionManager;
 

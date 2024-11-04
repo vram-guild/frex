@@ -21,12 +21,10 @@
 package io.vram.frex.api.buffer;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-
 import io.vram.frex.api.model.InputContext;
 import io.vram.frex.api.rendertype.RenderTypeUtil;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 
 /**
  * Universal interface for models to send vertex data to the back end.

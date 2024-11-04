@@ -22,11 +22,9 @@ package io.vram.frex.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-
+import io.vram.frex.impl.texture.SpriteFinderImpl;
 import net.minecraft.client.renderer.texture.SpriteLoader;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-
-import io.vram.frex.impl.texture.SpriteFinderImpl;
 
 @Mixin(TextureAtlas.class)
 public class MixinTextureAtlas implements SpriteFinderImpl.SpriteFinderAccess {

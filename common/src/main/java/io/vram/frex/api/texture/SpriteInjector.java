@@ -21,9 +21,7 @@
 package io.vram.frex.api.texture;
 
 import java.util.function.Consumer;
-
 import net.minecraft.resources.ResourceLocation;
-
 import io.vram.frex.impl.texture.SpriteInjectorImpl;
 
 /**
@@ -52,7 +50,7 @@ public interface SpriteInjector {
 	}
 
 	static void injectAlways(ResourceLocation atlasId, String spriteId) {
-		injectAlways(atlasId, new ResourceLocation(spriteId));
+		injectAlways(atlasId, ResourceLocation.parse(spriteId));
 	}
 
 	/**

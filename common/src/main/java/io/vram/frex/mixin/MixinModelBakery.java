@@ -43,78 +43,67 @@ package io.vram.frex.mixin;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+import net.minecraft.client.color.block.BlockColors;
+import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.resources.model.BlockStateModelLoader;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.profiling.ProfilerFiller;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import net.minecraft.client.renderer.block.model.BlockModel;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.resources.ResourceLocation;
-
 import io.vram.frex.impl.model.ModelProviderRegistryImpl;
+import io.vram.frex.impl.model.ModelProviderRegistryImpl.LoaderInstance;
 import io.vram.frex.mixinterface.ModelBakeryExt;
 
 @Mixin(ModelBakery.class)
 public abstract class MixinModelBakery implements ModelBakeryExt {
-	@Shadow @Final private Map<ResourceLocation, BlockModel> modelResources;
-	@Shadow @Final private Map<ResourceLocation, List<ModelBakery.LoadedJson>> blockStateResources;
 	@Shadow @Final private Set<ResourceLocation> loadingStack;
 	@Shadow @Final private Map<ResourceLocation, UnbakedModel> unbakedCache;
 	@Shadow @Final private Map<ResourceLocation, UnbakedModel> topLevelModels;
 
 	@Unique private ModelProviderRegistryImpl.LoaderInstance frexHandler;
 
-	@Shadow private void loadTopLevel(ModelResourceLocation id) { }
-	@Shadow private void cacheAndQueueDependencies(ResourceLocation id, UnbakedModel unbakedModel) { }
-	@Shadow private void loadModel(ResourceLocation id) { }
 	@Shadow public abstract UnbakedModel getModel(ResourceLocation id);
 
-	private ModelProviderRegistryImpl.LoaderInstance frexHandler() {
-		var result = frexHandler;
-
-		if (result == null) {
-			result = ModelProviderRegistryImpl.begin((ModelBakery) (Object) this, modelResources, blockStateResources);
-			frexHandler = result;
-			ModelProviderRegistryImpl.onModelPopulation(modelResources, blockStateResources, this::frx_addModel);
+	@Inject(method = "<init>(Lnet/minecraft/client/color/block/BlockColors;Lnet/minecraft/util/profiling/ProfilerFiller;Ljava/util/Map;Ljava/util/Map;)V",
+				at = @At(value = "RETURN"))
+	private void initFrexHandler(BlockColors arg1, ProfilerFiller arg2, Map<ResourceLocation, BlockModel> arg3, Map<ResourceLocation, List<BlockStateModelLoader.LoadedJson>> arg4, CallbackInfo info) {
+		if (frexHandler == null) {
+			frexHandler = ModelProviderRegistryImpl.begin((ModelBakery) (Object) this, arg3, arg4);
+			ModelProviderRegistryImpl.onModelPopulation(arg3, arg4, this::frx_addModel);
 		}
-
-		return result;
 	}
 
-	@Inject(at = @At("HEAD"), method = "loadModel", cancellable = true)
-	private void loadModelHook(ResourceLocation id, CallbackInfo ci) {
-		final UnbakedModel customModel = frexHandler().loadModelFromVariant(id);
+	// TODO: ???
+	@Redirect(method = "getModel(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/resources/UnbakedModel;",
+				at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/model/ModelBakery;loadBlockModel(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/resources/model/UnbakedModel;"))
+	private UnbakedModel loadModelHook(ModelBakery this_, ResourceLocation id) {
+		final UnbakedModel customModel = frexHandler.loadModelFromVariant(id);
 
 		if (customModel != null) {
-			cacheAndQueueDependencies(id, customModel);
-			ci.cancel();
+			return customModel;
 		}
+		return this_.loadBlockModel(id);
 	}
 
 	@Inject(at = @At("RETURN"), method = "<init>")
 	private void initFinishedHook(CallbackInfo info) {
-		frexHandler().finish();
+		frexHandler.finish();
 	}
 
 	@Override @Unique
 	public void frx_addModel(ResourceLocation id) {
-		if (id instanceof ModelResourceLocation) {
-			loadTopLevel((ModelResourceLocation) id);
-		} else {
-			// The vanilla addModel method is arbitrarily limited to ModelIdentifiers,
-			// but it's useful to tell the game to just load and bake a direct model path as well.
-			// Replicate the vanilla logic of addModel here.
-			final UnbakedModel unbakedModel = getModel(id);
-			this.unbakedCache.put(id, unbakedModel);
-			this.topLevelModels.put(id, unbakedModel);
-		}
+		final UnbakedModel unbakedModel = getModel(id);
+		this.unbakedCache.put(id, unbakedModel);
+		this.topLevelModels.put(id, unbakedModel);
 	}
 
 	@Override @Unique
@@ -123,8 +112,11 @@ public abstract class MixinModelBakery implements ModelBakeryExt {
 			throw new IllegalStateException("Circular reference while loading model " + id);
 		}
 
+		// TODO: ???
+		return loadModelHook(this, id);
+		/*
 		loadModel(id);
 		loadingStack.remove(id);
-		return unbakedCache.get(id);
+		return unbakedCache.get(id);*/
 	}
 }

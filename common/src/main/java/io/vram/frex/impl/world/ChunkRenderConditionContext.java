@@ -21,12 +21,10 @@
 package io.vram.frex.impl.world;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.world.level.Level;
-
+import org.jetbrains.annotations.Nullable;
 import io.vram.frex.api.world.RenderRegionBakeListener;
 import io.vram.frex.api.world.RenderRegionBakeListener.RenderRegionContext;
 

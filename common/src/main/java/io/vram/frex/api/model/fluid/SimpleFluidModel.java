@@ -20,10 +20,15 @@
 
 package io.vram.frex.api.model.fluid;
 
+import io.vram.frex.api.buffer.QuadEmitter;
+import io.vram.frex.api.buffer.QuadSink;
+import io.vram.frex.api.config.FrexConfig;
+import io.vram.frex.api.material.RenderMaterial;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HalfTransparentBlock;
@@ -34,11 +39,6 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import io.vram.frex.api.buffer.QuadEmitter;
-import io.vram.frex.api.buffer.QuadSink;
-import io.vram.frex.api.config.FrexConfig;
-import io.vram.frex.api.material.RenderMaterial;
 
 /**
  * Implementation of {@link FluidModel}  with vanilla-like geometry.

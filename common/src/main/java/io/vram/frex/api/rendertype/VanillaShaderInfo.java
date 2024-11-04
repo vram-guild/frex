@@ -21,10 +21,6 @@
 package io.vram.frex.api.rendertype;
 
 import org.jetbrains.annotations.ApiStatus.NonExtendable;
-
-import net.minecraft.client.renderer.RenderStateShard.ShaderStateShard;
-import net.minecraft.client.renderer.ShaderInstance;
-
 import io.vram.frex.impl.material.VanillaShaderInfoImpl;
 
 @NonExtendable
@@ -47,10 +43,10 @@ public interface VanillaShaderInfo {
 	 * RenderState instances into renderable materials
 	 *
 	 * <p>To use this method, your mod will need an access widener to reference
-	 * the {@link ShaderStateShard} class. That class is not exposed here to prevent
+	 * the {@link ShaderProgram} class. That class is not exposed here to prevent
 	 * compilation or validation problems in dependent mods without visibility to it.
 	 *
-	 * @param shaderStateShard MUST be an instance of {@link ShaderStateShard}.
+	 * @param shaderStateShard MUST be an instance of {@link ShaderProgram}.
 	 * @return VanillaShaderInfo instance describing the shader, or
 	 *         {@link #MISSING} if not found.
 	 */
@@ -64,7 +60,7 @@ public interface VanillaShaderInfo {
 	 * visibility to ShaderStateShard and/or have some way to obtain the shader
 	 * instance name without it.
 	 *
-	 * @param shaderName  The name of the vanilla shader, corresponding to {@link ShaderInstance#name}.
+	 * @param shaderName  The name of the vanilla shader, corresponding to {@link net.minecraft.client.renderer.ShaderInstance#name}.
 	 * @return VanillaShaderInfo instance describing the shader, or
 	 *         {@link #MISSING} if not found.
 	 */

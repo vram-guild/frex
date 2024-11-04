@@ -21,14 +21,12 @@
 package io.vram.frex.api.material;
 
 import org.jetbrains.annotations.Nullable;
-
+import io.vram.frex.api.renderer.Renderer;
 import net.minecraft.resources.ResourceLocation;
 
-import io.vram.frex.api.renderer.Renderer;
-
 public interface MaterialShader {
-	ResourceLocation DEFAULT_VERTEX_SOURCE = new ResourceLocation("frex:shaders/material/default.vert");
-	ResourceLocation DEFAULT_FRAGMENT_SOURCE = new ResourceLocation("frex:shaders/material/default.frag");
+	ResourceLocation DEFAULT_VERTEX_SOURCE = ResourceLocation.parse("frex:shaders/material/default.vert");
+	ResourceLocation DEFAULT_FRAGMENT_SOURCE = ResourceLocation.parse("frex:shaders/material/default.frag");
 
 	int index();
 

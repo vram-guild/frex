@@ -23,15 +23,13 @@ package io.vram.frex.api.model.util;
 import static net.minecraft.util.Mth.equal;
 
 import org.joml.Vector3f;
-
+import io.vram.frex.api.math.PackedVector3f;
+import io.vram.frex.api.mesh.QuadView;
 import net.minecraft.client.renderer.FaceInfo.Constants;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
-
-import io.vram.frex.api.math.PackedVector3f;
-import io.vram.frex.api.mesh.QuadView;
 
 /**
  * Static routines of general utility for renderer implementations.

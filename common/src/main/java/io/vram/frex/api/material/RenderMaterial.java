@@ -21,10 +21,8 @@
 package io.vram.frex.api.material;
 
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.resources.ResourceLocation;
-
 import io.vram.frex.api.renderer.Renderer;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Immutable material specification, governs practically all aspects of
@@ -38,8 +36,8 @@ import io.vram.frex.api.renderer.Renderer;
  *
  */
 public interface RenderMaterial extends MaterialView, MaterialTransform {
-	ResourceLocation STANDARD_MATERIAL_KEY = new ResourceLocation("frex", "standard");
-	ResourceLocation MISSING_MATERIAL_KEY = new ResourceLocation("frex", "missing");
+	ResourceLocation STANDARD_MATERIAL_KEY = ResourceLocation.fromNamespaceAndPath("frex", "standard");
+	ResourceLocation MISSING_MATERIAL_KEY = ResourceLocation.fromNamespaceAndPath("frex", "missing");
 
 	int index();
 

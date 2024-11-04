@@ -21,13 +21,10 @@
 package io.vram.frex.fabric.compat;
 
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.resources.ResourceLocation;
-
 import net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
-
+import net.minecraft.resources.ResourceLocation;
 import io.vram.frex.api.renderer.Renderer;
 
 public class FrexCompatibilityWrapper implements net.fabricmc.fabric.api.renderer.v1.Renderer {

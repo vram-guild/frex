@@ -20,10 +20,9 @@
 
 package io.vram.frex.api.model.fluid;
 
+import io.vram.frex.impl.model.FluidAppearanceImpl;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-
-import io.vram.frex.impl.model.FluidAppearanceImpl;
 
 public interface FluidAppearance extends FluidColorProvider, FluidSpriteProvider {
 	static FluidAppearance of(FluidColorProvider colorProvider, FluidSpriteProvider spriteProvider) {

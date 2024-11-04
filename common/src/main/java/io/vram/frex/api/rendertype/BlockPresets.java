@@ -20,11 +20,10 @@
 
 package io.vram.frex.api.rendertype;
 
+import io.vram.frex.impl.material.BlockPresetsImpl;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
-
-import io.vram.frex.impl.material.BlockPresetsImpl;
 
 /**
  * Use to associate blocks or fluids with render types other than default.

@@ -21,12 +21,10 @@
 package io.vram.frex.api.material;
 
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.resources.ResourceLocation;
-
 import io.vram.frex.api.renderer.Renderer;
 import io.vram.frex.api.texture.MaterialTexture;
 import io.vram.frex.impl.material.MaterialFinderPool;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Finds standard {@link RenderMaterial} instances used to communicate

@@ -30,7 +30,7 @@ public interface SpriteProvider {
 	TextureAtlasSprite getSprite(ResourceLocation path);
 
 	default TextureAtlasSprite getSprite(String path) {
-		return getSprite(new ResourceLocation(path));
+		return getSprite(ResourceLocation.parse(path));
 	}
 
 	@SuppressWarnings("resource")

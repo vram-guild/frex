@@ -21,12 +21,10 @@
 package io.vram.frex.api.texture;
 
 import java.nio.ByteBuffer;
-
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import org.jetbrains.annotations.Nullable;
 
 public interface PhysicalTextureSet extends AutoCloseable {
 	ResourceLocation baseColorId();

@@ -21,10 +21,8 @@
 package io.vram.frex.api.renderer;
 
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.resources.ResourceLocation;
-
 import io.vram.frex.api.material.MaterialShader;
+import net.minecraft.resources.ResourceLocation;
 
 public interface MaterialShaderManager {
 	MaterialShader shaderFromIndex(int index);

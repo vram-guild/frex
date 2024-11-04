@@ -20,11 +20,10 @@
 
 package io.vram.frex.base.renderer.context.input;
 
-import net.minecraft.util.RandomSource;
-
 import io.vram.frex.api.math.MatrixStack;
 import io.vram.frex.api.model.InputContext;
 import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
+import net.minecraft.util.RandomSource;
 
 public abstract class BaseInputContext implements InputContext {
 	protected final Type type;

@@ -20,11 +20,10 @@
 
 package io.vram.frex.base.renderer.context.render;
 
-import net.minecraft.client.renderer.texture.OverlayTexture;
-
 import io.vram.frex.api.material.MaterialConstants;
 import io.vram.frex.base.renderer.context.input.BaseBakedInputContext;
 import io.vram.frex.base.renderer.mesh.BaseQuadEmitter;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 
 /**
  * Base class for block and item contexts, or "baked" models.

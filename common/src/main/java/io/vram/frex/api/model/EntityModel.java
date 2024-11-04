@@ -20,11 +20,10 @@
 
 package io.vram.frex.api.model;
 
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.Entity;
-
 import io.vram.frex.api.buffer.QuadSink;
 import io.vram.frex.api.model.InputContext.Type;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
 
 @FunctionalInterface
 public interface EntityModel<T extends Entity> extends DynamicModel {

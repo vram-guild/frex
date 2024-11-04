@@ -21,12 +21,9 @@
 package io.vram.frex.api.world;
 
 import java.util.function.Function;
-
-import org.jetbrains.annotations.ApiStatus.NonExtendable;
-
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-
+import org.jetbrains.annotations.ApiStatus.NonExtendable;
 import io.vram.frex.impl.world.BlockEntityRenderDataImpl;
 
 /**

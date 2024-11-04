@@ -21,14 +21,12 @@
 package io.vram.frex.api.model.fluid;
 
 import org.jetbrains.annotations.Nullable;
-
+import io.vram.frex.impl.model.SimpleFluidSpriteProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.material.FluidState;
-
-import io.vram.frex.impl.model.SimpleFluidSpriteProvider;
 
 /**
  * Get the sprites for a fluid being rendered at a given position.
@@ -48,7 +46,7 @@ public interface FluidSpriteProvider {
 	TextureAtlasSprite[] getFluidSprites(@Nullable BlockAndTintGetter view, @Nullable BlockPos pos, FluidState state);
 
 	static FluidSpriteProvider of(String stillSpriteName, String flowingSpriteName, @Nullable String overlaySpriteName) {
-		return SimpleFluidSpriteProvider.of(new ResourceLocation(stillSpriteName), new ResourceLocation(flowingSpriteName), overlaySpriteName == null ? null : new ResourceLocation(overlaySpriteName));
+		return SimpleFluidSpriteProvider.of(ResourceLocation.tryParse(stillSpriteName), ResourceLocation.tryParse(flowingSpriteName), overlaySpriteName == null ? null : ResourceLocation.tryParse(overlaySpriteName));
 	}
 
 	static FluidSpriteProvider of(String stillSpriteName, String flowingSpriteName) {

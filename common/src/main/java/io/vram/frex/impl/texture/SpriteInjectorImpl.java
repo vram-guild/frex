@@ -21,13 +21,10 @@
 package io.vram.frex.impl.texture;
 
 import java.util.function.Consumer;
-
+import net.minecraft.resources.ResourceLocation;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-
-import net.minecraft.resources.ResourceLocation;
-
 import io.vram.frex.api.texture.SpriteInjector;
 
 public class SpriteInjectorImpl {

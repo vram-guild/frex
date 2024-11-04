@@ -28,12 +28,11 @@ import static net.minecraft.core.Direction.SOUTH;
 import static net.minecraft.core.Direction.UP;
 import static net.minecraft.core.Direction.WEST;
 
-import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
-
 import io.vram.frex.api.math.FixedMath255;
 import io.vram.frex.api.math.PackedSectionPos;
 import io.vram.frex.base.renderer.mesh.BaseQuadView;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 
 /**
  * Adapted from vanilla. Holds positional data in related functions for each block face.

@@ -21,12 +21,10 @@
 package io.vram.frex.api.mesh;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
-
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.Direction;
-
 import io.vram.frex.api.buffer.QuadEmitter;
 import io.vram.frex.api.material.RenderMaterial;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.Direction;
 
 /**
  * Similar in purpose to {@link BufferBuilder} but simpler

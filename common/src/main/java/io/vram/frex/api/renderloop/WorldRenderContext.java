@@ -20,11 +20,7 @@
 
 package io.vram.frex.api.renderloop;
 
-import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
@@ -33,6 +29,8 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.util.profiling.ProfilerFiller;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 
 /**
  * Except as noted below, the properties exposed here match the parameters passed to

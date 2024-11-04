@@ -21,13 +21,11 @@
 package io.vram.frex.impl.material;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import org.jetbrains.annotations.ApiStatus.Internal;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-
+import org.jetbrains.annotations.ApiStatus.Internal;
 import io.vram.frex.api.config.FrexConfig;
 import io.vram.frex.api.material.MaterialTransform;
 import io.vram.frex.impl.FrexLog;
@@ -40,7 +38,7 @@ public final class MaterialTransformLoader {
 
 	public static MaterialTransform loadTransform(String idForLog, String materialString, MaterialTransform defaultValue) {
 		try {
-			final MaterialTransform result = loadTransformInner(new ResourceLocation(materialString));
+			final MaterialTransform result = loadTransformInner(ResourceLocation.parse(materialString));
 			return result == null ? defaultValue : result;
 		} catch (final Exception e) {
 			FrexLog.warn("Unable to load material transform " + materialString + " for material map " + idForLog + " because of exception. Using default transform.", e);
@@ -49,7 +47,7 @@ public final class MaterialTransformLoader {
 	}
 
 	private static MaterialTransform loadTransformInner(ResourceLocation idIn) {
-		final ResourceLocation id = new ResourceLocation(idIn.getNamespace(), "materials/" + idIn.getPath() + ".json");
+		final ResourceLocation id = ResourceLocation.fromNamespaceAndPath(idIn.getNamespace(), "materials/" + idIn.getPath() + ".json");
 
 		MaterialTransform result = null;
 		final ResourceManager rm = Minecraft.getInstance().getResourceManager();

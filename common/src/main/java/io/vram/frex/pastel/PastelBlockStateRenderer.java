@@ -21,15 +21,13 @@
 package io.vram.frex.pastel;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-
+import io.vram.frex.api.model.BlockModel;
+import io.vram.frex.api.world.RenderRegionBakeListener.BlockStateRenderer;
+import io.vram.frex.pastel.mixinterface.RenderChunkRegionExt;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
-
-import io.vram.frex.api.model.BlockModel;
-import io.vram.frex.api.world.RenderRegionBakeListener.BlockStateRenderer;
-import io.vram.frex.pastel.mixinterface.RenderChunkRegionExt;
 
 public class PastelBlockStateRenderer implements BlockStateRenderer {
 	private PoseStack matrixStack;

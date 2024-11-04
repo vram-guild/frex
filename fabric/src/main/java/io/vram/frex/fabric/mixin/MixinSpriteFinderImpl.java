@@ -21,12 +21,9 @@
 package io.vram.frex.fabric.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
-
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadView;
 import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
-
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import io.vram.frex.impl.texture.SpriteFinderImpl;
 
 @SuppressWarnings("NonExtendableApiUsage")

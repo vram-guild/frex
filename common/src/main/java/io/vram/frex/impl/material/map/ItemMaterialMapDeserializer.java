@@ -22,16 +22,13 @@ package io.vram.frex.impl.material.map;
 
 import java.io.InputStreamReader;
 import java.util.IdentityHashMap;
-
-import com.google.gson.JsonObject;
-import org.jetbrains.annotations.ApiStatus.Internal;
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-
+import com.google.gson.JsonObject;
+import org.jetbrains.annotations.ApiStatus.Internal;
+import org.jetbrains.annotations.Nullable;
 import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.api.material.MaterialTransform;
 import io.vram.frex.impl.FrexLog;

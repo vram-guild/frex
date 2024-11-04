@@ -24,16 +24,15 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
+import io.vram.frex.api.model.BlockModel;
+import io.vram.frex.api.model.BlockModel.TerrainParticleDelegate;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.TerrainParticle;
 import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
-
-import io.vram.frex.api.model.BlockModel;
-import io.vram.frex.api.model.BlockModel.TerrainParticleDelegate;
 
 @Mixin(TerrainParticle.class)
 public abstract class MixinTerrainParticle extends TextureSheetParticle implements TerrainParticleDelegate {

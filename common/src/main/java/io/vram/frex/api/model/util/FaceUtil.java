@@ -21,11 +21,9 @@
 package io.vram.frex.api.model.util;
 
 import java.util.Arrays;
-
-import org.jetbrains.annotations.Contract;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import org.jetbrains.annotations.Contract;
 
 public abstract class FaceUtil {
 	private FaceUtil() { }

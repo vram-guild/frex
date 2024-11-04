@@ -28,7 +28,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.function.BiPredicate;
-
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -36,14 +41,6 @@ import org.jetbrains.annotations.ApiStatus.Internal;
 import org.spongepowered.include.com.google.gson.JsonParseException;
 
 import com.mojang.serialization.JsonOps;
-
-import net.minecraft.advancements.critereon.StatePropertiesPredicate;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-
 import io.vram.frex.api.config.FrexConfig;
 import io.vram.frex.api.material.MaterialMap;
 import io.vram.frex.api.material.MaterialTransform;

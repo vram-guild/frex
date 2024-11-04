@@ -20,6 +20,7 @@
 
 package io.vram.frex.pastel.mixin;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,16 +34,17 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexSorting;
 
 import net.minecraft.client.renderer.SectionBufferBuilderPack;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.chunk.SectionRenderDispatcher.RenderSection;
-import net.minecraft.client.renderer.chunk.SectionRenderDispatcher.RenderSection.RebuildTask;
-import net.minecraft.client.renderer.chunk.SectionRenderDispatcher.RenderSection.RebuildTask.CompileResults;
+import net.minecraft.client.renderer.chunk.SectionCompiler;
+import net.minecraft.client.renderer.chunk.SectionCompiler.Results;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.client.renderer.chunk.VisGraph;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.RenderShape;
@@ -59,50 +61,51 @@ import io.vram.frex.pastel.PastelBlockStateRenderer;
 import io.vram.frex.pastel.PastelTerrainRenderContext;
 import io.vram.frex.pastel.mixinterface.RenderChunkRegionExt;
 
-@Mixin(RebuildTask.class)
+@Mixin(SectionCompiler.class)
 public abstract class MixinChunkRebuildTask implements RenderRegionContext<BlockAndTintGetter> {
-	//e -> field_20839 -> this$1
-	@Shadow(aliases = {"field_20839"}) protected RenderSection this$1;
-
 	// Below are for RenderRegionBakeListener support
 
 	@Unique
 	private final PastelBlockStateRenderer blockStateRenderer = new PastelBlockStateRenderer();
 
-	// could shadow this but is set to null by the time we need it
+	// these are only valid for RenderRegionBakeListener (see regionStartHook)
 	@Unique
 	private RenderChunkRegion contextRegion;
+	@Unique
+	private BlockPos contextOrigin;
 
 	@Unique
 	private final BlockPos.MutableBlockPos searchPos = new BlockPos.MutableBlockPos();
 
-	@Inject(method = "Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection$RebuildTask;compile(FFFLnet/minecraft/client/renderer/SectionBufferBuilderPack;)Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection$RebuildTask$CompileResults;",
+	@Inject(method = "compile(Lnet/minecraft/core/SectionPos;Lnet/minecraft/client/renderer/chunk/RenderChunkRegion;Lcom/mojang/blaze3d/vertex/VertexSorting;Lnet/minecraft/client/renderer/SectionBufferBuilderPack;)Lnet/minecraft/client/renderer/chunk/SectionCompiler$Results;",
 				require = 1, locals = LocalCapture.CAPTURE_FAILHARD,
 				at = @At(value = "INVOKE", target = "Lnet/minecraft/util/RandomSource;create()Lnet/minecraft/util/RandomSource;"))
-	private void regionStartHook(float arg0, float arg1, float arg2, SectionBufferBuilderPack arg3, CallbackInfoReturnable<CompileResults> cir, CompileResults compileResults, int i, BlockPos blockPos, BlockPos blockPos2, VisGraph visGraph, RenderChunkRegion renderChunkRegion, PoseStack poseStack, @SuppressWarnings("rawtypes") Set set) {
+	private void regionStartHook(SectionPos arg1, RenderChunkRegion arg2, VertexSorting arg3, SectionBufferBuilderPack arg4, CallbackInfoReturnable<Results> cir, Results compileResults, BlockPos blockPos, BlockPos blockPos2, VisGraph visGraph, PoseStack poseStack, @SuppressWarnings("rawtypes") Map map) {
 		final PastelTerrainRenderContext context = PastelTerrainRenderContext.POOL.get();
-		((RenderChunkRegionExt) renderChunkRegion).frx_setContext(context, this$1.getOrigin());
-		context.prepareForRegion(renderChunkRegion, poseStack, blockPos, arg3, set);
+		((RenderChunkRegionExt) arg2).frx_setContext(context, arg1.origin());
+		context.prepareForRegion(arg2, poseStack, blockPos, arg4, map);
 
-		final RenderRegionBakeListener[] listeners = ((RenderChunkRegionExt) renderChunkRegion).frx_getRenderRegionListeners();
+		final RenderRegionBakeListener[] listeners = ((RenderChunkRegionExt) arg2).frx_getRenderRegionListeners();
 
 		if (listeners != null) {
-			contextRegion = renderChunkRegion;
-			blockStateRenderer.prepare(poseStack, renderChunkRegion);
+			contextRegion = arg2;
+			contextOrigin = arg1.origin();
+			blockStateRenderer.prepare(poseStack, arg2);
 			final int limit = listeners.length;
 
 			for (int n = 0; n < limit; ++n) {
 				final var listener = listeners[n];
-				context.overrideBlockView(listener.blockViewOverride(renderChunkRegion));
+				context.overrideBlockView(listener.blockViewOverride(arg2));
 				listener.bake(this, blockStateRenderer);
 			}
 
-			context.overrideBlockView(renderChunkRegion);
+			context.overrideBlockView(arg2);
 			contextRegion = null;
+			contextOrigin = null;
 		}
 	}
 
-	@Redirect(method = "Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection$RebuildTask;compile(FFFLnet/minecraft/client/renderer/SectionBufferBuilderPack;)Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection$RebuildTask$CompileResults;",
+	@Redirect(method = "compile(Lnet/minecraft/core/SectionPos;Lnet/minecraft/client/renderer/chunk/RenderChunkRegion;Lcom/mojang/blaze3d/vertex/VertexSorting;Lnet/minecraft/client/renderer/SectionBufferBuilderPack;)Lnet/minecraft/client/renderer/chunk/SectionCompiler$Results;",
 			require = 1, at = @At(value = "INVOKE",
 			target = "Lnet/minecraft/client/renderer/block/BlockRenderDispatcher;renderBatched(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/BlockAndTintGetter;Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;ZLnet/minecraft/util/RandomSource;)V"))
 	private void blockRenderHook(BlockRenderDispatcher renderManager, BlockState blockState, BlockPos blockPos, BlockAndTintGetter blockView, PoseStack matrix, VertexConsumer bufferBuilder, boolean checkSides, RandomSource random) {
@@ -117,14 +120,14 @@ public abstract class MixinChunkRebuildTask implements RenderRegionContext<Block
 		}
 	}
 
-	@Redirect(method = "Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection$RebuildTask;compile(FFFLnet/minecraft/client/renderer/SectionBufferBuilderPack;)Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection$RebuildTask$CompileResults;",
+	@Redirect(method = "compile(Lnet/minecraft/core/SectionPos;Lnet/minecraft/client/renderer/chunk/RenderChunkRegion;Lcom/mojang/blaze3d/vertex/VertexSorting;Lnet/minecraft/client/renderer/SectionBufferBuilderPack;)Lnet/minecraft/client/renderer/chunk/SectionCompiler$Results;",
 			require = 1, at = @At(value = "INVOKE",
 			target = "Lnet/minecraft/client/renderer/block/BlockRenderDispatcher;renderLiquid(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/BlockAndTintGetter;Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/material/FluidState;)V"))
 	private void fluidRenderHook(BlockRenderDispatcher renderManager, BlockPos blockPos, BlockAndTintGetter blockView, VertexConsumer vertexConsumer, BlockState currentBlockState, FluidState fluidState) {
 		((RenderChunkRegionExt) blockView).frx_getContext().renderFluid(currentBlockState, blockPos, FluidModel.get(fluidState.getType()));
 	}
 
-	@Inject(at = @At("RETURN"), method = "Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection$RebuildTask;compile(FFFLnet/minecraft/client/renderer/SectionBufferBuilderPack;)Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection$RebuildTask$CompileResults;")
+	@Inject(at = @At("RETURN"), method = "compile(Lnet/minecraft/core/SectionPos;Lnet/minecraft/client/renderer/chunk/RenderChunkRegion;Lcom/mojang/blaze3d/vertex/VertexSorting;Lnet/minecraft/client/renderer/SectionBufferBuilderPack;)Lnet/minecraft/client/renderer/chunk/SectionCompiler$Results;")
 	private void hookRebuildChunkReturn(CallbackInfoReturnable<Set<BlockEntity>> ci) {
 		PastelTerrainRenderContext.POOL.get().inputContext.release();
 	}
@@ -136,12 +139,15 @@ public abstract class MixinChunkRebuildTask implements RenderRegionContext<Block
 
 	@Override
 	public BlockPos origin() {
-		return this$1.getOrigin();
+		return contextOrigin;
 	}
 
 	@Override
 	public MutableBlockPos originOffset(int x, int y, int z) {
 		final var origin = origin();
+		if (origin == null) {
+			return null;
+		}
 		return searchPos.set(origin.getX() + x, origin.getY() + y, origin.getZ() + z);
 	}
 }

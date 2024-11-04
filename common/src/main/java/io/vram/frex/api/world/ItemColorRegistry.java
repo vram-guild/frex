@@ -22,11 +22,9 @@ package io.vram.frex.api.world;
 
 import org.jetbrains.annotations.ApiStatus.NonExtendable;
 import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.world.level.ItemLike;
-
 import io.vram.frex.impl.world.ColorRegistryImpl;
 
 /**

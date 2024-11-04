@@ -22,13 +22,11 @@ package io.vram.frex.api.world;
 
 import java.util.List;
 import java.util.function.Predicate;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-
 import io.vram.frex.impl.world.RenderRegionBakeListenerImpl;
 
 @FunctionalInterface

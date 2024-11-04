@@ -22,11 +22,8 @@ package io.vram.frex.fabric.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
-
-import net.minecraft.client.renderer.texture.TextureAtlas;
-
 import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
-
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import io.vram.frex.impl.texture.SpriteFinderImpl;
 
 @Mixin(SpriteFinder.class)
